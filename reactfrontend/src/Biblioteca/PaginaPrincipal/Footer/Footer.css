@@ -1,0 +1,84 @@
+#footer{
+    padding: 30px;
+    /* display: grid;
+    grid-template-columns: 1fr 1fr 1fr; */
+    background-color: #B8E7F6;
+}
+
+#footer h1{
+    text-align: center;
+    font-size: 24px;
+}
+
+#footer h2{
+    text-align: center;
+    font-size: 18px;
+}
+
+.contenedorIconos{
+    margin: 0 auto;
+    display: flex;
+    width: 40%;
+    justify-content: space-evenly;
+}
+
+.contenedorIconos a{
+    border: 3px solid #FF4B2B;
+    border-radius: 190px;
+    padding: 5px;
+    width: 70px;
+    text-align: center;
+}
+
+.social-media-icons-white a{
+    color: #FF4B2B;
+    font-size: 2rem;
+}
+
+.contenedorIconos a{
+    margin: 10px;
+}
+
+.social-media-icons-white a.facebook:hover{
+    color: #3b5998;
+    font-size: 2rem;
+    border: 3px solid #484242;
+}
+
+.social-media-icons-white a.instagram:hover{
+    color: #FD1D1D;
+    font-size: 2rem;
+    border: 3px solid #484242;
+}
+
+.social-media-icons-white a.twitter:hover{
+    color: #00acee;
+    font-size: 2rem;
+    border: 3px solid #484242;
+}
+
+.social-media-icons-white a.linkedin:hover{
+    color: #0e76a8;
+    font-size: 2rem;
+    border: 3px solid #484242;
+}
+
+.social-media-icons-white a.tiktok:hover{
+    color: black;
+    font-size: 2rem;
+    border: 3px solid #484242;
+}
+
+
+.ContenedorFooter{
+    margin-top: 30px;
+}
+
+@media (max-width: 600px) {
+    #footer{
+        padding: 30px;
+        display: grid;
+        grid-template-columns: 100%;
+        background-color: #B8E7F6;
+    } 
+}

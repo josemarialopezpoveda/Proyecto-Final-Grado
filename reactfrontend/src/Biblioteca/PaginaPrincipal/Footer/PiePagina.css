@@ -1,0 +1,38 @@
+div.PiePagina{
+    display: flex;
+    justify-content: space-around;
+    font-weight: bolder;
+    background-color: #B8E7F6;
+}
+
+div.PiePagina *{
+    font-size: 12px;
+}
+
+/* POSICIONAR EL FOOTER ABAJO */
+
+body{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+
+html{
+    margin: auto;
+    width: 100%;
+}
+
+.ContenedorBajarFooter{
+    position: relative;
+}
+
+.BajarFooter{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+nav#barraNavegacion ~ section{
+    min-height: 100vh;
+}

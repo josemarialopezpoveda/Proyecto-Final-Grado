@@ -1,0 +1,28 @@
+.btnOcultar4 {
+    position: absolute;
+    top: 8px;
+    right: 22%;
+    font-size: 1rem;
+}
+
+@media (max-width:1750px){
+    .btnOcultar4{
+        right: 18%!important;
+    }
+}
+
+@media (max-width:1500px){
+    .btnOcultar4{
+        right: 14%!important;
+    }
+}
+
+@media (max-width:1400px){
+    .btnOcultar4{
+        right: 12%!important;
+    }
+}
+
+.marginBotonesModVolver{
+    margin: 20px!important;
+}

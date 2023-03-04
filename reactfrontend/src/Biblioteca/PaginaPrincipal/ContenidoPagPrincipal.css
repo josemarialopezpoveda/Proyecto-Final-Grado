@@ -1,0 +1,94 @@
+
+
+.heading{
+    font-size: 18px;
+}
+
+.headingPrincipal{
+    font-size: 20px;
+}
+
+.tituloInfoApp{
+    font-size: 26px;
+}
+
+#services{
+    margin-top: 40px;
+}
+
+.padNo{
+    padding: 0!important;
+}
+
+#services .sectiontitle{
+    margin: 15px;
+}
+.one_third{
+    width: 100%;
+    height: 100%;
+}
+
+.articulosPagWeb{
+    padding: 40px!important;
+}
+
+.sectiontitle{
+    margin-top: 4%!important;
+}
+
+ul.grid-3{
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+}
+
+li{
+    list-style: none;
+}
+
+ul.grid-3 li,article{
+    text-align: center;
+}
+
+ul.grid-3 li.one_third *:hover{
+    background-color: #B8E7F6;
+}
+
+ul.grid-3 li.one_third h6:hover{
+    color: black;
+    font-weight: bold;
+}
+
+
+li.one_third{
+    padding: 10px;
+}
+
+div.sectiontitle{
+    text-align: center;
+    
+}
+
+.articulosPagWeb{
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.tituloEmpresa{
+    font-size: 24px;
+    font-weight: bolder;
+    color: #51CEF4;
+}
+
+@media (max-width: 600px) {
+    ul.grid-3{
+        display: grid;
+        grid-template-columns: 100%;
+    }
+  }
+
+@media (max-width: 500px){
+    .carousel{
+        display: none;
+    }
+}

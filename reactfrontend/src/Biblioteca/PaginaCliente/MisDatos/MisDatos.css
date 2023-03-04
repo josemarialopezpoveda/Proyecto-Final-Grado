@@ -1,0 +1,53 @@
+.TablaDatosUser{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.TablaDatosUser table{
+    border: 3px solid black;
+    text-align: center;
+}
+
+.TablaDatosUser table thead tr th{
+    font-size: 22px;
+}
+
+.fotoUsuarioLogueado{
+    text-align: center;
+    width: 100%;
+    margin: 30px 0;
+}
+
+.fotoUsuarioLogueado img{
+    width: 300px;
+    max-width: 400px;
+    max-height: 600px;
+}
+
+@media (max-width: 420px){
+
+    .TablaDatosUser table thead tr th{
+        font-size: 15px;
+    }
+
+    /*
+    .TablaDatosUser table{
+        width: 3px;
+    } */
+
+    .TablaDatosUser {
+        margin-top: 30px;
+        margin-bottom: 30px;
+        padding-left: 10px;
+    }
+
+    .fotoUsuarioLogueado img{
+        width: 200px;
+    }
+
+    .table * {
+        font-size: 14px;
+    }
+}

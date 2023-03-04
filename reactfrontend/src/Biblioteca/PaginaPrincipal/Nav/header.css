@@ -1,0 +1,36 @@
+.logoEmpresa{
+    width: 90px;
+}
+
+#barraNavegacion{
+    margin: auto;
+    text-align: center;
+    background-color: #51CEF4;
+    padding: 10px;
+}
+
+a.nav-link:hover{
+    font-weight: bold;
+}
+
+div.collapse{
+    justify-content: flex-end;
+}
+
+div.navbar-nav a.nav-link{
+    font-size: 23px;
+    color: #484242;
+}
+
+@media (max-width: 1000px) {
+    div.navbar-nav a.nav-link{
+        font-size: 17px;
+        color: #484242;
+    }
+}
+
+@media (max-width: 600px) {
+    .nav-link{
+        font-size: 15px!important;
+    }
+}

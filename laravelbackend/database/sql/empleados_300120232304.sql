@@ -1,0 +1,3 @@
+INSERT INTO proyecto.empleados (nif,nombre,apellidos,direccion,cPostal,localidad,provincia,pais,telefono,fechaNacimiento,email,password,numSegSoc,fotografia,ultimaConexion,activo,fechaAlta,fechaBaja,tipoEmpleado,created_at,updated_at) VALUES
+	 ('12345678A','Vasco','Nuñez de Balboa','Las Navas, 25','03600','Elda','Alicante','España','666555444','1995-04-15','vasco@gmail.com','123456','03/12345678T',NULL,'2001-01-01 00:00:00',1,'2023-01-07',NULL,'Trabajador',NULL,NULL),
+	 ('87654321Z','Miguel','De la Cuadra','Nueva, 30','30505','Abanilla','Murcia','España','676676676','1992-07-25','miguel@gmail.com','123456','30/25252525T',NULL,'2023-01-30 23:03:00',1,'2023-02-01',NULL,'Trabajador','2023-01-30 23:03:23','2023-01-30 23:03:27');

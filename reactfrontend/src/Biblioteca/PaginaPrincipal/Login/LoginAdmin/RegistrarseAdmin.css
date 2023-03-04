@@ -1,0 +1,69 @@
+
+.contenedorCrearCuentaForm input{
+    height: 35px;
+}
+
+.btnOcultar3{
+    position: absolute;
+	top: 16px;
+	right: 35px;
+	font-size: 1.2rem;
+} 
+
+#container{
+    margin-top: 22%;
+}
+
+.fieldset legend{
+    font-size: 15px;
+}
+
+.fieldset{
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+}
+
+.divFlex{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-gap: 20px;
+    margin-right: 20px;
+}
+
+.divFlex2{
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    grid-gap: 20px;
+    margin-right: 35px;
+}
+
+.contenedorRegistrarse{
+    margin-top: 40%!important;
+}
+
+@media (max-width: 600px){
+	.fieldset input::placeholder{
+        font-size: 10px;
+    }
+
+    .imagenDeFondoLogin{
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+    }
+
+    .divFlexquitar{
+        display: block!important;
+        margin: 0;
+    }
+
+    .btnOcultar3{
+        position: absolute;
+        top: 7px;
+        right: 30px;
+        font-size: 1.2rem;
+    } 
+}

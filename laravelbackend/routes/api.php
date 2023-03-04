@@ -1,0 +1,92 @@
+<?php
+
+use App\Http\Controllers\AusenciaController;
+use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\TipoausenciaController;
+use App\Http\Controllers\TurnoController;
+use App\Models\Empresa;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
+Route::middleware('auth:sanctum')->get(
+    /**
+     * @param Request $request
+     * @return mixed
+     */
+    '/empresa',
+    function (Request $request) {
+        return $request->empresa();
+    }
+);
+
+//Empresa
+
+//Route::post('/empresas', 'App\Http\Controllers\EmpresaController@store');
+//Route::post('/login', 'App\Http\Controllers\EmpresaController@login');
+
+Route::get('/empresas', [EmpresaController::class, 'index']);
+Route::post('/login', [EmpresaController::class, 'login']);
+Route::post('/empresas', [EmpresaController::class, 'store']);
+Route::get('/error', [EmpresaController::class, 'paginaError']);
+
+
+//Empleado
+
+Route::post('/loginEmpleado', 'App\Http\Controllers\EmpleadoController@login');
+
+// Turnos
+
+Route::get('/turnos', [TurnoController::class, 'index']);
+Route::get('/turnos/{turno}', [TurnoController::class, 'show']);
+Route::post('/turnos', [TurnoController::class, 'store']);
+Route::delete('/turnos/{turno}', [TurnoController::class, 'destroy']);
+Route::put('/turnos/{turno}', [TurnoController::class, 'update']);
+
+// Tipos de Ausencia
+
+Route::get('/tipoAusencias', [TipoausenciaController::class, 'index']);
+Route::get('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'show']);
+Route::post('/tipoAusencias', [TipoausenciaController::class, 'store']);
+Route::put('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'update']);
+Route::delete('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'destroy']);
+
+// Ausencias
+Route::get('/ausencias', [AusenciaController::class, 'index']);
+Route::get('/ausencias/{ausencias}', [AusenciaController::class, 'show']);
+Route::post('/ausencias', [AusenciaController::class, 'store']);
+Route::put('/ausencias/{ausencias}', [AusenciaController::class, 'update']);
+Route::delete('/ausencias/{ausencias}', [AusenciaController::class, 'destroy']);
+
+Route::middleware('auth:sanctum')->group(
+    /**
+     * @return void
+     */
+    function () {
+
+        //Empresas
+        Route::get('/empresa', 'App\Http\Controllers\EmpresaController@show');
+        Route::put('/empresa', 'App\Http\Controllers\EmpresaController@update');
+        Route::delete('/empresa', 'App\Http\Controllers\EmpresaController@destroy');
+        Route::get('/logout', [EmpresaController::class, 'logout']);
+
+        //Empleados
+        Route::get('/empleados', 'App\Http\Controllers\EmpleadoController@index');
+        Route::post('/empleados', 'App\Http\Controllers\EmpleadoController@store');
+        Route::get('/empleado', 'App\Http\Controllers\EmpleadoController@show');
+        Route::put('/empleados/{empleados}', 'App\Http\Controllers\EmpleadoController@update');
+        Route::delete('/empleados/{empleados}', 'App\Http\Controllers\EmpleadoController@destroy');
+        Route::get('/logoutEmpleado', [EmpleadoController::class, 'logout']);
+    }
+);

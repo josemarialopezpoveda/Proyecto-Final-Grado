@@ -1,0 +1,62 @@
+@media (max-width: 650px){
+    div.mb-3 input#formFileLg{
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 520px){
+    div.mb-3 input#formFileLg{
+        font-size: 10px;
+    }
+}
+
+.bordeRedondo{
+    border-radius: 30px;
+}
+
+.btnOcultar2{
+    position: absolute;
+	top: 11px;
+	right: 40px;
+	font-size: 1rem;
+} 
+
+.anyadirUsuarioDatos{
+    margin: 5px!important;
+}
+
+.sectionPequenyo{
+   width: 50%!important;
+   margin: auto;
+}
+
+.sectionTamanyoFijoGrande{
+    min-height: 700px!important;
+}
+
+@media (max-width: 900px) {
+    .sectionPequenyo{
+        width: 80%!important;
+        margin: auto;
+     }
+
+     .sectionFormMarginBottom{
+        margin-bottom: 40%!important;
+    }
+}
+
+@media (max-width: 500px) {
+    .sectionPequenyo{
+        width: 100%!important;
+        margin: auto;
+     }
+
+     .sectionFormMarginBottom{
+        margin-bottom: 120%!important;
+    }
+}
+
+.sectionFormMarginBottom{
+    margin-bottom: 1000px!important;
+}
+
