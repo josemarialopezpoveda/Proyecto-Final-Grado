@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\AusenciaController;
-use App\Http\Controllers\EmpresaController;
-use App\Http\Controllers\EmpleadoController;
-use App\Http\Controllers\TipoausenciaController;
-use App\Http\Controllers\TurnoController;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TurnoController;
+use App\Http\Controllers\TiempoController;
+use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\AusenciaController;
+use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\TipoausenciaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -68,6 +69,14 @@ Route::get('/ausencias/{ausencias}', [AusenciaController::class, 'show']);
 Route::post('/ausencias', [AusenciaController::class, 'store']);
 Route::put('/ausencias/{ausencias}', [AusenciaController::class, 'update']);
 Route::delete('/ausencias/{ausencias}', [AusenciaController::class, 'destroy']);
+
+// Tiempos
+Route::get('/tiempos', [TiempoController::class, 'index']);
+Route::get('/tiempos/{tiempos}', [TiempoController::class, 'show']);
+Route::post('/tiempos', [TiempoController::class, 'store']);
+Route::put('/tiempos/{tiempos}', [TiempoController::class, 'update']);
+Route::delete('/tiempos/{tiempos}', [TiempoController::class, 'destroy']);
+
 
 Route::middleware('auth:sanctum')->group(
     /**

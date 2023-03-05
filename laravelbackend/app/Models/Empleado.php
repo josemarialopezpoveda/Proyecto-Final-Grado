@@ -11,7 +11,8 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  *
  */
-class Empleado extends Model {
+class Empleado extends Model
+{
     use HasFactory;
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -56,4 +57,8 @@ class Empleado extends Model {
         return $this->belongsToMany(Turno::class, 'empleados_turnos');
     }
 
+    public function tiempos()
+    {
+        return $this->hasMany(Tiempo::class);
+    }
 }
