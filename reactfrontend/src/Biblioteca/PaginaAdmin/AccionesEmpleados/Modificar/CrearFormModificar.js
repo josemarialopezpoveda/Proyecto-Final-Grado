@@ -12,7 +12,7 @@ import {
   mostrarAlertaCorrecta,
   formatearFechaHora,
 } from "Biblioteca/FuncionesAuxiliares/Funciones";
-import { URL_API } from "services/http/const";
+import { URL_API } from "../../../../services/http/const";
 
 function CrearFormModificar() {
   const [form, setForm] = useState({

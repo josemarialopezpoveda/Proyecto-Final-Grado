@@ -105,8 +105,8 @@ class EmpleadoController extends Controller {
      */
     public function show()
     {
-       $user = Auth::user();
-       $empleado=Empleado::find(Auth::$user()->id);
+       $user = Auth::user();       
+       $empleado=Empleado::find($user["id"]);
        if ($empleado){
            return response()->json($empleado);
        }

@@ -8,7 +8,7 @@ import {
 } from "../../FuncionesAuxiliares/Funciones";
 import { Link, useNavigate } from "react-router-dom";
 import SweetAlert from "sweetalert2";
-import { URL_API } from "services/http/const";
+import { URL_API } from "../../../services/http/const";
 
 function ContenidoTablaTipoAusencias() {
   //Creamos la variable para el uso del useNavigate.

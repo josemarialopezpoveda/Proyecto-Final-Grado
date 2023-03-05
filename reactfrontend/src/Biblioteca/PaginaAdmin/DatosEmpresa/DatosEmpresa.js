@@ -8,7 +8,7 @@ import { mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete, peticionGe
 import './DatosEmpresa.css';
 import {useNavigate} from "react-router-dom";
 import SweetAlert from "sweetalert2";
-import { URL_API } from "services/http/const";
+import { URL_API } from "../../../services/http/const";
 
 function DatosEmpresa(){
     //Variable para el uso del useNavigate.

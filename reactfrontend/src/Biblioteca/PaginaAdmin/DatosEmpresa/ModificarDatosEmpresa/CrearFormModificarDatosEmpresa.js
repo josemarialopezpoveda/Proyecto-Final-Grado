@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import {peticionPut,mostrarAlertaCorrecta, mostrarAlertaErronea, formatearFecha, formatearFechaHora, peticionGetAuth } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import { isValidCif } from "nif-dni-nie-cif-validation";
 import {Link} from 'react-router-dom';
-import { URL_API } from "services/http/const";
+import { URL_API } from "../../../../services/http/const";
 
 function CrearFormModificarDatosEmpresa() {
       //Variable para el uso del navigate.

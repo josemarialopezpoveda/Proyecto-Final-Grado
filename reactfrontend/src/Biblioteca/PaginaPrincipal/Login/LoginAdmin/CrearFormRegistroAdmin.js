@@ -9,7 +9,7 @@ import {peticionPost, mostrarAlertaErronea, mostrarAlertaCorrecta, formatearFech
 import {isValidCif} from "nif-dni-nie-cif-validation";
 import {Link} from 'react-router-dom';
 import { contexto } from 'Biblioteca/Contextos/ContextoRegistroAdmin/ContextoRegistroAdmin';
-import { URL_API } from "services/http/const";
+import { URL_API } from "../../../../services/http/const";
 
 
 function CrearFormRegistroAdmin() {

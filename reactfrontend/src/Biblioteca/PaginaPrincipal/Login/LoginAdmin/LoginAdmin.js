@@ -2,17 +2,14 @@
 import "./Login.css";
 import React, { useRef, useState } from "react";
 import NavAdminLogin from "../Nav/NavAdminLogin";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEyeSlash, faEye} from '@fortawesome/free-solid-svg-icons';
-import Form from 'react-bootstrap/Form';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
+import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import { useNavigate } from "react-router-dom";
-import {Link} from 'react-router-dom';
-import { mostrarAlertaCorrecta,
-    mostrarAlertaErronea,
-    peticionPost
-} from "../../../FuncionesAuxiliares/Funciones";
-import { URL_API } from "services/http/const";
+import { Link } from "react-router-dom";
+import { mostrarAlertaCorrecta, mostrarAlertaErronea, peticionPost } from "../../../FuncionesAuxiliares/Funciones";
+import { URL_API } from "../../../../services/http/const";
 
 function LoginAdmin() {
   //Referencia para el input con el tipo password.
@@ -22,41 +19,41 @@ function LoginAdmin() {
   //Variable para el uso del useNavigate.
   const Navigate = useNavigate();
   //Estado para almacenar los datos del login.
-  const [form,setForm] = useState({
-    email:"",
-    password:"",
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
   });
   //Función para ocultar o enseñar la contraseña modificando el icono del "ojo"
-  const ocultar = ()=>{
-    if(passwordInput.current.type==="password"){
+  const ocultar = () => {
+    if (passwordInput.current.type === "password") {
       setVerContraseña(faEye);
-      passwordInput.current.type="text";
-    }else if(passwordInput.current.type==="text"){
+      passwordInput.current.type = "text";
+    } else if (passwordInput.current.type === "text") {
       setVerContraseña(faEyeSlash);
-      passwordInput.current.type="password";
+      passwordInput.current.type = "password";
     }
-  }
+  };
   //Función que hace una petición post a la URL de la API pasándole el objeto recogido del formulario y a partir de ahí informo si ha habido un error o si funciona correctamente, guardo los datos de la sesión en localStorage y accede a nuestra web.
-  const TodoCorrecto = async() => {
+  const TodoCorrecto = async () => {
     var raw = {
-        "email":form.email,
-        "password": form.password,
+      email: form.email,
+      password: form.password,
     };
     try {
-        let peticion = await peticionPost(URL_API+"login", raw);
-        if(peticion.data.errores !== undefined && peticion.data.errores !== null){
-            mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
-        }else{
-            mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "3000");
-            localStorage.setItem('token', peticion.data.token);
-            localStorage.setItem('tipoToken', peticion.data.token_type);
-            localStorage.setItem('id', peticion.data.empresa);
-            Navigate("/accionesEmpleados");
-        }
+      let peticion = await peticionPost(URL_API + "login", raw);
+      if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
+        mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
+      } else {
+        mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "3000");
+        localStorage.setItem("token", peticion.data.token);
+        localStorage.setItem("tipoToken", peticion.data.token_type);
+        localStorage.setItem("id", peticion.data.empresa);
+        Navigate("/accionesEmpleados");
+      }
     } catch (error) {
-        mostrarAlertaErronea(error.message, error.stack, null);
+      mostrarAlertaErronea(error.message, error.stack, null);
     }
-  }
+  };
 
   //Devolvemos un div con varios p con el contenido props de la información de un por de página.
   return (
@@ -71,31 +68,36 @@ function LoginAdmin() {
         <div className="imagenDeFondoLogin">
           <div className="container" id="container">
             <div className="form-container sign-in-container">
-              <Form >
+              <Form>
                 <h1 className="tituloLogin">Login Empresa</h1>
                 <FormControl
                   className="input"
-                  onChange={e=>setForm({...form,email:e.target.value.trim()})}
+                  onChange={(e) => setForm({ ...form, email: e.target.value.trim() })}
                   defaultValue={form.email}
                   type="email"
-                  placeholder="Correo electrónico"/>
+                  placeholder="Correo electrónico"
+                />
                 <div className="cajaPasswordLogin">
-                <FormControl
-                  className="input"
-                  ref={passwordInput}
-                  defaultValue={form.password}
-                  onChange={e=>setForm({...form,password:e.target.value.trim()})}
-                  type="password"
-                  placeholder="Contraseña"/>
-                  <FontAwesomeIcon className="btnOcultar" icon={verContrasenya} onClick={ocultar}/>
-
+                  <FormControl
+                    className="input"
+                    ref={passwordInput}
+                    defaultValue={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value.trim() })}
+                    type="password"
+                    placeholder="Contraseña"
+                  />
+                  <FontAwesomeIcon className="btnOcultar" icon={verContrasenya} onClick={ocultar} />
                 </div>
                 {/* <a className="enlace" href="#">
                   ¿Has olvidado tu contraseña?
                 </a> */}
                 <div className="ContenedorLoginBotones">
-                  <button type='button' className="linkSignInLogin" id="signIn" onClick={TodoCorrecto}>Login</button>
-                  <Link type='button' className="linkSignInLogin" id="signIn" to="/registrarseAdmin" >Registrarse</Link>
+                  <button type="button" className="linkSignInLogin" id="signIn" onClick={TodoCorrecto}>
+                    Login
+                  </button>
+                  <Link type="button" className="linkSignInLogin" id="signIn" to="/registrarseAdmin">
+                    Registrarse
+                  </Link>
                 </div>
               </Form>
             </div>
