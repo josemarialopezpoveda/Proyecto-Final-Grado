@@ -3,24 +3,26 @@ import PiePagina from '../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../Nav/NavAdmin';
 import Form from 'react-bootstrap/Form';
 import {Link, useNavigate} from 'react-router-dom';
-import { mostrarAlertaErronea, mostrarAlertaCorrecta, peticionPost, peticionGetAuth } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { mostrarAlertaErronea, mostrarAlertaCorrecta, peticionGetAuth, peticionPut } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { URL_API } from 'services/http/const';
 
 function ModificarTipoAusencia() {
 
     const [form, setForm] = useState({
-        tipoAusencia: ""
+        descripcion: ""
     });
 
     //Creamos la variable para poder usar el navigate.
     const Navigate = useNavigate();
 
     const TodoCorrecto = async() =>{
-        let correcto = form.tipoAusencia !== "";
+        let correcto = form.descripcion !== "";
         console.log(correcto)
         if(correcto){
             var raw = {
-                "tipoAusencia": form.tipoAusencia,
+                "descripcion": form.descripcion,
             }
+            console.log(raw)
 
             try {
                 const header = {
@@ -29,7 +31,7 @@ function ModificarTipoAusencia() {
                         "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
                     }
                 }
-              let peticion = await peticionPost("", raw, header)
+              let peticion = await peticionPut(URL_API + "tipoAusencias/" + `${localStorage.getItem('idAusencia')}`, raw)
               if(peticion.data.errores !== undefined && peticion.data.errores !== null){
                   mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
               }else{
@@ -49,15 +51,14 @@ function ModificarTipoAusencia() {
                   "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
               }
           }
-      let datosEmpleado = await peticionGetAuth(``, header);
-        if(datosEmpleado.data.empresa.empleados !== undefined){
-            datosEmpleado.data.empresa.empleados.map(datosE => {
-                    if(datosE.id == localStorage.getItem('idEmpleado')) {
-                        setForm({
-                            tipoAusencia: datosE.tipoAusencia,
-                        })
-                    }
+      let datosAusencia = await peticionGetAuth(URL_API + "tipoAusencias/" + `${localStorage.getItem('idAusencia')}`);
+      console.log(datosAusencia)
+        if(datosAusencia.data !== undefined){
+            if(datosAusencia.data.id == localStorage.getItem('idAusencia')) {
+                setForm({
+                    descripcion: datosAusencia.data.descripcion,
                 })
+            }
         }else{
               mostrarAlertaErronea("Ruta de la petición incorrecta", "Error de red", null);
         }
@@ -73,26 +74,23 @@ function ModificarTipoAusencia() {
         <NavAdmin/>
             <div>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
-                    <h1 className='tituloh1noMarBot'>Añadir Tipo ausencia</h1>
+                    <h1 className='tituloh1noMarBot'>Modificar Tipo ausencia</h1>
                     <Form id="anyadir" className='formAnyadirTipoAusencia'>
                             <p>Tipo Ausencia</p>
                             <Form.Group className="mb-3">
-                                    <Form.Control required size="lg" type="text" placeholder={"Añade el tipo de ausencia"}
-                                    onChange={e=>setForm({...form,tipoAusencia:e.target.value.trim()})}
-                                    defaultValue={form.tipoAusencia}/>
+                                    <Form.Control required size="lg" type="text"
+                                    onInput={e=>setForm({...form,descripcion:e.target.value.trim()})}
+                                    defaultValue={form.descripcion}/>
                             </Form.Group>
                     </Form>
                     <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
                         <Link to="/verTipoAusencias" className="anyadirUsuarioDatos">Volver</Link>
-                        <button type='button' onClick={TodoCorrecto} className="anyadirUsuarioDatos">AÑADIR</button>
+                        <button type='button' onClick={TodoCorrecto} className="anyadirUsuarioDatos">MODIFICAR</button>
                     </div>
-                </section>  
+                </section> 
+                <pre>{JSON.stringify(form, null, 3)}</pre> 
             </div>
-        <div className='ContenedorBajarFooter'>
-            <div className='BajarFooter'>
             <PiePagina/>
-            </div>
-        </div>  
     </React.Fragment>
   );
 }

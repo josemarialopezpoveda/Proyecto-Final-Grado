@@ -1,10 +1,41 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import PiePagina from '../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../Nav/NavAdmin';
 import {Link} from 'react-router-dom';
 import './PagInfoClienteSel.css';
+import { URL_API } from 'services/http/const';
+import { peticionGetAuth } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 
 function PagInfoClienteSel() {
+
+    const [empleado, setEmpleado] = useState({
+        nombre:"",
+    })
+
+    //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
+    useEffect(() => {
+        recoleccionDatos();
+    }, []);
+
+  const recoleccionDatos = async () => {
+    const header = {
+      headers: {
+        Accept: "application/json",
+        Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+      },
+    };
+    let datosEmpresa = await peticionGetAuth(URL_API + "empresa", header);
+    if (datosEmpresa.data.empresa.empleados.length !== 0) {
+      var todosDatosEmpresa = datosEmpresa.data.empresa.empleados.map((datosE) => {
+        var newEmpresa = {
+          nombre: datosE.nombre,
+        };
+        return newEmpresa;
+      });
+      setEmpleado(todosDatosEmpresa);
+    }
+  };
+
   return (
     <React.Fragment>
       <NavAdmin/>

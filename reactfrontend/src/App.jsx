@@ -90,6 +90,8 @@ function App() {
                   <Route exact path="/modificarBaja" element={<ModificarAusenciaGeneral titulo="Baja" link="/verBajas"/>}/>
                   <Route exact path="/modificarVacaciones" element={<ModificarAusenciaGeneral titulo="Vacaciones" link="/verVacaciones"/>}/>
                   <Route exact path="/modificarAusencia" element={<ModificarAusenciaGeneral titulo="Ausencia" link="/verAusencias"/>}/>
+
+                  {/*Tipos de Ausencias */}
                   <Route exact path="/verTipoAusencias" element={<VerTiposAusencias/>}/>
                   <Route exact path="/anyadirTipoAusencia" element={<AnyadirTipoAusencia/>}/>
                   <Route exact path="/modificarTipoAusencia" element={<ModificarTipoAusencia/>}/>

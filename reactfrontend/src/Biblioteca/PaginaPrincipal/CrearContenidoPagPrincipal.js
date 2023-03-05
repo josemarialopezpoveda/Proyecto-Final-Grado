@@ -24,7 +24,7 @@ function CrearContenidoPagPrincipal() {
     arrayProductosTitulo2.map((valor)=>{
         return(
         <li className="one_third" key={generarUUID()}>
-            <article className='articulosPagWeb'><a href="#"><i className="fas fa-spray-can"></i></a>
+            <article className='articulosPagWeb'><i className="fas fa-spray-can"></i>
                 <h6 className="heading">{valor.name}</h6>
                 <p>{valor.descripcion}</p>
             </article>

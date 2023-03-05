@@ -191,3 +191,55 @@ export const formatearFecha = ()=>{
     var day = ('0' + date.getDate()).slice(-2);
     return (year + '-' + month + '-' + day);
 }
+
+export function separarFechaDiaSemana(fechaCompleta) {
+  // Separar la fecha y la hora
+  const partes = fechaCompleta.split(' ');
+  const fecha = partes[0];
+  
+  // Crear la fecha y el día
+  let diaSemana = new Date(fecha).toLocaleDateString('es-ES', { weekday: 'long' });
+  diaSemana = diaSemana.charAt(0).toUpperCase() + diaSemana.slice(1);
+  return [diaSemana];
+}
+
+export function separarFecha(fechaCompleta) {
+  // Separar la fecha y la hora
+  const partes = fechaCompleta.split(' ');
+  const fecha = partes[0];
+  
+  // Separar el año, mes y día
+  const [anio, mes, dia] = fecha.split('-');
+  
+  // Crear la fecha y el día
+  const fechaFormateada = new Date(fecha);
+
+  const fechaFinal = `${fechaFormateada.getDate()} de ${fechaFormateada.toLocaleDateString('es-ES', { month: 'long' })} del ${fechaFormateada.getFullYear()}`;
+
+  return [fechaFinal];
+}
+
+export function calculoFechaHoy() {
+  const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+  const hoy = new Date();
+  const diaSemana = diasSemana[hoy.getDay()];
+  const dia = hoy.getDate();
+  const mes = meses[hoy.getMonth()];
+  const anio = hoy.getFullYear();
+  const fecha = `${diaSemana} ${dia} de ${mes} del ${anio}`;
+  return fecha;
+}
+
+export function diaSemana() {
+  const hoy = new Date();
+  const dia = hoy.getDay();
+  return dia === 0 ? 7 : dia; // Convertir el domingo (0) a 7
+}
+
+export function quitarSegundos(hora) {
+  if(hora !== ""){ 
+    const partes = hora.split(":");
+    return partes[0] + ":" + partes[1];
+  }
+}

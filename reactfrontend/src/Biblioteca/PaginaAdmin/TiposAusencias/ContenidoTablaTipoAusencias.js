@@ -14,14 +14,10 @@ function ContenidoTablaTipoAusencias() {
   //Creamos la variable para el uso del useNavigate.
   const Navigate = useNavigate();
   //Creamos la variable para el contenido de los empleados.
-  const [empleados, setEmpleados] = useState([
+  const [tipoAusencias, setTipoAusencia] = useState([
     {
       id: "",
-      nombre: "",
-      apellidos: "",
-      dni: "",
-      correo: "",
-      telefono: "",
+      descripcion: "",
     },
   ]);
   //Función para recoger todos los empleados y los guarda en el estado.
@@ -32,16 +28,17 @@ function ContenidoTablaTipoAusencias() {
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
-    let datosEmpresa = await peticionGetAuth("", header);
-    if (datosEmpresa.data.empresa.empleados.length !== 0) {
-      var todosDatosEmpresa = datosEmpresa.data.empresa.empleados.map((datosE) => {
+    let datosEmpresa = await peticionGetAuth(URL_API + "tipoAusencias", header, header);
+    console.log(datosEmpresa)
+    if (datosEmpresa.data !== 0) {
+      var todosDatosEmpresa = datosEmpresa.data.map((datosE) => {
         var newEmpresa = {
-          idAusencia: datosE.id,
-          nombreAusencia: datosE.nombreAusencia,
+          id: datosE.id,
+          descripcion: datosE.descripcion,
         };
         return newEmpresa;
       });
-      setEmpleados(todosDatosEmpresa);
+      setTipoAusencia(todosDatosEmpresa);
     }
   };
   //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
@@ -66,8 +63,10 @@ function ContenidoTablaTipoAusencias() {
               Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
             },
           };
-          let url = URL_API + "empleados/";
-          let peticion = await peticionDelete(`${url}${e.target.id}`, header);
+          let url = URL_API + "tipoAusencias/";
+          console.log(url + `${e.target.id}`)
+          let peticion = await peticionDelete(`${url}${e.target.id}`);
+          console.log(peticion)
           if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
             mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
           } else {
@@ -83,29 +82,28 @@ function ContenidoTablaTipoAusencias() {
     });
   };
 
-  let datos = [
-    {
-      desc: "Enfermedad",
-    },
-    {
-      desc: "Maternidad",
-    },
-  ];
-  return datos.map((option) => {
+  const modificar = (e) => {
+    localStorage.setItem("idAusencia", e.target.id);
+    Navigate("/modificarTipoAusencia");
+  };
+
+  return tipoAusencias.map((option) => {
     return (
       <tr key={generarUUID()}>
-        <td>{option.desc}</td>
+        <td>{option.descripcion}</td>
         <td>
-          <Link to="/modificarTipoAusencia">
+          <button type="button" className="sinBorde" onClick={modificar}>
             <img
+              id={option.id}
               title="Modificar Tipo de ausencia"
               className="imagenFotoGestionUsuarios"
               src={require("../../../img/modify-foto.png")}
               alt="imagen Foto Modificar"
             />
-          </Link>
-          <button type="button" className="sinBorde" onClick={borrarTipoAusencia}>
+          </button>
+          <button id={option.id} type="button" className="sinBorde" onClick={borrarTipoAusencia}>
             <img
+              id={option.id}
               title="Borrar el tipo de ausencia"
               className="imagenFotoGestionUsuarios"
               src={require("../../../img/delete-foto.png")}

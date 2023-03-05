@@ -95,7 +95,6 @@ function TurnosDelDia() {
                     <Form.Control.Feedback type="invalid">Hora Válida</Form.Control.Feedback>
               </Form.Group>
             </div>
-            <pre>{JSON.stringify(contextoTurno.form, null, 3)}</pre>
         </div>
       </div>
     </Form>

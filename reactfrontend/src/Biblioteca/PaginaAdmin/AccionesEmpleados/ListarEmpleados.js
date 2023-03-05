@@ -55,6 +55,11 @@ function ListarEmpleados() {
     localStorage.setItem("idEmpleado", e.target.id);
     Navigate("/modificarEmpleado");
   };
+  //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
+  const verInfo = (e) => {
+    localStorage.setItem("idEmpleado", e.target.id);
+    Navigate("/pagInfoClienteSel");
+  };
   //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
   useEffect(() => {
     recoleccionDatos();
@@ -137,12 +142,13 @@ function ListarEmpleados() {
               alt="imagen Foto Borrar"
             />
           </button>
-          <Link
+          <button type="button"
             title="Ver Información Del Empleado"
-            to="/pagInfoClienteSel"
+            onClick={verInfo}
+            id={option.id}
             className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
             Ver Info.
-          </Link>
+          </button>
         </td>
       </tr>
     );
