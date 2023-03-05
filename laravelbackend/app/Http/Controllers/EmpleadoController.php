@@ -292,19 +292,14 @@ class EmpleadoController extends Controller
 
     public function turnosEmpleado(Empleado $empleado)
     {
-        
-        $empleado = Empleado::find($empleado);
-        if ($empleado) {
-            $data = [
-                'message' => 'Turnos de un empleado',
-                'empleado' => $empleado,
-                'turnos' => $empleado->turnos
-            ];
-        } else {
-            $data = [
-                'message' => 'Empleado no existe'
-            ];
-        }
+
+
+        $data = [
+            'message' => 'Turnos de un empleado',
+            'empleado' => $empleado,
+            'turnos' => $empleado->turnos
+        ];
+
         return response()->json($data);
     }
 
