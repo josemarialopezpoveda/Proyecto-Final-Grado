@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('ausencias', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->foreignId('tipoausencias_id')->constrained();
+            $table->foreignId('tipoausencias_id')->constrained()->cascadeOnDelete();
             $table->string('descripcion');
             $table->date('fechaInicio');
             $table->date('fechaFin')->nullable();

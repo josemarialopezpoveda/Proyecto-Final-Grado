@@ -80,7 +80,9 @@ Route::delete('/tiempos/{tiempos}', [TiempoController::class, 'destroy']);
 
 // Empleado_Turno
 
-Route::post('/empleados/turno', [EmpleadoController::class,'attach']);
+Route::post('/empleados/turno', [EmpleadoController::class, 'attach']);
+Route::get('/turnosEmpleado/{empleado}', [EmpleadoController::class, 'turnosEmpleado']);
+//Route::get('/turnosEmpleado', [EmpleadoController::class, 'turnosEmpleados']);
 
 Route::middleware('auth:sanctum')->group(
     /**

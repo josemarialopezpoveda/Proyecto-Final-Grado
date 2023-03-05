@@ -289,4 +289,35 @@ class EmpleadoController extends Controller
         ];
         return response()->json($data);
     }
+
+    public function turnosEmpleado($id)
+    {
+        $empleado = Empleado::find($id);
+        if ($empleado) {
+            $data = [
+                'message' => 'Turnos de un empleado',
+                'empleado' => $empleado,
+                'turnos' => $empleado->turnos
+            ];
+        } else {
+            $data = [
+                'message' => 'Empleado no existe'
+            ];
+        }
+        return response()->json($data);
+    }
+
+    /* public function turnosEmpleados()
+    {
+        $empleados = Empleado::all();
+        $data = [];
+        foreach ($empleados as $empleado) {
+            $data = [
+                'message' => 'Turnos de un empleado',
+                'empleado' => $empleado,
+                'turnos' => $empleado->turnos
+            ];
+        }
+        return response()->json($data);
+    } */
 }
