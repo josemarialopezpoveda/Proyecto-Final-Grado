@@ -13,7 +13,8 @@ use Illuminate\Validation\Rule;
 /**
  *
  */
-class EmpleadoController extends Controller {
+class EmpleadoController extends Controller
+{
     /**
      * Display a listing of the resource.
      * Función que devuelve todos los empleados del usuario logueado como empresa.
@@ -63,26 +64,26 @@ class EmpleadoController extends Controller {
             ];
         }
         $empleado = new Empleado();
-        $empleado->empresa_id=$request['empresa_id'];
-        $empleado->nif=$request['nif'];
-        $empleado->nombre=$request['nombre'];
-        $empleado->apellidos=$request['apellidos'];
-        $empleado->direccion=$request['direccion'];
-        $empleado->cPostal=$request['cPostal'];
-        $empleado->poblacion=$request['poblacion'];
-        $empleado->provincia=$request['provincia'];
-        $empleado->pais=$request['pais'];
-        $empleado->telefono=$request['telefono'];
-        $empleado->fechaNacimiento=$request['fechaNacimiento'];
-        $empleado->email=$request['email'];
-        $empleado->password=Hash::make($request['password']);
-        $empleado->numSegSoc=$request['numSegSoc'];
-        $empleado->fotografia=$request['fotografia'];
-        $empleado->ultimaConexion=$request['ultimaConexion'];
-        $empleado->activo=$request['activo'];
-        $empleado->tipoEmpleado=$request['tipoEmpleado'];
-        $empleado->fechaAlta=$request['fechaAlta'];
-        $empleado->fechaBaja=$request['fechaBaja'];
+        $empleado->empresa_id = $request['empresa_id'];
+        $empleado->nif = $request['nif'];
+        $empleado->nombre = $request['nombre'];
+        $empleado->apellidos = $request['apellidos'];
+        $empleado->direccion = $request['direccion'];
+        $empleado->cPostal = $request['cPostal'];
+        $empleado->poblacion = $request['poblacion'];
+        $empleado->provincia = $request['provincia'];
+        $empleado->pais = $request['pais'];
+        $empleado->telefono = $request['telefono'];
+        $empleado->fechaNacimiento = $request['fechaNacimiento'];
+        $empleado->email = $request['email'];
+        $empleado->password = Hash::make($request['password']);
+        $empleado->numSegSoc = $request['numSegSoc'];
+        $empleado->fotografia = $request['fotografia'];
+        $empleado->ultimaConexion = $request['ultimaConexion'];
+        $empleado->activo = $request['activo'];
+        $empleado->tipoEmpleado = $request['tipoEmpleado'];
+        $empleado->fechaAlta = $request['fechaAlta'];
+        $empleado->fechaBaja = $request['fechaBaja'];
 
         $empleado->save();
 
@@ -105,18 +106,16 @@ class EmpleadoController extends Controller {
      */
     public function show()
     {
-       $user = Auth::user();       
-       $empleado=Empleado::find($user["id"]);
-       if ($empleado){
-           return response()->json($empleado);
-       }
-       else{
-           $data = [
-               'message' => 'Empleado no existe'
-           ];
-           return response()->json($data);
-       }
-
+        $user = Auth::user();
+        $empleado = Empleado::find($user["id"]);
+        if ($empleado) {
+            return response()->json($empleado);
+        } else {
+            $data = [
+                'message' => 'Empleado no existe'
+            ];
+            return response()->json($data);
+        }
     }
 
     /**
@@ -128,7 +127,7 @@ class EmpleadoController extends Controller {
     public function update(Request $request, $id)
     {
         $user = Auth::user();
-        $empleado=Empleado::find($id);
+        $empleado = Empleado::find($id);
 
         if ($empleado) {
             $validator = Validator::make($request->all(), [
@@ -202,8 +201,7 @@ class EmpleadoController extends Controller {
                 'message' => 'Empleado actualizado correctamente',
                 'empleado' => $empleado
             ];
-        }
-        else{
+        } else {
             $data = [
                 'message' => 'Empleado no existe'
             ];
@@ -221,18 +219,16 @@ class EmpleadoController extends Controller {
     {
         $user = Auth::user();  //Un empleado puede borrarlo el administrador de la empresa.
 
-        $empleado=Empleado::find($id);
+        $empleado = Empleado::find($id);
 
-        if ($empleado){
+        if ($empleado) {
             $empleado->delete();
             $data = [
                 'user' => $user,
                 'message' => 'Empleado eliminado correctamente',
                 'empleado' => $empleado
             ];
-        }
-        else
-        {
+        } else {
             $data = [
                 'message' => 'Empleado no existe'
             ];
@@ -254,9 +250,10 @@ class EmpleadoController extends Controller {
                 return response()->json([
                     "mensaje" => "Usuario logueado correctamente",
                     "token_type" => 'Bearer',
-                    'token'=>$token,
+                    'token' => $token,
                     'empleado' => $empleado->id,
-                    'empresa'=> $empleado->empresa_id]);
+                    'empresa' => $empleado->empresa_id
+                ]);
             } else {
                 return response()->json([
                     'message' => "Datos incorrectos",
@@ -279,5 +276,17 @@ class EmpleadoController extends Controller {
     {
         auth()->user()->tokens()->delete();
         return response()->json(["message" => "Sesión cerrada"]);
+    }
+
+
+    public function attach(Request $request)
+    {
+        $empleado = Empleado::find($request->empleado_id);
+        $empleado->turnos()->attach($request->turno_id, ['fechaInicioTurno' => $request->fechaInicioTurno, 'fechaFinTurno' => $request->fechaFinTurno]);
+        $data = [
+            'message' => 'Turno attach correctamente',
+            'empleado' => $empleado
+        ];
+        return response()->json($data);
     }
 }

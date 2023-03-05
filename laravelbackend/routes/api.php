@@ -9,6 +9,7 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\AusenciaController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\TipoausenciaController;
+use App\Models\Empleado;
 
 /*
 |--------------------------------------------------------------------------
@@ -77,6 +78,9 @@ Route::post('/tiempos', [TiempoController::class, 'store']);
 Route::put('/tiempos/{tiempos}', [TiempoController::class, 'update']);
 Route::delete('/tiempos/{tiempos}', [TiempoController::class, 'destroy']);
 
+// Empleado_Turno
+
+Route::post('/empleados/turno', [EmpleadoController::class,'attach']);
 
 Route::middleware('auth:sanctum')->group(
     /**

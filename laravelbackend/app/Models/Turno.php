@@ -8,11 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Turno extends Model
 {
     use HasFactory;
-//    public function empleados()
-//    {
-//        return $this->belongsToMany(Empleado::class, 'empleados_turnos');
-//    }
-    public function dias(){
+
+    
+    public function empleados()
+    {
+        return $this->belongsToMany(Empleado::class, 'empleados_turnos');
+    }
+
+
+    public function dias()
+    {
         return $this->hasMany(Dia::class);
     }
 }

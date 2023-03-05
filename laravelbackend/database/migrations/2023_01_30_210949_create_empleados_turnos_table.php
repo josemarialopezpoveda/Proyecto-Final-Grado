@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('turno_id');
             $table->foreign('turno_id')->references('id')->on('turnos');
             $table->date('fechaInicioTurno');
-            $table->date('fechaFinTurno')->nullable(); //Poner un valor por defecto?
+            $table->date('fechaFinTurno');
             $table->timestamps();
         });
     }
