@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreign('turno_id')->references('id')->on('turnos');
             $table->date('fechaInicioTurno');
             $table->date('fechaFinTurno');
+            $table->boolean('activo')->default(true);
             $table->timestamps();
         });
     }

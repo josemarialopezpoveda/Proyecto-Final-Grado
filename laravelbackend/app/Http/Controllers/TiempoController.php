@@ -25,6 +25,12 @@ class TiempoController extends Controller
         return response()->json($tiempo);
     }
 
+    public function empleadoOnline($id)
+    {
+        $tiempo = Tiempo::where('empleado_id', $id)->where('fin', null)->get();
+        return response()->json($tiempo);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

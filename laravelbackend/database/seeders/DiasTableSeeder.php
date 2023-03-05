@@ -193,5 +193,29 @@ class DiasTableSeeder extends Seeder {
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
+        DB::table('dias')->insert([
+            'turno_id' => 4,
+            'diaSemana' => 6,
+            'horaInicioM' => '08:00:00',
+            'horaFinM' => '16:00:00',
+            'horaInicioT' => '00:00:00',
+            'horaFinT' => '00:00:00',
+            'horaInicioN' => '00:00:00',
+            'horaFinN' => '00:00:00',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
+        DB::table('dias')->insert([
+            'turno_id' => 4,
+            'diaSemana' => 7,
+            'horaInicioM' => '08:00:00',
+            'horaFinM' => '16:00:00',
+            'horaInicioT' => '00:00:00',
+            'horaFinT' => '00:00:00',
+            'horaInicioN' => '00:00:00',
+            'horaFinN' => '00:00:00',
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
     }
 }

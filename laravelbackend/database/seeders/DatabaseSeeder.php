@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
             DiasTableSeeder::class,
             TipoAusenciasTableSeeder::class,
             AusenciasTableSeeder::class,
-            TiemposTableSeeder::class
+            TiemposTableSeeder::class,
+            EmpleadosTurnosTableSeeder::class
 
         ]);
     }

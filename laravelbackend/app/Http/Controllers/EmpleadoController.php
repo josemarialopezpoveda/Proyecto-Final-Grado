@@ -290,9 +290,10 @@ class EmpleadoController extends Controller
         return response()->json($data);
     }
 
-    public function turnosEmpleado($id)
+    public function turnosEmpleado(Empleado $empleado)
     {
-        $empleado = Empleado::find($id);
+        
+        $empleado = Empleado::find($empleado);
         if ($empleado) {
             $data = [
                 'message' => 'Turnos de un empleado',

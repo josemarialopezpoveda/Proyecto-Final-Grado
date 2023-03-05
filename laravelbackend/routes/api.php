@@ -47,6 +47,7 @@ Route::get('/error', [EmpresaController::class, 'paginaError']);
 //Empleado
 
 Route::post('/loginEmpleado', 'App\Http\Controllers\EmpleadoController@login');
+Route::get('/empleadoOnline/{empleado}', [TiempoController::class, 'empleadoOnline']);
 
 // Turnos
 

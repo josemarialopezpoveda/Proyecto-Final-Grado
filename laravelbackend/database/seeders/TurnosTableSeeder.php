@@ -32,5 +32,10 @@ class TurnosTableSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
+        DB::table('turnos')->insert([
+            'descripcion' => "DE SABADO A DOMINGO DE 8 A 16",
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
     }
 }

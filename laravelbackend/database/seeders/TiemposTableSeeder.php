@@ -37,7 +37,8 @@ class TiemposTableSeeder extends Seeder
         ]);
         DB::table('tiempos')->insert([
             'empleado_id' => 1,
-            'inicio' => '2023-03-06 06:58:49',
+            'inicio' => '2023-03-05 10:05:49',
+            'fin' => null,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
