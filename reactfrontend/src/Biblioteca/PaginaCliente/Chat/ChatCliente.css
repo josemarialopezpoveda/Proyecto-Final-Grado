@@ -1,0 +1,44 @@
+.contenedorBotonCrearCorreo{
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 25px;
+    margin-top: 25px;
+}
+
+.crearCorreoBoton{
+    border-radius: 20px;
+	background-color: #FF4B2B;
+	color: #000000;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 12px 10px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: transform 80ms ease-in;
+	text-decoration: none;
+    text-align: center;
+    min-width: 80px;
+}
+
+.crearCorreoBoton:hover{
+    cursor: pointer;
+	color: #51CEF4;
+	background-color: white;
+    border: 1px solid #FF4B2B;
+}
+
+.contenedorCorreo{
+    text-decoration: none;
+    margin: 20px;
+    border: 2px solid black;
+    padding: 10px;
+}
+
+a.chat{
+    text-decoration: none!important;
+    color: #000000!important;
+}
+
+.tituloCorreo{
+    font-size: 20px;
+}

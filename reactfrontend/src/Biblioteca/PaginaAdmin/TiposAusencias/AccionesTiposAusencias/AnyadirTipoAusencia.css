@@ -1,0 +1,48 @@
+.anyadirTipoAusencia{
+    margin: auto;
+    min-height: 500px!important;
+}
+
+.formAnyadirTipoAusencia{
+    background-color: #FFFFFF;
+    padding: 20px;
+    text-align: center;
+    background-color: #D3D5D5;
+}
+
+.contenedorBotonVolverAnyadirTipoAusencia{
+    margin-top: 20px;
+}
+
+.estiloFormularios{
+    margin-top: 70px;
+    background-color: #D3D5D5;
+    border: 3px solid black;
+    border-radius: 30px;
+    padding: 30px 10px;
+}
+
+.sectionFormMarginBottomTipoAusencia{
+    margin-bottom: 8%;
+}
+
+.tituloh1noMarBot{
+        text-align: center;
+    font-size: 50px;
+    margin-top: 40px;
+}
+
+@media (max-width:900px) {
+    .sectionFormMarginBottomTipoAusencia{
+        margin-bottom:15%;
+    }
+}
+
+@media (max-width:500px) {
+    .disFlex500px{
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        align-items: center;
+    }
+}

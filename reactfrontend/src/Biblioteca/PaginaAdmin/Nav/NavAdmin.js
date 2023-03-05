@@ -8,12 +8,28 @@ import ListarOpciones from "../../FuncionesAuxiliares/ListarOpciones";
 function NavAdmin() {
   const opciones = [
     {
+      titulo: "Inicio",
+      path: "/pagAdministrador",
+    },
+    {
       titulo: "Gestion Empleados",
       path: "/accionesEmpleados",
     },
     {
       titulo: "Alta Empleados",
       path: "/altaEmpleado",
+    },
+    {
+      titulo: "Chat",
+      path: "/chatAdmin",
+    },
+    {
+      titulo: "Tipos de Ausencias",
+      path: "/verTipoAusencias",
+    },
+    {
+      titulo: "Turnos",
+      path: "/paginaPrincipalTurnos",
     },
     {
       titulo: "Mis Datos",

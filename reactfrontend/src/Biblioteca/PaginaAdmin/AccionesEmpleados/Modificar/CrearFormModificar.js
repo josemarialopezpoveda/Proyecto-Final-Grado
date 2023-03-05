@@ -13,6 +13,7 @@ import {
   formatearFechaHora,
 } from "Biblioteca/FuncionesAuxiliares/Funciones";
 import { URL_API } from "services/http/const";
+
 function CrearFormModificar() {
   const [form, setForm] = useState({
     nombre: "",
@@ -153,8 +154,8 @@ function CrearFormModificar() {
           fechaBaja: formatearFechaHora(),
           tipoEmpleado: form.tipoEmpleado,
         };
-        let url = URL_API + "empleados";
-        let peticion = await peticionPut(`${url}/${localStorage.getItem("idEmpleado")}`, raw, header);
+        let url = URL_API + "empleados/";
+        let peticion = await peticionPut(`${url}${localStorage.getItem("idEmpleado")}`, raw, header);
         if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
           mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
         } else {

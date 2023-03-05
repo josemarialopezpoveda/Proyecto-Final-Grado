@@ -1,5 +1,5 @@
 //Importamos los estilos CSS del pie de página.
-import React, {useContext} from 'react';
+import React from 'react';
 import Table from 'react-bootstrap/Table';
 import NavAdmin from '../Nav/NavAdmin';
 import './AccionesEmpleados.css';
@@ -14,6 +14,9 @@ function AccionesEmpleados(){
         <NavAdmin/>
         <section className="contenedorEmpleadosAcciones">
             <div className='TablaDatosUser'>
+                <div className='contenedorBotonCrearCorreo'>
+                    <Link className='crearCorreoBoton' to="/totalEmpleados">Ver Empleados Conectados</Link>
+                </div>
                 <Table id='tablaAccionesEmpleados' striped>
                     <thead>
                         <tr>

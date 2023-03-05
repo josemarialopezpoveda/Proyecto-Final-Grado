@@ -1,0 +1,8 @@
+.contenedorLinkCrearTurno{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.sectionTamanyoFijo{
+    min-height: 500px!important;
+}

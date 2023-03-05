@@ -1,0 +1,59 @@
+.tituloPagInfoClienteSel{
+    margin-top: 40px;
+    text-align: center;
+    font-size: 50px;
+}
+
+.pagInfoClienteSelVolver{
+    margin: 40px;
+}
+
+.infoclienteSel{
+    margin: 20px;
+}
+
+.contenedorInfoClienteSel{
+    display: grid;
+    grid-template-columns: 40% 40%;
+    justify-content: center;
+}
+
+.botonCambiarTurno{
+    margin-bottom: 30px!important;
+}
+
+.botonInfoCliente {
+    border-radius: 20px;
+    border: 1px solid #FF4B2B;
+    background-color: #FF4B2B;
+    color: #000000;
+    font-size: 12px!important;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    text-decoration: none;
+}
+
+.botonInfoCliente:hover {
+    cursor: pointer;
+    color: #51CEF4;
+    background-color: white;
+}
+
+.infoclienteSel h3{
+    text-align: center;
+    margin: 20px;
+    font-size: 30px;
+}
+
+.infoclienteSel div{
+    padding: 20px;
+    border: 2px solid black;
+}
+
+.infoclienteSel p{
+    text-align: center;
+    padding: 10px;
+}

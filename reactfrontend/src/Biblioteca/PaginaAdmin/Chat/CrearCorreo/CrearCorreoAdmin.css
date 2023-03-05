@@ -1,0 +1,32 @@
+
+.funcionCrearHorarioCorreo{
+    display: flex;
+    gap: 30px;
+    margin: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.contenedorFormularioCrearCorreo{
+    margin-bottom: 70px;
+}
+
+.contenedorDatePickerCorreo{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 40px;
+}
+
+.selectCrearCorreoAdmin{
+    width: 200px;
+}
+
+.contenedorSelectCrearCorreoAdmin{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.MuiFormLabel-root{
+    font-size: 18px;
+}

@@ -1,0 +1,79 @@
+.contenedorBotonCrearCorreo{
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 1%;
+    margin: 25px 0;
+}
+
+.crearCorreoBoton{
+    border-radius: 20px;
+	background-color: #FF4B2B;
+	color: #000000;
+	font-size: 12px;
+	font-weight: bold;
+	padding: 12px 10px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	transition: transform 80ms ease-in;
+	text-decoration: none;
+    text-align: center;
+    min-width: 80px;
+}
+
+.crearCorreoBoton:hover{
+    cursor: pointer;
+	color: #51CEF4;
+	background-color: white;
+    border: 1px solid #FF4B2B;
+}
+
+.contenedorCorreo{
+    border: 2px solid black;
+    border-radius: 30px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tituloCorreo{
+    font-size: 20px;
+}
+
+.emisorCorreo{
+    font-size: 18px;
+}
+
+.emisorCorreo * {
+    margin: 20px;
+}
+
+.mensajeCorreo{
+    font-size: 15px;
+}
+
+.ImagenResponderCorreo{
+    width: 30px;
+}
+
+.ContenedorImagenResponderCorreo{
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 1250px) {
+    .datoCorreoOpcional{
+        display: none;
+    }
+}
+
+@media (max-width: 510px) {
+    .datoCorreoOpcional2{
+        display: none;
+    }
+    .hacerPequeño{
+        font-size: 12px!important;
+    }
+}
+

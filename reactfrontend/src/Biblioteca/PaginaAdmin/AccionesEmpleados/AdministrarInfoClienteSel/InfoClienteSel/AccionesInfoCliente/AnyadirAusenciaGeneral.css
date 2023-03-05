@@ -1,0 +1,57 @@
+.sectionAnyadirAusenciaGeneral h1{
+    text-align: center;
+    font-size: 50px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+h1.tituloh1{
+    text-align: center;
+    font-size: 50px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.selectpequenyo{
+    width: 85%!important;
+}
+
+.contenedorBotonModAusenciaGen{
+    margin-top: 20px;
+}
+
+.modAusenciaVolver{
+    margin-top: 20px;
+}
+
+.anyadirAusenciaBotonVolver{
+    margin-top: 40px;
+}
+
+.sectionAnyadirAusenciaGeneral form{
+    padding: 20px!important;
+}
+
+
+.sectionAnyadirAusenciaGeneral form div select{
+    margin: auto;
+}
+
+.sectionAnyadirAusenciaGeneral form div{
+    margin: 10px;
+}
+
+.sectionAnyadirAusenciaGeneral form div.MuiInputBase-root{
+    background-color: white;
+}
+
+.botonAñadirAusenciaGeneral{
+    display: block;
+    width: 20%;
+    margin: auto!important;
+}
+
+.optionModAusenciaGeneral{
+    width: 90%;
+    margin: auto;
+}

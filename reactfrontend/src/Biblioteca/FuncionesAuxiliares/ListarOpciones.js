@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import {generarUUID, peticionGetAuth, mostrarAlertaCorrecta, mostrarAlertaErronea} from './Funciones';
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { URL_API } from 'services/http/const';
+import { URL_API } from "services/http/const";
 
 const ListarOpciones = (props) =>{
   //Variable para el uso del useNavigate.

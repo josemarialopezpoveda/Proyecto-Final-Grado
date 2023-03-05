@@ -1,0 +1,76 @@
+
+.todosLosDiasDeLaSemanaTurno{
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    text-align: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    border: 1px solid black;
+    border-radius: 20px;
+    padding: 10px;
+    background-color: white;
+}
+
+.subtitulo2{
+    font-size: 20px;
+    text-align: center;
+}
+
+.contenedorInputTurno{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.divPequenyo {
+    width: 60%!important;
+    margin: auto!important;
+}
+
+.contenedorCrearTurnoForm{
+    background-color: #D3D5D5;
+    border: 3px solid black;
+    margin: 30px;
+    padding: 20px;
+    border-radius: 30px;
+}
+
+#botonCrearTurno{
+    border-radius: 20px;
+    background-color: #FF4B2B;
+    border: 1px solid #FF4B2B;
+    color: #000000;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    text-decoration: none;
+    text-align: center;
+    min-width: 80px;
+}
+
+.inputDescripcion{
+    width: 70%!important;
+}
+
+#botonCrearTurno:hover{
+        cursor: pointer;
+        color: #51CEF4;
+        background-color: white;
+}
+
+@media (max-width: 900px) {
+    .inputDescripcion{
+        width: 100%!important;
+    }
+    
+}
+
+@media (max-width: 500px) {
+    .divPequenyo{
+        width: 90%!important;
+    }
+}
