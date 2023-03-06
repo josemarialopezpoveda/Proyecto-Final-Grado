@@ -3,41 +3,20 @@ import React, { useState, createContext } from "react";
 const contexto = createContext();
 
     const ContextoTurno = (props) =>{
-        const [horaEntradaM, setHoraEntradaM] = useState('-');
-        const [horaSalidaM, setHoraSalidaM] = useState('-');
-        const [horaEntradaT, setHoraEntradaT] = useState('-');
-        const [horaSalidaT, setHoraSalidaT] = useState('-');
-        const [horaEntradaN, setHoraEntradaN] = useState('-');
-        const [horaSalidaN, setHoraSalidaN] = useState('-');
+        const [dias, setDias] = useState([]);
 
-        const [form, setForm] = useState({
-            descripcion: "",
-            dias: [
-                    /* "diaSemana": null,
-                    "horaInicioM": "07:00:00",
-                    "horaFinM": "15:00:00",
-                    "horaInicioT": null,
-                    "horaFinT": null,
-                    "horaInicioN": null,
-                    "horaFinN": null, */  
-            ],
-        });
+        const anyadirDia = (valor) =>{
+            if (dias.indexOf(valor) === -1) {
+                setDias((array) => array.includes(valor) ? [...array] : [...array, valor]);
+            }else{
+                setDias((array) => array.filter((item) => item !== valor));
+            }
+        }
 
         const datos =  {
-            horaEntradaM,
-            horaEntradaN,
-            horaEntradaT,
-            horaSalidaM,
-            horaSalidaN,
-            horaSalidaT,
-            form,
-            setForm,
-            setHoraEntradaM,
-            setHoraEntradaN,
-            setHoraEntradaT,
-            setHoraSalidaM,
-            setHoraSalidaN,
-            setHoraSalidaT,
+            dias,
+            anyadirDia,
+            setDias,
         };
 
         return (

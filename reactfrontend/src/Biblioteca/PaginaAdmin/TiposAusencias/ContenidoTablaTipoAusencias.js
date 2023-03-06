@@ -28,7 +28,7 @@ function ContenidoTablaTipoAusencias() {
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
-    let datosEmpresa = await peticionGetAuth(URL_API + "tipoAusencias", header, header);
+    let datosEmpresa = await peticionGetAuth(URL_API + "tipoAusencias", header);
     console.log(datosEmpresa)
     if (datosEmpresa.data !== 0) {
       var todosDatosEmpresa = datosEmpresa.data.map((datosE) => {
@@ -87,33 +87,42 @@ function ContenidoTablaTipoAusencias() {
     Navigate("/modificarTipoAusencia");
   };
 
-  return tipoAusencias.map((option) => {
-    return (
+  if(tipoAusencias.id !== "" && tipoAusencias.descripcion !== ""){
+    return tipoAusencias.map((option) => {
+      return (
+        <tr key={generarUUID()}>
+          <td>{option.descripcion}</td>
+          <td>
+            <button type="button" className="sinBorde" onClick={modificar}>
+              <img
+                id={option.id}
+                title="Modificar Tipo de ausencia"
+                className="imagenFotoGestionUsuarios"
+                src={require("../../../img/modify-foto.png")}
+                alt="imagen Foto Modificar"
+              />
+            </button>
+            <button id={option.id} type="button" className="sinBorde" onClick={borrarTipoAusencia}>
+              <img
+                id={option.id}
+                title="Borrar el tipo de ausencia"
+                className="imagenFotoGestionUsuarios"
+                src={require("../../../img/delete-foto.png")}
+                alt="imagen Foto Borrar"
+              />
+            </button>
+          </td>
+        </tr>
+      );
+    
+  });
+  }else{
+    return(
       <tr key={generarUUID()}>
-        <td>{option.descripcion}</td>
-        <td>
-          <button type="button" className="sinBorde" onClick={modificar}>
-            <img
-              id={option.id}
-              title="Modificar Tipo de ausencia"
-              className="imagenFotoGestionUsuarios"
-              src={require("../../../img/modify-foto.png")}
-              alt="imagen Foto Modificar"
-            />
-          </button>
-          <button id={option.id} type="button" className="sinBorde" onClick={borrarTipoAusencia}>
-            <img
-              id={option.id}
-              title="Borrar el tipo de ausencia"
-              className="imagenFotoGestionUsuarios"
-              src={require("../../../img/delete-foto.png")}
-              alt="imagen Foto Borrar"
-            />
-          </button>
-        </td>
+        <td colSpan="6">Tu empresa no dispone de tipos de ausencias.</td>
       </tr>
     );
-  });
+  }
 }
 
 export default ContenidoTablaTipoAusencias;

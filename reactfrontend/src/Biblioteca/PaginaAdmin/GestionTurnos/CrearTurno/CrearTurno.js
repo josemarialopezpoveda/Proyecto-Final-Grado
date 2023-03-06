@@ -1,6 +1,5 @@
 //Importamos todos los .js que necesitamos para esta práctica.
 import React from 'react';
-import {Link} from 'react-router-dom';
 import PiePagina from '../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../Nav/NavAdmin';
 import './CrearTurno.css';
@@ -26,12 +25,6 @@ function CrearTurno() {
               <ChecksDiasSemana diaSemana="Domingo" />
             </div>
             <TurnosDelDia/>
-
-            <div className='botonAnyadirTurnoDiv'>
-              <Link className="anyadirTurnoBoton" id='botonCrearTurno' to='/paginaPrincipalTurnos'>
-                Crear Turno
-              </Link>
-            </div>
           </div>
         </ContextoTurno>
         <PiePagina/>

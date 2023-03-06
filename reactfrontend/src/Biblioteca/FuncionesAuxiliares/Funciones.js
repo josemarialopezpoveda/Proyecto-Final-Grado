@@ -231,14 +231,57 @@ export function calculoFechaHoy() {
   return fecha;
 }
 
+//Cálculo del numero segun el dia de hoy.
 export function diaSemana() {
   const hoy = new Date();
   const dia = hoy.getDay();
   return dia === 0 ? 7 : dia; // Convertir el domingo (0) a 7
 }
 
+export function convertirDiaSemanaNumero(diaSemana) {
+  switch (diaSemana.toLowerCase()) {
+    case "Lunes":
+      return 1;
+    case "Martes":
+      return 2;
+    case "Miércoles":
+      return 3;
+    case "Jueves":
+      return 4;
+    case "Viernes":
+      return 5;
+    case "Sábado":
+      return 6;
+    case "Domingo":
+      return 7;
+    default:
+      throw new Error("El valor de día de semana debe ser un día válido en español.");
+  }
+}
+
+export function convertirNumeroDiaSemana(diaSemanaNumero) {
+  switch (diaSemanaNumero) {
+    case 1:
+      return "Lunes";
+    case 2:
+      return "Martes";
+    case 3:
+      return "Miércoles";
+    case 4:
+      return "Jueves";
+    case 5:
+      return "Viernes";
+    case 6:
+      return "Sábado";
+    case 7:
+      return "Domingo";
+    default:
+      throw new Error("El valor de día de semana debe ser un número entre 1 y 7.");
+  }
+}
+
 export function quitarSegundos(hora) {
-  if(hora !== ""){ 
+  if(hora !== "" && hora !== undefined){ 
     const partes = hora.split(":");
     return partes[0] + ":" + partes[1];
   }

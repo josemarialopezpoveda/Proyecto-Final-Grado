@@ -1,3 +1,7 @@
 .contenedorBotonModificarTurno{
     text-align: center;
 }
+
+.tablaMediaQuery{
+    overflow: scroll;
+}

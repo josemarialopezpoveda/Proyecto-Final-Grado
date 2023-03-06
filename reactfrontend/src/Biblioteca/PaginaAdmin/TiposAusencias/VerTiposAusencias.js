@@ -10,6 +10,7 @@ function VerTiposAusencias() {
   return (
     <React.Fragment>
         <NavAdmin/>
+        <section className="contenedorEmpleadosAcciones">
                 <h1 className='tituloh1'>Tipos Ausencias</h1>
                 <div className='contenedorBotonCrearCorreo'>
                     <Link className='crearCorreoBoton' to="/anyadirTipoAusencia">Añadir tipo de ausencia</Link>
@@ -27,7 +28,8 @@ function VerTiposAusencias() {
                 </tbody>
                 </Table>
             </div>
-            <PiePagina/>
+        </section>
+        <PiePagina/>
     </React.Fragment>
   );
 }

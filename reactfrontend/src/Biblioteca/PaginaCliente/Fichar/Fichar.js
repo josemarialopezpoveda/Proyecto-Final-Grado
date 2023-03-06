@@ -9,7 +9,8 @@ import { URL_API } from 'services/http/const.js';
 
 
 function Fichar(){
-    const estadoEmpleado = useRef(null);
+    const boton = useRef(null);
+    const estadoTiempoEmpleado = useRef(null);
     const [datosTiempoEmpleado, setDatosTiempoEmpleado] = useState({});
     const [datosTablaPibot, setDatosTablaPibot] = useState({});
     const [datosHorarioEmpleado, setDatosHorarioEmpleado] = useState({});
@@ -18,6 +19,7 @@ function Fichar(){
     useEffect(() => {
         recoleccionDatos();
         recoleccionDatosTablaPibot();
+        recoleccionTiempoOnline();
     }, []);
 
     const recoleccionDatos = async () => {
@@ -111,16 +113,40 @@ function Fichar(){
           let datosEmpleado = await peticionGet(URL_API + "empleadoOnline/" + `${localStorage.getItem("id")}`);
           console.log("4º PETICION")
           console.log(datosEmpleado)
-            if (datosEmpleado.data.length !== 0) {
-                    const obj = {
-                        empleado_id: datosEmpleado.data[0].empleado_id,
-                        inicio: datosEmpleado.data[0].inicio,
-                        fin: formatearFechaHora(),
-                    }
-                    console.log(obj)
-                    let datosTiempoPost = await peticionPut(URL_API + "tiempos/" + datosEmpleado.data[0].id, obj);
-                    console.log(datosTiempoPost)
-            }
+            //if (datosEmpleado.data.length !== 0) {
+                if(datosEmpleado.data.length === 0){
+                  console.log("paso")
+                  boton.current.innerHTML = "ENTRADA";
+                  estadoTiempoEmpleado.current.innerHTML = "OFFLINE";
+                  estadoTiempoEmpleado.current.classList.add("offline");
+                }else{
+                  boton.current.innerHTML = "SALIDA";
+                  estadoTiempoEmpleado.current.innerHTML = "ONLINE";
+                  estadoTiempoEmpleado.current.classList.add("online");
+                }
+            //}
+    }
+
+    const salir = async() =>{
+        const header = {
+          headers: {
+            Accept: "application/json",
+            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+          },
+        };
+        let datosEmpleado = await peticionGet(URL_API + "empleadoOnline/" + `${localStorage.getItem("id")}`);
+        console.log("4º PETICION")
+        console.log(datosEmpleado)
+          if (datosEmpleado.data.length !== 0) {
+                  const obj = {
+                      empleado_id: datosEmpleado.data[0].empleado_id,
+                      inicio: datosEmpleado.data[0].inicio,
+                      fin: formatearFechaHora(),
+                  }
+                  console.log(obj)
+                  let datosTiempoPost = await peticionPut(URL_API + "tiempos/" + datosEmpleado.data[0].id, obj);
+                  console.log(datosTiempoPost)
+          }
     }
 
     const estaVacio = (hora) =>{
@@ -154,21 +180,21 @@ function Fichar(){
     }
 
     const fichar = (e) =>{
-        if(estadoEmpleado !== null && estadoEmpleado !== undefined){
+        if(estadoTiempoEmpleado !== null && estadoTiempoEmpleado !== undefined){
             //Si esta conectado.
-            if(estadoEmpleado.current.innerHTML === "ONLINE"){
-                estadoEmpleado.current.innerHTML = "OFFLINE";
-                estadoEmpleado.current.classList.remove("online");
-                estadoEmpleado.current.classList.add("offline");
+            if(estadoTiempoEmpleado.current.innerHTML === "ONLINE"){
+                estadoTiempoEmpleado.current.innerHTML = "OFFLINE";
+                estadoTiempoEmpleado.current.classList.remove("online");
+                estadoTiempoEmpleado.current.classList.add("offline");
                 e.target.innerHTML = "ENTRADA";
 
-                recoleccionTiempoOnline();
+                salir();
 
             //Si no esta conectado.
-            }else if(estadoEmpleado.current.innerHTML === "OFFLINE"){
-                estadoEmpleado.current.innerHTML = "ONLINE";
-                estadoEmpleado.current.classList.remove("offline");
-                estadoEmpleado.current.classList.add("online");
+            }else if(estadoTiempoEmpleado.current.innerHTML === "OFFLINE"){
+                estadoTiempoEmpleado.current.innerHTML = "ONLINE";
+                estadoTiempoEmpleado.current.classList.remove("offline");
+                estadoTiempoEmpleado.current.classList.add("online");
                 e.target.innerHTML = "SALIDA";
 
                 entrar();
@@ -186,7 +212,7 @@ function Fichar(){
                         <p>{calculoFechaHoy()}</p>
                     </article>
                     <article className='horas'>
-                        <p>Estado Actual: <span ref={estadoEmpleado} className="offline">OFFLINE</span></p>
+                        <p>Estado Actual: <span ref={estadoTiempoEmpleado} className="mayus offline"></span></p>
                         <div>
                             <h1>Horario Hoy</h1>
                             <p>{datosHorarioEmpleado.horaInicioM} {datosHorarioEmpleado.horaFinM}</p>
@@ -195,7 +221,7 @@ function Fichar(){
                         </div>
                         </article>
                     <article className='botonParaFichar'>
-                        <Link onClick={fichar} className='anyadirTurnoBoton'>ENTRADA</Link>
+                        <Link onClick={fichar} ref={boton} className='anyadirTurnoBoton'></Link>
                     </article>
                 </div>
             </section>
