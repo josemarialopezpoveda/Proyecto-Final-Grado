@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Dia;
 use App\Models\Turno;
-use Illuminate\Http\JsonResponse;
+use App\Models\Empleado;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
-class TurnoController extends Controller {
+class TurnoController extends Controller
+{
     /**
      * Display a listing of the resource.
      *
@@ -115,8 +117,7 @@ class TurnoController extends Controller {
                 'message' => 'Turno actualizado correctamente',
                 'turno' => $turno
             ];
-        }
-        else {
+        } else {
             $data = [
                 'message' => 'Turno no existe'
             ];
@@ -134,11 +135,17 @@ class TurnoController extends Controller {
     {
         $turno = Turno::find($id);
         if ($turno) {
-            $turno->delete();
-            $data = [
-                'message' => 'Turno eliminado correctamente',
-                'turno' => $turno
-            ];
+            if (!(Empleado::first()->turnos()->wherePivot('turno_id', $turno->id)->first())) {
+                $turno->delete();
+                $data = [
+                    'message' => 'Turno eliminado correctamente',
+                    'turno' => $turno
+                ];
+            } else {
+                $data = [
+                    'message' => 'El turno no se puede borrar, está asignado a un empleado'
+                ];
+            }
         } else {
             $data = [
                 'message' => 'Turno no existe'
@@ -147,8 +154,8 @@ class TurnoController extends Controller {
         return response()->json($data);
 
 
-//
-//        return response()->json($data);
+        //
+        //        return response()->json($data);
     }
 
     /*public function attach(Request $request): \Illuminate\Http\JsonResponse
