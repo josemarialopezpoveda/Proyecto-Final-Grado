@@ -13,4 +13,9 @@ class Ausencia extends Model
     {
         return $this->belongsTo(Tipoausencia::class);
     }
+
+    public function empleados()
+    {
+        return $this->belongsTo(Empleado::class);
+    }
 }

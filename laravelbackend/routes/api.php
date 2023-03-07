@@ -72,6 +72,9 @@ Route::post('/ausencias', [AusenciaController::class, 'store']);
 Route::put('/ausencias/{ausencias}', [AusenciaController::class, 'update']);
 Route::delete('/ausencias/{ausencias}', [AusenciaController::class, 'destroy']);
 
+Route::get('/ausenciasEmpleados', [AusenciaController::class, 'ausenciasEmpleados']);
+Route::get('/ausenciasEmpleados/{empleado}', [AusenciaController::class, 'ausenciasEmpleado']);
+
 // Tiempos
 Route::get('/tiempos', [TiempoController::class, 'index']);
 Route::get('/tiempos/{tiempos}', [TiempoController::class, 'show']);
