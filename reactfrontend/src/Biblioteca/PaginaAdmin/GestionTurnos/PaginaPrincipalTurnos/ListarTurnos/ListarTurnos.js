@@ -66,9 +66,13 @@ function ListarTurnos() {
                 if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
                   mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
                 } else {
-                  mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
-                  //Navigate("/paginaPrincipalTurnos");
-                  recoleccionDatos();
+                  if(peticion.data.message === "El turno no se puede borrar, está asignado a un empleado"){
+                    mostrarAlertaErronea(peticion.data.message, "Error de turno asignado a un empleado.", null);
+                  }else{
+                    mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
+                    //Navigate("/paginaPrincipalTurnos");
+                    recoleccionDatos();
+                  }
                 }
               } catch (error) {
                 mostrarAlertaErronea(error.message, error.stack, null);

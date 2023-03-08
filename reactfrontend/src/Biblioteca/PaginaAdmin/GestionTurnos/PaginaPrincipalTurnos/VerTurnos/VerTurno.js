@@ -41,7 +41,11 @@ function VerTurno() {
             <tr>
                 <th>Horas Asignadas</th>
                 {turno.dias.map((dia)=>{
+                  if(dia.horaInicioM !== "00:00:00" && dia.horaFinM !== "00:00:00" ||
+                     dia.horaInicioT !== "00:00:00" && dia.horaFinT !== "00:00:00" ||
+                     dia.horaInicioN !== "00:00:00" && dia.horaFinN !== "00:00:00"){
                     return(<th key={generarUUID()}>{convertirNumeroDiaSemana(dia.diaSemana)}</th>)
+                  }
                 })}
             </tr>
         );

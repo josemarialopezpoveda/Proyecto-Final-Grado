@@ -2,6 +2,8 @@
     text-align: center;
 }
 
-.tablaMediaQuery{
-    overflow: scroll;
+@media (max-width:900px) {
+    .tablaMediaQuery{
+        overflow: scroll;
+    }
 }

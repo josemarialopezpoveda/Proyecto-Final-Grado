@@ -5,6 +5,7 @@ import { URL_API } from 'services/http/const';
 
 function CrearBodyTurno() {
     const [turno, setTurno] = useState({});
+    const [fila, setFila] = useState("");
 
     const recoleccionDatos = async () => {
         const header = {
@@ -27,11 +28,16 @@ function CrearBodyTurno() {
         recoleccionDatos();
     }, []);
 
-    const estaVacio = (hora) =>{
-        if(hora === "00:00:00" || hora === undefined){
-            return "-";
-        }else{
-            return hora;
+    const verExistenHoras = (horaBuscar, texto) =>{
+        let existenHoras = false;
+        turno.dias.map((dia)=>{
+            if(dia[horaBuscar] !== "00:00:00"){
+                existenHoras= true;
+            }
+        })
+
+        if(existenHoras === true){
+            return(<td>{texto}</td>); 
         }
     }
 
@@ -39,39 +45,51 @@ function CrearBodyTurno() {
         return(
             <tbody>
                 <tr>
-                    <td>Hora Inicio Mañana</td>
+                    {verExistenHoras("horaInicioM","Hora Inicio Mañana")}
                     {turno.dias.map((dia)=>{
+                        if(dia.horaInicioM !== "00:00:00"){
                         return(<td key={generarUUID()}>{quitarSegundos(dia.horaInicioM)}</td>);
+                        }
                     })}
                 </tr>
                 <tr>
-                    <td>Hora Fin Mañana</td>
+                    {verExistenHoras("horaFinM","Hora Fin Mañana")}
                     {turno.dias.map((dia)=>{
-                        return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinM)}</td>);
+                        if(dia.horaFinM !== "00:00:00"){
+                            return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinM)}</td>);
+                        }
                     })}
                 </tr>
                 <tr>
-                    <td>Hora Inicio Tarde</td>
+                    {verExistenHoras("horaInicioT","Hora Inicio Tarde")}
                     {turno.dias.map((dia)=>{
-                        return(<td key={generarUUID()}>{quitarSegundos(dia.horaInicioT)}</td>);
+                        if(dia.horaInicioT !== "00:00:00"){
+                            return(<td key={generarUUID()}>{quitarSegundos(dia.horaInicioT)}</td>);
+                        }
                     })}
                 </tr>
                 <tr>
-                    <td>Hora Fin Tarde</td>
+                    {verExistenHoras("horaFinT","Hora Fin Tarde")}
                     {turno.dias.map((dia)=>{
-                        return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinT)}</td>);
+                        if(dia.horaFinT !== "00:00:00"){
+                            return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinT)}</td>);
+                        }
                     })}
                 </tr>
                 <tr>
-                    <td>Hora Inicio Noche</td>
+                    {verExistenHoras("horaInicioN","Hora Inicio Tarde")}
                     {turno.dias.map((dia)=>{
-                        return(<td key={generarUUID()}>{quitarSegundos(dia.horaInicioN)}</td>);
+                        if(dia.horaInicioN !== "00:00:00"){
+                            return(<td key={generarUUID()}>{quitarSegundos(dia.horaInicioN)}</td>);
+                        }
                     })}
                 </tr>
                 <tr>
-                    <td>Hora Fin Noche</td>
+                    {verExistenHoras("horaFinN","Hora Fin Noche")}
                     {turno.dias.map((dia)=>{
-                        return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinN)}</td>);
+                        if(dia.horaFinN !== "00:00:00"){
+                            return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinN)}</td>);
+                        }
                     })}
                 </tr>
             </tbody>

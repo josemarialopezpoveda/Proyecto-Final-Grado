@@ -22,8 +22,6 @@ function ModificarTipoAusencia() {
             var raw = {
                 "descripcion": form.descripcion,
             }
-            console.log(raw)
-
             try {
                 const header = {
                     headers: {
@@ -38,9 +36,9 @@ function ModificarTipoAusencia() {
                   mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
                   Navigate("/verTipoAusencias")
               }
-          } catch (error) {
+            } catch (error) {
               mostrarAlertaErronea(error.message, error.stack, null);
-          }
+            }
         }
     }
 

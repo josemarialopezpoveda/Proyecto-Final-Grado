@@ -14,12 +14,12 @@ function TurnosDelDia() {
   });
 
   const [horas,setHoras] = useState({
-    horaInicioM: "",
-    horaInicioT: "",
-    horaInicioN: "",
-    horaFinM:"", 
-    horaFinT: "",
-    horaFinN: "", 
+    horaInicioM: "00:00:00",
+    horaInicioT: "00:00:00",
+    horaInicioN: "00:00:00",
+    horaFinM:"00:00:00", 
+    horaFinT: "00:00:00",
+    horaFinN: "00:00:00", 
   })
 
   const crearTurno = () =>{

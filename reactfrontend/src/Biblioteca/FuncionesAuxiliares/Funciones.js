@@ -240,19 +240,19 @@ export function diaSemana() {
 
 export function convertirDiaSemanaNumero(diaSemana) {
   switch (diaSemana.toLowerCase()) {
-    case "Lunes":
+    case "lunes":
       return 1;
-    case "Martes":
+    case "martes":
       return 2;
-    case "Miércoles":
+    case "miércoles":
       return 3;
-    case "Jueves":
+    case "jueves":
       return 4;
-    case "Viernes":
+    case "viernes":
       return 5;
-    case "Sábado":
+    case "sábado":
       return 6;
-    case "Domingo":
+    case "domingo":
       return 7;
     default:
       throw new Error("El valor de día de semana debe ser un día válido en español.");
@@ -284,5 +284,7 @@ export function quitarSegundos(hora) {
   if(hora !== "" && hora !== undefined){ 
     const partes = hora.split(":");
     return partes[0] + ":" + partes[1];
+  }else{
+    return hora;
   }
 }
