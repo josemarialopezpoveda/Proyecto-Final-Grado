@@ -48,7 +48,7 @@ function AnyadirTipoAusencia() {
         <NavAdmin/>
             <div>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
-                    <h1 className='tituloh1noMarBot'>Modificar Tipo ausencia</h1>
+                    <h1 className='tituloh1noMarBot'>Añadir Tipo Ausencia</h1>
                     <Form id="anyadir" className='formAnyadirTipoAusencia'>
                             <p>Tipo Ausencia</p>
                             <Form.Group className="mb-3">

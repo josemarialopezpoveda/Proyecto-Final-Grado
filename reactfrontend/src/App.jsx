@@ -81,15 +81,17 @@ function App() {
                   <Route exact path="/verTurnoCliente" element={<VerTurnoCliente/>} />
 
                   {/*Vacaciones / Bajas / Ausencias*/}
-                  <Route exact path="/verBajas" element={<VerAusenciasGenerales titulo="Bajas" link="/modificarBaja"/>}/>
-                  <Route exact path="/verVacaciones" element={<VerAusenciasGenerales titulo="Vacaciones" link="/modificarVacaciones"/>}/>
-                  <Route exact path="/verAusencias" element={<VerAusenciasGenerales titulo="Ausencias" link="/modificarAusencia"/>}/>
-                  <Route exact path="/anyadirAusencia" element={<AnyadirAusenciaGeneral titulo="Ausencia"/>}/>
-                  <Route exact path="/anyadirVacaciones" element={<AnyadirAusenciaGeneral titulo="Vacaciones"/>}/>
+                  <Route exact path="/verBajas" element={<VerAusenciasGenerales titulo="Bajas" link="/modificarBaja" linkActual="verBajas"/>}/>
                   <Route exact path="/anyadirBaja" element={<AnyadirAusenciaGeneral titulo="Baja"/>}/>
                   <Route exact path="/modificarBaja" element={<ModificarAusenciaGeneral titulo="Baja" link="/verBajas"/>}/>
-                  <Route exact path="/modificarVacaciones" element={<ModificarAusenciaGeneral titulo="Vacaciones" link="/verVacaciones"/>}/>
+
+                  <Route exact path="/verAusencias" element={<VerAusenciasGenerales titulo="Ausencias" link="/modificarAusencia" linkActual="verAusencias"/>}/>
+                  <Route exact path="/anyadirAusencia" element={<AnyadirAusenciaGeneral titulo="Ausencia"/>}/>
                   <Route exact path="/modificarAusencia" element={<ModificarAusenciaGeneral titulo="Ausencia" link="/verAusencias"/>}/>
+
+                  <Route exact path="/verVacaciones" element={<VerAusenciasGenerales titulo="Vacaciones" link="/modificarVacaciones" linkActual="verVacaciones"/>}/>
+                  <Route exact path="/anyadirVacaciones" element={<AnyadirAusenciaGeneral titulo="Vacaciones"/>}/>
+                  <Route exact path="/modificarVacaciones" element={<ModificarAusenciaGeneral titulo="Vacaciones" link="/verVacaciones"/>}/>
 
                   {/*Tipos de Ausencias */}
                   <Route exact path="/verTipoAusencias" element={<VerTiposAusencias/>}/>

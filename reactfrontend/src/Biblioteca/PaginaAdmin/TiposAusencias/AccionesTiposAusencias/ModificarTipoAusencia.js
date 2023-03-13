@@ -72,7 +72,7 @@ function ModificarTipoAusencia() {
         <NavAdmin/>
             <div>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
-                    <h1 className='tituloh1noMarBot'>Modificar Tipo ausencia</h1>
+                    <h1 className='tituloh1noMarBot'>Modificar Tipo Ausencia</h1>
                     <Form id="anyadir" className='formAnyadirTipoAusencia'>
                             <p>Tipo Ausencia</p>
                             <Form.Group className="mb-3">
@@ -86,7 +86,6 @@ function ModificarTipoAusencia() {
                         <button type='button' onClick={TodoCorrecto} className="anyadirUsuarioDatos">MODIFICAR</button>
                     </div>
                 </section> 
-                <pre>{JSON.stringify(form, null, 3)}</pre> 
             </div>
             <PiePagina/>
     </React.Fragment>

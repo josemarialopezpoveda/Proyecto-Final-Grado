@@ -24,15 +24,13 @@ function PagInfoClienteSel() {
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
-    let datosEmpresa = await peticionGetAuth(URL_API + "empresa", header);
-    if (datosEmpresa.data.empresa.empleados.length !== 0) {
-      var todosDatosEmpresa = datosEmpresa.data.empresa.empleados.map((datosE) => {
-        var newEmpresa = {
-          nombre: datosE.nombre,
-        };
-        return newEmpresa;
-      });
-      setEmpleado(todosDatosEmpresa);
+    let datosEmpleado = await peticionGetAuth(URL_API + "ausenciasEmpleados/" + `${localStorage.getItem("idEmpleado")}`, header);
+    console.log(datosEmpleado)
+    if (datosEmpleado.data.empleado.length !== 0) {
+        var newEmpleado = {
+          nombre: datosEmpleado.data.empleado.nombre,
+        }
+      setEmpleado(newEmpleado);
     }
   };
 
@@ -40,7 +38,7 @@ function PagInfoClienteSel() {
     <React.Fragment>
       <NavAdmin/>
         <section>
-            <h1 className='tituloPagInfoClienteSel'>Datos de USERNAME</h1>
+            <h1 className='tituloPagInfoClienteSel'>Datos de {empleado.nombre}</h1>
             <div className='contenedorInfoClienteSel'>
                 <div className='infoclienteSel'>
                     <h3>Turno</h3>

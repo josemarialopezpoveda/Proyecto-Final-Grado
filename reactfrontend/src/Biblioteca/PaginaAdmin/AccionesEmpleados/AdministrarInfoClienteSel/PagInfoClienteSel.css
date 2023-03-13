@@ -27,7 +27,7 @@
     border: 1px solid #FF4B2B;
     background-color: #FF4B2B;
     color: #000000;
-    font-size: 12px!important;
+    font-size: 12px;
     font-weight: bold;
     padding: 12px 45px;
     letter-spacing: 1px;
@@ -56,4 +56,21 @@
 .infoclienteSel p{
     text-align: center;
     padding: 10px;
+}
+
+@media (max-width:900px) {
+    .contenedorInfoClienteSel{
+        grid-template-columns: 50% 50%;
+    }
+
+    .contenedorInfoClienteSel a {
+        margin: auto;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width:570px) {
+    .contenedorInfoClienteSel{
+        grid-template-columns: 100%;
+    }
 }
