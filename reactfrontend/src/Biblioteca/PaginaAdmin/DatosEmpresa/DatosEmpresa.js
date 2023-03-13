@@ -25,6 +25,7 @@ function DatosEmpresa(){
         }
         let url = URL_API + "empresa";
         let datosEmpresa = await peticionGetAuth(`${url}`, header);
+        console.log(datosEmpresa)
             if(datosEmpresa !== undefined && datosEmpresa.data.empresa !== undefined){
                 setDatos({
                     razonSocial: datosEmpresa.data.empresa.razonSocial,
@@ -90,7 +91,7 @@ function DatosEmpresa(){
             <div className='TablaDatosUser'>
                 <div className='fotoUsuarioLogueado'>
                      <h1>Foto {datos.nombreComercial}</h1>
-                    {/* <img className='fotoMisDatosUsuario' alt="logotipo"/> */}
+                    <img className='fotoMisDatosUsuario' alt="logotipo"/>
                 </div>
                 <section className='sectionPequenyo sectionFormMarginBottom'>
                     <Table className='tablaAjustar' striped>

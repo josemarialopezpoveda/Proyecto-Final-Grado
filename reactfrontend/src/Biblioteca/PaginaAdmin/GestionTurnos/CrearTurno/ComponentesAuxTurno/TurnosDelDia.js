@@ -54,12 +54,12 @@ function TurnosDelDia() {
       console.log(raw)
       let peticion = await peticionPost(URL_API + "turnos", raw, header);
       console.log(peticion)
-      // if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
-      //   mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
-      // } else {
-      //   mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-      //   //Navigate("/paginaPrincipalTurnos");
-      // }
+      if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
+        mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
+      } else {
+        mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
+        Navigate("/paginaPrincipalTurnos");
+      }
     } catch (error) {
       mostrarAlertaErronea(error.message, error.stack, null);
     }

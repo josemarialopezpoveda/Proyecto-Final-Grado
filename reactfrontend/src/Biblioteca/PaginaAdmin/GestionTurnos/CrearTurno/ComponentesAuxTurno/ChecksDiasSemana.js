@@ -18,7 +18,6 @@ function ChecksDiasSemana(props) {
             id="custom-switch"
             onChange={seleccionarDia}
           />
-          <pre>{JSON.stringify(contextoTurno.dias, null, 3)}</pre>
         <p className='tituloDiaSemana'>{props.diaSemana}</p>
       </div>
   );
