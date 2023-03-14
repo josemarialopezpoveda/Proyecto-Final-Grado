@@ -24,8 +24,16 @@ class EmpleadoController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $empleado = Empleado::all(Auth::user());
-        return response()->json($empleado);
+        if ($user->cif) {  //Compruebo que el usuario logueado es una empresa.
+            //$empleado = Empleado::all(Auth::user());
+            $empleados = Empleado::where('empresa_id', $user->id)->get(); //Devuelve los empleados de la empresa logueada.
+            return response()->json($empleados);
+        } else {
+            $data = [
+                'message' => 'No autorizado'
+            ];
+            return response()->json($data);
+        }
     }
 
     /**
@@ -35,6 +43,8 @@ class EmpleadoController extends Controller
      */
     public function store(Request $request)
     {
+
+        
         $validator = Validator::make($request->all(), [
             'nif' => 'required|string|unique:empleados',
             'nombre' => 'required|string',
@@ -107,7 +117,7 @@ class EmpleadoController extends Controller
     public function show()
     {
         $user = Auth::user();
-        $empleado = Empleado::find($user["id"]);
+        $empleado = Empleado::find($user["id"]); //Esto no funciona bien, trae el empleado cuyo id es el mismo que el id de la empresa logueada.
         if ($empleado) {
             return response()->json($empleado);
         } else {

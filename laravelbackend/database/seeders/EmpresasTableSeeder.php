@@ -8,9 +8,11 @@ use Illuminate\Database\Seeder;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
-class EmpresasTableSeeder extends Seeder {
+class EmpresasTableSeeder extends Seeder
+{
     /**
      * Run the database seeds.
      *
@@ -36,7 +38,13 @@ class EmpresasTableSeeder extends Seeder {
         $empresa1->fechaAlta = Carbon::now();
         $empresa1->created_at = Carbon::now();
         $empresa1->updated_at = Carbon::now();
+        /* $file1 = public_path('seed_images\logo1.jpg');
+        $path1 = Storage::disk('public')->putFile('images', $file1);
+        $empresa1->logotipo = $path1; */
+
         $empresa1->save();
+
+
 
         $empresa2 = new Empresa;
         $empresa2->cif = 'B79553855';
@@ -56,6 +64,9 @@ class EmpresasTableSeeder extends Seeder {
         $empresa2->fechaAlta = Carbon::now();
         $empresa2->created_at = Carbon::now();
         $empresa2->updated_at = Carbon::now();
+        /* $file2 = public_path('seed_images\logo2.png');
+        $path2 = Storage::disk('public')->putFile('images', $file2);
+        $empresa2->logotipo = $path2; */
         $empresa2->save();
 
         $empresa3 = new Empresa;
@@ -76,6 +87,9 @@ class EmpresasTableSeeder extends Seeder {
         $empresa3->fechaAlta = Carbon::now();
         $empresa3->created_at = Carbon::now();
         $empresa3->updated_at = Carbon::now();
+        /* $file3 = public_path('seed_images\logo3.png');        
+        $path3 = Storage::disk('public')->putFile('images', $file3);
+        $empresa3->logotipo = $path3; */
         $empresa3->save();
 
         $empresa4 = new Empresa;
@@ -96,7 +110,9 @@ class EmpresasTableSeeder extends Seeder {
         $empresa4->fechaAlta = Carbon::now();
         $empresa4->created_at = Carbon::now();
         $empresa4->updated_at = Carbon::now();
+        /* $file4 = public_path('seed_images\logo4.jpg');
+        $path4 = Storage::disk('public')->putFile('images', $file4);
+        $empresa4->logotipo = $path4; */
         $empresa4->save();
-
     }
 }

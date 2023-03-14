@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Empresa;
 use Illuminate\Validation\Rule;
@@ -14,7 +15,8 @@ use Illuminate\Validation\Rule;
 /**
  *
  */
-class EmpresaController extends Controller {
+class EmpresaController extends Controller
+{
 
 
     /**
@@ -23,6 +25,7 @@ class EmpresaController extends Controller {
      */
     public function index(): JsonResponse
     {
+
         $empresas = Empresa::with('empleados')->get();
         return response()->json($empresas);
     }
@@ -47,6 +50,8 @@ class EmpresaController extends Controller {
             'telefonoMovil' => 'required|integer|digits:9|unique:empresas',
             'email' => 'required|string|email|max:255|unique:empresas',
             'password' => 'required|string|confirmed|min:8',
+            'logotipo' => 'string',
+            //'logotipo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // añadido logotipo
             'ultimaConexion' => 'required|date_format:Y-m-d H:i:s',
             'activo' => 'required|boolean',
             'fechaAlta' => 'required|date',
@@ -72,6 +77,7 @@ class EmpresaController extends Controller {
         $empresa->telefonoMovil = $request['telefonoMovil'];
         $empresa->email = $request['email'];
         $empresa->password = Hash::make($request['password']);
+        //$empresa->logotipo = Storage::disk('public')->putFile('images', $request['logotipo']);
         $empresa->logotipo = $request['logotipo'];
         $empresa->ultimaConexion = $request['ultimaConexion'];
         $empresa->activo = $request['activo'];
@@ -99,12 +105,11 @@ class EmpresaController extends Controller {
     {
         $user = Auth::user();
         $empresa = Empresa::with('empleados')->find(Auth::user()->id);
-        if($empresa){
+        if ($empresa) {
             $data = [
-                'empresa' =>$empresa
+                'empresa' => $empresa
             ];
-        }
-        else{
+        } else {
             $data = [
                 'message' => 'Empresa no existe'
             ];
@@ -154,6 +159,8 @@ class EmpresaController extends Controller {
                 'max:255',
                 Rule::unique('empresas')->ignore($empresa->id),
             ],
+            //'logotipo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // añadido logotipo
+            'logotipo' => 'string',
             'ultimaConexion' => 'required|date_format:Y-m-d H:i:s',
             'activo' => 'required|boolean',
             'fechaAlta' => 'required|date',
@@ -183,6 +190,8 @@ class EmpresaController extends Controller {
         $empresa->activo = $request['activo'];
         $empresa->fechaAlta = $request['fechaAlta'];
         $empresa->fechaBaja = $request['fechaBaja'];
+        //$empresa->logotipo = Storage::disk('public')->putFile('images', $request['logotipo']);
+        $empresa->logotipo = $request['logotipo'];
 
         $empresa->save();
         $data = [
@@ -201,14 +210,13 @@ class EmpresaController extends Controller {
 
         $user = Auth::user();
         $empresa = Empresa::with('empleados')->find(Auth::user()->id);
-        if ($empresa){
-        $empresa->delete();
+        if ($empresa) {
+            $empresa->delete();
             $data = [
                 'message' => 'Empresa eliminada correctamente',
                 'empresa' => $empresa
             ];
-        }
-        else{
+        } else {
             $data = [
                 'message' => 'Empresa no existe'
             ];
@@ -224,14 +232,15 @@ class EmpresaController extends Controller {
     public function login(Request $request)
     {
         $empresa = Empresa::where('email', $request->email)->first();
-        if($empresa){
+        if ($empresa) {
             if (Hash::check($request->password, $empresa->password)) {
                 $token = $empresa->createToken('auth_token')->plainTextToken;
                 return response()->json([
                     "mensaje" => "Usuario logueado correctamente",
                     "token_type" => 'Bearer',
-                    'token'=>$token,
-                    'empresa' => $empresa->id]);
+                    'token' => $token,
+                    'empresa' => $empresa->id
+                ]);
             } else {
                 return response()->json([
                     'message' => "Datos incorrectos",
@@ -260,9 +269,10 @@ class EmpresaController extends Controller {
      * Función que devuelve error ante cualquier error que se produzca
      * @return JsonResponse
      */
-    public function paginaError(){
+    public function paginaError()
+    {
         return \response()->json([
-            'message'=> "Página no encontrada"
+            'message' => "Página no encontrada"
         ], 404);
     }
 }

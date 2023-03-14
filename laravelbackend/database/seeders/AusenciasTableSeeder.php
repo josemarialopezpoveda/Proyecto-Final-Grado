@@ -44,5 +44,15 @@ class AusenciasTableSeeder extends Seeder
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
+        DB::table('ausencias')->insert([
+            'tipoausencias_id' => 10,
+            'empleado_id' => 3,
+            'descripcion' => "VACACIONES MARZO",
+            'fechaInicio' => '2023-03-20',
+            'fechaFin' => '2023-03-27',
+            'justificada' => 1,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now()
+        ]);
     }
 }
