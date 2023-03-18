@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Turno;
+use App\Models\Empresa;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -16,6 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+
+
+
         $this->call([
             EmpresasTableSeeder::class,
             EmpleadosTableSeeder::class,
@@ -27,5 +31,6 @@ class DatabaseSeeder extends Seeder
             EmpleadosTurnosTableSeeder::class
 
         ]);
+        Empresa::factory(50)->create();
     }
 }
