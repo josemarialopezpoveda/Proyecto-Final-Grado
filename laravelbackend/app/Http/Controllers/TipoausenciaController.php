@@ -39,6 +39,7 @@ class TipoausenciaController extends Controller
     public function store(Request $request)
     {
         $tipoAusencia = new Tipoausencia();
+        $tipoAusencia->tipo = $request->tipo;
         $tipoAusencia->descripcion = $request->descripcion;
 
         $tipoAusencia->save();

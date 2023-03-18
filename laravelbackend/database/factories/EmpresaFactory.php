@@ -31,11 +31,12 @@ class EmpresaFactory extends Factory
             'Salamanca', 'Santa Cruz de Tenerife', 'Segovia', 'Sevilla', 'Soria',
             'Tarragona', 'Teruel', 'Toledo', 'Valencia', 'Valladolid', 'Vizcaya', 'Zamora', 'Zaragoza'
         );
+
         return [
             'cif' => $faker->vat,
-            'razonSocial' => ($faker->company('Industria Textil', 'SL')),
-            'nombreComercial' => $faker->company,
-            'direccion' => $faker->streetAddress,
+            'razonSocial' => strtoupper(($faker->company('Industria Textil', 'SL'))),
+            'nombreComercial' => strtoupper($faker->company),
+            'direccion' => strtoupper($faker->streetAddress),
             'cPostal' => $faker->postcode,
             'poblacion' => $faker->city,
             'provincia' => $faker->randomElement($provincias),
