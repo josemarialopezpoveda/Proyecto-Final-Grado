@@ -22,7 +22,7 @@ function Footer(){
                             <FontAwesomeIcon icon={faTwitter}/>
                         </a>
                         <a className='instagram' href='https://www.instagram.com'>
-                            <FontAwesomeIcon icon={faInstagram}/>
+                            <div><FontAwesomeIcon icon={faInstagram}/></div>
                         </a> 
                         <a className='linkedin' href='https://es.linkedin.com/'>
                             <FontAwesomeIcon icon={faLinkedin}/>

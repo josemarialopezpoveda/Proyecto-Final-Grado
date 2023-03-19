@@ -45,10 +45,11 @@
     border: 3px solid #484242;
 }
 
-.social-media-icons-white a.instagram:hover{
-    color: #FD1D1D;
-    font-size: 2rem;
-    border: 3px solid #484242;
+.social-media-icons-white a.instagram:hover svg{
+    color: white;
+    background: radial-gradient(circle at 30% 107%, #fdf497 5%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+    border-radius: 30px;
+    padding: 0 5px;
 }
 
 .social-media-icons-white a.twitter:hover{

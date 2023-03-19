@@ -81,11 +81,11 @@ function App() {
                   <Route exact path="/verTurnoCliente" element={<VerTurnoCliente/>} />
 
                   {/*Vacaciones / Bajas / Ausencias*/}
-                  <Route exact path="/verBajas" element={<VerAusenciasGenerales titulo="Bajas" link="/modificarBaja" linkActual="verBajas"/>}/>
+                  <Route exact path="/verBajas" element={<VerAusenciasGenerales titulo="Baja" link="/modificarBaja" linkActual="verBajas"/>}/>
                   <Route exact path="/anyadirBaja" element={<AnyadirAusenciaGeneral titulo="Baja"/>}/>
                   <Route exact path="/modificarBaja" element={<ModificarAusenciaGeneral titulo="Baja" link="/verBajas"/>}/>
 
-                  <Route exact path="/verAusencias" element={<VerAusenciasGenerales titulo="Ausencias" link="/modificarAusencia" linkActual="verAusencias"/>}/>
+                  <Route exact path="/verAusencias" element={<VerAusenciasGenerales titulo="Ausencia" link="/modificarAusencia" linkActual="verAusencias"/>}/>
                   <Route exact path="/anyadirAusencia" element={<AnyadirAusenciaGeneral titulo="Ausencia"/>}/>
                   <Route exact path="/modificarAusencia" element={<ModificarAusenciaGeneral titulo="Ausencia" link="/verAusencias"/>}/>
 

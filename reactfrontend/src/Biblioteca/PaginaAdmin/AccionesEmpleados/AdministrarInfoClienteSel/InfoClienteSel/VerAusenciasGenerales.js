@@ -7,37 +7,41 @@ import VerInfoAusencia from './VerInfoAusencia';
 import {Link} from 'react-router-dom';
 
 function VerAusenciasGenerales(props) {
+  let titulo;
+  if(props.titulo === "Vacaciones"){
+    titulo = "Vacaciones";
+  }else{
+    titulo = props.titulo + "s";
+  }
   return (
     <React.Fragment>
         <NavAdmin/>
-          <div className='contenedorVerAusenciasGenerales'>
-            <h1>Ver {props.titulo}</h1>
-            <div className='TablaDatosUser'>
-              <Table striped>
-                <thead>
-                    <tr>
-                        <th>Descripción</th>
-                        <th className='campoOpcional'>Fecha Inicio</th>
-                        <th className='campoOpcional'>Fecha Fin</th>
-                        <th className='campoOpcional'>Justificada</th>
-                        <th className='campoOpcional'>Tipo Ausencia</th>
-                        <th>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  <VerInfoAusencia link={props.link}/>
-                </tbody>
-              </Table>
+          <section>
+            <div className='contenedorVerAusenciasGenerales'>
+              <h1>Ver {titulo}</h1>
+              <div className='TablaDatosUser'>
+                <Table striped>
+                  <thead>
+                      <tr>
+                          <th>Descripción</th>
+                          <th className='campoOpcional'>Fecha Inicio</th>
+                          <th className='campoOpcional'>Fecha Fin</th>
+                          <th className='campoOpcional'>Justificada</th>
+                          <th className='campoOpcional'>Tipo Ausencia</th>
+                          <th>Opciones</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <VerInfoAusencia titulo={props.titulo} link={props.link}/>
+                  </tbody>
+                </Table>
+              </div>
             </div>
-          </div>
-          <div className='contenedorBotonVolver'>
+            <div className='contenedorBotonVolver'>
                 <Link to="/pagInfoClienteSel" className="botonInfoCliente">Volver</Link>
-          </div>
-          <div className='ContenedorBajarFooter'>
-            <div className='BajarFooter'>
-              <PiePagina/>
             </div>
-          </div>
+          </section>
+          <PiePagina/>
     </React.Fragment>
   );
 }

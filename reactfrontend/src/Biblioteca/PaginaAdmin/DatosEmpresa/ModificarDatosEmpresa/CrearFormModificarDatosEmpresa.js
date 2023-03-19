@@ -201,8 +201,6 @@ function CrearFormModificarDatosEmpresa() {
                         <p>Logotipo</p>
                         <Form.Group controlId="formFileLg" className="mb-3 width500">
                               <Form.Control type="file"
-                              isValid={validarFoto(/.+\.(png|jpg|jpeg)$/.test(datos.logotipo))}
-                              isInvalid={validarFoto(!/.+\.(png|jpg|jpeg)$/.test(datos.logotipo))}
                               onChange={e=>setDatos({...datos,logotipo:e.target.value.trim()})}
                               defaultValue={datos.logotipo} />
                         </Form.Group>

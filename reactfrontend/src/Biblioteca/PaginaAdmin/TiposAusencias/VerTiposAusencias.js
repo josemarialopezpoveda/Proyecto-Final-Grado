@@ -20,6 +20,7 @@ function VerTiposAusencias() {
                 <thead>
                     <tr>
                         <th>Descripción</th>
+                        <th className='campoOpcional'>Tipo Ausencia</th>
                         <th>Opciones</th>
                     </tr>
                 </thead>

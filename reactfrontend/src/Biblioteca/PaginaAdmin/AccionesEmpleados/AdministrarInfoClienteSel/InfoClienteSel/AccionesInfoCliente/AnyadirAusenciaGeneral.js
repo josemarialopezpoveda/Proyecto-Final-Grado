@@ -2,10 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PiePagina from '../../../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../../../Nav/NavAdmin';
 import Form from 'react-bootstrap/Form';
-import { TextField } from '@mui/material';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPost } from '../../../../../FuncionesAuxiliares/Funciones';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import {mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPost } from '../../../../../FuncionesAuxiliares/Funciones';
 import './AnyadirAusenciaGeneral.css';
 import {Link} from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
@@ -17,9 +14,9 @@ function AnyadirAusenciaGeneral(props) {
   const [form, setForm ] = useState({
     descripcion: '',
     justificada: 0,
-    tipoausencias_id: "",
+    tipoausencias_id: "0",
     fechaInicio: "",
-    fechaFin: "",
+    fechaFin: null,
   });
 
   const [tipoAusencia, setTipoAusencia] = useState([]);
@@ -50,20 +47,21 @@ function AnyadirAusenciaGeneral(props) {
 
     const obtenerOptions = () =>{
       if(tipoAusencia !== {} && typeof(tipoAusencia) === 'object'){
-        return(tipoAusencia.map((ausencia)=>{
-          return(<option key={generarUUID()} value={String(ausencia.id)}>{ausencia.descripcion}</option>)
+        return(tipoAusencia.map((ausencia, index)=>{
+          return(<option key={index} value={String(ausencia.id)}>{ausencia.descripcion}</option>)
         }))
       }
     }
   
-  const TodoCorrecto = async(e) =>{
+  const TodoCorrecto = async() =>{
     console.log(tipoBaja)
     let raw = {
-      "tipoausencias_id": tipoBaja.current.value.trim(),
-      "empleado_id": localStorage.getItem('idEmpleado'),
+      "descripcion": form.descripcion,
+      "tipoausencias_id": parseInt(tipoBaja.current.value.trim()),
+      "empleado_id": parseInt(localStorage.getItem('idEmpleado')),
       "fechaInicio": form.fechaInicio,
       "fechaFin": form.fechaFin,
-      "justificada": form.justificada
+      "justificada": parseInt(form.justificada)
     }
     console.log(raw)
     try {
@@ -95,7 +93,7 @@ function AnyadirAusenciaGeneral(props) {
                 <Form id="anyadir">
                   <div className='divContenedorCampo'>
                     <p>Descripción</p>
-                    <Form.Group className="mb-3">
+                    <Form.Group className="w-50 mb-3">
                           <Form.Control
                             onInput={(e) => setForm({ ...form, descripcion: e.target.value.trim() })}
                             size="lg" type="text"/>
@@ -105,7 +103,7 @@ function AnyadirAusenciaGeneral(props) {
                     <p>Justificada</p>
                     <Form.Group className="w-50 mb-3">
                       <Form.Select
-                        defaultValue={"0"}
+                        value={form.justificada}
                         className="selectCrearCorreoAdmin selectpequenyo"
                         onInput={(e) => setForm({ ...form, justificada: e.target.value.trim() })}>
                         <option value="1">Si</option>
@@ -117,10 +115,11 @@ function AnyadirAusenciaGeneral(props) {
                     <p>Tipo de {props.titulo}</p>
                     <Form.Group className="w-50 mb-3">
                       <Form.Select 
-                       ref={tipoBaja}
+                        ref={tipoBaja}
+                        value={form.tipoausencias_id}
+                        onInput={(e) => setForm({ ...form, tipoausencias_id: e.target.value.trim() })}
                         className='selectpequenyo selectCrearCorreoAdmin'>
                         <option value="0"> - </option>
-                        <option value="100"> / </option>
                         {obtenerOptions()}
                       </Form.Select>
                     </Form.Group>

@@ -44,8 +44,8 @@ function ListarEmpresas() {
       <tr className="EmpleadoTablaApartado" key={generarUUID()}>
         <td>{option.nombreComercial}</td>
         <td>{option.poblacion}</td>
-        <td className="campoOpcional">{option.provincia}</td>
         <td className="campoOpcional">{option.pais}</td>
+        <td className="campoOpcional">{option.provincia}</td>
       </tr>
     );
   });

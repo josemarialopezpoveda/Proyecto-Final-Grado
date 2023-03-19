@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import {Link, useNavigate} from 'react-router-dom';
 import './AnyadirTipoAusencia.css';
 import { mostrarAlertaErronea, mostrarAlertaCorrecta, peticionPost } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { URL_API } from 'services/http/const';
 
 function AnyadirTipoAusencia() {
     
@@ -20,9 +21,10 @@ function AnyadirTipoAusencia() {
         console.log(correcto)
         if(correcto){
             var raw = {
-                "tipoAusencia": form.tipoAusencia,
+                "descripcion": form.tipoAusencia,
+                "tipo": form.tipo
             }
-
+            console.log(raw)
             try {
                 const header = {
                     headers: {
@@ -30,7 +32,7 @@ function AnyadirTipoAusencia() {
                         "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
                     }
                 }
-              let peticion = await peticionPost("", raw, header)
+              let peticion = await peticionPost(URL_API + "tipoAusencias", raw, header)
               if(peticion.data.errores !== undefined && peticion.data.errores !== null){
                   mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
               }else{
@@ -50,12 +52,25 @@ function AnyadirTipoAusencia() {
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
                     <h1 className='tituloh1noMarBot'>Añadir Tipo Ausencia</h1>
                     <Form id="anyadir" className='formAnyadirTipoAusencia'>
-                            <p>Tipo Ausencia</p>
-                            <Form.Group className="mb-3">
-                                    <Form.Control required size="lg" type="text" placeholder={"Añade el tipo de ausencia"}
-                                    onChange={e=>setForm({...form,tipoAusencia:e.target.value.trim()})}
-                                    defaultValue={form.tipoAusencia}/>
-                            </Form.Group>
+                                <p>Descripción</p>
+                                <Form.Group className="mb-3">
+                                        <Form.Control required size="lg" type="text" placeholder={"Añade el tipo de ausencia"}
+                                        onChange={e=>setForm({...form,tipoAusencia:e.target.value.trim()})}
+                                        defaultValue={form.tipoAusencia}/>
+                                </Form.Group>
+                                <p>Tipo Ausencia</p>
+                                <div className='centrarDivSelect'>
+                                    <Form.Group className="w-15 mb-3">
+                                        <Form.Select
+                                            defaultValue={"0"}
+                                            className="selectCrearCorreoAdmin"
+                                            onInput={(e) => setForm({ ...form, tipo: e.target.value.trim() })}>
+                                            <option value="BAJA">BAJA</option>
+                                            <option value="AUSENCIA">AUSENCIA</option>
+                                            <option value="VACACIONES">VACACIONES</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                </div>
                     </Form>
                     <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
                         <Link to="/verTipoAusencias" className="anyadirUsuarioDatos">Volver</Link>

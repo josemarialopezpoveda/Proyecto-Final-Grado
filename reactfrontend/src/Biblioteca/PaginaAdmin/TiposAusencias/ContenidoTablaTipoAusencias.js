@@ -35,6 +35,7 @@ function ContenidoTablaTipoAusencias() {
         var newEmpresa = {
           id: datosE.id,
           descripcion: datosE.descripcion,
+          tipo: datosE.tipo
         };
         return newEmpresa;
       });
@@ -83,7 +84,7 @@ function ContenidoTablaTipoAusencias() {
   };
 
   const modificar = (e) => {
-    localStorage.setItem("idAusencia", e.target.id);
+    localStorage.setItem("idTipoAusencia", e.target.id);
     Navigate("/modificarTipoAusencia");
   };
 
@@ -92,6 +93,7 @@ function ContenidoTablaTipoAusencias() {
       return (
         <tr key={generarUUID()}>
           <td>{option.descripcion}</td>
+          <td className='campoOpcional'>{option.tipo}</td>
           <td>
             <button type="button" className="sinBorde" onClick={modificar}>
               <img

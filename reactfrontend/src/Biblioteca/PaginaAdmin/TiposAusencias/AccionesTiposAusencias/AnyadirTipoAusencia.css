@@ -10,6 +10,11 @@
     background-color: #D3D5D5;
 }
 
+.formAnyadirTipoAusencia div.centrarDivSelect{
+    display: flex;
+    justify-content: center;
+}
+
 .contenedorBotonVolverAnyadirTipoAusencia{
     margin-top: 20px;
 }

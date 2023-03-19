@@ -19,9 +19,15 @@ function ModificarTipoAusencia() {
         let correcto = form.descripcion !== "";
         console.log(correcto)
         if(correcto){
-            var raw = {
-                "descripcion": form.descripcion,
+            if(form.tipo !== "-"){
+                var raw = {
+                    "descripcion": form.descripcion,
+                    "tipo": form.tipo,
+                }
+            }else{
+                mostrarAlertaErronea("Tipo Erróneo","El campo tipo no ha sido correcto.", null);
             }
+            console.log(raw)
             try {
                 const header = {
                     headers: {
@@ -29,7 +35,7 @@ function ModificarTipoAusencia() {
                         "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
                     }
                 }
-              let peticion = await peticionPut(URL_API + "tipoAusencias/" + `${localStorage.getItem('idAusencia')}`, raw)
+              let peticion = await peticionPut(URL_API + "tipoAusencias/" + `${localStorage.getItem('idTipoAusencia')}`, raw)
               if(peticion.data.errores !== undefined && peticion.data.errores !== null){
                   mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
               }else{
@@ -55,6 +61,7 @@ function ModificarTipoAusencia() {
             if(datosAusencia.data.id == localStorage.getItem('idAusencia')) {
                 setForm({
                     descripcion: datosAusencia.data.descripcion,
+                    tipo: datosAusencia.data.tipo
                 })
             }
         }else{
@@ -71,15 +78,29 @@ function ModificarTipoAusencia() {
     <React.Fragment>
         <NavAdmin/>
             <div>
+                <pre>{JSON.stringify(form, null, 3)}</pre>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
                     <h1 className='tituloh1noMarBot'>Modificar Tipo Ausencia</h1>
                     <Form id="anyadir" className='formAnyadirTipoAusencia'>
                             <p>Tipo Ausencia</p>
                             <Form.Group className="mb-3">
                                     <Form.Control required size="lg" type="text"
-                                    onInput={e=>setForm({...form,descripcion:e.target.value.trim()})}
+                                    onInput={e=>setForm({...form, descripcion:e.target.value.trim()})}
                                     defaultValue={form.descripcion}/>
                             </Form.Group>
+                            <p>Tipo Ausencia</p>
+                            <div className='centrarDivSelect'>
+                                <Form.Group className="w-15 mb-3">
+                                    <Form.Select
+                                        value={form.tipo}
+                                        className="selectCrearCorreoAdmin"
+                                        onInput={(e) => setForm({ ...form, tipo: e.target.value.trim() })}>
+                                        <option value="BAJA">BAJA</option>
+                                        <option value="AUSENCIA">AUSENCIA</option>
+                                        <option value="VACACIONES">VACACIONES</option>
+                                    </Form.Select>
+                                </Form.Group>
+                            </div>
                     </Form>
                     <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
                         <Link to="/verTipoAusencias" className="anyadirUsuarioDatos">Volver</Link>
