@@ -51,7 +51,7 @@ class EmpresaFactory extends Factory
             'telefonoMovil' => $faker->unique()->numerify('6########'),
             'email' =>  $faker->unique()->safeEmail,
             'password' => Hash::make('12345678'),
-            'logotipo' => $faker->image('public/storage/images',640,480, null, false),
+            //'logotipo' => $faker->image('public/storage/images',640,480, null, false),
             'ultimaConexion' => Carbon::now('Europe/Madrid'),
             'activo' => true,
             'fechaAlta' => Carbon::now('Europe/Madrid'),
