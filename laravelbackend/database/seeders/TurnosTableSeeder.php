@@ -18,24 +18,28 @@ class TurnosTableSeeder extends Seeder
     {
 
         DB::table('turnos')->insert([
+            'empresa_id' => 1,
             'descripcion' => "DE LUNES A VIERNES DE 7 A 15",
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('turnos')->insert([
+            'empresa_id' => 1,
             'descripcion' => "DE LUNES A VIERNES DE 9 A 17",
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('turnos')->insert([
+            'empresa_id' => 1,
             'descripcion' => "DE LUNES A VIERNES DE 8 A 13 Y DE 16 A 19",
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('turnos')->insert([
-            'descripcion' => "DE SABADO A DOMINGO DE 8 A 16",
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'empresa_id' => 1,
+            'descripcion' => "DE SÁBADO A DOMINGO DE 8 A 16",
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
     }
 }

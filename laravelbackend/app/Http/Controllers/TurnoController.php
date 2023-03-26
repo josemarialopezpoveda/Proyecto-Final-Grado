@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Dia;
 use App\Models\Turno;
 use App\Models\Empleado;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
@@ -53,6 +54,7 @@ class TurnoController extends Controller
     public function store(Request $request)
     {
         $turno = new Turno;
+        $turno->empresa_id = $request['empresa_id'];
         $turno->descripcion = $request->descripcion;
         $turno->save();
 
@@ -66,6 +68,8 @@ class TurnoController extends Controller
             $dia["horaFinT"] = $request->dias[$i]["horaFinT"];
             $dia["horaInicioN"] = $request->dias[$i]["horaInicioN"];
             $dia["horaFinN"] = $request->dias[$i]["horaFinN"];
+            $dia["created_at"] = Carbon::now('Europe/Madrid');
+            $dia["updated_at"] = Carbon::now('Europe/Madrid');
             $dia->save();
             $turno->dias[$i] = $dia;
         }
@@ -100,6 +104,7 @@ class TurnoController extends Controller
         $turno = Turno::with('dias')->find($id);
         if ($turno) {
             $turno->descripcion = $request->descripcion;
+            $turno->empresa_id = $request['empresa_id'];
             $turno->save();
             for ($i = 0; $i < count($request->dias); $i++) {
                 $dia = Dia::find($turno->dias[$i]->id);
@@ -110,6 +115,7 @@ class TurnoController extends Controller
                 $dia["horaFinT"] = $request->dias[$i]["horaFinT"];
                 $dia["horaInicioN"] = $request->dias[$i]["horaInicioN"];
                 $dia["horaFinN"] = $request->dias[$i]["horaFinN"];
+                $dia["updated_at"] = Carbon::now('Europe/Madrid');
                 $dia->save();
                 $turno->dias[$i] = $dia;
             }

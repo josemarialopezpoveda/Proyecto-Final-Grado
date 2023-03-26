@@ -23,8 +23,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 1,
@@ -35,8 +35,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 1,
@@ -47,8 +47,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 1,
@@ -59,8 +59,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 1,
@@ -71,8 +71,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 1,
@@ -83,8 +83,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 1,
@@ -95,8 +95,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 2,
@@ -107,8 +107,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 2,
@@ -119,8 +119,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 2,
@@ -131,8 +131,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 2,
@@ -143,8 +143,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 2,
@@ -155,8 +155,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 2,
@@ -167,8 +167,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 2,
@@ -179,8 +179,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 3,
@@ -191,8 +191,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '19:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 3,
@@ -203,8 +203,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '19:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 3,
@@ -215,8 +215,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '19:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 3,
@@ -227,8 +227,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '19:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 3,
@@ -239,8 +239,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '19:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 3,
@@ -251,8 +251,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 3,
@@ -263,8 +263,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 4,
@@ -275,8 +275,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 4,
@@ -287,8 +287,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 4,
@@ -299,8 +299,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 4,
@@ -311,8 +311,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 4,
@@ -323,8 +323,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 4,
@@ -335,8 +335,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
         DB::table('dias')->insert([
             'turno_id' => 4,
@@ -347,8 +347,8 @@ class DiasTableSeeder extends Seeder
             'horaFinT' => '00:00:00',
             'horaInicioN' => '00:00:00',
             'horaFinN' => '00:00:00',
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now()
+            'created_at' => Carbon::now('Europe/Madrid'),
+            'updated_at' => Carbon::now('Europe/Madrid')
         ]);
     }
 }

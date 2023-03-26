@@ -115,6 +115,8 @@
       <excludeFolder url="file://$MODULE_DIR$/laravelbackend/vendor/symfony/event-dispatcher" />
       <excludeFolder url="file://$MODULE_DIR$/laravelbackend/vendor/symfony/uid" />
       <excludeFolder url="file://$MODULE_DIR$/laravelbackend/vendor/symfony/http-foundation" />
+      <excludeFolder url="file://$MODULE_DIR$/laravelbackend/vendor/intervention/image" />
+      <excludeFolder url="file://$MODULE_DIR$/laravelbackend/vendor/league/csv" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

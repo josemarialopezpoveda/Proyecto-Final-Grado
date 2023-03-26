@@ -4,8 +4,10 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Empleado;
 use App\Models\Turno;
 use App\Models\Empresa;
+use App\Models\Tiempo;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -31,6 +33,8 @@ class DatabaseSeeder extends Seeder
             EmpleadosTurnosTableSeeder::class
 
         ]);
-        Empresa::factory(50)->create();
+        Empresa::factory(10)->create();
+        Empleado::factory(10)->create();
+        Tiempo::factory(42)->create();
     }
 }

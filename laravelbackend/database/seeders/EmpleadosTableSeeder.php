@@ -31,12 +31,12 @@ class EmpleadosTableSeeder extends Seeder {
         $empleado1->email = "jokin@gmail.com";
         $empleado1->password = Hash::make('12345678');
         $empleado1->numSegSoc = 373310065271;
-        $empleado1->ultimaConexion = Carbon::now();
+        $empleado1->ultimaConexion = Carbon::now('Europe/Madrid');
         $empleado1->activo = 1;
-        $empleado1->fechaAlta = Carbon::now();
+        $empleado1->fechaAlta = '2023-01-02';
         $empleado1->tipoEmpleado = "Trabajador";
-        $empleado1->created_at = Carbon::now();
-        $empleado1->updated_at = Carbon::now();
+        $empleado1->created_at = '2023-01-01';
+        $empleado1->updated_at = Carbon::now('Europe/Madrid');
         $empleado1->save();
 
         $empleado2 = new Empleado;
@@ -54,12 +54,12 @@ class EmpleadosTableSeeder extends Seeder {
         $empleado2->email = "victor@gmail.com";
         $empleado2->password = Hash::make('12345678');
         $empleado2->numSegSoc = 512150137625;
-        $empleado2->ultimaConexion = Carbon::now();
+        $empleado2->ultimaConexion = Carbon::now('Europe/Madrid');
         $empleado2->activo = 1;
-        $empleado2->fechaAlta = Carbon::now();
+        $empleado2->fechaAlta ='2023-01-02';
         $empleado2->tipoEmpleado = "Administrador";
-        $empleado2->created_at = Carbon::now();
-        $empleado2->updated_at = Carbon::now();
+        $empleado2->created_at = '2023-01-01';
+        $empleado2->updated_at = Carbon::now('Europe/Madrid');
         $empleado2->save();
 
         $empleado3 = new Empleado;
@@ -77,12 +77,12 @@ class EmpleadosTableSeeder extends Seeder {
         $empleado3->email = "josemaria@gmail.com";
         $empleado3->password = Hash::make('12345678');
         $empleado3->numSegSoc = 243140720665;
-        $empleado3->ultimaConexion = Carbon::now();
+        $empleado3->ultimaConexion = Carbon::now('Europe/Madrid');
         $empleado3->activo = 1;
-        $empleado3->fechaAlta = Carbon::now();
+        $empleado3->fechaAlta = '2023-01-02';
         $empleado3->tipoEmpleado = "Administrador";
-        $empleado3->created_at = Carbon::now();
-        $empleado3->updated_at = Carbon::now();
+        $empleado3->created_at = '2023-01-01';
+        $empleado3->updated_at = Carbon::now('Europe/Madrid');
         $empleado3->save();
     }
 }

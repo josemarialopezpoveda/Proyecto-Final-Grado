@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('turnos', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
+            $table->foreignId('empresa_id')->constrained()->cascadeOnDelete();
             $table->string('descripcion', 300);
             $table->timestamps();
         });
