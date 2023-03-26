@@ -33,10 +33,6 @@ function CrearCorreoAdmin() {
                             value={fechaFin}
                             onChange={(valorNuevo) => {setFechaFin(valorNuevo)}}
                         />
-                        <InputGroup>
-                            <InputGroup.Text>Mensaje:</InputGroup.Text>
-                            <Form.Control as="textarea" aria-label="With textarea" />
-                        </InputGroup>
                     </LocalizationProvider>
                 </div>
             );
@@ -57,10 +53,6 @@ function CrearCorreoAdmin() {
                             onChange={(valorNuevo) => {setFechaFin(valorNuevo)}}
                         />
                     </LocalizationProvider>
-                    <InputGroup>
-                        <InputGroup.Text>Mensaje:</InputGroup.Text>
-                        <Form.Control as="textarea" aria-label="With textarea" />
-                    </InputGroup>
                 </div>
             );
         }else if(opcionSeleccionada === "Informar Nuevo Horario"){
@@ -80,10 +72,6 @@ function CrearCorreoAdmin() {
                     <Form.Label>Para:</Form.Label>
                     <Form.Control required size="lg" type="email"/>
                 </Form.Group>
-                <InputGroup>
-                    <InputGroup.Text>Mensaje:</InputGroup.Text>
-                    <Form.Control as="textarea" aria-label="With textarea" />
-                </InputGroup>
             </div>
             );
         }
@@ -91,22 +79,68 @@ function CrearCorreoAdmin() {
   return (
     <React.Fragment>
         <NavAdmin/>
-        <div className='contenedorFormularioCrearCorreo'>
-            <div className='contenedorSelectCrearCorreoAdmin'>
-                <Form.Select className='selectCrearCorreoAdmin' aria-label="Default select example" onChange={(e)=>{setOpcionSeleccionada(e.target.value) }}>
-                    <option value="Informar Vacaciones">Informar Vacaciones</option>
-                    <option value="Informar Baja">Informar Baja</option>
-                    <option value="Informar Nuevo Horario">Informar Nuevo Horario</option>
-                    <option value="Otros">Otros</option>
-                </Form.Select>
-            </div>
+                {/* <Form id="anyadir">
+                <div className='contenedorSelectCrearCorreoAdmin'>
+                    <Form.Select className='selectCrearCorreoAdmin' aria-label="Default select example" onChange={(e)=>{setOpcionSeleccionada(e.target.value) }}>
+                        <option value="Informar Vacaciones">Informar Vacaciones</option>
+                        <option value="Informar Baja">Informar Baja</option>
+                        <option value="Informar Nuevo Horario">Informar Nuevo Horario</option>
+                        <option value="Otros">Otros</option>
+                    </Form.Select>
+                </div>
 
-            <h1>Crear Correo</h1>
-            {crearCorreo()}
-            <div className='contenedorLinkEnviarCorreo'>
-                <Link className='enviarCorreoBoton' to="/chatAdmin">Enviar Correo</Link>
-            </div>
-        </div>
+                <h1>Crear Correo</h1>
+                {crearCorreo()}
+                <div className="divContenedorCampo">
+                    <p>Mensaje</p>
+                    <Form.Group className="mb-3 width500">
+                    <Form.Control
+                        size="lg"
+                        type="text"
+                        //defaultValue={form.nombre}
+                        //onChange={(e) => setForm({ ...form, nombre: e.target.value.trim() })}
+                        //isValid={validarCampos(/^(?!\s*$).+/.test(form.nombre))}
+                        //isInvalid={validarCampos(!/^(?!\s*$).+/.test(form.nombre))}
+                    />
+                    </Form.Group>
+                </div>
+                <div className='contenedorLinkEnviarCorreo'>
+                    <Link className='enviarCorreoBoton' to="/chatAdmin">Enviar Correo</Link>
+                </div>
+                </Form> */}
+                <div className='contenedorSectionFormAccionesUsuario'>
+                    <h1 className='text-center tituloH1'>Dar de alta empleados</h1>
+                    <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottom'>
+                    <Form id="anyadir">
+                        <div className='contenedorSelectCrearCorreoAdmin'>
+                            <Form.Select className='selectCrearCorreoAdmin' aria-label="Default select example" onChange={(e)=>{setOpcionSeleccionada(e.target.value) }}>
+                                <option value="Informar Vacaciones">Informar Vacaciones</option>
+                                <option value="Informar Baja">Informar Baja</option>
+                                <option value="Informar Nuevo Horario">Informar Nuevo Horario</option>
+                                <option value="Otros">Otros</option>
+                            </Form.Select>
+                        </div>
+                        <h1>Crear Correo</h1>
+                        {crearCorreo()}
+                        <div className="divContenedorCampo">
+                            <p>Mensaje</p>
+                            <Form.Group className="mb-3 width500">
+                            <Form.Control
+                                size="lg"
+                                type="text"
+                                //defaultValue={form.nombre}
+                                //onChange={(e) => setForm({ ...form, nombre: e.target.value.trim() })}
+                                //isValid={validarCampos(/^(?!\s*$).+/.test(form.nombre))}
+                                //isInvalid={validarCampos(!/^(?!\s*$).+/.test(form.nombre))}
+                            />
+                            </Form.Group>
+                        </div>
+                        <div className='contenedorLinkEnviarCorreo'>
+                            <Link className='enviarCorreoBoton' to="/chatAdmin">Enviar Correo</Link>
+                        </div>
+                    </Form>
+                    </section>
+                </div>
         <PiePagina/>
     </React.Fragment>
   );
