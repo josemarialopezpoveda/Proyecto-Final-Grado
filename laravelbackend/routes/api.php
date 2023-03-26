@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MensajeController;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -87,6 +88,13 @@ Route::delete('/tiempos/{tiempos}', [TiempoController::class, 'destroy']);
 Route::post('/empleados/turno', [EmpleadoController::class, 'attach']);
 Route::get('/turnosEmpleado/{empleado}', [EmpleadoController::class, 'turnosEmpleado']);
 //Route::get('/turnosEmpleado', [EmpleadoController::class, 'turnosEmpleados']);
+
+//Mensajes
+Route::get('/mensajes', [MensajeController::class, 'index']);
+Route::get('/mensajes/{mensajes}', [MensajeController::class, 'show']);
+Route::post('/mensajes', [MensajeController::class, 'store']);
+Route::put('/mensajes/{mensajes}', [MensajeController::class, 'update']);
+Route::delete('/mensajes/{mensajes}', [MensajeController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->group(
     /**

@@ -30,7 +30,10 @@ class DatabaseSeeder extends Seeder
             TipoAusenciasTableSeeder::class,
             AusenciasTableSeeder::class,
             TiemposTableSeeder::class,
-            EmpleadosTurnosTableSeeder::class
+            EmpleadosTurnosTableSeeder::class,
+            CasosTableSeeder::class,
+            CasosEmpleadosTableSeeder::class,
+            MensajesTableSeeder::class
 
         ]);
         Empresa::factory(10)->create();
