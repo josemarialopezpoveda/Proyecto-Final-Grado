@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
 
         ]);
         Empresa::factory(10)->create();
-        Empleado::factory(10)->create();
+        Empleado::factory(100)->create();
         Tiempo::factory(42)->create();
     }
 }
