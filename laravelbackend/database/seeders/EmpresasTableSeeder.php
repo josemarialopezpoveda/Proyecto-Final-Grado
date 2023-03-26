@@ -43,9 +43,9 @@ class EmpresasTableSeeder extends Seeder
         $empresa1->fechaAlta = '2023-01-01';
         $empresa1->created_at = '2023-01-01';
         $empresa1->updated_at = Carbon::now('Europe/Madrid');
-        $file1 = public_path('seed_images\logo1.jpg');
-        $path1 = Storage::disk('public')->putFile('images', $file1);
-        $empresa1->logotipo = $path1;
+//        $file1 = public_path('seed_images\logo1.jpg');
+//        $path1 = Storage::disk('public')->putFile('images', $file1);
+//        $empresa1->logotipo = $path1;
         $empresa1->save();
 
 
@@ -68,9 +68,9 @@ class EmpresasTableSeeder extends Seeder
         $empresa2->fechaAlta = '2023-01-01';
         $empresa2->created_at = '2023-01-01';
         $empresa2->updated_at = Carbon::now('Europe/Madrid');
-        $file2 = public_path('seed_images\logo2.png');
-        $path2 = Storage::disk('public')->putFile('images', $file2);
-        $empresa2->logotipo = $path2;
+//        $file2 = public_path('seed_images\logo2.png');
+//        $path2 = Storage::disk('public')->putFile('images', $file2);
+//        $empresa2->logotipo = $path2;
         $empresa2->save();
 
         $empresa3 = new Empresa;
@@ -91,9 +91,9 @@ class EmpresasTableSeeder extends Seeder
         $empresa3->fechaAlta = '2023-01-01';
         $empresa3->created_at = '2023-01-01';
         $empresa3->updated_at = Carbon::now('Europe/Madrid');
-        $file3 = public_path('seed_images\logo3.png');
-        $path3 = Storage::disk('public')->putFile('images', $file3);
-        $empresa3->logotipo = $path3;
+//        $file3 = public_path('seed_images\logo3.png');
+//        $path3 = Storage::disk('public')->putFile('images', $file3);
+//        $empresa3->logotipo = $path3;
         $empresa3->save();
 
         $empresa4 = new Empresa;
@@ -114,9 +114,9 @@ class EmpresasTableSeeder extends Seeder
         $empresa4->fechaAlta = '2023-01-01';
         $empresa4->created_at = '2023-01-01';
         $empresa4->updated_at = Carbon::now('Europe/Madrid');
-        $file4 = public_path('seed_images\logo4.jpg');
-        $path4 = Storage::disk('public')->putFile('images', $file4);
-        $empresa4->logotipo = $path4;
+//        $file4 = public_path('seed_images\logo4.jpg');
+//        $path4 = Storage::disk('public')->putFile('images', $file4);
+//        $empresa4->logotipo = $path4;
         $empresa4->save();
     }
 }
