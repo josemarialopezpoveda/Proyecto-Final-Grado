@@ -55,10 +55,6 @@ function CrearOpcionHorarioCorreo() {
                         <Form.Control.Feedback type="invalid">El nombre es incorrecto</Form.Control.Feedback>
                 </Form.Group>
             </div>
-            <InputGroup>
-                <InputGroup.Text>Mensaje:</InputGroup.Text>
-                <Form.Control as="textarea" aria-label="With textarea" />
-            </InputGroup>
         </div>
     </React.Fragment>
   );

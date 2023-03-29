@@ -1,0 +1,25 @@
+#Buscador {
+    background: url(https://cdn0.iconfinder.com/data/icons/slim-square-icons-basics/100/basics-19-32.png) no-repeat 0px 5px;
+    background-size: 35px;
+    width: 500px;
+    border: transparent;
+    border-bottom: solid 2px #ccc;
+    background-color: #f9f9f9;
+    padding: 10px 10px 10px 40px;
+    outline: none;
+}
+
+#Buscador:focus{
+    border: solid 2px #ccc;
+    box-shadow: unset;
+}
+
+#Buscador:focus::placeholder{
+    font-size: 13px;
+}
+
+.contenedorBuscador{
+    display: flex;
+    justify-content: start;
+    margin: 20px 0 20px 20px;
+}

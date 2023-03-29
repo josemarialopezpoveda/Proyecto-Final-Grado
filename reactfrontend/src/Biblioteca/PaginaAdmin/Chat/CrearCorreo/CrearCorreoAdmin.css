@@ -27,6 +27,15 @@
     justify-content: flex-end;
 }
 
+.divMensajeCorreo{
+    margin: 20px 0;
+}
+
+
 .MuiFormLabel-root{
     font-size: 18px;
+}
+
+.contenedorSelectCrearCorreoAdmin select{
+    width: 200px;
 }

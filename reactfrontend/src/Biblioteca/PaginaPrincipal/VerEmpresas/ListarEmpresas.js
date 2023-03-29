@@ -2,10 +2,12 @@
 import React, { useState, useEffect } from "react";
 import { generarUUID, mostrarAlertaErronea, peticionGet } from "../../FuncionesAuxiliares/Funciones";
 import { URL_API } from "../../../services/http/const";
+import Table from 'react-bootstrap/Table';
+import BuscadorNuestrosClientes from "Biblioteca/Buscador/BuscadorNuestrosClientes";
 
 function ListarEmpresas() {
   //Creo un estado que principalmente avisa que no hay empresas aún.
-  const [empresas, setEmpresas] = useState([
+  const [empresasDinamico, setEmpresasDinamico] = useState([
     {
       nombreComercial: "No se han registrado empresas aún",
       poblacion: "No se han registrado empresas aún",
@@ -13,9 +15,20 @@ function ListarEmpresas() {
       pais: "No se han registrado empresas aún",
     },
   ]);
+  const [empresasEstatico, setEmpresasEstatico] = useState([
+    {
+      nombreComercial: "No se han registrado empresas aún",
+      poblacion: "No se han registrado empresas aún",
+      provincia: "No se han registrado empresas aún",
+      pais: "No se han registrado empresas aún",
+    },
+  ]);
+
+
   //Esta función hace una petición y almacena los datos de la empresa y si falla avisamos al usuario
   const recoleccionDatos = async () => {
     let datosEmpresa = await peticionGet(URL_API + "empresas");
+    console.log(datosEmpresa)
     if (datosEmpresa !== undefined) {
       var todosDatosEmpresa = datosEmpresa.data.map((datosE) => {
         var newEmpresa = {
@@ -26,7 +39,8 @@ function ListarEmpresas() {
         };
         return newEmpresa;
       });
-      setEmpresas(todosDatosEmpresa);
+      setEmpresasDinamico(todosDatosEmpresa);
+      setEmpresasEstatico(todosDatosEmpresa);
     } else {
       mostrarAlertaErronea(
         "Error: algo raro ha pasado...",
@@ -39,16 +53,36 @@ function ListarEmpresas() {
   useEffect(() => {
     recoleccionDatos();
   }, []);
-  return empresas.map((option) => {
-    return (
-      <tr className="EmpleadoTablaApartado" key={generarUUID()}>
-        <td>{option.nombreComercial}</td>
-        <td>{option.poblacion}</td>
-        <td className="campoOpcional">{option.pais}</td>
-        <td className="campoOpcional">{option.provincia}</td>
-      </tr>
-    );
-  });
+
+  return(
+    <section className="contenedorEmpleadosAcciones">
+            <h1 className='text-center mt-4'>Empresas que usan nuestra tecnología</h1>
+            <BuscadorNuestrosClientes datosEstaticos={setEmpresasEstatico} datosDinamicos={empresasDinamico}/>
+            <div className='TablaDatosUser'>
+                <Table id='tablaAccionesEmpleados' striped>
+                    <thead>
+                        <tr>
+                            <th>Nombre Comercial</th>
+                            <th>Población</th>
+                            <th className='campoOpcional'>País</th>
+                            <th className='campoOpcional'>Provincia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {empresasEstatico.map((option) => {
+                      return (
+                        <tr className="EmpleadoTablaApartado" key={generarUUID()}>
+                          <td>{option.nombreComercial}</td>
+                          <td>{option.poblacion}</td>
+                          <td className="campoOpcional">{option.pais}</td>
+                          <td className="campoOpcional">{option.provincia}</td>
+                        </tr>
+                      )})}
+                    </tbody>
+                </Table>
+            </div>
+        </section>
+  )
 }
 
 export default ListarEmpresas;

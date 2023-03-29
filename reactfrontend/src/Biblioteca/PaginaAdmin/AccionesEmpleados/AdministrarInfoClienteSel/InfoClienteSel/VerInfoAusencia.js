@@ -38,7 +38,6 @@ function VerInfoAusencia(props) {
             if(todosDatosAusencia !== undefined){
               setAusencia(todosDatosAusencia);
             }
-           
         }
       };
 

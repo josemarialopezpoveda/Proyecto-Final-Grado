@@ -17,7 +17,6 @@ function ModificarTipoAusencia() {
 
     const TodoCorrecto = async() =>{
         let correcto = form.descripcion !== "";
-        console.log(correcto)
         if(correcto){
             if(form.tipo !== "-"){
                 var raw = {
@@ -27,7 +26,6 @@ function ModificarTipoAusencia() {
             }else{
                 mostrarAlertaErronea("Tipo Erróneo","El campo tipo no ha sido correcto.", null);
             }
-            console.log(raw)
             try {
                 const header = {
                     headers: {
@@ -78,9 +76,8 @@ function ModificarTipoAusencia() {
     <React.Fragment>
         <NavAdmin/>
             <div>
-                <pre>{JSON.stringify(form, null, 3)}</pre>
+                <h1 className='tituloh1noMarBot'>Modificar Tipo Ausencia</h1>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
-                    <h1 className='tituloh1noMarBot'>Modificar Tipo Ausencia</h1>
                     <Form id="anyadir" className='formAnyadirTipoAusencia'>
                             <p>Tipo Ausencia</p>
                             <Form.Group className="mb-3">

@@ -13,6 +13,7 @@ import {
   formatearFechaHora,
 } from "Biblioteca/FuncionesAuxiliares/Funciones";
 import { URL_API } from "../../../../services/http/const";
+import { Link } from "react-router-dom";
 
 function CrearFormModificar() {
   const [form, setForm] = useState({
@@ -154,6 +155,7 @@ function CrearFormModificar() {
           fechaBaja: formatearFechaHora(),
           tipoEmpleado: form.tipoEmpleado,
         };
+        console.log(raw)
         let url = URL_API + "empleados/";
         let peticion = await peticionPut(`${url}${localStorage.getItem("idEmpleado")}`, raw, header);
         if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
@@ -237,6 +239,7 @@ function CrearFormModificar() {
                   size="lg"
                   type="date"
                   onChange={(e) => setForm({ ...form, fechaAlta: e.target.value.trim() })}
+                  defaultValue={form.fechaAlta}
                   isValid={validarCampos(
                     /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/.test(formatDate(form.fechaAlta))
                   )}
@@ -392,10 +395,10 @@ function CrearFormModificar() {
             />
           </div>
         </fieldset>
-        {/*HACER VALIDACIÓN Y CONFIRMACIÓN AL USUARIO DE QUE LO QUIERE AÑADIR Y COMPROBAR QUE TODO ESTÉ CORRECTO */}
-        <button type="button" onClick={TodoCorrecto} className="anyadirUsuarioDatos">
-          MODIFICAR
-        </button>
+        <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
+          <Link to="/verTipoAusencias" className="anyadirUsuarioDatos">Volver</Link>
+          <button type="button" onClick={TodoCorrecto} className="anyadirUsuarioDatos">MODIFICAR</button>
+        </div>
       </Form>
     </React.Fragment>
   );

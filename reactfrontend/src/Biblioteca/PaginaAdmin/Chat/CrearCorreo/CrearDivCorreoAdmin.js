@@ -19,6 +19,24 @@ function CrearDivCorreoAdmin(props) {
           </em>
           <em>Actividad:<span className={props.actividad}>{props.actividad}</span></em>
           <em className='datoCorreoOpcional2'>{props.fecha}</em>
+          <div>
+            <button type="button" className="sinBorde" to="/modificarEmpleado">
+              <img
+                title="Modificar Empleado"
+                className="imagenFotoGestionUsuarios"
+                src={require("../../../../img/modify-foto.png")}
+                alt="imagen Foto Modificar"
+              />
+            </button>
+            <button type="button" className="sinBorde">
+              <img
+                title="Borrar Empleado"
+                className="imagenFotoGestionUsuarios"
+                src={require("../../../../img/delete-foto.png")}
+                alt="imagen Foto Borrar"
+              />
+            </button>
+          </div>
         </div>
     </Link>
     </React.Fragment>

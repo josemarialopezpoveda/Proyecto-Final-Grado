@@ -13,26 +13,10 @@ function AccionesEmpleados(){
     <React.Fragment>
         <NavAdmin/>
         <section className="contenedorEmpleadosAcciones">
-            <div className='TablaDatosUser'>
-                <div className='contenedorBotonCrearCorreo'>
-                    <Link className='crearCorreoBoton' to="/totalEmpleados">Ver Empleados Conectados</Link>
-                </div>
-                <Table id='tablaAccionesEmpleados' striped>
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th className='campoOpcional'>Apellidos</th>
-                            <th className='campoOpcional'>DNI</th>
-                            <th className='campoOpcional'>Correo</th>
-                            <th className='campoOpcional'>Teléfono</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ListarEmpleados/>
-                    </tbody>
-                </Table>
+            <div className='contenedorBotonCrearCorreo'>
+                <Link className='crearCorreoBoton' to="/totalEmpleados">Ver Empleados Conectados</Link>
             </div>
+            <ListarEmpleados/>
         </section>
         <PiePagina/>
     </React.Fragment>

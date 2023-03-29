@@ -38,7 +38,8 @@ function TurnosDelDia() {
     })
     let raw = {
       "descripcion": form.descripcion,
-      "dias": dias
+      "dias": dias,
+      "empresa_id": localStorage.getItem("id")
     }
     postTurno(raw);
   }
