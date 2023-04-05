@@ -42,7 +42,7 @@ class EmpresaFactory extends Factory
             'cif' => $faker->unique()->vat,
             'razonSocial' => strtoupper($faker->company),
             'nombreComercial' => strtoupper($faker->company),
-            'direccion' => strtoupper($faker->streetAddress),
+            'direccion' => strtoupper($faker->streetName()) .', '. $faker->buildingNumber(),
             'cPostal'=> $poblaciones[$aleatorio]['cPostal'],
             'provincia' => strtoupper($poblaciones[$aleatorio]['provincia']),
             'poblacion' => strtoupper($poblaciones[$aleatorio]['poblacion']),

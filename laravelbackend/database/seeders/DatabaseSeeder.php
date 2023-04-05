@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
             DiasTableSeeder::class,
             TipoAusenciasTableSeeder::class,
             AusenciasTableSeeder::class,
-            TiemposTableSeeder::class,
+            //TiemposTableSeeder::class,
             EmpleadosTurnosTableSeeder::class,
             CasosTableSeeder::class,
             CasosEmpleadosTableSeeder::class,
@@ -37,7 +37,16 @@ class DatabaseSeeder extends Seeder
 
         ]);
         Empresa::factory(10)->create();
-        Empleado::factory(100)->create();
-        Tiempo::factory(42)->create();
+        Empleado::factory(50)->create();
+        /* $empleado=Empleado::factory(3)->hasTiempos(3,function(array $attributes,Empleado $empleado){
+            return ['empleado_id'=>$empleado->id];
+        })->create(); */
+        //Tiempo::factory(42)->create();
+        for ($i = 1; $i < 4; $i++) {
+            echo "Llamada al factory " . "\n";
+            Tiempo::factory(3, ['empleado_id' => $i])->create();
+        }
+
+        //$this->call(ActualizarFechaSeeder::class);
     }
 }

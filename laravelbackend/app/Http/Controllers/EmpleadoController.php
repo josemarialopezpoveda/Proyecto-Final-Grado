@@ -44,7 +44,7 @@ class EmpleadoController extends Controller
     public function store(Request $request)
     {
 
-        
+
         $validator = Validator::make($request->all(), [
             'nif' => 'required|string|unique:empleados',
             'nombre' => 'required|string',
@@ -302,12 +302,12 @@ class EmpleadoController extends Controller
 
     public function turnosEmpleado(Empleado $empleado)
     {
-
-
+        
         $data = [
-            'message' => 'Turnos de un empleado',
-            'empleado' => $empleado,
+            /* 'message' => 'Turnos de un empleado',
+            'empleado' => $empleado, */
             'turnos' => $empleado->turnos
+            //aquí turno activo.
         ];
 
         return response()->json($data);
