@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dia;
+use App\Models\Empresa;
 use App\Models\Turno;
 use App\Models\Empleado;
 use Carbon\Carbon;
@@ -32,8 +33,42 @@ class TurnoController extends Controller
     public function show(Turno $turno)
     {
         $turnos = Turno::with('dias')->find($turno->id);
-        return response()->json($turnos);
+        $data = [
+            'message' => 'Turno ' . $turnos->id,
+            'turno' => $turno
+        ];
+        return response()->json($data);
     }
+
+    public function turnosEmpresa($empresaId)
+    {
+//        $existe = Empresa::where('id', $empresaId)->exists();
+//        $data = [
+//            'message' => 'Existe',
+//            'existe' => $existe
+//        ];
+        if (Empresa::where('id', $empresaId)->exists()) {
+            $empresa = Empresa::find($empresaId);
+            $turnos = Turno:: where('empresa_id', $empresa->id)->get();
+            if (count($turnos) != 0) {
+                $data = [
+                    'message' => 'Turnos de la empresa ' . $empresa->id . " ". $empresa->nombre,
+                    'turnos' => $turnos
+                ];
+            } else {
+                $data = [
+                    'message' => 'No se encontraron turnos para la empresa ' . $empresa->id,
+                ];
+            }
+        } else {
+            $data = [
+                'message' => 'No se encontró la empresa con el ID proporcionado'
+            ];
+        }
+
+        return response()->json($data);
+    }
+
 
     /**
      * Show the form for creating a new resource.

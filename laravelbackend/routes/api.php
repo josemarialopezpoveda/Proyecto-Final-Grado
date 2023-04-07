@@ -54,6 +54,7 @@ Route::get('/empleadoOnline/{empleado}', [TiempoController::class, 'empleadoOnli
 
 Route::get('/turnos', [TurnoController::class, 'index']);
 Route::get('/turnos/{turno}', [TurnoController::class, 'show']);
+Route::get('/turnosEmpresa/{empresaId}', [TurnoController::class, 'turnosEmpresa']);
 Route::post('/turnos', [TurnoController::class, 'store']);
 Route::delete('/turnos/{turno}', [TurnoController::class, 'destroy']);
 Route::put('/turnos/{turno}', [TurnoController::class, 'update']);
@@ -74,7 +75,7 @@ Route::put('/ausencias/{ausencias}', [AusenciaController::class, 'update']);
 Route::delete('/ausencias/{ausencias}', [AusenciaController::class, 'destroy']);
 
 Route::get('/ausenciasEmpleados', [AusenciaController::class, 'ausenciasEmpleados']);
-Route::get('/ausenciasEmpleados/{empleado}', [AusenciaController::class, 'ausenciasEmpleado']);
+Route::get('/ausenciasEmpleados/{empleadoId}', [AusenciaController::class, 'ausenciasEmpleado']);
 
 // Tiempos
 Route::get('/tiempos', [TiempoController::class, 'index']);
@@ -86,7 +87,7 @@ Route::delete('/tiempos/{tiempos}', [TiempoController::class, 'destroy']);
 // Empleado_Turno
 
 Route::post('/empleados/turno', [EmpleadoController::class, 'attach']);
-Route::get('/turnosEmpleado/{empleado}', [EmpleadoController::class, 'turnosEmpleado']);
+Route::get('/turnosEmpleado/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
 //Route::get('/turnosEmpleado', [EmpleadoController::class, 'turnosEmpleados']);
 
 //Mensajes

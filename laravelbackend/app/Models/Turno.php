@@ -9,12 +9,17 @@ class Turno extends Model
 {
     use HasFactory;
 
-    
+
+//    public function empleados()
+//    {
+//        return $this->belongsToMany(Empleado::class, 'empleados_turnos');
+//    }
+
     public function empleados()
     {
-        return $this->belongsToMany(Empleado::class, 'empleados_turnos');
+        return $this->belongsToMany(Empleado::class, 'empleados_turnos', 'turno_id', 'empleado_id')
+            ->withPivot('fechaInicioTurno', 'fechaFinTurno', 'activo'); // Agrega los campos de la tabla pivot
     }
-
 
     public function dias()
     {

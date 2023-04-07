@@ -44,7 +44,7 @@ class EmpleadoController extends Controller
     public function store(Request $request)
     {
 
-        
+
         $validator = Validator::make($request->all(), [
             'nif' => 'required|string|unique:empleados',
             'nombre' => 'required|string',
@@ -300,15 +300,29 @@ class EmpleadoController extends Controller
         return response()->json($data);
     }
 
-    public function turnosEmpleado(Empleado $empleado)
+    public function turnoActivoEmpleado($empleadoId)
     {
-
-
-        $data = [
-            'message' => 'Turnos de un empleado',
-            'empleado' => $empleado,
-            'turnos' => $empleado->turnos
-        ];
+        if (Empleado::where('id', $empleadoId)->exists()) {
+            $empleado = Empleado::find($empleadoId);
+            $turnoActivo = $empleado->turnos->where('pivot.activo', true)->first();
+            if ($turnoActivo) {
+                $data = [
+                    'message' => 'Turno activo del empleado ' . $empleado->id . " ". $empleado->nombre,
+                    'turnoId' => $turnoActivo->id,
+                    'Fecha inicio turno' => $turnoActivo->pivot->fechaInicioTurno,
+                    'Fecha fin turno' => $turnoActivo->pivot->fechaFinTurno,
+                    'turno activo' => $turnoActivo
+                ];
+            } else {
+                $data = [
+                    'message' => 'No se encontró turno activo para el empleado'
+                    ];
+            }
+        } else {
+            $data = [
+                'message' => 'No se encontró el empleado con el ID proporcionado'
+            ];
+        }
 
         return response()->json($data);
     }

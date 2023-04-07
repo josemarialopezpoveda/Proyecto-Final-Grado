@@ -7,8 +7,7 @@ use App\Models\Empleado;
 use App\Models\Tipoausencia;
 use Illuminate\Http\Request;
 
-class AusenciaController extends Controller
-{
+class AusenciaController extends Controller {
     /**
      * Display a listing of the resource.
      */
@@ -49,23 +48,55 @@ class AusenciaController extends Controller
     }
 
 
-    public function ausenciasEmpleado($id)
+    public function ausenciasEmpleado($empleadoId)
     {
-        $empleado = Empleado::find($id);
-        $ausencia = Ausencia::where('empleado_id', $empleado->id)->get();
+        if (Empleado::where('id', $empleadoId)->exists()) {
+            $empleado = Empleado::find($empleadoId);
+            $ausencias = Ausencia::where('empleado_id', $empleado->id)->get();
 
-        if (count($ausencia) === 0) {
+            if (count($ausencias) === 0) {
+                $data = [
+                    'message' => 'El empleado no tiene ausencias',
+                    'cantidad de ausencias' => count($ausencias),
+                ];
+            } else {
+
+                // Crear un arreglo vacío para las ausencias
+                $ausenciasData = [];
+
+                // Iterar por cada ausencia y agregar los datos al arreglo
+                foreach ($ausencias as $ausencia) {
+                    $tipoAusencia = Tipoausencia::find($ausencia->tipoausencias_id);
+                    $nombreTipoAusencia = $tipoAusencia->tipo;
+                    $descripcionTipoAusencia = $tipoAusencia->descripcion;
+
+                    // Crear un objeto JSON para la ausencia actual
+                    $ausenciaData = [
+                        'tipo' => $nombreTipoAusencia,
+                        'descripcion' => $descripcionTipoAusencia,
+                        'ausencia' => $ausencia->descripcion,
+                        'fecha inicio' => $ausencia->fechaInicio,
+                        'fecha fin' => $ausencia->fechaFin,
+                        'justificada' => $ausencia->justificada,
+                    ];
+
+                    // Agregar el objeto JSON al arreglo de ausencias
+                    $ausenciasData[] = $ausenciaData;
+                }
+
+                // Crear el arreglo final con los datos
+                $data = [
+                    'message' => 'Ausencias de un empleado',
+                    'cantidad de ausencias' => count($ausencias),
+                    'ausencias' => $ausenciasData
+                ];
+
+
+            }
+        }
+        else{
             $data = [
-                'message' => 'El empleado no tiene ausencias',
-                'cantidad de ausencias' => count($ausencia),
-                'empleado' => $empleado
-            ];
-        } else {
-            $data = [
-                'message' => 'Ausencias de un empleado',
-                'cantidad de ausencias' => count($ausencia),
-                'empleado' => $empleado,
-                'ausencias' => $ausencia
+                'message' => 'No se encontró el empleado con el ID proporcionado'
             ];
         }
         return response()->json($data);
@@ -94,7 +125,6 @@ class AusenciaController extends Controller
         ];
         return response()->json($data);
     }
-
 
 
     /**

@@ -15,5 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     //return view('welcome');
-    echo "TimeMana";
+    //return view('/mi-pagina', 'mi_pagina_react')->name('mi_pagina_react');
+    return view('mi_pagina_react');
+    //echo "TimeMana";
 });
+//Route::view('/mi-pagina', 'mi_pagina_react')->name('mi_pagina_react');

@@ -52,10 +52,17 @@ class Empleado extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
+//    public function turnos()
+//    {
+//        return $this->belongsToMany(Turno::class, 'empleados_turnos');
+//    }
     public function turnos()
     {
-        return $this->belongsToMany(Turno::class, 'empleados_turnos');
+        return $this->belongsToMany(Turno::class, 'empleados_turnos', 'empleado_id', 'turno_id')
+            ->withPivot('fechaInicioTurno', 'fechaFinTurno', 'activo'); // Agrega los campos de la tabla pivot
     }
+
+
 
     public function tiempos()
     {
