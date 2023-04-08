@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CasoController;
 use App\Http\Controllers\MensajeController;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
@@ -90,10 +91,14 @@ Route::post('/empleados/turno', [EmpleadoController::class, 'attach']);
 Route::get('/turnosEmpleado/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
 //Route::get('/turnosEmpleado', [EmpleadoController::class, 'turnosEmpleados']);
 
+// Caso
+
+
+
 //Mensajes
-Route::get('/mensajes', [MensajeController::class, 'index']);
-Route::get('/mensajes/{mensajes}', [MensajeController::class, 'show']);
-Route::post('/mensajes', [MensajeController::class, 'store']);
+
+
+
 Route::put('/mensajes/{mensajes}', [MensajeController::class, 'update']);
 Route::delete('/mensajes/{mensajes}', [MensajeController::class, 'destroy']);
 
@@ -116,5 +121,18 @@ Route::middleware('auth:sanctum')->group(
         Route::put('/empleados/{empleados}', 'App\Http\Controllers\EmpleadoController@update');
         Route::delete('/empleados/{empleados}', 'App\Http\Controllers\EmpleadoController@destroy');
         Route::get('/logoutEmpleado', [EmpleadoController::class, 'logout']);
+
+
+        //Casos
+        Route::get('/casos/{casoId}', [CasoController::class, 'show']);
+        Route::get('/casos', [CasoController::class, 'index']);
+        Route::post('/casos', [CasoController::class, 'store']);
+
+
+        //Mensajes
+        Route::get('/mensajes', [MensajeController::class, 'index']); // Todos los mensajes de una empresa
+        Route::get('/mensajes/{casoId}', [MensajeController::class, 'show']); // Todos los mensajes de un caso (casoId)
+        Route::post('/mensajes', [MensajeController::class, 'store']);
+
     }
 );

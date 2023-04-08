@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Caso;
 use App\Models\Empleado;
 use App\Models\Turno;
 use App\Models\Empresa;
@@ -20,8 +21,6 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
 
-
-
         $this->call([
             EmpresasTableSeeder::class,
             EmpleadosTableSeeder::class,
@@ -33,11 +32,16 @@ class DatabaseSeeder extends Seeder
             EmpleadosTurnosTableSeeder::class,
             CasosTableSeeder::class,
             CasosEmpleadosTableSeeder::class,
-            MensajesTableSeeder::class
-
         ]);
+
+
         Empresa::factory(10)->create();
         Empleado::factory(100)->create();
         Tiempo::factory(42)->create();
+        Caso::factory(10)->create();
+
+        $this->call([
+            MensajesTableSeeder::class,
+        ]);
     }
 }

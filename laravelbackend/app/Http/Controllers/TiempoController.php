@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empleado;
 use App\Models\Tiempo;
 use Illuminate\Http\Request;
 
@@ -73,18 +74,25 @@ class TiempoController extends Controller
     public function update(Request $request, $id)
     {
         $tiempo = Tiempo::find($id);
-        if ($tiempo) {
-            $tiempo->empleado_id = $request->empleado_id;
-            $tiempo->inicio = $request->inicio;
-            $tiempo->fin = $request->fin;
-            $tiempo->save();
+        $empleado = Empleado::find($request->id);
+        if ($empleado) {
+            if ($tiempo) {
+                $tiempo->empleado_id = $request->empleado_id;
+                $tiempo->inicio = $request->inicio;
+                $tiempo->fin = $request->fin;
+                $tiempo->save();
+                $data = [
+                    'message' => 'Tiempo actualizado correctamente',
+                    'tiempo' => $tiempo
+                ];
+            } else {
+                $data = [
+                    'message' => 'Tiempo no existe'
+                ];
+            }
+        }else {
             $data = [
-                'message' => 'Tiempo actualizado correctamente',
-                'tiempo' => $tiempo
-            ];
-        } else {
-            $data = [
-                'message' => 'Tiempo no existe'
+                'message' => 'Empleado no existe'
             ];
         }
         return response()->json($data);

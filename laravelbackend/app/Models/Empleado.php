@@ -63,9 +63,13 @@ class Empleado extends Model
     }
 
 
-
     public function tiempos()
     {
         return $this->hasMany(Tiempo::class);
+    }
+
+    public function casos()
+    {
+        return $this->belongsToMany(Caso::class, 'casos_empleados');
     }
 }

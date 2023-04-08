@@ -25,7 +25,6 @@ class EmpresaController extends Controller
      */
     public function index(): JsonResponse
     {
-
         $empresas = Empresa::with('empleados')->get();
         return response()->json($empresas);
     }

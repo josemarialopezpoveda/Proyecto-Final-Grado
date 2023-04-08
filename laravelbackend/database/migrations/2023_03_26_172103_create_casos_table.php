@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('casos', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
+            $table->foreignId('empleado_id')->constrained();
             $table->string('asunto');
             $table->boolean('activo')->default(true);
             $table->dateTime('fechaCreacion')->nullable();

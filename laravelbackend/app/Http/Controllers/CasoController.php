@@ -3,16 +3,82 @@
 namespace App\Http\Controllers;
 
 use App\Models\Caso;
+use App\Models\Empleado;
+use App\Models\Empresa;
+use App\Models\Mensaje;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
-class CasoController extends Controller
-{
+class CasoController extends Controller {
+
+    /**
+     * Display the specified resource.
+     */
+    public function show($casoId)
+    {
+        $user = Auth::user();
+        $empresa = $this->getEmpresa($user);
+        $caso = Caso::find($casoId);
+        if (!$caso) {
+            return response()->json(['error' => 'Caso no encontrado'], 404);
+        }
+        if ($user->cif || $user->tipoEmpleado === 'Administrador') {
+            $empleado = Empleado::find($caso->empleado_id);
+            if ($empleado->empresa_id !== $empresa->id) {
+                return response()->json(['error' => 'El caso no pertenece a la empresa especificada'], 403);
+            }
+            $mensajes = Mensaje::where('casos_id', $casoId)->get();
+            return response()->json(['caso' => $caso, 'mensajes' => $mensajes]);
+        } else {
+            $mensajes = Mensaje::where('casos_id', $casoId)->get();
+            $existeUser = false;
+            foreach ($mensajes as $mensaje) {
+                if (($mensaje->emisor === $user->id) || ($mensaje->receptor === $user->id)) {
+                    $existeUser = true;
+                    break;
+                }
+            }
+            if ($existeUser) {
+                return response()->json(['caso' => $caso, 'mensajes' => $mensajes]);
+            } else {
+                return response()->json(['error' => 'no estás autorizado']);
+            }
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        $empresa = $this->getEmpresa($user);
+        if ($user->cif || $user->tipoEmpleado === 'Administrador') {  //Compruebo que el usuario logueado es una empresa.
+
+            $casos = Caso::whereIn('empleado_id', $empresa->empleados->pluck('id'))
+                ->with([
+                    'empleado' => function ($query) {
+                        $query->select('id', 'nombre');
+                    }
+                ])
+                ->select('id', 'empleado_id', 'asunto', 'activo', 'fechaCreacion')
+                ->get();
+
+            $data = $this->getArr($casos, $empresa);
+        } else {
+            $casos = Caso::where('empleado_id', $user->id)
+                ->with([
+                    'empleado' => function ($query) {
+                        $query->select('id', 'nombre');
+                    }
+                ])
+                ->select('id', 'empleado_id', 'asunto', 'activo', 'fechaCreacion')
+                ->get();
+
+            $data = $this->getArr($casos, $empresa);
+        }
+        return response()->json($data);
     }
 
     /**
@@ -28,16 +94,47 @@ class CasoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = Auth::user();
+        // Validación de los datos del formulario
+        $validator = Validator::make($request->all(), [
+            'empleado_id' => 'required|exists:empleados,id',
+            // Validación de existencia del empleado_id en la tabla empleados
+            'asunto' => 'required|string',
+            'activo' => 'boolean',
+            'fechaCreacion' => 'nullable|date'
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'message' => 'Error, hay campos con errores de validación',
+                'errores' => $validator->errors()->all()
+            ];
+        }
+        if ($user->id == $request['empleado_id']) {
+            // Creación del nuevo caso en la base de datos
+            $caso = new Caso();
+            $caso->empleado_id = $request['empleado_id'];
+            $caso->asunto = $request['asunto'];
+            $caso->activo = $request->has(
+                'activo'
+            ) ? $request['activo'] : true; // Si no se proporciona el valor de activo, se establece como true por defecto
+            $caso->fechaCreacion = $request['fechaCreacion'];
+            $caso->save();
+
+            $data = [
+                'message' => 'Caso creado correctamente',
+                'caso' => $caso,
+            ];
+        } else {
+            $data = [
+                'message' => 'El ID del empleado no coincide con el usuario autenticado.',
+            ];
+        }
+
+
+        return response()->json($data);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Caso $caso)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -61,5 +158,40 @@ class CasoController extends Controller
     public function destroy(Caso $caso)
     {
         //
+    }
+
+    /**
+     * @param $casos
+     * @param $empresa
+     * @return array|string[]
+     */
+    public function getArr($casos, $empresa): array
+    {
+        $casos->each(function ($caso) use ($empresa) {
+            $caso->empresa_id = $empresa->id;
+            $caso->nombre_empresa = $empresa->nombreComercial;
+        });
+
+        if (count($casos) != 0) {
+            $data = [
+                'message' => 'Casos de la empresa ' . $empresa->id,
+                'casos' => $casos,
+            ];
+        } else {
+            $data = [
+                'message' => 'La empresa no tiene casos ',
+            ];
+        }
+        return $data;
+    }
+
+    public function getEmpresa($user): Empresa
+    {
+        if ($user->cif) {
+            $empresa = Empresa::find($user->id);
+        } else {
+            $empresa = Empresa::find($user->empresa_id);
+        }
+        return $empresa;
     }
 }

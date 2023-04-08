@@ -43,8 +43,6 @@ class EmpleadoController extends Controller
      */
     public function store(Request $request)
     {
-
-
         $validator = Validator::make($request->all(), [
             'nif' => 'required|string|unique:empleados',
             'nombre' => 'required|string',

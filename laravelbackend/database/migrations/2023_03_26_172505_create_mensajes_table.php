@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('mensajes', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
+            $table->foreignId('empresa_id')->constrained();
             $table->foreignId('casos_id')->constrained()->cascadeOnDelete();
-            $table->string ('emisor');
-            $table->string ('receptor');
-            $table->string('mensaje');
+            $table->unsignedBigInteger ('emisor');
+            $table->unsignedBigInteger ('receptor');
+            $table->text('mensaje');
             $table->dateTime('horaEnvio');
             $table->timestamps();
         });
