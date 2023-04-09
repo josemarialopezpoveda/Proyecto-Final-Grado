@@ -147,17 +147,99 @@ class CasoController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Caso $caso)
+    public function update(Request $request, $casoId)
     {
-        //
+        $user = Auth::user();
+        $caso = Caso::find($casoId);
+
+        if ($caso) {
+            $validator = Validator::make($request->all(), [
+                'asunto' => 'required|string',
+                'activo' => 'required|boolean'
+            ]);
+
+            if ($validator->fails()) {
+                return [
+                    'message' => 'Error, hay campos con errores de validación',
+                    'errores' => $validator->errors()->all()
+                ];
+            }
+            /*
+             * Un caso puede modificarlo el empleado que lo creo ($caso->empleado_id) o un administrador de la empresa.
+             * Hay que comprobar que el usuario logueado sea de tipo empleado.
+             */
+            if ($user->nif) {
+                $esPropietario = $user->id == $caso->empleado->id;
+                $esAdmin = $user->tipoEmpleado == "Administrador" && $user->empresa_id == $caso->empleado->empresa_id;
+
+                if ($esPropietario || $esAdmin) {
+                    $caso->asunto = $request['asunto'];
+                    $caso->activo = $request['activo'];
+                    $caso->save();
+                    $data = [
+                        'message' => 'Caso actualizado correctamente',
+                        'id empleado que actualiza' => $user->id,
+                        'tipo empleado que actualiza' => $user->tipoEmpleado,
+                        'caso' => $caso,
+                    ];
+                } else {
+                    $data = [
+                        'message' => 'No estás autorizado.',
+                    ];
+                }
+            } else {
+                $data = [
+                    'message' => 'No estás autorizado.',
+                ];
+            }
+        } else {
+            $data = [
+                'message' => 'Caso no existe'
+            ];
+        }
+        return response()->json($data);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Caso $caso)
+    public function destroy($casoId)
     {
-        //
+        $user = Auth::user();
+        $caso = Caso::find($casoId);
+        /* Para borrar un caso:
+            1.- Tiene que existir.
+            2.- Lo puede borrar el propietario o un admin de la empresa.
+            3.- Si tiene mensajes no se puede borrar. (el id del caso está en la tabla mensajes).
+        */
+
+        if ($caso) {
+            $esPropitario = $user->id == $caso->empleado->id;
+            $esAdmin = $user->tipoEmpleado == "Administrador";
+            $mensajes = Mensaje::where('casos_id', $casoId)->get();
+            if (count($mensajes) != 0) {
+                $data = [
+                    'message' => 'Error, no se puede borrar, el caso tiene mensajes.',
+                ];
+            } else {
+                if ($esPropitario || $esAdmin) {
+                    $caso->delete();
+                    $data = [
+                        'message' => 'Caso eliminado correctamente',
+                        'caso' => $caso,
+                    ];
+                } else {
+                    $data = [
+                        'message' => 'Error, no estás autorizado.',
+                    ];
+                }
+            }
+        } else {
+            $data = [
+                'message' => 'Caso no existe'
+            ];
+        }
+        return response()->json($data);
     }
 
     /**

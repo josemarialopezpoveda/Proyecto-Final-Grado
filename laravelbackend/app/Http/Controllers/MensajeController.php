@@ -24,7 +24,8 @@ class MensajeController extends Controller {
             } else {
                 $empresa = Empresa::find($user->empresa_id);
             }
-            $mensajes = Mensaje::where('empresa_id', $empresa->id)->get(); //Devuelve los empleados de la empresa logueada.
+            $mensajes = Mensaje::where('empresa_id', $empresa->id)->get(
+            ); //Devuelve los empleados de la empresa logueada.
             if (count($mensajes) != 0) {
                 $data = [
                     'message' => 'Mensajes de la empresa ' . $empresa->id,
@@ -108,14 +109,6 @@ class MensajeController extends Controller {
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -138,7 +131,19 @@ class MensajeController extends Controller {
         }
 
         //if ($user->id == $request['empleado_id']) {
+        $caso = Caso::find($request['casos_id']);
+        $empleadoOK = $user->id == $caso->empleado_id;
 
+        $empresaOK = $user->empresa_id == $request['empresa_id'];
+        $emisorOK = $user->id == $request['emisor'];
+        $receptorOK = Empleado::find($request['receptor']);
+        if ($receptorOK) {
+            $receptorOK = $user->empresa_id == $receptorOK->empresa_id;
+        }
+        // ¿discutir si solo se pueden enviar mensajes al admin?
+        $esAdmin = $user->tipoEmpleado == "Administrador";
+
+        if ($empleadoOK && $empresaOK && $emisorOK && $receptorOK) {
             $mensaje = new Mensaje();
             $mensaje->empresa_id = $request['empresa_id'];
             $mensaje->casos_id = $request['casos_id'];
@@ -152,60 +157,65 @@ class MensajeController extends Controller {
                 'message' => 'Mensaje creado correctamente',
                 'mensaje' => $mensaje,
             ];
-//        } else {
-//            $data = [
-//                'message' => 'El ID del empleado no coincide con el usuario autenticado.',
-//            ];
-//        }
-
-
+        } else {
+            $data = [
+                'message' => 'No estás autorizado.',
+            ];
+        }
         return response()->json($data);
-
-//        $mensaje = new Mensaje();
-//        $mensaje->empresa_id = $request->empresa_id;
-//        $mensaje->casos_id = $request->casos_id;
-//        $mensaje->emisor = $request->emisor;
-//        $mensaje->receptor = $request->receptor;
-//        $mensaje->mensaje = $request->mensaje;
-//        $mensaje->horaEnvio = $request->horaEnvio;
-//        $mensaje->created_at = $request->horaEnvio;
-//        $mensaje->updated_at = $request->horaEnvio;
-//
-//        $mensaje->save();
-//        $data = [
-//            'message' => 'Mensaje creado correctamente',
-//            'mensaje' => $mensaje
-//        ];
-//        return response()->json($data);
     }
 
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Mensaje $mensaje)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $mensajeId)
     {
-        $mensaje = Mensaje::find($id);
-        if ($mensaje) {
-            $mensaje->casos_id = $request->casos_id;
-            $mensaje->emisor = $request->emisor;
-            $mensaje->receptor = $request->receptor;
-            $mensaje->mensaje = $request->mensaje;
-            $mensaje->horaEnvio = $request->horaEnvio;
-            $mensaje->updated_at = $request->horaEnvio;
-            $mensaje->save();
-            $data = [
-                'message' => 'Mensaje actualizado correctamente',
-                'mensaje' => $mensaje
+        $user = Auth::user();
+        $mensaje = Mensaje::find($mensajeId);
+
+        $validator = Validator::make($request->all(), [
+            'receptor' => 'required|integer',
+            'mensaje' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return [
+                'message' => 'Error, hay campos con errores de validación',
+                'errores' => $validator->errors()->all()
             ];
+        }
+
+        /*
+         * Solo se puede modificar el último mensaje
+         * Si eres el emisor (es un empleado)
+         * El $mensajeId == $ultimoMnesaje
+         *
+         */
+        if ($mensaje) {
+            if ($mensajeId == Mensaje::where('casos_id', $mensaje->casos_id)
+                    ->orderBy('id', 'desc')
+                    ->first()->id) // es el último mensaje.
+            {
+                if ($user->nif && $user->id == $mensaje->emisor) { //si es empleado y el emisor del mensaje coincide con el id del usario logueado.
+                    $mensaje->receptor = $request->receptor;
+                    $mensaje->mensaje = $request->mensaje;
+                    $mensaje->horaEnvio = Carbon::now();
+                    $mensaje->save();
+                    $data = [
+                        'message' => 'Mensaje actualizado correctamente',
+                        'mensaje' => $mensaje
+                    ];
+                } else {
+                    $data = [
+                        'message' => 'No se puede modificar, no estás autorizado',
+                    ];
+                }
+            } else {
+                $data = [
+                    'message' => 'No se puede modificar, no es el último mensaje',
+                ];
+            }
         } else {
             $data = [
                 'message' => 'Mensaje no existe'
@@ -217,21 +227,31 @@ class MensajeController extends Controller {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy($mensajeId)
     {
-        $mensaje = Mensaje::find($id);
+        $user = Auth::user();
+        $mensaje = Mensaje::find($mensajeId);
         if ($mensaje) {
-            $ultimo = Mensaje::where('casos_id', $mensaje->casos_id)->orderBy('id', 'desc')->first();
-            if ($mensaje->id === $ultimo->id) {
-                $mensaje->delete();
-                $data = [
-                    'message' => 'Mensaje eliminado correctamente',
-                    'mensaje' => $mensaje
-                ];
+            if ($mensajeId == Mensaje::where('casos_id', $mensaje->casos_id)
+                    ->orderBy('id', 'desc')
+                    ->first()->id) // es el último mensaje.
+            {
+                if ($user->nif && $user->id == $mensaje->emisor)
+                {
+                    $mensaje->delete();
+                    $data = [
+                        'message' => 'Mensaje eliminado correctamente',
+                        'mensaje' => $mensaje
+                    ];
+
+                } else {
+                    $data = [
+                        'message' => 'No se puede eliminar, no estás autorizado',
+                    ];
+                }
             } else {
                 $data = [
-                    'message' => 'No se puede eliminar, no es el último mensaje.'
-
+                    'message' => 'No se puede eliminar, no es el último mensaje',
                 ];
             }
         } else {

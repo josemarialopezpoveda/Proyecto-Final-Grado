@@ -99,9 +99,6 @@ Route::get('/turnosEmpleado/{empleadoId}', [EmpleadoController::class, 'turnoAct
 
 
 
-Route::put('/mensajes/{mensajes}', [MensajeController::class, 'update']);
-Route::delete('/mensajes/{mensajes}', [MensajeController::class, 'destroy']);
-
 Route::middleware('auth:sanctum')->group(
     /**
      * @return void
@@ -127,12 +124,16 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/casos/{casoId}', [CasoController::class, 'show']);
         Route::get('/casos', [CasoController::class, 'index']);
         Route::post('/casos', [CasoController::class, 'store']);
+        Route::put('/casos/{casoId}', [CasoController::class, 'update']);
+        Route::delete('/casos/{casoId}', [CasoController::class, 'destroy']);
 
 
         //Mensajes
         Route::get('/mensajes', [MensajeController::class, 'index']); // Todos los mensajes de una empresa
         Route::get('/mensajes/{casoId}', [MensajeController::class, 'show']); // Todos los mensajes de un caso (casoId)
         Route::post('/mensajes', [MensajeController::class, 'store']);
+        Route::put('/mensajes/{mensajeId}', [MensajeController::class, 'update']);
+        Route::delete('/mensajes/{mensajeId}', [MensajeController::class, 'destroy']);
 
     }
 );
