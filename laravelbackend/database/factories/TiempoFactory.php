@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tiempo>
  */
-class TiempoFactory extends Factory {
+class TiempoFactory extends Factory
+{
     /**
      * Define the model's default state.
      *
@@ -25,10 +26,15 @@ class TiempoFactory extends Factory {
         $horaInicioF = '7:15:00';
         $horaFinI = '14:45:00';
         $horaFinF = '15:30:00';
+        $i = 0;
 
         $fechaActual = Carbon::parse($fechaInicio);
         $fechaHoraInicio = [];
         $fechaHoraFin = [];
+
+        /* for ($i = 0; $i <= $this->count; $i++) {
+            echo "dentro del for antes del while " . $i . "\n";
+        } */
 
         while ($fechaActual <= Carbon::parse($fechaFin)) {
             if (!$fechaActual->isWeekend()) {
@@ -40,7 +46,8 @@ class TiempoFactory extends Factory {
                 $fechaHoraSalida->setTimeFromTimeString($horaAleatoriaS);
                 //echo "Hora Entrada: " . Carbon::parse($fechaHoraEntrada)->format('d/m/Y H:i:s') . "\n";
                 $fechaHoraInicio[] = $fechaHoraEntrada;
-                $fechaHoraFin[]=$fechaHoraSalida;
+                $fechaHoraFin[] = $fechaHoraSalida;
+                $i++;
             }
             $fechaActual->addDay();
         }
@@ -49,12 +56,13 @@ class TiempoFactory extends Factory {
         static $indiceInicio = 0;
         static $indiceFin = 0;
 
+        
         return [
             'empleado_id' => 1,
             'created_at' => $fechaHoraInicio[$indiceInicio],
             'updated_at' => $fechaHoraFin[$indiceFin],
-            'inicio' => $fechaHoraInicio[$indiceInicio++ %count($fechaHoraInicio)],
-            'fin' => $fechaHoraFin[$indiceFin++ %count($fechaHoraFin)]
+            'inicio' => $fechaHoraInicio[$indiceInicio++ % count($fechaHoraInicio)],
+            'fin' => $fechaHoraFin[$indiceFin++ % count($fechaHoraFin)]
         ];
     }
 }
