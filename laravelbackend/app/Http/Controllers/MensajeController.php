@@ -25,7 +25,7 @@ class MensajeController extends Controller {
                 $empresa = Empresa::find($user->empresa_id);
             }
             $mensajes = Mensaje::where('empresa_id', $empresa->id)->get(
-            ); //Devuelve los empleados de la empresa logueada.
+            ); //Devuelve los empleados de la empresa registrada.
             if (count($mensajes) != 0) {
                 $data = [
                     'message' => 'Mensajes de la empresa ' . $empresa->id,
@@ -54,7 +54,7 @@ class MensajeController extends Controller {
             ];
         } else {
             $empleado = Empleado::find($caso->empleado_id);
-            if ($user->cif || $user->tipoEmpleado === 'Administrador') {  //Compruebo que el usuario logueado es una empresa.
+            if ($user->cif || $user->tipoEmpleado === 'Administrador') {  //Compruebo que el usuario registrado es una empresa.
                 if ($user->cif) {
                     $empresa = Empresa::find($user->id);
                 } else {
@@ -189,7 +189,7 @@ class MensajeController extends Controller {
         /*
          * Solo se puede modificar el último mensaje
          * Si eres el emisor (es un empleado)
-         * El $mensajeId == $ultimoMnesaje
+         * El $mensajeId == $ultimoMensaje
          *
          */
         if ($mensaje) {
@@ -197,7 +197,7 @@ class MensajeController extends Controller {
                     ->orderBy('id', 'desc')
                     ->first()->id) // es el último mensaje.
             {
-                if ($user->nif && $user->id == $mensaje->emisor) { //si es empleado y el emisor del mensaje coincide con el id del usario logueado.
+                if ($user->nif && $user->id == $mensaje->emisor) { //si es empleado y el emisor del mensaje coincide con el id del usuario logueado.
                     $mensaje->receptor = $request->receptor;
                     $mensaje->mensaje = $request->mensaje;
                     $mensaje->horaEnvio = Carbon::now();

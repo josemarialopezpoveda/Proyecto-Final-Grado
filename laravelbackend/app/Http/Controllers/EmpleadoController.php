@@ -6,6 +6,7 @@ use App\Models\Empleado;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -24,11 +25,19 @@ class EmpleadoController extends Controller
     public function index()
     {
         $user = Auth::user();
-        if ($user->cif) {  //Compruebo que el usuario logueado es una empresa.
+        //if ($user instanceof Empresa)
+        // if ($user->cif)
+        if ($user instanceof Empresa) {  //Compruebo que el usuario logueado es una empresa.
             //$empleado = Empleado::all(Auth::user());
-            $empleados = Empleado::where('empresa_id', $user->id)->get(); //Devuelve los empleados de la empresa logueada.
+            //$empleados = Empleado::where('empresa_id', $user->id)->get(); //Devuelve los empleados de la empresa logueada.
+            $empleados = DB::table('empleados')->where('empresa_id', $user->id)->get();
+            //$empresa = Empresa::find($user->getKey());
             return response()->json($empleados);
-        } else {
+        } else if ($user instanceof Empleado && $user->tipoEmpleado=="Administrador") {
+            $empleados = DB::table('empleados')->where('empresa_id', $user->empresa_id)->get();
+            return response()->json($empleados);
+        }
+        else {
             $data = [
                 'message' => 'No autorizado'
             ];
