@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -13,7 +14,6 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class Empleado extends Model
 {
-    use HasFactory;
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -27,6 +27,8 @@ class Empleado extends Model
     /**
      * @var string[]
      */
+
+
     protected $fillable = [
         'empresa_id',
         'nif',
@@ -40,7 +42,6 @@ class Empleado extends Model
         'telefono',
         'fechaNacimiento',
         'email',
-        'password',
         'numSegSoc',
         'fotografia',
         'ultimaConexion',
@@ -49,8 +50,9 @@ class Empleado extends Model
         'fechaBaja'
     ];
 
+    protected $hidden = ['password'];
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
 //    public function turnos()
 //    {

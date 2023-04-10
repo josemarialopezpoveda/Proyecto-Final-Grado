@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Empleado;
 use App\Models\Empresa;
+use App\Models\Turno;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -14,8 +14,7 @@ use Illuminate\Validation\Rule;
 /**
  *
  */
-class EmpleadoController extends Controller
-{
+class EmpleadoController extends Controller {
     /**
      * Display a listing of the resource.
      * Función que devuelve todos los empleados del usuario logueado como empresa.
@@ -25,21 +24,49 @@ class EmpleadoController extends Controller
     public function index()
     {
         $user = Auth::user();
-        //if ($user instanceof Empresa)
-        // if ($user->cif)
-        if ($user instanceof Empresa) {  //Compruebo que el usuario logueado es una empresa.
-            //$empleado = Empleado::all(Auth::user());
-            //$empleados = Empleado::where('empresa_id', $user->id)->get(); //Devuelve los empleados de la empresa logueada.
-            $empleados = DB::table('empleados')->where('empresa_id', $user->id)->get();
-            //$empresa = Empresa::find($user->getKey());
+        if ($user instanceof Empresa) {
+            $empleados = Empleado::where('empresa_id', $user->getKey())->get();
             return response()->json($empleados);
-        } else if ($user instanceof Empleado && $user->tipoEmpleado=="Administrador") {
-            $empleados = DB::table('empleados')->where('empresa_id', $user->empresa_id)->get();
-            return response()->json($empleados);
+        } else {
+            if ($user instanceof Empleado) {
+                $empleado = Empleado::find($user->getKey());
+                if ($empleado->tipoEmpleado == "Administrador") {
+                    $empleados = Empleado::where('empresa_id', $empleado->empresa_id)->get();
+                    return response()->json($empleados);
+                } else {
+                    if ($empleado->tipoEmpleado == "Trabajador") {
+                        $empleado = $empleado->makeHidden(['password']);
+                        return response()->json($empleado);
+                    } else {
+                        $data = ['message' => 'Error'];
+                        return response()->json($data);
+                    }
+                }
+            } else {
+                $data = ['message' => 'No autorizado'];
+                return response()->json($data);
+            }
         }
-        else {
+    }
+
+
+
+    /**
+     * Display the specified resource.
+     * Función que muestra los datos del empleado logueado.
+     * @param \App\Models\empleado $empleado
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function show($empleadoId)
+    {
+        $user = Auth::user();
+        $empleado = Empleado::find($empleadoId);
+
+        if ($empleado) {
+            return response()->json($empleado);
+        } else {
             $data = [
-                'message' => 'No autorizado'
+                'message' => 'Empleado no existe'
             ];
             return response()->json($data);
         }
@@ -113,26 +140,6 @@ class EmpleadoController extends Controller
             'token_type' => 'Bearer',
         ];
         return response()->json($data);
-    }
-
-    /**
-     * Display the specified resource.
-     * Función que muestra los datos del empleado logueado.
-     * @param \App\Models\empleado $empleado
-     * @return \Illuminate\Http\Response
-     */
-    public function show()
-    {
-        $user = Auth::user();
-        $empleado = Empleado::find($user["id"]); //Esto no funciona bien, trae el empleado cuyo id es el mismo que el id de la empresa logueada.
-        if ($empleado) {
-            return response()->json($empleado);
-        } else {
-            $data = [
-                'message' => 'Empleado no existe'
-            ];
-            return response()->json($data);
-        }
     }
 
     /**
@@ -291,15 +298,39 @@ class EmpleadoController extends Controller
      */
     public function logout()
     {
-        auth()->user()->tokens()->delete();
-        return response()->json(["message" => "Sesión cerrada"]);
+        try {
+            $user = auth()->user();
+
+            if ($user) {
+                if ($user instanceof Empleado) {
+                    // Cerrar sesión de un Empleado
+                    $user->tokens()->delete();
+                    return response()->json(["message" => "Sesión de Empleado cerrada"]);
+                } else {
+                    // No cerrar sesión de una Empresa
+                    return response()->json(["message" => "No tienes permiso para cerrar esta sesión"], 403);
+                }
+            } else {
+                return response()->json(["message" => "Usuario no autenticado"], 401);
+            }
+        } catch (\Exception $e) {
+            // Captura y maneja cualquier excepción que ocurra durante la ejecución
+            // del código en el bloque try
+            return response()->json(["message" => "Error al cerrar la sesión"], 500);
+        }
     }
+
+
+
 
 
     public function attach(Request $request)
     {
         $empleado = Empleado::find($request->empleado_id);
-        $empleado->turnos()->attach($request->turno_id, ['fechaInicioTurno' => $request->fechaInicioTurno, 'fechaFinTurno' => $request->fechaFinTurno]);
+        $empleado->turnos()->attach(
+            $request->turno_id,
+            ['fechaInicioTurno' => $request->fechaInicioTurno, 'fechaFinTurno' => $request->fechaFinTurno]
+        );
         $data = [
             'message' => 'Turno attach correctamente',
             'empleado' => $empleado
@@ -309,28 +340,53 @@ class EmpleadoController extends Controller
 
     public function turnoActivoEmpleado($empleadoId)
     {
-        if (Empleado::where('id', $empleadoId)->exists()) {
-            $empleado = Empleado::find($empleadoId);
+        $user = Auth::user();
+        $empleado = Empleado::find($empleadoId);
+        if ($empleado) {
+            if ($user instanceof Empresa){
+                if ($user->getKey() != $empleado->empresa_id){
+                    $data = [
+                        'message' => 'El empleado con el ID proporcionado no pertenece a la empresa'
+                    ];
+                    return response()->json($data);
+                }
+            } else if ($user instanceof Empleado) {
+                if ($user->empresa_id != $empleado->empresa_id){
+                    $data = [
+                        'message' => 'La empresa del empleado proporcionado no coincide con la empresa del usuario autenticado.'
+                    ];
+                    return response()->json($data);
+                }
+               if ($user->tipoEmpleado != "Administrador" && $user->getKey() != $empleadoId){
+                   $data = [
+                       'message' => 'No estás autorizado.'
+                   ];
+                   return response()->json($data);
+               }
+            }
+
             $turnoActivo = $empleado->turnos->where('pivot.activo', true)->first();
             if ($turnoActivo) {
+                $turnos = Turno::with('dias')->find($turnoActivo->id);
                 $data = [
-                    'message' => 'Turno activo del empleado ' . $empleado->id . " ". $empleado->nombre,
+                    'message' => 'Turno activo del empleado ' . $empleado->id . " " . $empleado->nombre,
+                    'empleado_id' => $empleadoId,
                     'turnoId' => $turnoActivo->id,
+                    'descripcion' => $turnos->descripcion,
                     'Fecha inicio turno' => $turnoActivo->pivot->fechaInicioTurno,
                     'Fecha fin turno' => $turnoActivo->pivot->fechaFinTurno,
-                    'turno activo' => $turnoActivo
+                    'dias' => $turnos->dias,
                 ];
             } else {
                 $data = [
                     'message' => 'No se encontró turno activo para el empleado'
-                    ];
+                ];
             }
         } else {
             $data = [
                 'message' => 'No se encontró el empleado con el ID proporcionado'
             ];
         }
-
         return response()->json($data);
     }
 

@@ -91,12 +91,6 @@ Route::post('/empleados/turno', [EmpleadoController::class, 'attach']);
 Route::get('/turnosEmpleado/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
 //Route::get('/turnosEmpleado', [EmpleadoController::class, 'turnosEmpleados']);
 
-// Caso
-
-
-
-//Mensajes
-
 
 
 Route::middleware('auth:sanctum')->group(
@@ -113,8 +107,8 @@ Route::middleware('auth:sanctum')->group(
 
         //Empleados
         Route::get('/empleados', 'App\Http\Controllers\EmpleadoController@index');
+        Route::get('/empleado/{empleadoId}', 'App\Http\Controllers\EmpleadoController@show');
         Route::post('/empleados', 'App\Http\Controllers\EmpleadoController@store');
-        Route::get('/empleado', 'App\Http\Controllers\EmpleadoController@show');
         Route::put('/empleados/{empleados}', 'App\Http\Controllers\EmpleadoController@update');
         Route::delete('/empleados/{empleados}', 'App\Http\Controllers\EmpleadoController@destroy');
         Route::get('/logoutEmpleado', [EmpleadoController::class, 'logout']);
@@ -134,6 +128,9 @@ Route::middleware('auth:sanctum')->group(
         Route::post('/mensajes', [MensajeController::class, 'store']);
         Route::put('/mensajes/{mensajeId}', [MensajeController::class, 'update']);
         Route::delete('/mensajes/{mensajeId}', [MensajeController::class, 'destroy']);
+
+        //Turnos
+        Route::get('/turnosEmpleado/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
 
     }
 );

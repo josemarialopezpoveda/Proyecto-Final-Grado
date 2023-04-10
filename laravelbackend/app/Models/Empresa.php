@@ -40,14 +40,13 @@ class Empresa extends Model {
         'telefonoFijo',
         'telefonoMovil',
         'email',
-        'password',
         'logotipo',
         'ultimaConexion',
         'activo',
         'fechaAlta',
         'fechaBaja'
     ];
-
+    protected $hidden = ['password'];
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

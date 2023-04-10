@@ -258,11 +258,30 @@ class EmpresaController extends Controller
      * Función cerrar sesión el usuario logueado
      * @return JsonResponse
      */
-    public function logout()
+    public function logout(): JsonResponse
     {
-        auth()->user()->tokens()->delete();
-        return response()->json(["message" => "Sesión cerrada"]);
+        try {
+            $user = auth()->user();
+
+            if ($user) {
+                if ($user instanceof Empresa) {
+                    // Cerrar sesión de una Empresa
+                    $user->tokens()->delete();
+                    return response()->json(["message" => "Sesión de Empresa cerrada"]);
+                } else {
+                    // No cerrar sesión de un Empleado
+                    return response()->json(["message" => "No tienes permiso para cerrar esta sesión"], 403);
+                }
+            } else {
+                return response()->json(["message" => "Usuario no autenticado"], 401);
+            }
+        } catch (\Exception $e) {
+            // Captura y maneja cualquier excepción que ocurra durante la ejecución
+            // del código en el bloque try
+            return response()->json(["message" => "Error al cerrar la sesión"], 500);
+        }
     }
+
 
     /**
      * Función que devuelve error ante cualquier error que se produzca

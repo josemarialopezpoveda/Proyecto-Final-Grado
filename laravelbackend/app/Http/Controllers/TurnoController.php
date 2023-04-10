@@ -32,10 +32,11 @@ class TurnoController extends Controller
      */
     public function show(Turno $turno)
     {
+
         $turnos = Turno::with('dias')->find($turno->id);
         $data = [
             'message' => 'Turno ' . $turnos->id,
-            'turno' => $turno
+            'turno' => $turnos
         ];
         return response()->json($data);
     }

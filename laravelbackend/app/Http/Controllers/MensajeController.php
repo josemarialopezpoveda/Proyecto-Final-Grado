@@ -25,7 +25,7 @@ class MensajeController extends Controller {
                 $empresa = Empresa::find($user->empresa_id);
             }
             $mensajes = Mensaje::where('empresa_id', $empresa->id)->get(
-            ); //Devuelve los empleados de la empresa registrada.
+            );
             if (count($mensajes) != 0) {
                 $data = [
                     'message' => 'Mensajes de la empresa ' . $empresa->id,
@@ -118,8 +118,8 @@ class MensajeController extends Controller {
         $validator = Validator::make($request->all(), [
             'empresa_id' => 'required|exists:empresas,id',
             'casos_id' => 'required|exists:casos,id',
-            'emisor' => 'required|integer',
-            'receptor' => 'required|integer',
+            'emisor' => 'required|exists:empleados,id',
+            'receptor' => 'required|exists:empleados,id',
             'mensaje' => 'required|string',
         ]);
 

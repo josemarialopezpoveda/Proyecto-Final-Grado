@@ -7,6 +7,7 @@ use App\Models\Empleado;
 use App\Models\Empresa;
 use App\Models\Mensaje;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -118,7 +119,7 @@ class CasoController extends Controller {
             $caso->activo = $request->has(
                 'activo'
             ) ? $request['activo'] : true; // Si no se proporciona el valor de activo, se establece como true por defecto
-            $caso->fechaCreacion = $request['fechaCreacion'];
+            $caso->fechaCreacion = Carbon::now();
             $caso->save();
 
             $data = [
