@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         Empresa::factory(10)->create();
         Empleado::factory(100)->create();
         Tiempo::factory(42)->create();
-        Caso::factory(10)->create();
+        Caso::factory(20)->create();
 
         $this->call([
             MensajesTableSeeder::class,

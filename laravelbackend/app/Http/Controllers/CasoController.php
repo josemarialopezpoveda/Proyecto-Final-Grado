@@ -60,7 +60,7 @@ class CasoController extends Controller {
             $casos = Caso::whereIn('empleado_id', $empresa->empleados->pluck('id'))
                 ->with([
                     'empleado' => function ($query) {
-                        $query->select('id', 'nombre');
+                        $query->select('id', 'nombre', 'apellidos');
                     }
                 ])
                 ->select('id', 'empleado_id', 'asunto', 'activo', 'fechaCreacion')
@@ -71,7 +71,7 @@ class CasoController extends Controller {
             $casos = Caso::where('empleado_id', $user->id)
                 ->with([
                     'empleado' => function ($query) {
-                        $query->select('id', 'nombre');
+                        $query->select('id', 'nombre', 'apellidos');
                     }
                 ])
                 ->select('id', 'empleado_id', 'asunto', 'activo', 'fechaCreacion')
