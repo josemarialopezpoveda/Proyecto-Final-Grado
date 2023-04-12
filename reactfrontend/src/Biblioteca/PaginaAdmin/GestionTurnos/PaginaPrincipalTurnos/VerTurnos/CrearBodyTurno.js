@@ -14,13 +14,19 @@ function CrearBodyTurno() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosTurno = await peticionGetAuth(URL_API + "turnos/" + `${localStorage.getItem("idTurno")}`, header);
-        if (datosTurno.data !== 0) {
-            var newTurno = {
-              descripcion: datosTurno.data.descripcion,
-              dias: datosTurno.data.dias,
-            };
-          setTurno(newTurno);
+        let datosTurno = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem("idEmpleado")}`, header);
+        console.log(datosTurno)
+        if (datosTurno.data.empleado.turnos !== null) {
+            datosTurno.data.empleado.turnos.map((turnoDatos)=>{
+                if(turnoDatos.activo === 1){
+                    console.log(datosTurno.data.empleado.turnos)
+                    var newTurno = {
+                    descripcion: datosTurno.data.empleado.turnos.descripcion,
+                    dias: datosTurno.data.empleado.turnos.dias,
+                    };
+                    setTurno(newTurno);
+                }
+            })
         }
       };
 
@@ -92,6 +98,7 @@ function CrearBodyTurno() {
                         }
                     })}
                 </tr>
+                <pre>{JSON.stringify(turno, null, 3)}</pre>
             </tbody>
         );
         

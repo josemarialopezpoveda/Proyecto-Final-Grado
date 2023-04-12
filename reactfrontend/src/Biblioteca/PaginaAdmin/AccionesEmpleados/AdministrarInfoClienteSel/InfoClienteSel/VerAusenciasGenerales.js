@@ -19,23 +19,7 @@ function VerAusenciasGenerales(props) {
           <section>
             <div className='contenedorVerAusenciasGenerales'>
               <h1>Ver {titulo}</h1>
-              <div className='TablaDatosUser'>
-                <Table striped>
-                  <thead>
-                      <tr>
-                          <th>Descripción</th>
-                          <th className='campoOpcional'>Fecha Inicio</th>
-                          <th className='campoOpcional'>Fecha Fin</th>
-                          <th className='campoOpcional'>Justificada</th>
-                          <th className='campoOpcional'>Tipo Ausencia</th>
-                          <th>Opciones</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    <VerInfoAusencia titulo={props.titulo} link={props.link}/>
-                  </tbody>
-                </Table>
-              </div>
+              <VerInfoAusencia titulo={props.titulo} link={props.link}/>
             </div>
             <div className='contenedorBotonVolver'>
                 <Link to="/pagInfoClienteSel" className="botonInfoCliente">Volver</Link>

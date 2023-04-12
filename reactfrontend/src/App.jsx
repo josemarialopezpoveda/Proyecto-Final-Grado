@@ -34,6 +34,8 @@ import ModificarAusenciaGeneral from 'Biblioteca/PaginaAdmin/AccionesEmpleados/A
 import VerTiposAusencias from 'Biblioteca/PaginaAdmin/TiposAusencias/VerTiposAusencias';
 import AnyadirTipoAusencia from 'Biblioteca/PaginaAdmin/TiposAusencias/AccionesTiposAusencias/AnyadirTipoAusencia';
 import ModificarTipoAusencia from 'Biblioteca/PaginaAdmin/TiposAusencias/AccionesTiposAusencias/ModificarTipoAusencia';
+import ModificarCorreo from 'Biblioteca/PaginaAdmin/Chat/ModificarCorreo';
+import VerMensajes from 'Biblioteca/PaginaAdmin/Chat/VerMensajes/VerMensajes';
 
 function App() {
   return(
@@ -71,6 +73,8 @@ function App() {
                   <Route exact path="/chatAdmin" element={<ChatAdmin/>} />
                   <Route exact path="/crearCorreoAdmin" element={<CrearCorreoAdmin/>} />
                   <Route exact path="/verCorreoSeleccionadoAdmin" element={<InfoCorreoSeleccionadoAdmin/>}/>
+                  <Route exact path="/modificarCorreo" element={<ModificarCorreo/>}/>
+                  <Route exact path="/verMensajes" element={<VerMensajes/>}/>
 
                   {/*Turno / Horario*/}
                   <Route exact path="/cambiarTurno" element={<CambiarTurno/>} />

@@ -16,20 +16,8 @@ function PaginaPrincipalTurnos() {
             <div className='contenedorBotonCrearCorreo'>
                 <Link className='crearCorreoBoton' to="/crearTurno">Crear Turno</Link>
             </div>
-            <div className='TablaDatosUser'>
-                {/*PENDIENTE BUSCADOR TURNOS*/ }
-                <Table striped>
-                    <thead>
-                        <tr>
-                            <th>Descripción</th>
-                            <th>Opciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <ListarTurnos/>  
-                    </tbody>
-                </Table>
-            </div>
+            {/*PENDIENTE BUSCADOR TURNOS*/ }
+            <ListarTurnos/>  
         </section>
         <PiePagina/>
     </React.Fragment>

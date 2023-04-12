@@ -87,7 +87,6 @@ function AnyadirAusenciaGeneral(props) {
     <React.Fragment>
         <NavAdmin/>
           <div className='sectionAnyadirAusenciaGeneral'>
-          <pre>{JSON.stringify(form, null, 3)}</pre>
             <h1>Añadir {props.titulo}</h1>
               <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottom'>
                 <Form id="anyadir">
@@ -136,7 +135,7 @@ function AnyadirAusenciaGeneral(props) {
                     </Form.Group>
                   </div>
                   <div className='divContenedorCampo'>
-                    <p>Fecha Inicio</p>
+                    <p>Fecha Fin</p>
                     <Form.Group className="w-50 mb-3">
                     <Form.Control
                       size="lg"

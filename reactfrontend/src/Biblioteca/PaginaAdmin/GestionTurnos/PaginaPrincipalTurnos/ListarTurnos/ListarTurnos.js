@@ -5,16 +5,24 @@ import {useNavigate } from "react-router-dom";
 import './ListarTurnos.css';
 import { URL_API } from 'services/http/const';
 import SweetAlert from "sweetalert2";
-
+import Table from 'react-bootstrap/Table';
+import BuscadorTurnos from 'Biblioteca/Buscador/BuscadorTurnos';
 
 function ListarTurnos() {
     //Creamos la variable para el uso del useNavigate.
     const Navigate = useNavigate();
-    const [turno, setTurno] = useState(
+    //Creamos la variable para el contenido de los empleados estaticos.
+    const [turnoEstatico, setTurnoEstatico] = useState(
         {
           id: "",
           descripcion: "",
         });
+    //Creamos la variable para el contenido de los empleados dinámicos.
+    const [turnoDinamico, setTurnoDinamico] = useState(
+      {
+        id: "",
+        descripcion: "",
+      });
 
     const recoleccionDatos = async () => {
         const header = {
@@ -23,17 +31,19 @@ function ListarTurnos() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosTurno = await peticionGetAuth(URL_API + "turnos", header);
+        console.log(URL_API + "turnosEmpresa/" + `${localStorage.getItem("id")}`)
+        let datosTurno = await peticionGetAuth(URL_API + "turnosEmpresa/" + `${localStorage.getItem("id")}`, header);
         console.log(datosTurno)
         if (datosTurno.data !== 0) {
-          var todosDatosEmpresa = datosTurno.data.map((datosE) => {
+          var todosDatosEmpresa = datosTurno.data.turnos.map((datosE) => {
             var newEmpresa = {
               id: datosE.id,
               descripcion: datosE.descripcion,
             };
             return newEmpresa;
           });
-          setTurno(todosDatosEmpresa);
+          setTurnoDinamico(todosDatosEmpresa);
+          setTurnoEstatico(todosDatosEmpresa);
         }
       };
 
@@ -87,20 +97,51 @@ function ListarTurnos() {
         Navigate("/verTurno");
       };
 
-    if(turno.id !== "" && turno.descripcion !== ""){
-        return turno.map((option)=> {
-            return(<tr key={generarUUID()}>
-                <td className='contenedorTurnoTabla'>{option.descripcion}</td>
-                <td className='contenedorTurnoTabla contenedorBotonesTurnoTabla'>
-                    <button type='button' id={option.id} onClick={modificarTurno} className="botonTurnos">Ver Turno</button>
-                    <button type='button' id={option.id} onClick={borrarTurno} className="botonTurnos">Eliminar Turno</button>
-                </td>
-            </tr>)
-        });
-    }else{
+    const getTurnos = () =>{
+      return turnoEstatico.map((option)=> {
         return(<tr key={generarUUID()}>
-                <td colSpan="2" className='contenedorTurnoTabla'>Tu empresa no dispone de turnos.</td>
-            </tr>)
+            <td className='contenedorTurnoTabla'>{option.descripcion}</td>
+            <td className='contenedorTurnoTabla contenedorBotonesTurnoTabla'>
+                <button type='button' id={option.id} onClick={modificarTurno} className="botonTurnos">Ver Turno</button>
+                <button type='button' id={option.id} onClick={borrarTurno} className="botonTurnos">Eliminar Turno</button>
+            </td>
+        </tr>)
+      });
+    }
+
+    if(turnoEstatico.id !== "" && turnoEstatico.descripcion !== ""){
+      return(
+        <div className='TablaDatosUser'>
+          <BuscadorTurnos datosEstaticos={setTurnoEstatico} datosDinamicos={turnoDinamico}/>
+          <Table striped>
+            <thead>
+              <tr>
+                  <th>Descripción</th>
+                  <th>Opciones</th>
+              </tr>
+            </thead> 
+            <tbody>
+                {getTurnos()}
+            </tbody>
+          </Table>
+        </div>)
+    }else{
+        return(
+        <div className='TablaDatosUser'>
+          <Table striped>
+            <thead>
+                <tr>
+                    <th>Descripción</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr key={generarUUID()}>
+                  <td colSpan="2" className='contenedorTurnoTabla'>Tu empresa no dispone de turnos.</td>
+                </tr>
+            </tbody>
+          </Table>
+        </div>)
     }
 }
 

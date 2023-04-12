@@ -1,138 +1,185 @@
 //Importamos todos los .js que necesitamos para esta práctica.
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
 import './CrearCorreoAdmin.css';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import PiePagina from '../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../Nav/NavAdmin';
-import { formatDate } from "../../../FuncionesAuxiliares/Funciones";
-import CrearOpcionHorarioCorreo from './CrearOpcionHorarioCorreo.js';
+import { mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPost } from "../../../FuncionesAuxiliares/Funciones";
+import { URL_API } from 'services/http/const';
 
 function CrearCorreoAdmin() {
-    const [opcionSeleccionada, setOpcionSeleccionada] = useState("Informar Vacaciones");
-    const [fechaInicio, setFechaInicio] = useState("Fecha Inicio a Introducir");
-    const [fechaFin, setFechaFin] = useState("Fecha Fin a Introducir");
-    const [form, setForm] = useState({});
-    const [comprobarCampo, setComprobarCampo] = useState(false);
-    
-    /**
-   * Devuelve un test del pattern informando el texto es correcto o incorrecto en el caso de que el estado este a true.
-   * @param {testPattern} testPattern Es un RegEx.
-   * @returns
-   */
-  const validarCampos = (testPattern) => {
-    if (comprobarCampo === true) {
-      return testPattern;
-    }
-  };
+    //Creamos la variable para poder usar el navigate.
+    const Navigate = useNavigate();
+    const [casoCreado, setCasoCreado] = useState({
+        empleado_id: `${localStorage.getItem("id")}`,
+        asunto: ""
+    });
 
-    const crearCorreo = () =>{
-        if(opcionSeleccionada === "Informar Vacaciones" || opcionSeleccionada === "Informar Baja"){
-            return(
-                <div className='contenedorDatePickerCorreo divMensajeCorreo'>
-                    <div className="divContenedorCampo2">
-                        <div className="divContenedorCampo">
-                        <p className="letrapequenya">Fecha inicio</p>
-                        <Form.Group className="grupoInputPequenyo">
-                            <Form.Control
-                            size="lg"
-                            type="date"
-                            onChange={(e) => setFechaInicio({ ...form, fnac: e.target.value.trim() })}
-                            defaultValue={form.fnac}
-                            isValid={validarCampos(
-                                /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/.test(formatDate(form.fnac))
-                            )}
-                            isInvalid={validarCampos(
-                                !/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/.test(formatDate(form.fnac))
-                            )}
-                            />
-                        </Form.Group>
-                        </div>
-                        <div className="divContenedorCampo">
-                        <p className="letrapequenya">Fecha fin</p>
-                        <Form.Group className="grupoInputPequenyo">
-                            <Form.Control
-                            size="lg"
-                            type="date"
-                            onChange={(e) => setFechaFin({ ...form, fechaAlta: e.target.value.trim() })}
-                            isValid={validarCampos(
-                                /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/.test(formatDate(form.fechaAlta))
-                            )}
-                            isInvalid={validarCampos(
-                                !/^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/.test(formatDate(form.fechaAlta))
-                            )}
-                            />
-                        </Form.Group>
-                        </div>
-                    </div>
-                </div>
-            );
-        }else if(opcionSeleccionada === "Informar Nuevo Horario"){
-            return(
-                <div>
-                    <CrearOpcionHorarioCorreo/>
-                </div>
-            );
-        }else if(opcionSeleccionada === "Otros"){
-            return(
-            <div>
-                <Form.Group className="mb-3">
-                    <Form.Label>Título:</Form.Label>
-                    <Form.Control required size="lg" type="text"/>
-                </Form.Group>
-                <Form.Group className="mb-3">
-                    <Form.Label>Para:</Form.Label>
-                    <Form.Control required size="lg" type="email"/>
-                </Form.Group>
-            </div>
-            );
+    const [mensajeCreado, setMensajeCreado] = useState({
+        casos_id: "",
+        empresa_id: `${localStorage.getItem("id")}`,
+        emisor: "",
+        receptor:"",
+        mensaje: ""
+    });
+
+    const [nombresUsuarios, setNombresUsuarios] = useState({
+        nombreCompleto: "",
+        id: ""
+    });
+
+    const recoleccionDatos = async () => {
+        const header = {
+          headers: {
+            Accept: "application/json",
+            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+          },
+        };
+        let datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/", header);
+        //console.log(datosEmpresaLogueada.data.empresa.empleados)
+        if (datosEmpresaLogueada.data.empresa.empleados !== 0) {
+          var nombreCompletoEmpleado = datosEmpresaLogueada.data.empresa.empleados.map((datosEmpleado) => {
+            var newEmpleado = {
+              id: datosEmpleado.id,
+              nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,
+            };
+            return newEmpleado;
+          });
+          setNombresUsuarios(nombreCompletoEmpleado);
+        }
+      };
+
+    useEffect(() => {
+        recoleccionDatos();
+    }, []);
+
+    const obtenerOptions = () =>{
+        if(nombresUsuarios.id !== "" && typeof(nombresUsuarios) === 'object'){
+            return(nombresUsuarios.map((empleado, index)=>{
+                return(<option key={index} value={String(empleado.id)}>{empleado.nombreCompleto}</option>)
+            }))
         }
     }
+
+    const TodoCorrecto = async() =>{
+        let raw = {
+          "empleado_id": casoCreado.empleado_id,
+          "asunto": casoCreado.asunto,
+        }
+        console.log(raw)
+        try {
+          const header = {
+              headers: {
+                  "Accept": "application/json",
+                  "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
+              }
+          }
+        let peticion = await peticionPost(URL_API + "casos", raw, header)
+        console.log(peticion)
+        if(peticion.data.errores !== undefined && peticion.data.errores !== null){
+            mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
+        }else{
+            mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
+            setMensajeCreado({...mensajeCreado, casos_id: peticion.data.caso.id});
+            crearMensaje();
+            //Navigate("/verTipoAusencias")
+        }
+      } catch (error) {
+          mostrarAlertaErronea(error.message, error.stack, null);
+      }
+    
+    }
+
+    const crearMensaje = async() =>{
+        console.log(mensajeCreado.casos_id,)
+        let raw = {
+            "casos_id": mensajeCreado.casos_id,
+            "empresa_id": mensajeCreado.empresa_id,
+            "emisor": mensajeCreado.emisor,
+            "receptor": mensajeCreado.receptor,
+            "mensaje": mensajeCreado.mensaje,
+          }
+          console.log(raw)
+          try {
+            const header = {
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
+                }
+            }
+          let peticion = await peticionPost(URL_API + "mensajes", raw, header)
+          console.log(peticion)
+          if(peticion.data.errores !== undefined && peticion.data.errores !== null){
+              mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
+          }else{
+              mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
+              Navigate("/chatAdmin")
+          }
+        } catch (error) {
+            mostrarAlertaErronea(error.message, error.stack, null);
+        }
+      
+    }
+
   return (
     <React.Fragment>
         <NavAdmin/>
+            <pre>{JSON.stringify(casoCreado, null, 3)}</pre>
+            <pre>{JSON.stringify(mensajeCreado, null, 3)}</pre>
                 <div className=''>
                     <h1 className='text-center tituloH1'>Crear Correo</h1>
                     <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
                     <Form id="anyadir">
-                        <div className='contenedorSelectCrearCorreoAdmin'>
-                            <div className="divContenedorCampo2">
-                                <div className="divContenedorCampo">
-                                    <Form.Select className='selectCrearCorreoAdmin' aria-label="Default select example" onChange={(e)=>{setOpcionSeleccionada(e.target.value) }}>
-                                        <option value="Informar Vacaciones">Informar Vacaciones</option>
-                                        <option value="Informar Baja">Informar Baja</option>
-                                        <option value="Informar Nuevo Horario">Informar Nuevo Horario</option>
-                                        <option value="Otros">Otros</option>
-                                    </Form.Select>
-                                </div>
-                            </div>
-                        </div>
-                            <div className="divContenedorCampo divMensajeCorreo">
-                                    <p>Para</p>
-                                    <Form.Group className="mb-3 width500">
-                                    <Form.Control
-                                        size="lg"
-                                        type="text"
-                                    />
-                                    </Form.Group>
-                            </div>
-                            {crearCorreo()}
-                            <div className="divContenedorCampo divMensajeCorreo">
-                                <p>Mensaje</p>
-                                <Form.Group className="mb-3 width500">
+                        <div className="divContenedorCampo divMensajeCorreo">
+                                <p>Asunto</p>
+                                <Form.Group className="mb-3 w-50">
                                 <Form.Control
+                                    defaultValue={casoCreado.asunto}
+                                    onInput={(e) => setCasoCreado({ ...casoCreado, asunto: e.target.value.trim() })}
                                     size="lg"
                                     type="text"
-                                    //defaultValue={form.nombre}
-                                    //onChange={(e) => setForm({ ...form, nombre: e.target.value.trim() })}
-                                    //isValid={validarCampos(/^(?!\s*$).+/.test(form.nombre))}
-                                    //isInvalid={validarCampos(!/^(?!\s*$).+/.test(form.nombre))}
                                 />
                                 </Form.Group>
-                            </div>
+                        </div>
+                        <div className='divContenedorCampo'>
+                            <p>De:</p>
+                            <Form.Group className="w-50 mb-3">
+                                <Form.Select 
+                                    value={mensajeCreado.emisor}
+                                    onInput={(e) => setMensajeCreado({ ...mensajeCreado, emisor: e.target.value.trim() })}
+                                    className='selectpequenyo selectCrearCorreoAdmin'>
+                                    <option value="0"> - </option>
+                                    {obtenerOptions()}
+                                </Form.Select>
+                            </Form.Group>
+                        </div>
+                        <div className="divContenedorCampo divMensajeCorreo">
+                                <p>Para:</p>
+                                <Form.Group className="w-50 mb-3">
+                                    <Form.Select 
+                                        value={mensajeCreado.receptor}
+                                        onInput={(e) => setMensajeCreado({ ...mensajeCreado, receptor: e.target.value.trim() })}
+                                        className='selectpequenyo selectCrearCorreoAdmin'>
+                                        <option value="0"> - </option>
+                                        {obtenerOptions()}
+                                    </Form.Select>
+                                </Form.Group>
+                        </div>
+                        <div className="divContenedorCampo divMensajeCorreo">
+                            <p>Mensaje</p>
+                            <Form.Group className="mb-3 w-50">
+                            <Form.Control
+                                size="lg"
+                                type="text"
+                                defaultValue={mensajeCreado.mensaje}
+                                onChange={(e) => setMensajeCreado({ ...mensajeCreado, mensaje: e.target.value.trim() })}
+                            />
+                            </Form.Group>
+                        </div>
                         <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
                             <Link to="/verTipoAusencias" className="anyadirUsuarioDatos">Volver</Link>
-                            <Link className='anyadirUsuarioDatos' to="/chatAdmin">Enviar Correo</Link>
+                            <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Enviar Correo</button>
                         </div>
                     </Form>
                     </section>
