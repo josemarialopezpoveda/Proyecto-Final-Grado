@@ -1,4 +1,5 @@
 import axios from "axios";
+import { URL_API } from "services/http/const";
 import SweetAlert from "sweetalert2";
 /**
  *
@@ -203,7 +204,7 @@ export function separarFechaDiaSemana(fechaCompleta) {
   return [diaSemana];
 }
 
-export function separarFecha(fechaCompleta) {
+export const separarFecha =(fechaCompleta) =>{
   // Separar la fecha y la hora
   const partes = fechaCompleta.split(' ');
   const fecha = partes[0];
@@ -219,7 +220,7 @@ export function separarFecha(fechaCompleta) {
   return [fechaFinal];
 }
 
-export function calculoFechaHoy() {
+export const calculoFechaHoy = () =>{
   const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
   const hoy = new Date();
@@ -232,13 +233,13 @@ export function calculoFechaHoy() {
 }
 
 //Cálculo del numero segun el dia de hoy.
-export function diaSemana() {
+export const diaSemana = () =>{
   const hoy = new Date();
   const dia = hoy.getDay();
   return dia === 0 ? 7 : dia; // Convertir el domingo (0) a 7
 }
 
-export function convertirDiaSemanaNumero(diaSemana) {
+export const convertirDiaSemanaNumero = (diaSemana) =>{
   switch (diaSemana.toLowerCase()) {
     case "lunes":
       return 1;
@@ -259,7 +260,7 @@ export function convertirDiaSemanaNumero(diaSemana) {
   }
 }
 
-export function convertirNumeroDiaSemana(diaSemanaNumero) {
+export const convertirNumeroDiaSemana = (diaSemanaNumero)=> {
   switch (diaSemanaNumero) {
     case 1:
       return "Lunes";
@@ -280,7 +281,7 @@ export function convertirNumeroDiaSemana(diaSemanaNumero) {
   }
 }
 
-export function quitarSegundos(hora) {
+export const quitarSegundos = (hora) =>{
   if(hora !== "" && hora !== undefined){ 
     const partes = hora.split(":");
     return partes[0] + ":" + partes[1];
@@ -288,3 +289,29 @@ export function quitarSegundos(hora) {
     return hora;
   }
 }
+
+export const mirarActividad =(valor)=>{
+  if (valor === 1) {
+    return "Activo";
+  } else if (valor === 0) {
+    return "Acabado";
+  }
+}
+
+//Función que según el parámetro de la actividad del empleado devuelve un booleano.
+export const valorCheck = (actividad) => {
+  if (actividad == 1) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+//Función que según el parámetro de la actividad del empleado devuelve un booleano.
+export const booleanoANumber = (actividad) => {
+  if (actividad == true) {
+    return 1;
+  } else {
+    return 0;
+  }
+};

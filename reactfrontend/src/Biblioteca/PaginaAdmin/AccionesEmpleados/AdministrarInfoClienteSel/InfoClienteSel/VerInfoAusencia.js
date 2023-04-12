@@ -1,13 +1,16 @@
 //Importamos todos los .js que necesitamos para esta práctica.
 import React, {useState, useEffect} from 'react';
 import { generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete, peticionGetAuth } from '../../../../FuncionesAuxiliares/Funciones';
-import {Link, useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import { URL_API } from 'services/http/const';
+import Table from 'react-bootstrap/Table'
 import SweetAlert from "sweetalert2";
+import BuscadorAusencia from 'Biblioteca/Buscador/BuscadorAusencia';
 
 function VerInfoAusencia(props) {
     const Navigate = useNavigate();
-    const [ausencia,setAusencia] = useState([]);
+    const [ausenciaDinamico,setAusenciaDinamico] = useState([]);
+    const [ausenciaEstatico,setAusenciaEstatico] = useState([]);
     const [estaVacio,setEstaVacio] = useState(false);
 
     const recoleccionDatos = async () => {
@@ -36,7 +39,8 @@ function VerInfoAusencia(props) {
               }
             });
             if(todosDatosAusencia !== undefined){
-              setAusencia(todosDatosAusencia);
+              setAusenciaEstatico(todosDatosAusencia);
+              setAusenciaDinamico(todosDatosAusencia);
             }
         }
       };
@@ -100,38 +104,96 @@ function VerInfoAusencia(props) {
       Navigate(props.link);
     }
 
-    if(estaVacio !== false){
-        return (ausencia.map((option, index)=> {
-          //return(<td><pre>{JSON.stringify(ausencia, null, 3)}</pre></td>)
-          if(option !== undefined){
-            return(<tr key={generarUUID()}>
-                        <td className='formatoTextoCorrecto'>{option.descripcion}</td>
-                        <td className='formatoTextoCorrecto campoOpcional'>{fechaNula(option.fInicio)}</td>
-                        <td className='formatoTextoCorrecto campoOpcional'>{fechaNula(option.fFin)}</td>
-                        <td className='formatoTextoCorrecto campoOpcional'>{estaJustificada(option.justificada)}</td>
-                        <td className='formatoTextoCorrecto campoOpcional'>{option.tipoAusencia}</td>
-                        <td>
-                            <button type='button' onClick={modificarAusencia} className="sinBorde">
-                                <img id={option.id} title='Boton Modificar' className='imagenFotoGestionUsuarios' src={require('../../../../../img/modify-foto.png')} alt="imagen Foto Modificar"/>
-                            </button>
-                            <button type="button" className='sinBorde' onClick={borrarAusencia}>
-                                <img id={option.id}  title='Boton Borrar' className='imagenFotoGestionUsuarios' src={require('../../../../../img/delete-foto.png')} alt="imagen Foto Borrar"/>
-                            </button>
-                        </td>
-                    </tr>
+    const getInfoAusencia = () =>{
+      return (ausenciaEstatico.map((option, index)=> {
+        //return(<td><pre>{JSON.stringify(ausencia, null, 3)}</pre></td>)
+        if(option !== undefined){
+          return(<tr key={generarUUID()}>
+                      <td className='formatoTextoCorrecto'>{option.descripcion}</td>
+                      <td className='formatoTextoCorrecto campoOpcional'>{fechaNula(option.fInicio)}</td>
+                      <td className='formatoTextoCorrecto campoOpcional'>{fechaNula(option.fFin)}</td>
+                      <td className='formatoTextoCorrecto campoOpcional'>{estaJustificada(option.justificada)}</td>
+                      <td className='formatoTextoCorrecto campoOpcional'>{option.tipoAusencia}</td>
+                      <td>
+                          <button type='button' onClick={modificarAusencia} className="sinBorde">
+                              <img id={option.id} title='Boton Modificar' className='imagenFotoGestionUsuarios' src={require('../../../../../img/modify-foto.png')} alt="imagen Foto Modificar"/>
+                          </button>
+                          <button type="button" className='sinBorde' onClick={borrarAusencia}>
+                              <img id={option.id}  title='Boton Borrar' className='imagenFotoGestionUsuarios' src={require('../../../../../img/delete-foto.png')} alt="imagen Foto Borrar"/>
+                          </button>
+                      </td>
+                  </tr>
 
-                )
-          }
-        }))  
+              )
+        }
+      })) 
+    }
+
+    if(estaVacio !== false){
+         return(
+          <div className='TablaDatosUser'>
+            <BuscadorAusencia datosEstaticos={setAusenciaEstatico} datosDinamicos={ausenciaDinamico}/>
+            <Table striped>
+              <thead>
+                  <tr>
+                      <th>Descripción</th>
+                      <th className='campoOpcional'>Fecha Inicio</th>
+                      <th className='campoOpcional'>Fecha Fin</th>
+                      <th className='campoOpcional'>Justificada</th>
+                      <th className='campoOpcional'>Tipo Ausencia</th>
+                      <th>Opciones</th>
+                  </tr>
+              </thead>
+              <tbody>
+                {getInfoAusencia()}
+              </tbody>
+            </Table>
+          </div>
+         )
     }else{
       if(props.titulo === "Vacaciones"){
-        return(<tr key={generarUUID()}>
-            <td colSpan={"6"}>Este empleado no dispone de {props.titulo}.</td>
-          </tr>)
+        return(
+          <div className='TablaDatosUser'>
+            <Table striped>
+              <thead>
+                  <tr>
+                      <th>Descripción</th>
+                      <th className='campoOpcional'>Fecha Inicio</th>
+                      <th className='campoOpcional'>Fecha Fin</th>
+                      <th className='campoOpcional'>Justificada</th>
+                      <th className='campoOpcional'>Tipo Ausencia</th>
+                      <th>Opciones</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <tr key={generarUUID()}>
+                  <td colSpan={"6"}>Este empleado no dispone de {props.titulo}.</td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>
+        )
       }else{
-      return(<tr key={generarUUID()}>
-            <td colSpan={"6"}>Este empleado no dispone de {props.titulo}s.</td>
-          </tr>)
+      return(
+        <div className='TablaDatosUser'>
+            <Table striped>
+              <thead>
+                  <tr>
+                      <th>Descripción</th>
+                      <th className='campoOpcional'>Fecha Inicio</th>
+                      <th className='campoOpcional'>Fecha Fin</th>
+                      <th className='campoOpcional'>Justificada</th>
+                      <th className='campoOpcional'>Tipo Ausencia</th>
+                      <th>Opciones</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <tr key={generarUUID()}>
+                  <td colSpan={"6"}>Este empleado no dispone de {props.titulo}s.</td>
+                </tr>
+              </tbody>
+            </Table>
+          </div>)
       } 
     }
 }

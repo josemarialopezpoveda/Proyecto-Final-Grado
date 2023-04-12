@@ -1,0 +1,45 @@
+.cabeceraVerMensaje{
+    padding: 3%;
+    display: grid;
+    grid-template-columns: 20% 80%;
+    align-items: center;
+    justify-content: center;
+}
+
+.genteMensaje h1{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.botonCrearMensaje a{
+    text-align: center;
+}
+
+.botonCrearMensaje{
+    display: flex;
+    justify-content: end;
+}
+
+.contenedorTexto{
+    margin: 2%;
+    padding: 2%;
+    background-color: #B8E7F6;
+}
+
+.contenedorTexto div{
+    background-color: #51CEF4;
+    padding: 1%;
+    margin: 1%;
+    font-size: 15px;
+}
+
+.fechaMensaje{
+    display: flex;
+    justify-content: end;
+    font-size: 12px;
+}
+
+.emisorReceptor h1{
+    font-size: 15px;
+    font-weight: bold;
+}

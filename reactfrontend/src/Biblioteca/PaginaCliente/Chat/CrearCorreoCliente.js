@@ -11,37 +11,61 @@ function CrearCorreoCliente() {
   return (
     <React.Fragment>
         <NavCliente/>
-            <div className='contenedorFormularioCrearCorreo divContenedorFormCrearCorreo'>
-                <Form id="anyadir">
-                    <h1>Crear Correo</h1>
-                    <div className='divContenedorCampo'>
-                        <p>Título</p>
-                        <Form.Group className="mb-3">
-                            <Form.Control required type="text"/>
-                        </Form.Group>
-                    </div>
-                    <div className='divContenedorCampo'>
-                        <p>Para</p>
-                        <Form.Group className="mb-3">
-                            <Form.Control required size="lg" type="email"/>
-                        </Form.Group>
-                    </div>
-                    <div className='divContenedorCampo'>
-                        <InputGroup className='textAreaPequenyo'>
-                            <InputGroup.Text>Mensaje:</InputGroup.Text>
-                            <Form.Control as="textarea" aria-label="With textarea" />
-                        </InputGroup>
-                    </div>
-                    <div className='contenedorLinkEnviarCorreo'>
-                        <Link className='enviarCorreoBoton' to="/chatCliente">Enviar Correo</Link>
-                    </div>
-                </Form>
-            </div>
-            <div className='ContenedorBajarFooter'>
-                <div className='BajarFooter'>
-                    <PiePagina/>
+                <div className=''>
+                    <h1 className='text-center tituloH1'>Crear Correo</h1>
+                    <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
+                    <Form id="anyadir">
+                        <div className='contenedorSelectCrearCorreoAdmin'>
+                            <div className="divContenedorCampo2">
+                                <div className="divContenedorCampo">
+                                    <Form.Select className='selectCrearCorreoAdmin' aria-label="Default select example">
+                                        <option value="Informar Vacaciones">Informar Vacaciones</option>
+                                        <option value="Informar Baja">Informar Baja</option>
+                                        <option value="Informar Nuevo Horario">Informar Nuevo Horario</option>
+                                        <option value="Otros">Otros</option>
+                                    </Form.Select>
+                                </div>
+                            </div>
+                        </div>
+                            <div className="divContenedorCampo divMensajeCorreo">
+                                    <p>Título</p>
+                                    <Form.Group className="mb-3 width500">
+                                    <Form.Control
+                                        size="lg"
+                                        type="text"
+                                    />
+                                    </Form.Group>
+                            </div>
+                            <div className="divContenedorCampo divMensajeCorreo">
+                                    <p>Para</p>
+                                    <Form.Group className="mb-3 width500">
+                                    <Form.Control
+                                        size="lg"
+                                        type="text"
+                                    />
+                                    </Form.Group>
+                            </div>
+                            <div className="divContenedorCampo divMensajeCorreo">
+                                <p>Mensaje</p>
+                                <Form.Group className="mb-3 width500">
+                                <Form.Control
+                                    size="lg"
+                                    type="text"
+                                    //defaultValue={form.nombre}
+                                    //onChange={(e) => setForm({ ...form, nombre: e.target.value.trim() })}
+                                    //isValid={validarCampos(/^(?!\s*$).+/.test(form.nombre))}
+                                    //isInvalid={validarCampos(!/^(?!\s*$).+/.test(form.nombre))}
+                                />
+                                </Form.Group>
+                            </div>
+                        <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
+                            <Link to="/verTipoAusencias" className="anyadirUsuarioDatos">Volver</Link>
+                            <Link className='anyadirUsuarioDatos' to="/chatAdmin">Enviar Correo</Link>
+                        </div>
+                    </Form>
+                    </section>
                 </div>
-            </div>
+        <PiePagina/>
     </React.Fragment>
   );
 }

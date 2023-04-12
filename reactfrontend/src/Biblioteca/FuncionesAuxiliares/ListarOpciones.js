@@ -17,7 +17,7 @@ const ListarOpciones = (props) => {
           Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
         },
       };
-      let peticion = await peticionGetAuth(URL_API + "logoutEmpleado", header);
+      let peticion = await peticionGetAuth(URL_API + "logout", header);
       if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
         mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
       } else {

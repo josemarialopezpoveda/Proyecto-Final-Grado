@@ -11,24 +11,11 @@ function VerTiposAusencias() {
     <React.Fragment>
         <NavAdmin/>
         <section className="contenedorEmpleadosAcciones">
-                <h1 className='tituloh1'>Tipos Ausencias</h1>
-                <div className='contenedorBotonCrearCorreo'>
-                    <Link className='crearCorreoBoton' to="/anyadirTipoAusencia">Añadir tipo de ausencia</Link>
-                </div>
-            <div className='TablaDatosUser tablaTiposAusencias'>
-                <Table striped>
-                <thead>
-                    <tr>
-                        <th>Descripción</th>
-                        <th className='campoOpcional'>Tipo Ausencia</th>
-                        <th>Opciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <ContenidoTablaTipoAusencias/>
-                </tbody>
-                </Table>
+            <h1 className='tituloh1'>Tipos Ausencias</h1>
+            <div className='contenedorBotonCrearCorreo'>
+                <Link className='crearCorreoBoton' to="/anyadirTipoAusencia">Añadir tipo de ausencia</Link>
             </div>
+            <ContenidoTablaTipoAusencias/>
         </section>
         <PiePagina/>
     </React.Fragment>

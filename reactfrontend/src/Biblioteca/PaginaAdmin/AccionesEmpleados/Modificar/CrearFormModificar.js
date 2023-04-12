@@ -11,6 +11,7 @@ import {
   mostrarAlertaErronea,
   mostrarAlertaCorrecta,
   formatearFechaHora,
+  valorCheck,
 } from "Biblioteca/FuncionesAuxiliares/Funciones";
 import { URL_API } from "../../../../services/http/const";
 import { Link } from "react-router-dom";
@@ -100,14 +101,7 @@ function CrearFormModificar() {
       return testPattern;
     }
   };
-  //Función que según el parámetro de la actividad del empleado devuelve un booleano.
-  const valorCheck = (actividad) => {
-    if (actividad == 1) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+
   //Función que valida los datos del formulario, los recoge y almacena en un objeto y hace la petición put y dependiendo del resultado informa al usuario.
   const TodoCorrecto = async () => {
     setComprobarCampo(true);
