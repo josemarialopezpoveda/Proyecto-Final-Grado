@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empleado;
+use App\Models\Empresa;
 use App\Models\Tiempo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class TiempoController extends Controller
-{
+class TiempoController extends Controller {
     /**
      * Display a listing of the resource.
      */
@@ -28,9 +29,65 @@ class TiempoController extends Controller
 
     public function empleadoOnline($id)
     {
+        //$user = Auth::user();
         $tiempo = Tiempo::where('empleado_id', $id)->where('fin', null)->get();
         return response()->json($tiempo);
     }
+
+    public function empleadosOnline()
+    {
+        $user = Auth::user();
+
+        if ($user->tipoEmpleado != 'Trabajador'){
+            if ($user instanceof Empresa) {
+                $empresaId = $user->getKey();
+            } elseif ($user->tipoEmpleado == 'Administrador') {
+                $empresaId = $user->empresa_id;
+            }
+
+            //Obtener los empleados con fin igual a null que pertenezcan a la empresa autenticada
+            $empleados = Tiempo::where('fin', null)
+                ->whereHas('empleado', function ($query) use ($empresaId) {
+                    $query->where('empresa_id', $empresaId);
+                })
+                ->with([
+                    'empleado' => function ($query) {
+                        $query->select('id', 'nombre', 'apellidos', 'empresa_id');
+                    }
+                ])
+                ->get();
+
+            // Obtener los campos necesarios y renombrarlos en la respuesta JSON
+            $empleados = $empleados->map(function ($item) {
+                return [
+                    'empleado_id' => $item->empleado_id,
+                    'nombre' => $item->empleado->nombre,
+                    'apellidos' => $item->empleado->apellidos,
+                    'inicio' => $item->inicio,
+                    'empresa_id' => $item->empleado->empresa_id
+                ];
+            });
+
+            // Convertir la colección a un array
+            //$empleados = $empleados->toArray();
+
+            // Verificar si se encontraron empleados y retornar la respuesta JSON
+            if (!empty($empleados)) {
+                return response()->json($empleados);
+            } else {
+                return response()->json(
+                    ['message' => 'No se encontraron empleados con fin nulo pertenecientes a la empresa autenticada.'],
+                    404
+                );
+            }
+        } else {
+            return response()->json(
+                ['message' => 'No estás autorizado.'],
+                404
+            );
+        }
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -57,7 +114,6 @@ class TiempoController extends Controller
         ];
         return response()->json($data);
     }
-
 
 
     /**
@@ -90,7 +146,7 @@ class TiempoController extends Controller
                     'message' => 'Tiempo no existe'
                 ];
             }
-        }else {
+        } else {
             $data = [
                 'message' => 'Empleado no existe'
             ];

@@ -62,6 +62,7 @@ class EmpleadoController extends Controller {
         $user = Auth::user();
         $empleado = Empleado::find($empleadoId);
 
+
         if ($empleado) {
             return response()->json($empleado);
         } else {

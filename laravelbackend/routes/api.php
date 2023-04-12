@@ -51,6 +51,7 @@ Route::get('/error', [EmpresaController::class, 'paginaError']);
 Route::post('/loginEmpleado', 'App\Http\Controllers\EmpleadoController@login');
 Route::get('/empleadoOnline/{empleado}', [TiempoController::class, 'empleadoOnline']);
 
+
 // Turnos
 
 Route::get('/turnos', [TurnoController::class, 'index']);
@@ -112,6 +113,8 @@ Route::middleware('auth:sanctum')->group(
         Route::put('/empleados/{empleados}', 'App\Http\Controllers\EmpleadoController@update');
         Route::delete('/empleados/{empleados}', 'App\Http\Controllers\EmpleadoController@destroy');
         Route::get('/logoutEmpleado', [EmpleadoController::class, 'logout']);
+
+        Route::get('/empleadosOnline', [TiempoController::class, 'empleadosOnline']);
 
 
         //Casos
