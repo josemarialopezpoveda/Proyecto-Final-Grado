@@ -30,7 +30,27 @@ class CasoController extends Controller {
                 return response()->json(['error' => 'El caso no pertenece a la empresa especificada'], 403);
             }
             $mensajes = Mensaje::where('casos_id', $casoId)->get();
-            return response()->json(['caso' => $caso, 'mensajes' => $mensajes]);
+            if (count($mensajes) != 0) {
+                $primerMensaje = $mensajes->first();
+                $empleadoEmisor = Empleado::find($primerMensaje->emisor);
+                $empleadoReceptor = Empleado::find($primerMensaje->receptor);
+                $response=[
+                    'idEmisor'=>$empleadoEmisor->id,
+                    'Emisor'=> $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
+                    'idReceptor'=>$empleadoReceptor->id,
+                    'Receptor'=> $empleadoReceptor->nombre . "  " . $empleadoReceptor->apellidos,
+                ];
+                return response()->json(['caso' => $caso, 'Intervinientes' => $response, 'mensajes' => $mensajes]);
+            } else{
+                $empleadoEmisor = Empleado::find($caso->empleado_id);
+                $response=[
+                    'idEmisor'=>$empleadoEmisor->id,
+                    'Emisor'=> $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
+                    ];
+                return response()->json(['caso' => $caso, 'Intervinientes' => $response, 'mensajes' => $mensajes]);
+            }
+
+
         } else {
             $mensajes = Mensaje::where('casos_id', $casoId)->get();
             $existeUser = false;
@@ -96,42 +116,47 @@ class CasoController extends Controller {
     public function store(Request $request)
     {
         $user = Auth::user();
-        // Validación de los datos del formulario
-        $validator = Validator::make($request->all(), [
-            'empleado_id' => 'required|exists:empleados,id',
-            // Validación de existencia del empleado_id en la tabla empleados
-            'asunto' => 'required|string',
-            'activo' => 'boolean',
-            'fechaCreacion' => 'nullable|date'
-        ]);
+        if (!($user instanceof Empresa)) {
+            // Validación de los datos del formulario
+            $validator = Validator::make($request->all(), [
+                'empleado_id' => 'required|exists:empleados,id',
+                // Validación de existencia del empleado_id en la tabla empleados
+                'asunto' => 'required|string',
+                'activo' => 'boolean',
+                'fechaCreacion' => 'nullable|date'
+            ]);
 
-        if ($validator->fails()) {
-            return [
-                'message' => 'Error, hay campos con errores de validación',
-                'errores' => $validator->errors()->all()
+            if ($validator->fails()) {
+                return [
+                    'message' => 'Error, hay campos con errores de validación',
+                    'errores' => $validator->errors()->all()
+                ];
+            }
+            if ($user->id == $request['empleado_id']) {
+                // Creación del nuevo caso en la base de datos
+                $caso = new Caso();
+                $caso->empleado_id = $request['empleado_id'];
+                $caso->asunto = $request['asunto'];
+                $caso->activo = $request->has(
+                    'activo'
+                ) ? $request['activo'] : true; // Si no se proporciona el valor de activo, se establece como true por defecto
+                $caso->fechaCreacion = Carbon::now();
+                $caso->save();
+
+                $data = [
+                    'message' => 'Caso creado correctamente',
+                    'caso' => $caso,
+                ];
+            } else {
+                $data = [
+                    'message' => 'El ID del empleado no coincide con el usuario autenticado.',
+                ];
+            }
+        }else {
+            $data = [
+                'message' => 'Un caso solo puede crearlo un Empleado.',
             ];
         }
-        if ($user->id == $request['empleado_id']) {
-            // Creación del nuevo caso en la base de datos
-            $caso = new Caso();
-            $caso->empleado_id = $request['empleado_id'];
-            $caso->asunto = $request['asunto'];
-            $caso->activo = $request->has(
-                'activo'
-            ) ? $request['activo'] : true; // Si no se proporciona el valor de activo, se establece como true por defecto
-            $caso->fechaCreacion = Carbon::now();
-            $caso->save();
-
-            $data = [
-                'message' => 'Caso creado correctamente',
-                'caso' => $caso,
-            ];
-        } else {
-            $data = [
-                'message' => 'El ID del empleado no coincide con el usuario autenticado.',
-            ];
-        }
-
 
         return response()->json($data);
     }
@@ -151,6 +176,8 @@ class CasoController extends Controller {
     public function update(Request $request, $casoId)
     {
         $user = Auth::user();
+        if (!($user instanceof Empresa)){
+
         $caso = Caso::find($casoId);
 
         if ($caso) {
@@ -198,6 +225,13 @@ class CasoController extends Controller {
                 'message' => 'Caso no existe'
             ];
         }
+
+    }
+    else {
+        $data = [
+            'message' => 'No estás autorizo. Los casos son los pueden modificar los Empleados'
+        ];
+    }
         return response()->json($data);
     }
 
@@ -207,37 +241,43 @@ class CasoController extends Controller {
     public function destroy($casoId)
     {
         $user = Auth::user();
-        $caso = Caso::find($casoId);
-        /* Para borrar un caso:
-            1.- Tiene que existir.
-            2.- Lo puede borrar el propietario o un admin de la empresa.
-            3.- Si tiene mensajes no se puede borrar. (el id del caso está en la tabla mensajes).
-        */
+        if (!($user instanceof Empresa)) {
+            $caso = Caso::find($casoId);
+            /* Para borrar un caso:
+                1.- Tiene que existir.
+                2.- Lo puede borrar el propietario o un admin de la empresa.
+                3.- Si tiene mensajes no se puede borrar. (el id del caso está en la tabla mensajes).
+            */
 
-        if ($caso) {
-            $esPropitario = $user->id == $caso->empleado->id;
-            $esAdmin = $user->tipoEmpleado == "Administrador";
-            $mensajes = Mensaje::where('casos_id', $casoId)->get();
-            if (count($mensajes) != 0) {
-                $data = [
-                    'message' => 'Error, no se puede borrar, el caso tiene mensajes.',
-                ];
-            } else {
-                if ($esPropitario || $esAdmin) {
-                    $caso->delete();
+            if ($caso) {
+                $esPropitario = $user->id == $caso->empleado->id;
+                $esAdmin = $user->tipoEmpleado == "Administrador";
+                $mensajes = Mensaje::where('casos_id', $casoId)->get();
+                if (count($mensajes) != 0) {
                     $data = [
-                        'message' => 'Caso eliminado correctamente',
-                        'caso' => $caso,
+                        'message' => 'Error, no se puede borrar, el caso tiene mensajes.',
                     ];
                 } else {
-                    $data = [
-                        'message' => 'Error, no estás autorizado.',
-                    ];
+                    if ($esPropitario || $esAdmin) {
+                        $caso->delete();
+                        $data = [
+                            'message' => 'Caso eliminado correctamente',
+                            'caso' => $caso,
+                        ];
+                    } else {
+                        $data = [
+                            'message' => 'Error, no estás autorizado.',
+                        ];
+                    }
                 }
+            } else {
+                $data = [
+                    'message' => 'Caso no existe'
+                ];
             }
-        } else {
+        }else {
             $data = [
-                'message' => 'Caso no existe'
+                'message' => 'Un caso solo puede eliminarlo un Empleado.'
             ];
         }
         return response()->json($data);
