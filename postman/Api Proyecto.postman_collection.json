@@ -439,7 +439,7 @@
 					"formdata": [
 						{
 							"key": "email",
-							"value": "eva.marrero@example.com",
+							"value": "victor@gmail.com",
 							"type": "text"
 						},
 						{
@@ -529,7 +529,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "4|vxS0bMyY75n7SkSioIv7FtMLOgZd9ig2kULth0vW",
+							"value": "4|legz8EID5NHUMfyKXkK6gOws1bfnymo7XLWpGFnh",
 							"type": "string"
 						}
 					]
@@ -561,6 +561,55 @@
 					"path": [
 						"api",
 						"empleados"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "EMPLEADO GET por ID",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "4|legz8EID5NHUMfyKXkK6gOws1bfnymo7XLWpGFnh",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n        \"cif\": \"A12345678\",\n        \"razonSocial\": \"ZAPATOS, S.L.\",\n        \"nombreComercial\": \"KIDS SHOES\",\n        \"direccion\": \"MAYOR, 2000\",\n        \"poblacion\": \"MADRID\",\n        \"provincia\": \"MADRID\",\n        \"pais\": \"España\",\n        \"telefonoFijo\": \"915967968\",\n        \"telefonoMovil\": \"614655656\",\n        \"email\": \"info@kidshoes.com\",\n        \"password\": \"123456\",\n        \"logotipo\": null,\n        \"created_at\": null,\n        \"updated_at\": null,\n        \"empleados\": []\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/empleado/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"empleado",
+						"5"
 					]
 				}
 			},
@@ -794,7 +843,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "3|l5pJESYeGZtccb0M5kUFarG1cKbJuWIbX1B524h2",
 							"type": "string"
 						}
 					]
@@ -1818,9 +1867,22 @@
 			"response": []
 		},
 		{
-			"name": "EMPLEADO_TURNO POST",
+			"name": "TIEMPOS GET EMPLEADOS ONLINE",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
-				"method": "POST",
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "8|aqcUze0CI4P3Q4kSWBMC1zPgMXnI0vFHoSTzblFl",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
 				"header": [
 					{
 						"key": "Accept",
@@ -1830,7 +1892,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"turno_id\": 1,\r\n    \"empleado_id\": 1,\r\n    \"fechaInicioTurno\": \"2023-01-01 00:00:00\",\r\n    \"fechaFinTurno\": \"2023-12-31 23:59:59\"\r\n}",
+					"raw": " {\n        \"cif\": \"A12345678\",\n        \"razonSocial\": \"ZAPATOS, S.L.\",\n        \"nombreComercial\": \"KIDS SHOES\",\n        \"direccion\": \"MAYOR, 2000\",\n        \"poblacion\": \"MADRID\",\n        \"provincia\": \"MADRID\",\n        \"pais\": \"España\",\n        \"telefonoFijo\": \"915967968\",\n        \"telefonoMovil\": \"614655656\",\n        \"email\": \"info@kidshoes.com\",\n        \"password\": \"123456\",\n        \"logotipo\": null,\n        \"created_at\": null,\n        \"updated_at\": null,\n        \"empleados\": []\n    }",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -1838,7 +1900,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8000/api/empleados/turno",
+					"raw": "http://localhost:8000/api/empleadosOnline",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -1846,8 +1908,7 @@
 					"port": "8000",
 					"path": [
 						"api",
-						"empleados",
-						"turno"
+						"empleadosOnline"
 					]
 				}
 			},
@@ -1903,6 +1964,42 @@
 			"response": []
 		},
 		{
+			"name": "EMPLEADO_TURNO POST",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"turno_id\": 1,\r\n    \"empleado_id\": 1,\r\n    \"fechaInicioTurno\": \"2023-01-01 00:00:00\",\r\n    \"fechaFinTurno\": \"2023-12-31 23:59:59\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/empleados/turno",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"empleados",
+						"turno"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "MENSAJES GET (mensajes de una empresa)",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -1945,6 +2042,55 @@
 					"path": [
 						"api",
 						"mensajes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "MENSAJES GET por ID de MENSAJE",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "10|zwarxXBxtyNHTNME0HAQIztD6HaeWK9vMvvsZRJH",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/mensaje/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"mensaje",
+						"1"
 					]
 				}
 			},
@@ -2317,6 +2463,54 @@
 						"api",
 						"casos",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CASOS GET",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "10|tbCqLb90dE61TpAB0gbhubCLOirsuy12rpqA6fZm",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/casos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"casos"
 					]
 				}
 			},
