@@ -50,7 +50,6 @@ class EmpleadoController extends Controller {
     }
 
 
-
     /**
      * Display the specified resource.
      * Función que muestra los datos del empleado logueado.
@@ -61,15 +60,43 @@ class EmpleadoController extends Controller {
     {
         $user = Auth::user();
         $empleado = Empleado::find($empleadoId);
-
-
-        if ($empleado) {
-            return response()->json($empleado);
-        } else {
+        if (!$empleado) {
             $data = [
-                'message' => 'Empleado no existe'
+                'message' => 'El empleado no existe',
             ];
             return response()->json($data);
+        } else {
+            if ($user instanceof Empresa) {
+                $empresaLogin = Empresa::find($user->getKey());
+            } else {
+                if ($user instanceof Empleado) {
+                    $empresaLogin = Empresa::find($user->empresa_id);
+                } else {
+                    $data = [
+                        'message' => 'Error. ',
+                    ];
+                    return response()->json($data);
+                }
+            }
+            if (Empresa::find($empleado->empresa_id)->id != $empresaLogin->id) {
+                $data = [
+                    'message' => 'No estás autorizado. El empleado no es de tu empresa.',
+                ];
+                return response()->json($data);
+            } else {
+                if ($user instanceof Empleado) {
+                    $empleadoLogin = Empleado::find($user->getKey());
+                    if ($empleadoLogin->tipoEmpleado == "Administrador" || $empleadoLogin->id == $empleado->id) {
+                        return response()->json($empleado);
+                    } else {
+                        $data = [
+                            'message' => 'No estás autorizado.',
+                        ];
+                        return response()->json($data);
+                    }
+                }
+                return response()->json($empleado);
+            }
         }
     }
 
@@ -322,9 +349,6 @@ class EmpleadoController extends Controller {
     }
 
 
-
-
-
     public function attach(Request $request)
     {
         $empleado = Empleado::find($request->empleado_id);
@@ -344,26 +368,28 @@ class EmpleadoController extends Controller {
         $user = Auth::user();
         $empleado = Empleado::find($empleadoId);
         if ($empleado) {
-            if ($user instanceof Empresa){
-                if ($user->getKey() != $empleado->empresa_id){
+            if ($user instanceof Empresa) {
+                if ($user->getKey() != $empleado->empresa_id) {
                     $data = [
                         'message' => 'El empleado con el ID proporcionado no pertenece a la empresa'
                     ];
                     return response()->json($data);
                 }
-            } else if ($user instanceof Empleado) {
-                if ($user->empresa_id != $empleado->empresa_id){
-                    $data = [
-                        'message' => 'La empresa del empleado proporcionado no coincide con la empresa del usuario autenticado.'
-                    ];
-                    return response()->json($data);
+            } else {
+                if ($user instanceof Empleado) {
+                    if ($user->empresa_id != $empleado->empresa_id) {
+                        $data = [
+                            'message' => 'La empresa del empleado proporcionado no coincide con la empresa del usuario autenticado.'
+                        ];
+                        return response()->json($data);
+                    }
+                    if ($user->tipoEmpleado != "Administrador" && $user->getKey() != $empleadoId) {
+                        $data = [
+                            'message' => 'No estás autorizado.'
+                        ];
+                        return response()->json($data);
+                    }
                 }
-               if ($user->tipoEmpleado != "Administrador" && $user->getKey() != $empleadoId){
-                   $data = [
-                       'message' => 'No estás autorizado.'
-                   ];
-                   return response()->json($data);
-               }
             }
 
             $turnoActivo = $empleado->turnos->where('pivot.activo', true)->first();
