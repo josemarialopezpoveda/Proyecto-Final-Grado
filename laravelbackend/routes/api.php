@@ -128,6 +128,7 @@ Route::middleware('auth:sanctum')->group(
         //Mensajes
         Route::get('/mensajes', [MensajeController::class, 'index']); // Todos los mensajes de una empresa
         Route::get('/mensajes/{casoId}', [MensajeController::class, 'show']); // Todos los mensajes de un caso (casoId)
+        Route::get('/mensaje/{mensajeId}', [MensajeController::class, 'showMensaje']); // Un mensaje (mensajeId)
         Route::post('/mensajes', [MensajeController::class, 'store']);
         Route::put('/mensajes/{mensajeId}', [MensajeController::class, 'update']);
         Route::delete('/mensajes/{mensajeId}', [MensajeController::class, 'destroy']);

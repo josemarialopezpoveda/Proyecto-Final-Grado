@@ -24,8 +24,7 @@ class MensajeController extends Controller {
             } else {
                 $empresa = Empresa::find($user->empresa_id);
             }
-            $mensajes = Mensaje::where('empresa_id', $empresa->id)->get(
-            );
+            $mensajes = Mensaje::where('empresa_id', $empresa->id)->get();
             if (count($mensajes) != 0) {
                 $data = [
                     'message' => 'Mensajes de la empresa ' . $empresa->id,
@@ -42,6 +41,70 @@ class MensajeController extends Controller {
             ];
         }
         return response()->json($data);
+    }
+
+
+    public function showMensaje($mensajeId)
+    {
+        $user = Auth::user();
+        $mensaje = Mensaje::find($mensajeId);
+        if (!$mensaje) {
+            $data = [
+                'message' => 'El mensaje no existe',
+            ];
+            return response()->json($data);
+        } else {
+            $empresa = Empresa::find($mensaje->empresa_id);
+            if ($user instanceof Empresa) {
+                $empresaLogin = Empresa::find($user->getKey());
+            } else {
+                if ($user instanceof Empleado) {
+                    $empresaLogin = Empresa::find($user->empresa_id);
+                } else {
+                    $data = [
+                        'message' => 'Error. ',
+                    ];
+                    return response()->json($data);
+                }
+            }
+            if ($empresa->id != $empresaLogin->id) {
+                $data = [
+                    'message' => 'No estás autorizado. El mensaje no es de tu empresa.',
+                ];
+                return response()->json($data);
+            } else {
+                if ($user instanceof Empleado) {
+                    $empleado = Empleado::find($user->getKey());
+                    if ($empleado->id == $mensaje->emisor || $empleado->id == $mensaje->receptor) {
+                        $data = [
+                            'mensaje' => $mensaje,
+                            'empleado' => $empleado,
+                            'empresa' => $empresa,
+                        ];
+                        return response()->json($data);
+                    } else {
+                        if ($empleado->tipoEmpleado == "Administrador") {
+                            $data = [
+                                'mensaje' => $mensaje,
+                                'empleado' => $empleado,
+                                'empresa' => $empresa,
+                            ];
+                            return response()->json($data);
+                        } else {
+                            $data = [
+                                'message' => 'No estás autorizado. El mensaje no es tuyo.',
+                            ];
+                            return response()->json($data);
+                        }
+                    }
+                }
+                $data = [
+                    'mensaje' => $mensaje,
+                    'empresa' => $empresa,
+                ];
+                return response()->json($data);
+            }
+        }
     }
 
     public function show($casoId)
@@ -236,14 +299,12 @@ class MensajeController extends Controller {
                     ->orderBy('id', 'desc')
                     ->first()->id) // es el último mensaje.
             {
-                if ($user->nif && $user->id == $mensaje->emisor)
-                {
+                if ($user->nif && $user->id == $mensaje->emisor) {
                     $mensaje->delete();
                     $data = [
                         'message' => 'Mensaje eliminado correctamente',
                         'mensaje' => $mensaje
                     ];
-
                 } else {
                     $data = [
                         'message' => 'No se puede eliminar, no estás autorizado',
