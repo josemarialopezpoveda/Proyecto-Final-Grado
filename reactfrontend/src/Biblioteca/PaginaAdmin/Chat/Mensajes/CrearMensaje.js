@@ -1,23 +1,18 @@
 //Importamos todos los .js que necesitamos para esta práctica.
 import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
-import './CrearCorreoAdmin.css';
 import {Link, useNavigate} from 'react-router-dom';
 import PiePagina from '../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../Nav/NavAdmin';
 import { mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPost } from "../../../FuncionesAuxiliares/Funciones";
 import { URL_API } from 'services/http/const';
 
-function CrearCorreoAdmin() {
+function CrearMensaje() {
     //Creamos la variable para poder usar el navigate.
     const Navigate = useNavigate();
-    const [casoCreado, setCasoCreado] = useState({
-        empleado_id: `${localStorage.getItem("id")}`,
-        asunto: ""
-    });
 
     const [mensajeCreado, setMensajeCreado] = useState({
-        casos_id: "",
+        casos_id: `${localStorage.getItem('idCaso')}`,
         empresa_id: `${localStorage.getItem("id")}`,
         emisor: "",
         receptor:"",
@@ -64,43 +59,12 @@ function CrearCorreoAdmin() {
 
     const TodoCorrecto = async() =>{
         let raw = {
-          "empleado_id": casoCreado.empleado_id,
-          "asunto": casoCreado.asunto,
-        }
-        console.log(raw)
-        try {
-          const header = {
-              headers: {
-                  "Accept": "application/json",
-                  "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
-              }
-          }
-        let peticion = await peticionPost(URL_API + "casos", raw, header)
-        console.log(peticion)
-        if(peticion.data.errores !== undefined && peticion.data.errores !== null){
-            mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
-        }else{
-            mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-            setMensajeCreado({...mensajeCreado, casos_id: peticion.data.caso.id});
-            crearMensaje();
-            //Navigate("/verTipoAusencias")
-        }
-      } catch (error) {
-          mostrarAlertaErronea(error.message, error.stack, null);
-      }
-    
-    }
-
-    const crearMensaje = async() =>{
-        console.log(mensajeCreado.casos_id,)
-        let raw = {
             "casos_id": mensajeCreado.casos_id,
             "empresa_id": mensajeCreado.empresa_id,
             "emisor": mensajeCreado.emisor,
             "receptor": mensajeCreado.receptor,
             "mensaje": mensajeCreado.mensaje,
           }
-          console.log(raw)
           try {
             const header = {
                 headers: {
@@ -114,32 +78,21 @@ function CrearCorreoAdmin() {
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
           }else{
               mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-              Navigate("/chatAdmin")
+              Navigate("/verMensajes")
           }
         } catch (error) {
             mostrarAlertaErronea(error.message, error.stack, null);
         }
-      
     }
 
   return (
     <React.Fragment>
         <NavAdmin/>
+            <pre>{JSON.stringify(mensajeCreado, null, 3)}</pre>
                 <div className=''>
-                    <h1 className='text-center tituloH1'>Crear Caso</h1>
+                    <h1 className='text-center tituloH1'>Crear Mensaje</h1>
                     <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
                     <Form id="anyadir">
-                        <div className="divContenedorCampo divMensajeCorreo">
-                                <p>Asunto</p>
-                                <Form.Group className="mb-3 w-50">
-                                <Form.Control
-                                    defaultValue={casoCreado.asunto}
-                                    onInput={(e) => setCasoCreado({ ...casoCreado, asunto: e.target.value.trim() })}
-                                    size="lg"
-                                    type="text"
-                                />
-                                </Form.Group>
-                        </div>
                         <div className='divContenedorCampo'>
                             <p>De:</p>
                             <Form.Group className="w-50 mb-3">
@@ -176,8 +129,8 @@ function CrearCorreoAdmin() {
                             </Form.Group>
                         </div>
                         <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
-                            <Link to="/verTipoAusencias" className="anyadirUsuarioDatos">Volver</Link>
-                            <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Enviar Correo</button>
+                            <Link to="/verMensajes" className="anyadirUsuarioDatos">Volver</Link>
+                            <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Crear Mensaje</button>
                         </div>
                     </Form>
                     </section>
@@ -187,4 +140,4 @@ function CrearCorreoAdmin() {
   );
 }
 
-export default CrearCorreoAdmin;
+export default CrearMensaje;

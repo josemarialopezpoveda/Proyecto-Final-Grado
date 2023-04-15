@@ -17,6 +17,7 @@ import {
 import { URL_API } from 'services/http/const.js';
 import { useNavigate } from "react-router-dom";
 import SweetAlert from "sweetalert2";
+import BuscadorCasos from 'Biblioteca/Buscador/BuscadorCasos';
 
 function ChatAdmin() {
   //Creamos la variable para el uso del useNavigate.
@@ -119,7 +120,7 @@ function ChatAdmin() {
         <div className='contenedorBotonCrearCorreo'>
           <Link to="/crearCorreoAdmin" className='crearCorreoBoton'>Crear Correo</Link>
         </div>
-        {/* <BuscadorEmpleados datosEstaticos={setEmpleadosEstaticos} datosDinamicos={empleadosDinamicos}/> */}
+        <BuscadorCasos datosEstaticos={setCasosEmpresaEstaticos} datosDinamicos={casosEmpresaDinamicos}/>
         <div className='TablaDatosUser'>
             <Table id='tablaAccionesEmpleados' striped>
                 <thead>

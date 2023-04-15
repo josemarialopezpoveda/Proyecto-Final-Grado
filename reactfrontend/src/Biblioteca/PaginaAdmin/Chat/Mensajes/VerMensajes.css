@@ -26,8 +26,8 @@
     background-color: #B8E7F6;
 }
 
-.contenedorTexto div{
-    background-color: #51CEF4;
+.contenedorTexto div.textoMensaje{
+    background-color: rgb(242, 242, 242);
     padding: 1%;
     margin: 1%;
     font-size: 15px;
@@ -42,4 +42,9 @@
 .emisorReceptor h1{
     font-size: 15px;
     font-weight: bold;
+}
+
+.emisorReceptorUltimoMensaje {
+    display: flex;
+    justify-content: space-between;
 }

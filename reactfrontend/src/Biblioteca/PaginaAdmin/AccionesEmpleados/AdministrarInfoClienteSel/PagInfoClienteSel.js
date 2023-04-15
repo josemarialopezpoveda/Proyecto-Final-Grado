@@ -24,11 +24,11 @@ function PagInfoClienteSel() {
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
-    let datosEmpleado = await peticionGetAuth(URL_API + "ausenciasEmpleados/" + `${localStorage.getItem("idEmpleado")}`, header);
+    let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleado")}`, header);
     console.log(datosEmpleado)
-    if (datosEmpleado.data.empleado.length !== 0) {
+    if (datosEmpleado.data.nombre !== undefined) {
         var newEmpleado = {
-          nombre: datosEmpleado.data.empleado.nombre,
+          nombre: datosEmpleado.data.nombre,
         }
       setEmpleado(newEmpleado);
     }

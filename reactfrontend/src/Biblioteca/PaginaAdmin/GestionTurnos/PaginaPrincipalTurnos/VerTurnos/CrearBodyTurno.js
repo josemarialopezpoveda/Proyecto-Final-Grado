@@ -1,7 +1,8 @@
 //Importamos todos los .js que necesitamos para esta práctica.
-import { generarUUID, peticionGetAuth, quitarSegundos } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { convertirNumeroDiaSemana, generarUUID, peticionGetAuth, quitarSegundos } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import React, {useState, useEffect} from 'react';
 import { URL_API } from 'services/http/const';
+import Table from 'react-bootstrap/Table';
 
 function CrearBodyTurno() {
     const [turno, setTurno] = useState({});
@@ -16,19 +17,16 @@ function CrearBodyTurno() {
         };
         let datosTurno = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem("idEmpleado")}`, header);
         console.log(datosTurno)
-        if (datosTurno.data.empleado.turnos !== null) {
-            datosTurno.data.empleado.turnos.map((turnoDatos)=>{
-                if(turnoDatos.activo === 1){
-                    console.log(datosTurno.data.empleado.turnos)
+        if(datosTurno.data.dias !== undefined){
+            if (datosTurno.data.dias.length !== 0) {
                     var newTurno = {
-                    descripcion: datosTurno.data.empleado.turnos.descripcion,
-                    dias: datosTurno.data.empleado.turnos.dias,
+                        descripcion: datosTurno.data.descripcion,
+                        dias: datosTurno.data.dias,
                     };
                     setTurno(newTurno);
-                }
-            })
+            }
         }
-      };
+    };
 
     useEffect(() => {
         recoleccionDatos();
@@ -47,61 +45,93 @@ function CrearBodyTurno() {
         }
     }
 
-    if(turno !== undefined && turno.dias !== undefined){
+    const diasTurno = () =>{
+        if(turno !== {} && turno.dias !== undefined){
         return(
-            <tbody>
-                <tr>
-                    {verExistenHoras("horaInicioM","Hora Inicio Mañana")}
-                    {turno.dias.map((dia)=>{
-                        if(dia.horaInicioM !== "00:00:00"){
-                        return(<td key={generarUUID()}>{quitarSegundos(dia.horaInicioM)}</td>);
-                        }
-                    })}
-                </tr>
-                <tr>
-                    {verExistenHoras("horaFinM","Hora Fin Mañana")}
-                    {turno.dias.map((dia)=>{
-                        if(dia.horaFinM !== "00:00:00"){
-                            return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinM)}</td>);
-                        }
-                    })}
-                </tr>
-                <tr>
-                    {verExistenHoras("horaInicioT","Hora Inicio Tarde")}
-                    {turno.dias.map((dia)=>{
-                        if(dia.horaInicioT !== "00:00:00"){
-                            return(<td key={generarUUID()}>{quitarSegundos(dia.horaInicioT)}</td>);
-                        }
-                    })}
-                </tr>
-                <tr>
-                    {verExistenHoras("horaFinT","Hora Fin Tarde")}
-                    {turno.dias.map((dia)=>{
-                        if(dia.horaFinT !== "00:00:00"){
-                            return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinT)}</td>);
-                        }
-                    })}
-                </tr>
-                <tr>
-                    {verExistenHoras("horaInicioN","Hora Inicio Tarde")}
-                    {turno.dias.map((dia)=>{
-                        if(dia.horaInicioN !== "00:00:00"){
-                            return(<td key={generarUUID()}>{quitarSegundos(dia.horaInicioN)}</td>);
-                        }
-                    })}
-                </tr>
-                <tr>
-                    {verExistenHoras("horaFinN","Hora Fin Noche")}
-                    {turno.dias.map((dia)=>{
-                        if(dia.horaFinN !== "00:00:00"){
-                            return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinN)}</td>);
-                        }
-                    })}
-                </tr>
-                <pre>{JSON.stringify(turno, null, 3)}</pre>
-            </tbody>
+            <tr>
+                <th>Horas Asignadas</th>
+                {turno.dias.map((dia)=>{
+                  if(dia.horaInicioM !== "00:00:00" && dia.horaFinM !== "00:00:00" ||
+                     dia.horaInicioT !== "00:00:00" && dia.horaFinT !== "00:00:00" ||
+                     dia.horaInicioN !== "00:00:00" && dia.horaFinN !== "00:00:00"){
+                    return(<th key={generarUUID()}>{convertirNumeroDiaSemana(dia.diaSemana)}</th>)
+                  }
+                })}
+            </tr>
+        );
+        }
+    }
+
+    if(turno !== undefined && turno.dias !== undefined){
+        console.log(turno)
+        return(
+            <Table striped>
+                <thead>
+                    {diasTurno()}
+                </thead>
+                <tbody>
+                    <tr>
+                        {verExistenHoras("horaInicioM","Hora Inicio Mañana")}
+                        {turno.dias.map((dia)=>{
+                            if(dia.horaInicioM !== "00:00:00"){
+                            return(<td key={generarUUID()}>{quitarSegundos(dia.horaInicioM)}</td>);
+                            }
+                        })}
+                    </tr>
+                    <tr>
+                        {verExistenHoras("horaFinM","Hora Fin Mañana")}
+                        {turno.dias.map((dia)=>{
+                            if(dia.horaFinM !== "00:00:00"){
+                                return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinM)}</td>);
+                            }
+                        })}
+                    </tr>
+                    <tr>
+                        {verExistenHoras("horaInicioT","Hora Inicio Tarde")}
+                        {turno.dias.map((dia)=>{
+                            if(dia.horaInicioT !== "00:00:00"){
+                                return(<td key={generarUUID()}>{quitarSegundos(dia.horaInicioT)}</td>);
+                            }
+                        })}
+                    </tr>
+                    <tr>
+                        {verExistenHoras("horaFinT","Hora Fin Tarde")}
+                        {turno.dias.map((dia)=>{
+                            if(dia.horaFinT !== "00:00:00"){
+                                return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinT)}</td>);
+                            }
+                        })}
+                    </tr>
+                    <tr>
+                        {verExistenHoras("horaInicioN","Hora Inicio Tarde")}
+                        {turno.dias.map((dia)=>{
+                            if(dia.horaInicioN !== "00:00:00"){
+                                return(<td key={generarUUID()}>{quitarSegundos(dia.horaInicioN)}</td>);
+                            }
+                        })}
+                    </tr>
+                    <tr>
+                        {verExistenHoras("horaFinN","Hora Fin Noche")}
+                        {turno.dias.map((dia)=>{
+                            if(dia.horaFinN !== "00:00:00"){
+                                return(<td key={generarUUID()}>{quitarSegundos(dia.horaFinN)}</td>);
+                            }
+                        })}
+                    </tr>
+                </tbody>
+            </Table>
         );
         
+    }else{
+        return(
+            <Table>
+                <tbody>
+                    <tr>
+                        <td>El empleado seleccionado no tiene un turno activado.</td>
+                    </tr>
+                </tbody>
+            </Table>
+        )
     }
             
 }
