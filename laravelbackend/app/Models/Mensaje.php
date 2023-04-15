@@ -13,4 +13,9 @@ class Mensaje extends Model
     {
         return $this->belongsTo(Caso::class);
     }
+
+    public function empresas()
+    {
+        return $this->belongsTo(Mensaje::class);
+    }
 }
