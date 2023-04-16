@@ -129,6 +129,8 @@ class MensajeController extends Controller {
                     if (count($mensajes) != 0) {
                         $data = [
                             'message' => 'Mensajes del caso ' . $caso->id,
+                            'id' => $caso->id,
+                            'asunto' => $caso->asunto,
                             'mensajes' => $mensajes
                         ];
                     } else {
@@ -156,6 +158,8 @@ class MensajeController extends Controller {
                     if ($existeUser) {
                         $data = [
                             'message' => 'Mensajes del caso ' . $caso->id,
+                            'id' => $caso->id,
+                            'asunto' => $caso->asunto,
                             'mensajes' => $mensajes
                         ];
                     } else {
