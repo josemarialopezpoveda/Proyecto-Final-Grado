@@ -39,19 +39,18 @@ function VerMensajes() {
         let datosMensaje = await peticionGetAuth(URL_API + "mensajes/" + `${localStorage.getItem('idCaso')}`, header);
         let datosCaso = await peticionGetAuth(URL_API + "casos/" + `${localStorage.getItem('idCaso')}`, header);
         console.log(datosMensaje)
-        console.log(datosCaso)
          if (datosMensaje.data.mensajes !== undefined && datosMensaje.data.mensajes !== null && datosMensaje.data.mensajes.length !== 0) {
             var todosDatosCaso = datosMensaje.data.mensajes.map((datosM) => {
                 let empleados = {
                     emisor:"",
                     receptor:"",
                 };
-                if(datosCaso.data.Intervinientes.idEmisor === datosM.emisor || datosCaso.data.Intervinientes.idReceptor === datosM.emisor){
-                    empleados.emisor = datosCaso.data.Intervinientes.Emisor;
-                    empleados.receptor = datosCaso.data.Intervinientes.Receptor;
-                }else if(datosCaso.data.Intervinientes.idEmisor === datosM.receptor || datosCaso.data.Intervinientes.idReceptor === datosM.receptor){
-                    empleados.emisor = datosCaso.data.Intervinientes.Receptor;
-                    empleados.receptor = datosCaso.data.Intervinientes.Emisor;
+                if(datosMensaje.data.Intervinientes.idEmisor === datosM.emisor || datosMensaje.data.Intervinientes.idReceptor === datosM.emisor){
+                    empleados.emisor = datosMensaje.data.Intervinientes.Emisor;
+                    empleados.receptor = datosMensaje.data.Intervinientes.Receptor;
+                }else if(datosMensaje.data.Intervinientes.idEmisor === datosM.receptor || datosMensaje.data.Intervinientes.idReceptor === datosM.receptor){
+                    empleados.emisor = datosMensaje.data.Intervinientes.Receptor;
+                    empleados.receptor = datosMensaje.data.Intervinientes.Emisor;
                 }
                 var newObj = {
                   id:datosM.id,
@@ -65,10 +64,10 @@ function VerMensajes() {
               });
               setForm(todosDatosCaso);
                 var intervinientes = {
-                    idInterveniente1: datosCaso.data.Intervinientes.idEmisor,
-                    nombreCompletoInterveniente1: datosCaso.data.Intervinientes.Emisor,
-                    idInterveniente2: datosCaso.data.Intervinientes.idReceptor,
-                    nombreCompletoInterveniente2: datosCaso.data.Intervinientes.Receptor,
+                    idInterveniente1: datosMensaje.data.Intervinientes.idEmisor,
+                    nombreCompletoInterveniente1: datosMensaje.data.Intervinientes.Emisor,
+                    idInterveniente2: datosMensaje.data.Intervinientes.idReceptor,
+                    nombreCompletoInterveniente2: datosMensaje.data.Intervinientes.Receptor,
                 }
               setIntervenientes(intervinientes);
         }

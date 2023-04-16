@@ -85,7 +85,7 @@ function DatosEmpresa(){
     },[]);
 
     const verificarUserAdmin = () =>{
-        if(localStorage.getItem('tipoUsuario') !== undefined && localStorage.getItem('tipoUsuario') === "Administrador" ){
+        if(localStorage.getItem('tipoUsuario') !== undefined && localStorage.getItem('tipoUsuario') !== "Administrador" ){
             return(<button type='button' onClick={borrarEmpresa} className="linkSignInLogin" id="signIn">Eliminar</button>)
         }
     }

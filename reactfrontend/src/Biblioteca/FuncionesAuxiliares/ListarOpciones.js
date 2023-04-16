@@ -17,13 +17,22 @@ const ListarOpciones = (props) => {
           Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
         },
       };
-      let peticion = await peticionGetAuth(URL_API + "logoutEmpleado", header);
-      if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
-        mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
-      } else {
-        mostrarAlertaCorrecta(peticion.data.message, "Tu sesión ha sido cerrada correctamente.", "3000");
-        localStorage.clear();
-        Navigate("/");
+
+      let peticion = undefined
+      if(localStorage.getItem("tipoUsuario") === "Trabajador" || localStorage.getItem("tipoUsuario") === "Administrador"){
+        peticion = await peticionGetAuth(URL_API + "logoutEmpleado", header);
+      }else{
+        peticion = await peticionGetAuth(URL_API + "logout", header);
+      }
+      console.log(peticion)
+      if(peticion !== undefined){
+        if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
+          mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
+        } else {
+          mostrarAlertaCorrecta(peticion.data.message, "Tu sesión ha sido cerrada correctamente.", "3000");
+          localStorage.clear();
+          Navigate("/");
+        }
       }
     } catch (error) {
       mostrarAlertaErronea(error.message, error.stack, null);

@@ -53,7 +53,7 @@ function LoginCliente() {
           Navigate("/accionesEmpleados");
         }else{
           localStorage.setItem("id", peticion.data.empresa);
-          Navigate("/misDatos") 
+          Navigate("/fichar") 
         }
       }
     } catch (error) {
