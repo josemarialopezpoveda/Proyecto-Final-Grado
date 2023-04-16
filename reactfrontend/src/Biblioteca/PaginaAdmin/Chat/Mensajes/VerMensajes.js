@@ -121,6 +121,42 @@ function VerMensajes() {
         Navigate("/modificarMensaje");
     }
 
+    const verificarEmpleadoAdministrador = (option) =>{
+        if(localStorage.getItem("tipoUsuario") !== undefined && localStorage.getItem("tipoUsuario") === "Administrador"){
+            return(
+                <div>
+                    <button type="button" className="sinBorde" onClick={modificarMensaje}>
+                        <img
+                            title="Borrar Mensaje"
+                            className="imagenFotoGestionUsuarios"
+                            id={option.id}
+                            src={require("../../../../img/modify-foto.png")}
+                            alt="imagen Foto Borrar"
+                        />
+                    </button>
+                    <button type="button" className="sinBorde" onClick={borrarMensaje}>
+                        <img
+                            title="Borrar Mensaje"
+                            className="imagenFotoGestionUsuarios"
+                            id={option.id}
+                            src={require("../../../../img/delete-foto.png")}
+                            alt="imagen Foto Borrar"
+                        />
+                    </button>
+                </div>
+            )
+        }
+    }
+
+    const verificarPuedeCrearMensaje = () =>{
+        if(localStorage.getItem("tipoUsuario") !== undefined && localStorage.getItem("tipoUsuario") === "Administrador"){
+            return(
+                <div className='botonCrearMensaje'>
+                    <Link to="/crearMensaje" className="crearCorreoBoton">Crear Mensaje</Link>
+                </div>
+            )
+        }
+    }
 
   return (
     <React.Fragment>
@@ -131,9 +167,7 @@ function VerMensajes() {
                 <h1>Involucrado 1: {intervenientes.nombreCompletoInterveniente1}</h1>
                 <h1>Involucrado 2: {intervenientes.nombreCompletoInterveniente2}</h1>
             </div>
-            <div className='botonCrearMensaje'>
-                <Link to="/crearMensaje" className="crearCorreoBoton">Crear Mensaje</Link>
-            </div>
+            {verificarPuedeCrearMensaje()}
         </div>
         <div className="contenedorTexto">
             {form.map((option, index) => {
@@ -153,26 +187,7 @@ function VerMensajes() {
                                         <h1>Para: {option.receptor}</h1>
                                         <h1>De: {option.emisor}</h1>
                                     </div>
-                                    <div>
-                                        <button type="button" className="sinBorde" onClick={modificarMensaje}>
-                                            <img
-                                                title="Borrar Mensaje"
-                                                className="imagenFotoGestionUsuarios"
-                                                id={option.id}
-                                                src={require("../../../../img/modify-foto.png")}
-                                                alt="imagen Foto Borrar"
-                                            />
-                                        </button>
-                                        <button type="button" className="sinBorde" onClick={borrarMensaje}>
-                                            <img
-                                                title="Borrar Mensaje"
-                                                className="imagenFotoGestionUsuarios"
-                                                id={option.id}
-                                                src={require("../../../../img/delete-foto.png")}
-                                                alt="imagen Foto Borrar"
-                                            />
-                                        </button>
-                                    </div>
+                                    {verificarEmpleadoAdministrador(option)}
                                 </div>
                                 <div className="textoMensaje">{option.mensaje}</div>
                                 <div className="fechaMensaje">{option.horaEnvio}</div>

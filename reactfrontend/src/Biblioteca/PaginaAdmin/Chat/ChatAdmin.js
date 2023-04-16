@@ -112,14 +112,66 @@ function ChatAdmin() {
     // PENDIENTE DE CREAR PÁGINA DE VER MENSAJES DEL CASO
     Navigate("/verMensajes");
   };
+
+  const comprobarEmpleadoAdmin = (option) =>{
+    if(localStorage.getItem("tipoUsuario") !== undefined && localStorage.getItem("tipoUsuario") !== "Administrador"){
+      return(<td>
+        <button type="button"
+          title="Ver Información Del Empleado"
+          onClick={verInfoChat}
+          id={option.id}
+          className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
+          Ver Info.
+        </button>
+      </td>)
+    }else{
+      return(
+      <td>
+        <button type="button" className="sinBorde" to="/modificarEmpleado" onClick={modificarCaso}>
+          <img
+            title="Modificar Empleado"
+            className="imagenFotoGestionUsuarios"
+            id={option.id}
+            src={require("../../../img/modify-foto.png")}
+            alt="imagen Foto Modificar"
+          />
+        </button>
+        <button type="button" className="sinBorde" onClick={borrarCaso}>
+          <img
+            title="Borrar Empleado"
+            className="imagenFotoGestionUsuarios"
+            id={option.id}
+            src={require("../../../img/delete-foto.png")}
+            alt="imagen Foto Borrar"
+          />
+        </button>
+        <button type="button"
+          title="Ver Información Del Empleado"
+          onClick={verInfoChat}
+          id={option.id}
+          className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
+          Ver Info.
+        </button>
+      </td>)
+    }
+  }
+
+  const comprobarAdminCrearCaso = () =>{
+    if(localStorage.getItem("tipoUsuario") !== undefined && localStorage.getItem("tipoUsuario") === "Administrador"){
+      return(
+        <div className='contenedorBotonCrearCorreo'>
+          <Link to="/crearCorreoAdmin" className='crearCorreoBoton'>Crear Caso</Link>
+        </div>
+      )
+    }
+  }
+
   
   return (
     <React.Fragment>
       <NavAdmin/>
       <div>
-        <div className='contenedorBotonCrearCorreo'>
-          <Link to="/crearCorreoAdmin" className='crearCorreoBoton'>Crear Caso</Link>
-        </div>
+        {comprobarAdminCrearCaso()}
         <BuscadorCasos datosEstaticos={setCasosEmpresaEstaticos} datosDinamicos={casosEmpresaDinamicos}/>
         <div className='TablaDatosUser'>
             <Table id='tablaAccionesEmpleados' striped>
@@ -134,57 +186,13 @@ function ChatAdmin() {
                 </thead>
                 <tbody>
                 {casosEmpresaEstaticos.map((option) => {
-                  if (option.apellidos === "") {
-                    return (
-                      <tr className="EmpleadoTablaApartado" key={generarUUID()}>
-                        <td colSpan="3">Tu empresa no dispone de empleados.</td>
-                        <td colSpan="3" className="alturaDefinidaTabla">
-                          <Link
-                            title="Ver Información Del Empleado"
-                            to="/altaEmpleado"
-                            className="botonPadPequeño botonInfoCliente anyadirTurnoBoton linkSignInLogin"
-                            id="signIn">
-                            AÑADIR EMPLEADOS
-                          </Link>
-                        </td>
-                      </tr>
-                    );
-                  }
                   return (
                     <tr className="EmpleadoTablaApartado" key={generarUUID()}>
                       <td>{option.creadoPor}</td>
                       <td>{option.asunto}</td>
                       <td className="campoOpcional">{option.activo}</td>
                       <td>{option.fCreacion}</td>
-                      <td>
-                        <button type="button" className="sinBorde" to="/modificarEmpleado" 
-                        onClick={modificarCaso}
-                        >
-                          <img
-                            title="Modificar Empleado"
-                            className="imagenFotoGestionUsuarios"
-                            id={option.id}
-                            src={require("../../../img/modify-foto.png")}
-                            alt="imagen Foto Modificar"
-                          />
-                        </button>
-                        <button type="button" className="sinBorde" onClick={borrarCaso}>
-                          <img
-                            title="Borrar Empleado"
-                            className="imagenFotoGestionUsuarios"
-                            id={option.id}
-                            src={require("../../../img/delete-foto.png")}
-                            alt="imagen Foto Borrar"
-                          />
-                        </button>
-                        <button type="button"
-                          title="Ver Información Del Empleado"
-                          onClick={verInfoChat}
-                          id={option.id}
-                          className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
-                          Ver Info.
-                        </button>
-                      </td>
+                        {comprobarEmpleadoAdmin(option)}
                     </tr>
                   );
                 })}

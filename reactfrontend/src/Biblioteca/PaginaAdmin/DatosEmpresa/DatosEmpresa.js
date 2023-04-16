@@ -23,23 +23,24 @@ function DatosEmpresa(){
                 "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
             }
         }
-        let url = URL_API + "empresa";
+        let url = URL_API + "empresa/" + `${localStorage.getItem('id')}`;
+        console.log(url)
         let datosEmpresa = await peticionGetAuth(`${url}`, header);
         console.log(datosEmpresa)
-            if(datosEmpresa !== undefined && datosEmpresa.data.empresa !== undefined){
+            if(datosEmpresa !== undefined && datosEmpresa.data !== undefined){
                 setDatos({
-                    razonSocial: datosEmpresa.data.empresa.razonSocial,
-                    nombreComercial: datosEmpresa.data.empresa.nombreComercial,
-                    CIF: datosEmpresa.data.empresa.cif,
-                    telFijo: datosEmpresa.data.empresa.telefonoFijo,
-                    telMovil: datosEmpresa.data.empresa.telefonoMovil,
-                    Logotipo: datosEmpresa.data.empresa.logotipo,
-                    Direccion: datosEmpresa.data.empresa.direccion,
-                    Poblacion: datosEmpresa.data.empresa.poblacion,
-                    Provincia: datosEmpresa.data.empresa.provincia,
-                    Pais: datosEmpresa.data.empresa.pais,
-                    email: datosEmpresa.data.empresa.email,
-                    cPostal: datosEmpresa.data.empresa.cPostal
+                    razonSocial: datosEmpresa.data.razonSocial,
+                    nombreComercial: datosEmpresa.data.nombreComercial,
+                    CIF: datosEmpresa.data.cif,
+                    telFijo: datosEmpresa.data.telefonoFijo,
+                    telMovil: datosEmpresa.data.telefonoMovil,
+                    Logotipo: datosEmpresa.data.logotipo,
+                    Direccion: datosEmpresa.data.direccion,
+                    Poblacion: datosEmpresa.data.poblacion,
+                    Provincia: datosEmpresa.data.provincia,
+                    Pais: datosEmpresa.data.pais,
+                    email: datosEmpresa.data.email,
+                    cPostal: datosEmpresa.data.cPostal
                 })
             }else{
                 mostrarAlertaErronea("Error: algo raro ha pasado...", "Error inesperado algo no ha funcionado correctamente.", "7000");
