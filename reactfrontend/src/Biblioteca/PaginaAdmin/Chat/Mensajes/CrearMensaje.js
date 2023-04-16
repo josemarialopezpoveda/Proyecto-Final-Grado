@@ -32,7 +32,6 @@ function CrearMensaje() {
           },
         };
         let datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/", header);
-        //console.log(datosEmpresaLogueada.data.empresa.empleados)
         if (datosEmpresaLogueada.data.empresa.empleados !== 0) {
           var nombreCompletoEmpleado = datosEmpresaLogueada.data.empresa.empleados.map((datosEmpleado) => {
             var newEmpleado = {

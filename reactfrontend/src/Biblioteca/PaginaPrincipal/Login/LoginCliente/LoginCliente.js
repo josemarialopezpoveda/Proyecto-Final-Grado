@@ -39,14 +39,22 @@ function LoginCliente() {
     };
     try {
       let peticion = await peticionPost(URL_API + "loginEmpleado", raw);
+      console.log(peticion)
       if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
         mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
       } else {
         mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "3000");
         localStorage.setItem("token", peticion.data.token);
         localStorage.setItem("tipoToken", peticion.data.token_type);
-        localStorage.setItem("id", peticion.data.empresa);
-        Navigate("/misDatos");
+        localStorage.setItem("tipoUsuario", peticion.data.tipo_empleado);
+        if(peticion.data.tipo_empleado === "Administrador"){
+          localStorage.setItem("id", peticion.data.empresa); 
+          localStorage.setItem("idEmpleadoAdmin", peticion.data.empleado);
+          Navigate("/accionesEmpleados");
+        }else{
+          localStorage.setItem("id", peticion.data.empresa);
+          Navigate("/misDatos") 
+        }
       }
     } catch (error) {
       mostrarAlertaErronea(error.message, error.stack, null);

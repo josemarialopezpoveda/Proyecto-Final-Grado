@@ -83,7 +83,7 @@ function CrearCorreoAdmin() {
             mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
             setMensajeCreado({...mensajeCreado, casos_id: peticion.data.caso.id});
             crearMensaje();
-            //Navigate("/verTipoAusencias")
+            Navigate("/chatAdmin")
         }
       } catch (error) {
           mostrarAlertaErronea(error.message, error.stack, null);
@@ -176,7 +176,7 @@ function CrearCorreoAdmin() {
                             </Form.Group>
                         </div>
                         <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
-                            <Link to="/verTipoAusencias" className="anyadirUsuarioDatos">Volver</Link>
+                            <Link to="/chatAdmin" className="anyadirUsuarioDatos">Volver</Link>
                             <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Enviar Correo</button>
                         </div>
                     </Form>
