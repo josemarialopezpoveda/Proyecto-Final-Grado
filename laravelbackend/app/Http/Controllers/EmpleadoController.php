@@ -304,7 +304,8 @@ class EmpleadoController extends Controller {
                     "token_type" => 'Bearer',
                     'token' => $token,
                     'empleado' => $empleado->id,
-                    'empresa' => $empleado->empresa_id
+                    'empresa' => $empleado->empresa_id,
+                    'tipo_empleado' => $empleado->tipoEmpleado,
                 ]);
             } else {
                 return response()->json([
