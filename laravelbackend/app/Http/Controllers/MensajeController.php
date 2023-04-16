@@ -133,7 +133,9 @@ class MensajeController extends Controller {
                         ];
                     } else {
                         $data = [
-                            'message' => 'El caso no tiene mensajes.'
+                            'message' => 'El caso no tiene mensajes.',
+                            'id' => $caso->id,
+                            'asunto' => $caso->asunto,
                         ];
                     }
                 } else {
@@ -163,7 +165,9 @@ class MensajeController extends Controller {
                     }
                 } else {
                     $data = [
-                        'message' => 'El caso no tiene mensajes.'
+                        'message' => 'El caso no tiene mensajes.',
+                        'id' => $caso->id,
+                        'asunto' => $caso->asunto,
                     ];
                 }
             }
