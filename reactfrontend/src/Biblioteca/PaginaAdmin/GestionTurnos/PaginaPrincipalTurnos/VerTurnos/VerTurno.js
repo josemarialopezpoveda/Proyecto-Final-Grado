@@ -60,12 +60,7 @@ function VerTurno() {
             <div>
                 <div className='tablaMediaQuery TablaDatosUser'>
                     {/*PENDIENTE BUSCADOR TURNOS*/ }
-                    <Table striped>
-                        <thead>
-                            {diasTurno()}
-                        </thead>
-                        <CrearBodyTurno/>
-                    </Table>
+                    <CrearBodyTurno/>
                 </div>
                 <div className='contenedorBotonModificarTurno disFlex500px'>
                     <Link className="linkSignInLogin" id="signIn" to="/modificarTurno">Modificar Turno</Link>

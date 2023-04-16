@@ -18,7 +18,15 @@ function VerMensajes() {
         receptor: "",
         mensaje: "",
         horaEnvio: "",
+        tituloCaso:""
     }]);
+
+    const [intervenientes, setIntervenientes] = useState({
+        idInterveniente1: "",
+        nombreCompletoInterveniente1:"",
+        idInterveniente2: "",
+        nombreCompletoInterveniente2:"",
+    });
 
     //Función para recoger todos los datos.
     const recoleccionDatos = async () => {
@@ -28,19 +36,41 @@ function VerMensajes() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
         },
         };
-        let datosCaso = await peticionGetAuth(URL_API + "mensajes/" + `${localStorage.getItem('idCaso')}`, header);
-         if (datosCaso.data.mensajes !== undefined && datosCaso.data.mensajes !== null && datosCaso.data.mensajes.length !== 0) {
-            var todosDatosCaso = datosCaso.data.mensajes.map((datosM) => {
-                var newEmpresa = {
+        let datosMensaje = await peticionGetAuth(URL_API + "mensajes/" + `${localStorage.getItem('idCaso')}`, header);
+        let datosCaso = await peticionGetAuth(URL_API + "casos/" + `${localStorage.getItem('idCaso')}`, header);
+        console.log(datosMensaje)
+        console.log(datosCaso)
+         if (datosMensaje.data.mensajes !== undefined && datosMensaje.data.mensajes !== null && datosMensaje.data.mensajes.length !== 0) {
+            var todosDatosCaso = datosMensaje.data.mensajes.map((datosM) => {
+                let empleados = {
+                    emisor:"",
+                    receptor:"",
+                };
+                if(datosCaso.data.Intervinientes.idEmisor === datosM.emisor || datosCaso.data.Intervinientes.idReceptor === datosM.emisor){
+                    empleados.emisor = datosCaso.data.Intervinientes.Emisor;
+                    empleados.receptor = datosCaso.data.Intervinientes.Receptor;
+                }else if(datosCaso.data.Intervinientes.idEmisor === datosM.receptor || datosCaso.data.Intervinientes.idReceptor === datosM.receptor){
+                    empleados.emisor = datosCaso.data.Intervinientes.Receptor;
+                    empleados.receptor = datosCaso.data.Intervinientes.Emisor;
+                }
+                var newObj = {
                   id:datosM.id,
-                  emisor: datosM.emisor,
-                  receptor: datosM.receptor,
+                  emisor: empleados.emisor,
+                  receptor: empleados.receptor,
                   mensaje: datosM.mensaje,
                   horaEnvio: datosM.horaEnvio,
+                  tituloCaso: datosCaso.data.caso.asunto
                 };
-                return newEmpresa;
+                return newObj;
               });
               setForm(todosDatosCaso);
+                var intervinientes = {
+                    idInterveniente1: datosCaso.data.Intervinientes.idEmisor,
+                    nombreCompletoInterveniente1: datosCaso.data.Intervinientes.Emisor,
+                    idInterveniente2: datosCaso.data.Intervinientes.idReceptor,
+                    nombreCompletoInterveniente2: datosCaso.data.Intervinientes.Receptor,
+                }
+              setIntervenientes(intervinientes);
         }
     };
 
@@ -75,7 +105,7 @@ function VerMensajes() {
                         mostrarAlertaErronea(peticion.data.message, "Tu no puedes eliminar este mensaje debido a que no es su emisor.", "7000");
                     }else{
                         mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
-                        Navigate("/chatAdmin");
+                        Navigate("/verMensajes");
                     }
                 }
             } catch (error) {
@@ -87,6 +117,7 @@ function VerMensajes() {
     }
 
     const modificarMensaje = (e) =>{
+        console.log(e.target.id)
         localStorage.setItem("idMensaje", e.target.id);
         Navigate("/modificarMensaje");
     }
@@ -95,63 +126,76 @@ function VerMensajes() {
   return (
     <React.Fragment>
         <NavAdmin/>
+        <h1 className='text-center tituloH1'>{form[0].tituloCaso}</h1>
         <div className='cabeceraVerMensaje'>
             <div className="genteMensaje">
-                <h1>Involucrado 1: {form[0].receptor}</h1>
-                <h1>Involucrado 2: {form[0].emisor}</h1>
+                <h1>Involucrado 1: {intervenientes.nombreCompletoInterveniente1}</h1>
+                <h1>Involucrado 2: {intervenientes.nombreCompletoInterveniente2}</h1>
             </div>
             <div className='botonCrearMensaje'>
-                <Link to="/crearMensaje" className="anyadirUsuarioDatos">Crear Mensaje</Link>
+                <Link to="/crearMensaje" className="crearCorreoBoton">Crear Mensaje</Link>
             </div>
         </div>
         <div className="contenedorTexto">
             {form.map((option, index) => {
-                if(index === form.length-1){
+                console.log(option)
+                if(option.id === "" && option.emisor === "" && option.receptor === "" && option.mensaje === "" && option.horaEnvio === "" ){
                     return(
                         <div className="textoMensaje" key={generarUUID()}>
-                            <div className='emisorReceptor emisorReceptorUltimoMensaje'>
-                                <div>
+                            <h1 className='text-center tituloH1'>Este caso todavia no tiene mensajes</h1>
+                        </div>
+                    );
+                }else{
+                    if(index === form.length-1){
+                        return(
+                            <div className="textoMensaje" key={generarUUID()}>
+                                <div className='emisorReceptor emisorReceptorUltimoMensaje'>
+                                    <div>
+                                        <h1>Para: {option.receptor}</h1>
+                                        <h1>De: {option.emisor}</h1>
+                                    </div>
+                                    <div>
+                                        <button type="button" className="sinBorde" onClick={modificarMensaje}>
+                                            <img
+                                                title="Borrar Mensaje"
+                                                className="imagenFotoGestionUsuarios"
+                                                id={option.id}
+                                                src={require("../../../../img/modify-foto.png")}
+                                                alt="imagen Foto Borrar"
+                                            />
+                                        </button>
+                                        <button type="button" className="sinBorde" onClick={borrarMensaje}>
+                                            <img
+                                                title="Borrar Mensaje"
+                                                className="imagenFotoGestionUsuarios"
+                                                id={option.id}
+                                                src={require("../../../../img/delete-foto.png")}
+                                                alt="imagen Foto Borrar"
+                                            />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div className="textoMensaje">{option.mensaje}</div>
+                                <div className="fechaMensaje">{option.horaEnvio}</div>
+                            </div>
+                        )
+                    }else{
+                        return(
+                            <div className="textoMensaje" key={generarUUID()}>
+                                <div className='emisorReceptor'>
                                     <h1>Para: {option.receptor}</h1>
                                     <h1>De: {option.emisor}</h1>
                                 </div>
-                                <div>
-                                    <button type="button" className="sinBorde" onClick={modificarMensaje}>
-                                        <img
-                                            title="Borrar Empleado"
-                                            className="imagenFotoGestionUsuarios"
-                                            id={option.id}
-                                            src={require("../../../../img/modify-foto.png")}
-                                            alt="imagen Foto Borrar"
-                                        />
-                                    </button>
-                                    <button type="button" className="sinBorde" onClick={borrarMensaje}>
-                                        <img
-                                            title="Borrar Empleado"
-                                            className="imagenFotoGestionUsuarios"
-                                            id={option.id}
-                                            src={require("../../../../img/delete-foto.png")}
-                                            alt="imagen Foto Borrar"
-                                        />
-                                    </button>
-                                </div>
+                                <div className="textoMensaje">{option.mensaje}</div>
+                                <div className="fechaMensaje">{option.horaEnvio}</div>
                             </div>
-                            <div className="textoMensaje">{option.mensaje}</div>
-                            <div className="fechaMensaje">{option.horaEnvio}</div>
-                        </div>
-                    )
-                }else{
-                    return(
-                        <div className="textoMensaje" key={generarUUID()}>
-                            <div className='emisorReceptor'>
-                                <h1>Para: {option.receptor}</h1>
-                                <h1>De: {option.emisor}</h1>
-                            </div>
-                            <div className="textoMensaje">{option.mensaje}</div>
-                            <div className="fechaMensaje">{option.horaEnvio}</div>
-                        </div>
-                    )
-                }
+                        )
+                    }
+                }           
             })}
+        </div>
+        <div className='contenedorBotonModificarTurno disFlex500px'>
+            <Link to="/chatAdmin" className="linkSignInLogin" id="signIn">Volver</Link>
         </div>
         <PiePagina/>
     </React.Fragment>

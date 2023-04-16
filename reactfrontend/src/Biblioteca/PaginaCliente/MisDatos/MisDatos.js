@@ -23,7 +23,7 @@ function MisDatos() {
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
-    let url = URL_API + "empleado/";
+    let url = URL_API + "empleado/" + `${localStorage.getItem("id")}`;
     let datosEmpleado = await peticionGetAuth(`${url}`, header);
     if (datosEmpleado !== undefined && datosEmpleado.data !== undefined) {
       setDatos({

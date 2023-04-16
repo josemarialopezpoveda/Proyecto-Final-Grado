@@ -11,7 +11,7 @@ function ModificarMensaje() {
     //Creamos la variable para poder usar el navigate.
     const Navigate = useNavigate();
 
-    const [mensajeCreado, setMensajeCreado] = useState({
+    const [mensaje, setMensaje] = useState({
         casos_id: `${localStorage.getItem('idCaso')}`,
         empresa_id: `${localStorage.getItem("id")}`,
         emisor: "",
@@ -24,17 +24,16 @@ function ModificarMensaje() {
         id: ""
     });
 
-    const recoleccionDatosEmpresa = async () => {
+    const recoleccionEmpleados = async () => {
         const header = {
           headers: {
             Accept: "application/json",
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/", header);
-        //console.log(datosEmpresaLogueada.data.empresa.empleados)
-        if (datosEmpresaLogueada.data.empresa.empleados !== 0) {
-          var nombreCompletoEmpleado = datosEmpresaLogueada.data.empresa.empleados.map((datosEmpleado) => {
+        let datosEmpleados = await peticionGetAuth(URL_API + "empresa/", header);
+        if (datosEmpleados.data.empresa.empleados !== 0) {
+          var nombreCompletoEmpleado = datosEmpleados.data.empresa.empleados.map((datosEmpleado) => {
             var newEmpleado = {
               id: datosEmpleado.id,
               nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,
@@ -43,7 +42,7 @@ function ModificarMensaje() {
           });
           setNombresUsuarios(nombreCompletoEmpleado);
         }
-      };
+    };
 
     const recoleccionDatosMensaje = async () => {
         const header = {
@@ -52,21 +51,19 @@ function ModificarMensaje() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
             },
         };
-        let datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/", header);
-        if (datosEmpresaLogueada.data.empresa.empleados !== 0) {
-            var nombreCompletoEmpleado = datosEmpresaLogueada.data.empresa.empleados.map((datosEmpleado) => {
-            var newEmpleado = {
-                id: datosEmpleado.id,
-                nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,
+        let datosMensaje = await peticionGetAuth(URL_API + "mensaje/" + `${localStorage.getItem("idMensaje")}`, header);
+        console.log(datosMensaje)
+        if (datosMensaje.data.mensaje !== undefined) {
+            var datosMensajeObj = {
+                receptor: datosMensaje.data.mensaje.receptor,
+                mensaje: datosMensaje.data.mensaje.mensaje,
             };
-            return newEmpleado;
-            });
-            setNombresUsuarios(nombreCompletoEmpleado);
+            setMensaje(datosMensajeObj);
         }
     };
 
     useEffect(() => {
-        recoleccionDatosEmpresa();
+        recoleccionEmpleados();
         recoleccionDatosMensaje();
     }, []);
 
@@ -80,11 +77,11 @@ function ModificarMensaje() {
 
     const TodoCorrecto = async() =>{
         let raw = {
-            "casos_id": mensajeCreado.casos_id,
-            "empresa_id": mensajeCreado.empresa_id,
-            "emisor": mensajeCreado.emisor,
-            "receptor": mensajeCreado.receptor,
-            "mensaje": mensajeCreado.mensaje,
+            "casos_id": mensaje.casos_id,
+            "empresa_id": mensaje.empresa_id,
+            "emisor": mensaje.emisor,
+            "receptor": mensaje.receptor,
+            "mensaje": mensaje.mensaje,
           }
           try {
             const header = {
@@ -109,29 +106,17 @@ function ModificarMensaje() {
   return (
     <React.Fragment>
         <NavAdmin/>
-            <pre>{JSON.stringify(mensajeCreado, null, 3)}</pre>
+            <pre>{JSON.stringify(mensaje, null, 3)}</pre>
                 <div className=''>
-                    <h1 className='text-center tituloH1'>Crear Mensaje</h1>
+                    <h1 className='text-center tituloH1'>Modificar Mensaje</h1>
                     <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
                     <Form id="anyadir">
-                        <div className='divContenedorCampo'>
-                            <p>De:</p>
-                            <Form.Group className="w-50 mb-3">
-                                <Form.Select 
-                                    value={mensajeCreado.emisor}
-                                    onInput={(e) => setMensajeCreado({ ...mensajeCreado, emisor: e.target.value.trim() })}
-                                    className='selectpequenyo selectCrearCorreoAdmin'>
-                                    <option value="0"> - </option>
-                                    {obtenerOptions()}
-                                </Form.Select>
-                            </Form.Group>
-                        </div>
                         <div className="divContenedorCampo divMensajeCorreo">
                                 <p>Para:</p>
                                 <Form.Group className="w-50 mb-3">
                                     <Form.Select 
-                                        value={mensajeCreado.receptor}
-                                        onInput={(e) => setMensajeCreado({ ...mensajeCreado, receptor: e.target.value.trim() })}
+                                        value={mensaje.receptor}
+                                        onInput={(e) => setMensaje({ ...mensaje, receptor: e.target.value.trim() })}
                                         className='selectpequenyo selectCrearCorreoAdmin'>
                                         <option value="0"> - </option>
                                         {obtenerOptions()}
@@ -144,14 +129,14 @@ function ModificarMensaje() {
                             <Form.Control
                                 size="lg"
                                 type="text"
-                                defaultValue={mensajeCreado.mensaje}
-                                onChange={(e) => setMensajeCreado({ ...mensajeCreado, mensaje: e.target.value.trim() })}
+                                defaultValue={mensaje.mensaje}
+                                onChange={(e) => setMensaje({ ...mensaje, mensaje: e.target.value.trim() })}
                             />
                             </Form.Group>
                         </div>
                         <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
                             <Link to="/verMensajes" className="anyadirUsuarioDatos">Volver</Link>
-                            <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Crear Mensaje</button>
+                            <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Modificar Mensaje</button>
                         </div>
                     </Form>
                     </section>

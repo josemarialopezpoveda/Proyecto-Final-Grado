@@ -118,7 +118,7 @@ function ChatAdmin() {
       <NavAdmin/>
       <div>
         <div className='contenedorBotonCrearCorreo'>
-          <Link to="/crearCorreoAdmin" className='crearCorreoBoton'>Crear Correo</Link>
+          <Link to="/crearCorreoAdmin" className='crearCorreoBoton'>Crear Caso</Link>
         </div>
         <BuscadorCasos datosEstaticos={setCasosEmpresaEstaticos} datosDinamicos={casosEmpresaDinamicos}/>
         <div className='TablaDatosUser'>

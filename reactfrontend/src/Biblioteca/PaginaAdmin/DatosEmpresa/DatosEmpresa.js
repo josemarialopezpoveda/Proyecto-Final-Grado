@@ -84,6 +84,12 @@ function DatosEmpresa(){
         recoleccionDatos();
     },[]);
 
+    const verificarUserAdmin = () =>{
+        if(localStorage.getItem('tipoUsuario') !== undefined && localStorage.getItem('tipoUsuario') === "Administrador" ){
+            return(<button type='button' onClick={borrarEmpresa} className="linkSignInLogin" id="signIn">Eliminar</button>)
+        }
+    }
+
     return(
     <React.Fragment>
         <NavAdmin/>
@@ -150,7 +156,7 @@ function DatosEmpresa(){
                     </Table>
                     <div className='text-center classFlexBotones'>
                         <Link className="linkSignInLogin" id="signIn" to="/modificarDatosEmpresa">Modificar</Link>
-                        <button type='button' onClick={borrarEmpresa} className="linkSignInLogin" id="signIn">Eliminar</button>
+                        {verificarUserAdmin()}
                     </div>
                 </section>
             </div>

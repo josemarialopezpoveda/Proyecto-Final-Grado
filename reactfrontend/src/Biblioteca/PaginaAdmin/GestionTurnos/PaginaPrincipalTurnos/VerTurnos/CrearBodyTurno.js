@@ -16,7 +16,6 @@ function CrearBodyTurno() {
           },
         };
         let datosTurno = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem("idEmpleado")}`, header);
-        console.log(datosTurno)
         if(datosTurno.data.dias !== undefined){
             if (datosTurno.data.dias.length !== 0) {
                     var newTurno = {
@@ -63,7 +62,6 @@ function CrearBodyTurno() {
     }
 
     if(turno !== undefined && turno.dias !== undefined){
-        console.log(turno)
         return(
             <Table striped>
                 <thead>
