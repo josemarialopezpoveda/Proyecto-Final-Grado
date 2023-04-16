@@ -127,18 +127,38 @@ class MensajeController extends Controller {
                 if ($empleado->empresa_id === $empresa->id) {
                     $mensajes = Mensaje::where('casos_id', $casoId)->get();
                     if (count($mensajes) != 0) {
-                        $data = [
-                            'message' => 'Mensajes del caso ' . $caso->id,
-                            'id' => $caso->id,
-                            'asunto' => $caso->asunto,
-                            'mensajes' => $mensajes
+                        $primerMensaje = $mensajes->first();
+                        $empleadoEmisor = Empleado::find($primerMensaje->emisor);
+                        $empleadoReceptor = Empleado::find($primerMensaje->receptor);
+                        $response = [
+                            'idEmisor' => $empleadoEmisor->id,
+                            'Emisor' => $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
+                            'idReceptor' => $empleadoReceptor->id,
+                            'Receptor' => $empleadoReceptor->nombre . "  " . $empleadoReceptor->apellidos,
                         ];
+                        return response()->json(
+                            ['caso' => $caso, 'Intervinientes' => $response, 'mensajes' => $mensajes]
+                        );
+//                        $data = [
+//                            'message' => 'Mensajes del caso ' . $caso->id,
+//                            'id' => $caso->id,
+//                            'asunto' => $caso->asunto,
+//                            'mensajes' => $mensajes
+//                        ];
                     } else {
-                        $data = [
-                            'message' => 'El caso no tiene mensajes.',
-                            'id' => $caso->id,
-                            'asunto' => $caso->asunto,
+                        $empleadoEmisor = Empleado::find($caso->empleado_id);
+                        $response = [
+                            'idEmisor' => $empleadoEmisor->id,
+                            'Emisor' => $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
                         ];
+                        return response()->json(
+                            ['caso' => $caso, 'Intervinientes' => $response, 'mensajes' => $mensajes]
+                        );
+//                        $data = [
+//                            'message' => 'El caso no tiene mensajes.',
+//                            'id' => $caso->id,
+//                            'asunto' => $caso->asunto,
+//                        ];
                     }
                 } else {
                     $data = [
@@ -156,23 +176,50 @@ class MensajeController extends Controller {
                         }
                     }
                     if ($existeUser) {
-                        $data = [
-                            'message' => 'Mensajes del caso ' . $caso->id,
-                            'id' => $caso->id,
-                            'asunto' => $caso->asunto,
-                            'mensajes' => $mensajes
+                        $primerMensaje = $mensajes->first();
+                        $empleadoEmisor = Empleado::find($primerMensaje->emisor);
+                        $empleadoReceptor = Empleado::find($primerMensaje->receptor);
+                        $response = [
+                            'idEmisor' => $empleadoEmisor->id,
+                            'Emisor' => $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
+                            'idReceptor' => $empleadoReceptor->id,
+                            'Receptor' => $empleadoReceptor->nombre . "  " . $empleadoReceptor->apellidos,
                         ];
+                        return response()->json(
+                            ['caso' => $caso, 'Intervinientes' => $response, 'mensajes' => $mensajes]
+                        );
+//                        $data = [
+//                            'message' => 'Mensajes del caso ' . $caso->id,
+//                            'id' => $caso->id,
+//                            'asunto' => $caso->asunto,
+//                            'mensajes' => $mensajes
+//                        ];
                     } else {
                         $data = [
                             'message' => 'No estás autorizado.',
                         ];
                     }
                 } else {
-                    $data = [
-                        'message' => 'El caso no tiene mensajes.',
-                        'id' => $caso->id,
-                        'asunto' => $caso->asunto,
-                    ];
+                    if ($caso->empleado_id == $user->id) {
+                        $empleadoEmisor = Empleado::find($caso->empleado_id);
+                        $response = [
+                            'idEmisor' => $empleadoEmisor->id,
+                            'Emisor' => $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
+                            'user_id' => $user->id,
+                        ];
+                        return response()->json(
+                            ['caso' => $caso, 'Intervinientes' => $response, 'mensajes' => $mensajes]
+                        );
+//                    $data = [
+//                        'message' => 'El caso no tiene mensajes.',
+//                        'id' => $caso->id,
+//                        'asunto' => $caso->asunto,
+//                    ];
+                    } else {
+                        $data = [
+                            'message' => 'No estás autorizado.',
+                        ];
+                    }
                 }
             }
         }
