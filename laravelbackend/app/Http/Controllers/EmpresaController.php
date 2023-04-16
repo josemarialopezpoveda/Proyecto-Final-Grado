@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Empleado;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -100,20 +101,38 @@ class EmpresaController extends Controller
      * Función que muestra la empresa del usuario logueado
      * @return JsonResponse
      */
-    public function show()
+    public function show($empresaId)
     {
         $user = Auth::user();
-        $empresa = Empresa::with('empleados')->find(Auth::user()->id);
-        if ($empresa) {
-            $data = [
-                'empresa' => $empresa
-            ];
+        if ($user instanceof Empresa){
+            if ($user->id == $empresaId){
+                $empresa = Empresa::with('empleados')->find($empresaId);
+                return response()->json($empresa);
+            } else {
+                $data = ['message' => 'No estás autorizado.'];
+                return response()->json($data);
+            }
+        } elseif ($user instanceof Empleado) {
+            if ($user->tipoEmpleado == "Administrador"){
+                if ($user->empresa_id == $empresaId){
+                    $empresa = Empresa::with('empleados')->find($empresaId);
+                    return response()->json($empresa);
+                } else {
+                    $data = ['message' => 'No estás autorizado.'];
+                    return response()->json($data);
+                }
+            } elseif($user->tipoEmpleado == "Trabajador")  {
+                $data = ['message' => 'No estás autorizado.'];
+                return response()->json($data);
+            } else {
+                $data = ['message' => 'Error no controlado.'];
+                return response()->json($data);
+            }
+
         } else {
-            $data = [
-                'message' => 'Empresa no existe'
-            ];
+            $data = ['message' => 'Error no controlado.'];
+            return response()->json($data);
         }
-        return response()->json($data);
     }
 
     /**
