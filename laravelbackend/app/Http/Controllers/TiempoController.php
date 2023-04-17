@@ -115,13 +115,13 @@ class TiempoController extends Controller {
             // Obtener los campos necesarios y renombrarlos en la respuesta JSON
             $empleados = $empleados->map(function ($item) {
                 return [
+                    'empresa_id' => $item->empleado->empresa_id,
                     'empleado_id' => $item->empleado_id,
                     'nombre' => $item->empleado->nombre,
                     'apellidos' => $item->empleado->apellidos,
                     'nif' => $item->empleado->nif,
                     'e-mail' => $item->empleado->email,
                     'inicio' => $item->inicio,
-                    'empresa_id' => $item->empleado->empresa_id
                 ];
             });
 
@@ -187,7 +187,7 @@ class TiempoController extends Controller {
     public function update(Request $request, $id)
     {
         $tiempo = Tiempo::find($id);
-        $empleado = Empleado::find($request->id);
+        $empleado = Empleado::find($request->empleado_id);
         if ($empleado) {
             if ($tiempo) {
                 $tiempo->empleado_id = $request->empleado_id;
