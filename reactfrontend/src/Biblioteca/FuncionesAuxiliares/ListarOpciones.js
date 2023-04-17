@@ -46,7 +46,8 @@ const ListarOpciones = (props) => {
           {option.titulo}
         </Link>
       );
-    } else {
+    } 
+    else {
       return (
         <Link key={generarUUID()} className="nav-link" to={option.path}>
           {option.titulo}
