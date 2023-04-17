@@ -50,8 +50,6 @@ Route::get('/error', [EmpresaController::class, 'paginaError']);
 
 Route::post('/loginEmpleado', 'App\Http\Controllers\EmpleadoController@login');
 
-
-
 // Turnos
 
 Route::get('/turnos', [TurnoController::class, 'index']);
@@ -101,17 +99,17 @@ Route::middleware('auth:sanctum')->group(
     function () {
 
         //Empresas
-        Route::get('/empresa/{empresaId}', 'App\Http\Controllers\EmpresaController@show');
-        Route::put('/empresa', 'App\Http\Controllers\EmpresaController@update');
-        Route::delete('/empresa', 'App\Http\Controllers\EmpresaController@destroy');
+        Route::get('/empresa/{empresaId}', [EmpresaController::class, 'show']);
+        Route::put('/empresa', [EmpresaController::class, 'update']);
+        Route::delete('/empresa', [EmpresaController::class, 'destroy']);
         Route::get('/logout', [EmpresaController::class, 'logout']);
 
         //Empleados
-        Route::get('/empleados', 'App\Http\Controllers\EmpleadoController@index');
-        Route::get('/empleado/{empleadoId}', 'App\Http\Controllers\EmpleadoController@show');
-        Route::post('/empleados', 'App\Http\Controllers\EmpleadoController@store');
-        Route::put('/empleados/{empleados}', 'App\Http\Controllers\EmpleadoController@update');
-        Route::delete('/empleados/{empleados}', 'App\Http\Controllers\EmpleadoController@destroy');
+        Route::get('/empleados', [EmpleadoController::class, 'index']);
+        Route::get('/empleado/{empleadoId}', [EmpleadoController::class, 'show']);
+        Route::post('/empleados', [EmpleadoController::class, 'store']);
+        Route::put('/empleados/{empleados}', [EmpleadoController::class, 'update']);
+        Route::delete('/empleados/{empleados}', [EmpleadoController::class, 'destroy']);
         Route::get('/logoutEmpleado', [EmpleadoController::class, 'logout']);
 
         Route::get('/empleadosOnline', [TiempoController::class, 'empleadosOnline']);
