@@ -26,7 +26,7 @@ class TiempoFactory extends Factory {
         $empleadoId = self::$contador;
         self::$contador++;
 
-        $fechaInicio = '2023-01-02';
+        $fechaInicio = '2023-01-01';
         $fechaFin = Carbon::now()->format('Y-m-d');
         $horaInicioI = '06:45:00';
         $horaInicioF = '7:15:00';
