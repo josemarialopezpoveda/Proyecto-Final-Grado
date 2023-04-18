@@ -8,6 +8,7 @@ import ListarActividadEmpleados from './ListarActividadEmpleados.js';
 import {Link} from 'react-router-dom';
 
 function Empleados(){
+    
     return(
     <React.Fragment>
         <NavAdmin/>
@@ -21,7 +22,6 @@ function Empleados(){
                             <th className='campoOpcional'>DNI</th>
                             <th className='campoOpcional'>Correo</th>
                             <th className='campoOpcional'>Teléfono</th>
-                            <th>Valor</th>
                         </tr>
                     </thead>
                     <tbody>
