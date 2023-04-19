@@ -84,5 +84,6 @@ class EmpleadosTableSeeder extends Seeder {
         $empleado3->created_at = '2023-01-01';
         $empleado3->updated_at = Carbon::now('Europe/Madrid');
         $empleado3->save();
+
     }
 }

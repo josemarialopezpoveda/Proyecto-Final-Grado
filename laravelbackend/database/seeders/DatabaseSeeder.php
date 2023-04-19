@@ -29,7 +29,6 @@ class DatabaseSeeder extends Seeder
             TipoAusenciasTableSeeder::class,
             AusenciasTableSeeder::class,
             //TiemposTableSeeder::class,
-            EmpleadosTurnosTableSeeder::class,
             CasosTableSeeder::class,
             CasosEmpleadosTableSeeder::class,
         ]);
@@ -37,11 +36,12 @@ class DatabaseSeeder extends Seeder
 
         Empresa::factory(10)->create();
         Empleado::factory(100)->create();
-        Tiempo::factory(42)->create();
+        Tiempo::factory(103)->create();
         Caso::factory(20)->create();
 
         $this->call([
             MensajesTableSeeder::class,
+            EmpleadosTurnosTableSeeder::class,
         ]);
     }
 }
