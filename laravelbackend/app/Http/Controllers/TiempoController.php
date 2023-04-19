@@ -107,7 +107,7 @@ class TiempoController extends Controller {
                 })
                 ->with([
                     'empleado' => function ($query) {
-                        $query->select('id', 'nombre', 'apellidos', 'empresa_id', 'email', 'nif');
+                        $query->select('id', 'nombre', 'apellidos', 'empresa_id', 'email', 'nif', 'telefono');
                     }
                 ])
                 ->get();
@@ -120,7 +120,8 @@ class TiempoController extends Controller {
                     'nombre' => $item->empleado->nombre,
                     'apellidos' => $item->empleado->apellidos,
                     'nif' => $item->empleado->nif,
-                    'e-mail' => $item->empleado->email,
+                    'email' => $item->empleado->email,
+                    'telefono' => $item->empleado->telefono,
                     'inicio' => $item->inicio,
                 ];
             });
