@@ -27,9 +27,6 @@ function ChatAdmin() {
   const [casosEmpresaEstaticos, setCasosEmpresaEstaticos] = useState([{}]);
   const [casosEmpresaDinamicos,setCasosEmpresaDinamicos] = useState([{}]);
 
-  const [emisor,setEmisor] = useState("");
-  const [receptor,setReceptor] = useState("");
-
   //Función para recoger todos los empleados y los guarda en el estado.
   const recoleccionDatos = async () => {
     const header = {
@@ -166,11 +163,20 @@ function ChatAdmin() {
     }
   }
 
+  const estaActivo = (activo) =>{
+    if(activo === "Activo"){
+      return(<td className="campoOpcional activo">{activo}</td>)
+    }else{
+      return(<td className="campoOpcional acabado">{activo}</td>)
+    }
+  }
+
   
   return (
     <React.Fragment>
       <NavAdmin/>
       <div>
+        <h1 className='text-center tituloH1'>Chat</h1>
         {comprobarAdminCrearCaso()}
         <BuscadorCasos datosEstaticos={setCasosEmpresaEstaticos} datosDinamicos={casosEmpresaDinamicos}/>
         <div className='TablaDatosUser'>
@@ -190,7 +196,7 @@ function ChatAdmin() {
                     <tr className="EmpleadoTablaApartado" key={generarUUID()}>
                       <td>{option.creadoPor}</td>
                       <td>{option.asunto}</td>
-                      <td className="campoOpcional">{option.activo}</td>
+                      {estaActivo(option.activo)}
                       <td>{option.fCreacion}</td>
                         {comprobarEmpleadoAdmin(option)}
                     </tr>

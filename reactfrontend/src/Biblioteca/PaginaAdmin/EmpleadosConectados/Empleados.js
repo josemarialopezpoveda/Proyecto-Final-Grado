@@ -13,6 +13,7 @@ function Empleados(){
     <React.Fragment>
         <NavAdmin/>
         <section>
+            <h1 className='text-center tituloH1'>Empleados Online</h1>
             <div className='TablaDatosUser'>
                 <Table striped>
                     <thead>

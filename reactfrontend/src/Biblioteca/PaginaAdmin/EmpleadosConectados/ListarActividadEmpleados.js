@@ -38,7 +38,6 @@ function ListarActividadEmpleados() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
         },
         };
-        console.log(header)
         let datosEmpresa = await peticionGetAuth(URL_API + "empleadosOnline", header);
         console.log(datosEmpresa)
         if (datosEmpresa.data.length !== 0) {

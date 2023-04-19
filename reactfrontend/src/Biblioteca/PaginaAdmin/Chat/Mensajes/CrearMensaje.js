@@ -6,6 +6,7 @@ import PiePagina from '../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../Nav/NavAdmin';
 import { mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPost } from "../../../FuncionesAuxiliares/Funciones";
 import { URL_API } from 'services/http/const';
+import NavCliente from 'Biblioteca/PaginaCliente/Nav/NavCliente';
 
 function CrearMensaje() {
     //Creamos la variable para poder usar el navigate.
@@ -14,15 +15,12 @@ function CrearMensaje() {
     const [mensajeCreado, setMensajeCreado] = useState({
         casos_id: `${localStorage.getItem('idCaso')}`,
         empresa_id: `${localStorage.getItem("id")}`,
-        emisor: "",
-        receptor:"",
         mensaje: ""
     });
 
-    const [nombresUsuarios, setNombresUsuarios] = useState({
-        nombreCompleto: "",
-        id: ""
-    });
+    const [datosEmisor, setDatosEmisor] = useState({});
+
+    const [datosReceptor, setDatosReceptor] = useState({});
 
     const recoleccionDatos = async () => {
         const header = {
@@ -31,16 +29,68 @@ function CrearMensaje() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/", header);
-        if (datosEmpresaLogueada.data.empresa.empleados !== 0) {
-          var nombreCompletoEmpleado = datosEmpresaLogueada.data.empresa.empleados.map((datosEmpleado) => {
-            var newEmpleado = {
-              id: datosEmpleado.id,
-              nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,
-            };
-            return newEmpleado;
-          });
-          setNombresUsuarios(nombreCompletoEmpleado);
+        let url = undefined;
+        url = URL_API + "casos/" + `${localStorage.getItem('idCaso')}`;
+        console.log(url)
+        if(url !== undefined){
+            let datosCaso = await peticionGetAuth(url, header);
+            console.log(datosCaso)
+            let obj = {
+                emisor: datosCaso.data.Intervinientes.Emisor,
+                receptor: datosCaso.data.Intervinientes.Receptor,
+                idEmisor: datosCaso.data.Intervinientes.idEmisor,
+                idReceptor: datosCaso.data.Intervinientes.idReceptor,
+            }
+
+            if(`${localStorage.getItem("tipoUsuario")}` === "Administrador"){
+                if(obj.idEmisor == `${localStorage.getItem("idEmpleadoAdmin")}`){
+                    let emisor = {
+                        nombre:obj.emisor,
+                        id:obj.idEmisor
+                    }
+                    let receptor = {
+                        nombre:obj.receptor,
+                        id:obj.idReceptor
+                    }
+                    setDatosEmisor(emisor);
+                    setDatosReceptor(receptor);
+                }else{
+                    let emisor = {
+                        nombre:obj.emisor,
+                        id:obj.idEmisor
+                    }
+                    let receptor = {
+                        nombre:obj.receptor,
+                        id:obj.idReceptor
+                    }
+                    setDatosEmisor(receptor);
+                    setDatosReceptor(emisor);
+                }
+            }else if(`${localStorage.getItem("tipoUsuario")}` === "Trabajador"){
+                if(obj.idEmisor == `${localStorage.getItem("id")}`){
+                    let emisor = {
+                        nombre:obj.emisor,
+                        id:obj.idEmisor
+                    }
+                    let receptor = {
+                        nombre:obj.receptor,
+                        id:obj.idReceptor
+                    }
+                    setDatosEmisor(emisor);
+                    setDatosReceptor(receptor);
+                }else{
+                    let emisor = {
+                        nombre:obj.emisor,
+                        id:obj.idEmisor
+                    }
+                    let receptor = {
+                        nombre:obj.receptor,
+                        id:obj.idReceptor
+                    }
+                    setDatosEmisor(receptor);
+                    setDatosReceptor(emisor);
+                }
+            }
         }
       };
 
@@ -48,22 +98,15 @@ function CrearMensaje() {
         recoleccionDatos();
     }, []);
 
-    const obtenerOptions = () =>{
-        if(nombresUsuarios.id !== "" && typeof(nombresUsuarios) === 'object'){
-            return(nombresUsuarios.map((empleado, index)=>{
-                return(<option key={index} value={String(empleado.id)}>{empleado.nombreCompleto}</option>)
-            }))
-        }
-    }
-
     const TodoCorrecto = async() =>{
+        
         let raw = {
             "casos_id": mensajeCreado.casos_id,
             "empresa_id": mensajeCreado.empresa_id,
-            "emisor": mensajeCreado.emisor,
-            "receptor": mensajeCreado.receptor,
+            "emisor": datosEmisor.id,
+            "receptor": datosReceptor.id,
             "mensaje": mensajeCreado.mensaje,
-          }
+            }
           try {
             const header = {
                 headers: {
@@ -71,22 +114,50 @@ function CrearMensaje() {
                     "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
                 }
             }
-          let peticion = await peticionPost(URL_API + "mensajes", raw, header)
-          console.log(peticion)
-          if(peticion.data.errores !== undefined && peticion.data.errores !== null){
-              mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
-          }else{
-              mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-              Navigate("/verMensajes")
-          }
+            if(raw !== undefined){
+                console.log(raw)
+                let peticion = await peticionPost(URL_API + "mensajes", raw, header)
+                console.log(peticion)
+                if(peticion.data.errores !== undefined && peticion.data.errores !== null){
+                    mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
+                }else{
+                    console.log(peticion.data.message)
+                    if(peticion.data.message !== undefined){
+                        mostrarAlertaErronea(peticion.data.message, "", null);
+                    }else{
+                        mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
+                        // if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){ 
+                        //     Navigate("/verMensajes")
+                        // }else{ 
+                        //     Navigate("/verMensajesEmpleado")
+                        // }
+                    }
+                }
+            }
         } catch (error) {
             mostrarAlertaErronea(error.message, error.stack, null);
         }
     }
 
+    const botonVolver = () =>{
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            return(<Link to="/verMensajes" className="anyadirUsuarioDatos">Volver</Link>)
+        }else{
+            return(<Link to="/verMensajesEmpleado" className="anyadirUsuarioDatos">Volver</Link>)
+        }
+    }
+
+    const anyadirBarraNav = () =>{
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            return(<NavAdmin/>)
+        }else{
+            return(<NavCliente/>)
+        }
+    }
+
   return (
     <React.Fragment>
-        <NavAdmin/>
+        {anyadirBarraNav()}
             <pre>{JSON.stringify(mensajeCreado, null, 3)}</pre>
                 <div className=''>
                     <h1 className='text-center tituloH1'>Crear Mensaje</h1>
@@ -95,25 +166,17 @@ function CrearMensaje() {
                         <div className='divContenedorCampo'>
                             <p>De:</p>
                             <Form.Group className="w-50 mb-3">
-                                <Form.Select 
-                                    value={mensajeCreado.emisor}
-                                    onInput={(e) => setMensajeCreado({ ...mensajeCreado, emisor: e.target.value.trim() })}
-                                    className='selectpequenyo selectCrearCorreoAdmin'>
-                                    <option value="0"> - </option>
-                                    {obtenerOptions()}
-                                </Form.Select>
+                                <Form.Control disabled
+                                    defaultValue={datosEmisor.nombre}>
+                                </Form.Control>
                             </Form.Group>
                         </div>
                         <div className="divContenedorCampo divMensajeCorreo">
                                 <p>Para:</p>
                                 <Form.Group className="w-50 mb-3">
-                                    <Form.Select 
-                                        value={mensajeCreado.receptor}
-                                        onInput={(e) => setMensajeCreado({ ...mensajeCreado, receptor: e.target.value.trim() })}
-                                        className='selectpequenyo selectCrearCorreoAdmin'>
-                                        <option value="0"> - </option>
-                                        {obtenerOptions()}
-                                    </Form.Select>
+                                    <Form.Control disabled
+                                        defaultValue={datosReceptor.nombre}>
+                                    </Form.Control>
                                 </Form.Group>
                         </div>
                         <div className="divContenedorCampo divMensajeCorreo">
@@ -128,7 +191,7 @@ function CrearMensaje() {
                             </Form.Group>
                         </div>
                         <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
-                            <Link to="/verMensajes" className="anyadirUsuarioDatos">Volver</Link>
+                            {botonVolver()}
                             <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Crear Mensaje</button>
                         </div>
                     </Form>

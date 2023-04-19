@@ -35,9 +35,10 @@ import VerTiposAusencias from 'Biblioteca/PaginaAdmin/TiposAusencias/VerTiposAus
 import AnyadirTipoAusencia from 'Biblioteca/PaginaAdmin/TiposAusencias/AccionesTiposAusencias/AnyadirTipoAusencia';
 import ModificarTipoAusencia from 'Biblioteca/PaginaAdmin/TiposAusencias/AccionesTiposAusencias/ModificarTipoAusencia';
 import ModificarCorreo from 'Biblioteca/PaginaAdmin/Chat/ModificarCorreo';
-import VerMensajes from 'Biblioteca/PaginaAdmin/Chat/Mensajes/VerMensajes';
 import CrearMensaje from 'Biblioteca/PaginaAdmin/Chat/Mensajes/CrearMensaje';
 import ModificarMensaje from 'Biblioteca/PaginaAdmin/Chat/Mensajes/ModificarMensaje';
+import VerMensajesEmpresaAdmin from 'Biblioteca/PaginaAdmin/Chat/Mensajes/VerMensajesEmpresaAdmin';
+import VerMensajesEmpleado from 'Biblioteca/PaginaAdmin/Chat/Mensajes/VerMensajesEmpleado';
 
 function App() {
   return(
@@ -78,7 +79,8 @@ function App() {
                   <Route exact path="/modificarCorreo" element={<ModificarCorreo/>}/>
                   
                   {/* Mensajes */}
-                  <Route exact path="/verMensajes" element={<VerMensajes/>}/>
+                  <Route exact path="/verMensajes" element={<VerMensajesEmpresaAdmin/>}/>
+                  <Route exact path="/verMensajesEmpleado" element={<VerMensajesEmpleado/>}/>
                   <Route exact path="/crearMensaje" element={<CrearMensaje/>}/>
                   <Route exact path="/modificarMensaje" element={<ModificarMensaje/>}/>
 

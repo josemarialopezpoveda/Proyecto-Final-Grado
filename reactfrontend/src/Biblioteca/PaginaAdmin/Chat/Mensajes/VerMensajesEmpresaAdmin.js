@@ -8,7 +8,7 @@ import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin';
 import PiePagina from 'Biblioteca/PaginaPrincipal/Footer/PiePagina';
 import SweetAlert from "sweetalert2";
 
-function VerMensajes() {
+function VerMensajesEmpresaAdmin() {
     //Creamos la variable para el uso del useNavigate.
     const Navigate = useNavigate();
 
@@ -38,17 +38,22 @@ function VerMensajes() {
         };
         let datosMensaje = await peticionGetAuth(URL_API + "mensajes/" + `${localStorage.getItem('idCaso')}`, header);
         let datosCaso = await peticionGetAuth(URL_API + "casos/" + `${localStorage.getItem('idCaso')}`, header);
-        console.log(datosMensaje)
+        //console.log(datosMensaje)
+        //console.log(datosCaso)
          if (datosMensaje.data.mensajes !== undefined && datosMensaje.data.mensajes !== null && datosMensaje.data.mensajes.length !== 0) {
             var todosDatosCaso = datosMensaje.data.mensajes.map((datosM) => {
                 let empleados = {
                     emisor:"",
                     receptor:"",
                 };
-                if(datosMensaje.data.Intervinientes.idEmisor === datosM.emisor || datosMensaje.data.Intervinientes.idReceptor === datosM.emisor){
+                console.log("SON IGUALES")
+                console.log(datosMensaje.data.Intervinientes.idEmisor)
+                console.log(datosMensaje.data.Intervinientes.idReceptor)
+                console.log(datosM.emisor)
+                if(datosMensaje.data.Intervinientes.idEmisor === datosM.emisor || datosMensaje.data.Intervinientes.idReceptor === datosM.receptor){
                     empleados.emisor = datosMensaje.data.Intervinientes.Emisor;
                     empleados.receptor = datosMensaje.data.Intervinientes.Receptor;
-                }else if(datosMensaje.data.Intervinientes.idEmisor === datosM.receptor || datosMensaje.data.Intervinientes.idReceptor === datosM.receptor){
+                }else if(datosMensaje.data.Intervinientes.idEmisor === datosM.receptor || datosMensaje.data.Intervinientes.idReceptor === datosM.emisor){
                     empleados.emisor = datosMensaje.data.Intervinientes.Receptor;
                     empleados.receptor = datosMensaje.data.Intervinientes.Emisor;
                 }
@@ -60,6 +65,7 @@ function VerMensajes() {
                   horaEnvio: datosM.horaEnvio,
                   tituloCaso: datosCaso.data.caso.asunto
                 };
+                console.log(newObj)
                 return newObj;
               });
               setForm(todosDatosCaso);
@@ -116,7 +122,6 @@ function VerMensajes() {
     }
 
     const modificarMensaje = (e) =>{
-        console.log(e.target.id)
         localStorage.setItem("idMensaje", e.target.id);
         Navigate("/modificarMensaje");
     }
@@ -161,6 +166,7 @@ function VerMensajes() {
   return (
     <React.Fragment>
         <NavAdmin/>
+        <pre>{JSON.stringify(form, null, 3)}</pre>
         <h1 className='text-center tituloH1'>{form[0].tituloCaso}</h1>
         <div className='cabeceraVerMensaje'>
             <div className="genteMensaje">
@@ -171,7 +177,6 @@ function VerMensajes() {
         </div>
         <div className="contenedorTexto">
             {form.map((option, index) => {
-                console.log(option)
                 if(option.id === "" && option.emisor === "" && option.receptor === "" && option.mensaje === "" && option.horaEnvio === "" ){
                     return(
                         <div className="textoMensaje" key={generarUUID()}>
@@ -216,4 +221,4 @@ function VerMensajes() {
   );
 }
 
-export default VerMensajes;
+export default VerMensajesEmpresaAdmin;

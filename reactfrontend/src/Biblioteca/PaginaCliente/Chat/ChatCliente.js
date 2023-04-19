@@ -88,7 +88,7 @@ function ChatCliente() {
               mostrarAlertaErronea(peticion.data.message, "Error mensaje con errores.", "3000")
             }else{
               mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente.", "3000");
-              Navigate("/chatAdmin");
+              Navigate("/chatCliente");
               recoleccionDatos();
             }
           }
@@ -109,12 +109,21 @@ function ChatCliente() {
   const verInfoChat = (e) => {
     localStorage.setItem("idCaso", e.target.id);
     // PENDIENTE DE CREAR PÁGINA DE VER MENSAJES DEL CASO
-    Navigate("/verMensajes");
+    Navigate("/verMensajesEmpleado");
   };
+
+  const estaActivo = (activo) =>{
+    if(activo === "Activo"){
+      return(<td className="campoOpcional activo">{activo}</td>)
+    }else{
+      return(<td className="campoOpcional acabado">{activo}</td>)
+    }
+  }
   
   return (
     <React.Fragment>
       <NavCliente/>
+      <h1 className='text-center tituloH1'>Chat</h1>
       <div>
         <div className='contenedorBotonCrearCorreo'>
           <Link to="/crearCorreoCliente" className='crearCorreoBoton'>Crear Caso</Link>
@@ -133,27 +142,11 @@ function ChatCliente() {
                 </thead>
                 <tbody>
                 {casosEmpresaEstaticos.map((option) => {
-                  if (option.apellidos === "") {
-                    return (
-                      <tr className="EmpleadoTablaApartado" key={generarUUID()}>
-                        <td colSpan="3">Tu empresa no dispone de empleados.</td>
-                        <td colSpan="3" className="alturaDefinidaTabla">
-                          <Link
-                            title="Ver Información Del Empleado"
-                            to="/altaEmpleado"
-                            className="botonPadPequeño botonInfoCliente anyadirTurnoBoton linkSignInLogin"
-                            id="signIn">
-                            AÑADIR EMPLEADOS
-                          </Link>
-                        </td>
-                      </tr>
-                    );
-                  }
                   return (
                     <tr className="EmpleadoTablaApartado" key={generarUUID()}>
                       <td>{option.creadoPor}</td>
                       <td>{option.asunto}</td>
-                      <td className="campoOpcional">{option.activo}</td>
+                      {estaActivo(option.activo)}
                       <td>{option.fCreacion}</td>
                       <td>
                         <button type="button" className="sinBorde" to="/modificarEmpleado" 
