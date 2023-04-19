@@ -76,20 +76,10 @@ class MensajeController extends Controller {
                 if ($user instanceof Empleado) {
                     $empleado = Empleado::find($user->getKey());
                     if ($empleado->id == $mensaje->emisor || $empleado->id == $mensaje->receptor) {
-                        $data = [
-                            'mensaje' => $mensaje,
-                            'empleado' => $empleado,
-                            'empresa' => $empresa,
-                        ];
-                        return response()->json($data);
+                        return $this->getEmisorReceptor($mensaje);
                     } else {
                         if ($empleado->tipoEmpleado == "Administrador") {
-                            $data = [
-                                'mensaje' => $mensaje,
-                                'empleado' => $empleado,
-                                'empresa' => $empresa,
-                            ];
-                            return response()->json($data);
+                            return $this->getEmisorReceptor($mensaje);
                         } else {
                             $data = [
                                 'message' => 'No estás autorizado. El mensaje no es tuyo.',
@@ -375,6 +365,24 @@ class MensajeController extends Controller {
                 'message' => 'Mensaje no existe'
             ];
         }
+        return response()->json($data);
+    }
+
+    /**
+     * @param $mensaje
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getEmisorReceptor($mensaje): \Illuminate\Http\JsonResponse
+    {
+        $empleadoEmisor = Empleado::find($mensaje->emisor);
+        $empleadoReceptor = Empleado::find($mensaje->receptor);
+        $data = [
+            'idMensaje' => $mensaje->id,
+            'idEmisor' => $empleadoEmisor->id,
+            'Emisor' => $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
+            'idReceptor' => $empleadoReceptor->id,
+            'Receptor' => $empleadoReceptor->nombre . "  " . $empleadoReceptor->apellidos,
+        ];
         return response()->json($data);
     }
 }
