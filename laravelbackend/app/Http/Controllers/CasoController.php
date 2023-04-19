@@ -61,7 +61,16 @@ class CasoController extends Controller {
                 }
             }
             if ($existeUser) {
-                return response()->json(['caso' => $caso, 'mensajes' => $mensajes]);
+                $primerMensaje = $mensajes->first();
+                $empleadoEmisor = Empleado::find($primerMensaje->emisor);
+                $empleadoReceptor = Empleado::find($primerMensaje->receptor);
+                $response=[
+                    'idEmisor'=>$empleadoEmisor->id,
+                    'Emisor'=> $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
+                    'idReceptor'=>$empleadoReceptor->id,
+                    'Receptor'=> $empleadoReceptor->nombre . "  " . $empleadoReceptor->apellidos,
+                ];
+                return response()->json(['caso' => $caso, 'Intervinientes' => $response, 'mensajes' => $mensajes]);
             } else {
                 return response()->json(['error' => 'no estás autorizado']);
             }
