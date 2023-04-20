@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Dia;
 use App\Models\Empleado;
 use App\Models\Empresa;
 use App\Models\Tiempo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TiempoController extends Controller {
     /**
@@ -30,70 +33,40 @@ class TiempoController extends Controller {
 
     public function empleadoOnline($idEmpleado)
     {
-
-//        $user = Auth::user();
-//        if ($user instanceof Empresa))
-//        if ($user->tipoEmpleado != 'Trabajador'){
-//            if ($user instanceof Empresa) {
-//                $empresaId = $user->getKey();
-//            } elseif ($user->tipoEmpleado == 'Administrador') {
-//                $empresaId = $user->empresa_id;
-//            }
-//
-//         // Verificamos si el usuario es una empresa o un empleado
-//        if ($user->tipoEmpleado === 'Administrador') {
-//            // Si el usuario es un Administrador, verificamos si pertenece a la misma empresa que el empleado solicitado
-//            $empleado = Empleado::find($idEmpleado);
-//            if (!$empleado || $empleado->empresa_id !== $user->empresa_id) {
-//                return response()->json(['message' => 'El empleado solicitado no pertenece a la empresa del usuario autenticado'], Response::HTTP_UNAUTHORIZED);
-//            }
-//        } elseif ($user->tipoEmpleado === 'Trabajador') {
-//            // Si el usuario es un Trabajador, verificamos si su ID es igual al ID del empleado solicitado
-//            if ($user->id != $idEmpleado) {
-//                return response()->json(['message' => 'El empleado solicitado no coincide con el usuario autenticado'], Response::HTTP_UNAUTHORIZED);
-//            }
-//        } else {
-//            // Si el usuario no es ni un Administrador ni un Trabajador, no tiene permisos para acceder a la información del empleado
-//            return response()->json(['message' => 'El usuario autenticado no tiene permisos para acceder a la información del empleado'], Response::HTTP_UNAUTHORIZED);
-//        }
-//
-//        // Obtenemos el tiempo más reciente del empleado
-//        $tiempo = Tiempo::where('empleado_id', $idEmpleado)->latest()->first();
-//
-//        // Verificamos si el empleado está Online u Offline basado en la columna "fin" de la tabla "tiempos"
-//        $estado = $tiempo && $tiempo->fin === null ? 'Online' : 'Offline';
-//
-////        // Preparamos la respuesta con la información solicitada
-////        $response = [
-////            'estado' => $estado,
-////            'nombre' => $tiempo->empleado->nombre,
-////            'apellidos' => $tiempo->empleado->apellidos,
-////            'idEmpleado' => $tiempo->empleado->id,
-////            'nombreEmpresa' => $tiempo->empleado->empresa->nombre,
-////            'idEmpresa' => $tiempo->empleado->empresa->id,
-////            'inicio' => $tiempo->inicio
-////        ];
-//
-//        return response()->json(['estado' => $estado]);
         $user = Auth::user();
-//        if ($user->tipoEmpleado != 'Trabajador') {
-//            if ($user instanceof Empresa) {
-//                $empresaId = $user->getKey();
-//            } elseif ($user->tipoEmpleado == 'Administrador') {
-//                $empresaId = $user->empresa_id;
-//            }
-//
-//
-//        }
-        $tiempo = Tiempo::where('empleado_id', $idEmpleado)->where('fin', null)->get();
-        return response()->json($tiempo);
+        $empleado = Empleado::find($idEmpleado);
+        if ($empleado) {
+            $tiempo = Tiempo::where('empleado_id', $idEmpleado)->where('fin', null)->get();
+            if ($tiempo) {
+                if ($user instanceof Empresa && $empleado->empresa_id == $user->id) {
+                    return response()->json($tiempo);
+                } elseif ($user instanceof Empleado && $empleado->empresa_id == $user->empresa_id) {
+                    $empleadoAutenticado = Empleado::find($user->id);
+                    if ($empleadoAutenticado->tipoEmpleado == "Administrador") {
+                        return response()->json($tiempo);
+                    } elseif ($empleadoAutenticado->tipoEmpleado == "Trabajador" && $empleadoAutenticado->id == $idEmpleado) {
+                        return response()->json($tiempo);
+                    } else {
+                        return response()->json(['message' => 'No estás autorizado.']);
+                    }
+                } else {
+                    return response()->json(
+                        ['message' => 'El empleado no pertenece a la empresa del usuario autenticado.']
+                    );
+                }
+            } else {
+                return response()->json(['message' => 'El empleado está offline']);
+            }
+        } else {
+            return response()->json(['message' => 'El empleado solicitado no existe']);
+        }
     }
 
     public function empleadosOnline()
     {
         $user = Auth::user();
 
-        if ($user->tipoEmpleado != 'Trabajador'){
+        if ($user->tipoEmpleado != 'Trabajador') {
             if ($user instanceof Empresa) {
                 $empresaId = $user->getKey();
             } elseif ($user->tipoEmpleado == 'Administrador') {
@@ -112,26 +85,54 @@ class TiempoController extends Controller {
                 ])
                 ->get();
 
-            // Obtener los campos necesarios y renombrarlos en la respuesta JSON
-            $empleados = $empleados->map(function ($item) {
-                return [
-                    'empresa_id' => $item->empleado->empresa_id,
-                    'empleado_id' => $item->empleado_id,
-                    'nombre' => $item->empleado->nombre,
-                    'apellidos' => $item->empleado->apellidos,
-                    'nif' => $item->empleado->nif,
-                    'email' => $item->empleado->email,
-                    'telefono' => $item->empleado->telefono,
-                    'inicio' => $item->inicio,
-                ];
-            });
-
-            // Convertir la colección a un array
-            $empleados = $empleados->toArray();
-
             // Verificar si se encontraron empleados y retornar la respuesta JSON
             if (!empty($empleados)) {
-                return response()->json($empleados);
+                $resultados = [];
+                foreach ($empleados as $empleado) {
+                    $turnoActivo = DB::table('empleados_turnos')
+                        ->where('empleado_id', $empleado->empleado_id)
+                        ->where('activo', true)
+                        ->first();
+                    $diaSemanaNumero = Carbon::parse($empleado->inicio)->format('N');
+                    $dia = DB::table('dias')
+                        ->where('turno_id', $turnoActivo->turno_id)
+                        ->where('diaSemana', $diaSemanaNumero)
+                        ->first();
+                    $horaLlegadaEmpleado = Carbon::parse($empleado->inicio)->format('H:i:s');
+                    $horaInicioTrabajo = Carbon::parse($dia->horaInicioM)->format('H:i:s');
+
+                    if ($horaLlegadaEmpleado > $horaInicioTrabajo) {
+                        // El empleado llegó tarde
+                        $retraso = true;
+                        $adelanto = false;
+                        $diferenciaSegundos = Carbon::parse($horaLlegadaEmpleado)->diffInSeconds($horaInicioTrabajo);
+                        $signo = '-';
+                    } else {
+                        // El empleado llegó temprano o a tiempo
+                        $retraso = false;
+                        $adelanto = true;
+                        $diferenciaSegundos = Carbon::parse($horaInicioTrabajo)->diffInSeconds($horaLlegadaEmpleado);
+                        $signo = '';
+                    }
+                    $diferenciaFormateada = $signo . gmdate('H:i:s', abs($diferenciaSegundos));
+                    $resultados[] = [
+                        'empresa_id' => $empleado->empleado->empresa_id,
+                        'empleado_id' => $empleado->empleado_id,
+                        'nombre' => $empleado->empleado->nombre,
+                        'apellidos' => $empleado->empleado->apellidos,
+                        'nif' => $empleado->empleado->nif,
+                        'email' => $empleado->empleado->email,
+                        'telefono' => $empleado->empleado->telefono,
+                        'inicio' => $empleado->inicio,
+                        'horaInicioTrabajo' => $horaInicioTrabajo,
+                        'diferencia' => $diferenciaFormateada,
+                        'retraso' => $retraso,
+                        'adelanto' => $adelanto,
+                        'diaSemana' => $diaSemanaNumero,
+                        'turnoActivo' => $turnoActivo->turno_id,
+                    ];
+                }
+                return response()->json($resultados);
             } else {
                 return response()->json(
                     ['message' => 'No se encontraron empleados OnLine pertenecientes a la empresa autenticada.'],
