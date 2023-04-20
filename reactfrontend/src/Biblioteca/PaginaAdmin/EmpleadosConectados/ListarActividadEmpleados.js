@@ -52,6 +52,9 @@ function ListarActividadEmpleados() {
                 telefono: datosE.telefono,
                 fechaInicio: datosE.inicio,
                 horaInicio: datosE.inicio,
+                adelanto: datosE.adelanto,
+                retraso: datosE.retraso,
+                diferencia: datosE.diferencia
             };
             return newEmpresa;
         });
@@ -64,6 +67,14 @@ function ListarActividadEmpleados() {
     useEffect(() => {
         recoleccionDatos();
     }, []);
+
+    const tieneAdelanto = (option) =>{
+        if(option.retraso == false){
+            return(<td className='adelanto'>{option.diferencia}</td>)
+        }else{
+            return(<td className='retraso'>{option.diferencia}</td>)
+        }
+    }
 
     if(empleadosEstaticos !== undefined && empleadosEstaticos[0].nombre !== ""){
         return(
@@ -78,6 +89,7 @@ function ListarActividadEmpleados() {
                             <th className='campoOpcional'>Teléfono</th>
                             <th>Fecha Inicio</th>
                             <th>Hora Inicio</th>
+                            <th>Diferencia Horaria</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -89,6 +101,7 @@ function ListarActividadEmpleados() {
                                 <td className='campoOpcional'>{option.telefono}</td>
                                 <td>{cogerFecha(option.fechaInicio)}</td>
                                 <td>{cogerHora(option.horaInicio)}</td>
+                                {tieneAdelanto(option)}
                             </tr>)
                         }
                     })}

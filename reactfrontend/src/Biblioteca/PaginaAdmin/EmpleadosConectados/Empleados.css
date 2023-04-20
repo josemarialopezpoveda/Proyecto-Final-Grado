@@ -1,9 +1,10 @@
-.online{
+.online ,.adelanto{
     color: #28FF28!important;
     font-weight: bold;
 }
 
-.offline{
-    color: red;
+.offline ,.retraso{
+    color: red !important;
     font-weight: bold;
 }
+
