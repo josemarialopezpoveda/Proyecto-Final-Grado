@@ -36,10 +36,16 @@ function CrearCorreoAdmin() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/", header);
+        let datosEmpresaLogueada = undefined;
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){   
+            datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/" + `${localStorage.getItem("id")}`, header);
+        }else{
+            datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/" + `${localStorage.getItem("idEmpresa")}`, header);
+        }
+        console.log(datosEmpresaLogueada)
         //console.log(datosEmpresaLogueada.data.empresa.empleados)
-        if (datosEmpresaLogueada.data.empresa.empleados !== 0) {
-          var nombreCompletoEmpleado = datosEmpresaLogueada.data.empresa.empleados.map((datosEmpleado) => {
+        if (datosEmpresaLogueada.data.empleados !== 0) {
+          var nombreCompletoEmpleado = datosEmpresaLogueada.data.empleados.map((datosEmpleado) => {
             var newEmpleado = {
               id: datosEmpleado.id,
               nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,

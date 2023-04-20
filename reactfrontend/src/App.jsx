@@ -39,6 +39,7 @@ import CrearMensaje from 'Biblioteca/PaginaAdmin/Chat/Mensajes/CrearMensaje';
 import ModificarMensaje from 'Biblioteca/PaginaAdmin/Chat/Mensajes/ModificarMensaje';
 import VerMensajesEmpresaAdmin from 'Biblioteca/PaginaAdmin/Chat/Mensajes/VerMensajesEmpresaAdmin';
 import VerMensajesEmpleado from 'Biblioteca/PaginaAdmin/Chat/Mensajes/VerMensajesEmpleado';
+import VerTiemposEmpleado from 'Biblioteca/PaginaAdmin/Tiempos/VerTiemposEmpleado';
 
 function App() {
   return(
@@ -71,6 +72,9 @@ function App() {
                   {/*Ver datos empresa y modificarlos*/}
                   <Route exact path="/datosEmpresa" element={<DatosEmpresa/>}/>
                   <Route exact path="/modificarDatosEmpresa" element={<ModificarDatosEmpresa/>}/>
+
+                  {/*Ver tiempos de un empleado*/}
+                  <Route exact path="/verTiemposEmpleado" element={<VerTiemposEmpleado/>}/>
 
                   {/*Chat / Correo*/}
                   <Route exact path="/chatAdmin" element={<ChatAdmin/>} />

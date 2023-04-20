@@ -4,85 +4,106 @@ import Form from 'react-bootstrap/Form';
 import {Link, useNavigate} from 'react-router-dom';
 import PiePagina from '../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../Nav/NavAdmin';
-import { mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPost } from "../../../FuncionesAuxiliares/Funciones";
+import { mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPut } from "../../../FuncionesAuxiliares/Funciones";
 import { URL_API } from 'services/http/const';
+import NavCliente from 'Biblioteca/PaginaCliente/Nav/NavCliente';
 
 function ModificarMensaje() {
     //Creamos la variable para poder usar el navigate.
     const Navigate = useNavigate();
 
-    const [mensaje, setMensaje] = useState({
+    const [mensajeCreado, setMensajeCreado] = useState({
         casos_id: `${localStorage.getItem('idCaso')}`,
         empresa_id: `${localStorage.getItem("id")}`,
-        emisor: "",
-        receptor:"",
         mensaje: ""
     });
 
-    const [nombresUsuarios, setNombresUsuarios] = useState({
-        nombreCompleto: "",
-        id: ""
-    });
+    const [datosEmisor, setDatosEmisor] = useState({});
 
-    const recoleccionEmpleados = async () => {
+    const [datosReceptor, setDatosReceptor] = useState({});
+
+    const recoleccionDatos = async () => {
         const header = {
           headers: {
             Accept: "application/json",
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosEmpleados = await peticionGetAuth(URL_API + "empresa/", header);
-        if (datosEmpleados.data.empresa.empleados !== 0) {
-          var nombreCompletoEmpleado = datosEmpleados.data.empresa.empleados.map((datosEmpleado) => {
-            var newEmpleado = {
-              id: datosEmpleado.id,
-              nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,
-            };
-            return newEmpleado;
-          });
-          setNombresUsuarios(nombreCompletoEmpleado);
-        }
-    };
+        let url = undefined;
+        url = URL_API + "casos/" + `${localStorage.getItem('idCaso')}`;
+        console.log(url)
+        if(url !== undefined){
+            let datosCaso = await peticionGetAuth(url, header);
+            console.log(datosCaso)
+            let obj = {
+                emisor: datosCaso.data.Intervinientes.Emisor,
+                receptor: datosCaso.data.Intervinientes.Receptor,
+                idEmisor: datosCaso.data.Intervinientes.idEmisor,
+                idReceptor: datosCaso.data.Intervinientes.idReceptor,
+            }
 
-    const recoleccionDatosMensaje = async () => {
-        const header = {
-            headers: {
-            Accept: "application/json",
-            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-            },
-        };
-        let datosMensaje = await peticionGetAuth(URL_API + "mensaje/" + `${localStorage.getItem("idMensaje")}`, header);
-        console.log(datosMensaje)
-        if (datosMensaje.data.mensaje !== undefined) {
-            var datosMensajeObj = {
-                receptor: datosMensaje.data.mensaje.receptor,
-                mensaje: datosMensaje.data.mensaje.mensaje,
-            };
-            setMensaje(datosMensajeObj);
+            if(`${localStorage.getItem("tipoUsuario")}` === "Administrador"){
+                if(obj.idEmisor == `${localStorage.getItem("idEmpleadoAdmin")}`){
+                    let emisor = {
+                        nombre:obj.emisor,
+                        id:obj.idEmisor
+                    }
+                    let receptor = {
+                        nombre:obj.receptor,
+                        id:obj.idReceptor
+                    }
+                    setDatosEmisor(emisor);
+                    setDatosReceptor(receptor);
+                }else{
+                    let emisor = {
+                        nombre:obj.emisor,
+                        id:obj.idEmisor
+                    }
+                    let receptor = {
+                        nombre:obj.receptor,
+                        id:obj.idReceptor
+                    }
+                    setDatosEmisor(receptor);
+                    setDatosReceptor(emisor);
+                }
+            }else if(`${localStorage.getItem("tipoUsuario")}` === "Trabajador"){
+                if(obj.idEmisor == `${localStorage.getItem("id")}`){
+                    let emisor = {
+                        nombre:obj.emisor,
+                        id:obj.idEmisor
+                    }
+                    let receptor = {
+                        nombre:obj.receptor,
+                        id:obj.idReceptor
+                    }
+                    setDatosEmisor(emisor);
+                    setDatosReceptor(receptor);
+                }else{
+                    let emisor = {
+                        nombre:obj.emisor,
+                        id:obj.idEmisor
+                    }
+                    let receptor = {
+                        nombre:obj.receptor,
+                        id:obj.idReceptor
+                    }
+                    setDatosEmisor(receptor);
+                    setDatosReceptor(emisor);
+                }
+            }
         }
-    };
+      };
 
     useEffect(() => {
-        recoleccionEmpleados();
-        recoleccionDatosMensaje();
+        recoleccionDatos();
     }, []);
-
-    const obtenerOptions = () =>{
-        if(nombresUsuarios.id !== "" && typeof(nombresUsuarios) === 'object'){
-            return(nombresUsuarios.map((empleado, index)=>{
-                return(<option key={index} value={String(empleado.id)}>{empleado.nombreCompleto}</option>)
-            }))
-        }
-    }
 
     const TodoCorrecto = async() =>{
         let raw = {
-            "casos_id": mensaje.casos_id,
-            "empresa_id": mensaje.empresa_id,
-            "emisor": mensaje.emisor,
-            "receptor": mensaje.receptor,
-            "mensaje": mensaje.mensaje,
+            "receptor": datosReceptor.id,
+            "mensaje": mensajeCreado.mensaje,
           }
+          console.log(raw)
           try {
             const header = {
                 headers: {
@@ -90,7 +111,7 @@ function ModificarMensaje() {
                     "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
                 }
             }
-          let peticion = await peticionPost(URL_API + "mensajes", raw, header)
+          let peticion = await peticionPut(URL_API + "mensajes/" +  `${localStorage.getItem('idMensaje')}`, raw, header)
           console.log(peticion)
           if(peticion.data.errores !== undefined && peticion.data.errores !== null){
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
@@ -103,47 +124,71 @@ function ModificarMensaje() {
         }
     }
 
-  return (
-    <React.Fragment>
-        <NavAdmin/>
-            <pre>{JSON.stringify(mensaje, null, 3)}</pre>
-                <div className=''>
-                    <h1 className='text-center tituloH1'>Modificar Mensaje</h1>
-                    <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
-                    <Form id="anyadir">
-                        <div className="divContenedorCampo divMensajeCorreo">
-                                <p>Para:</p>
+    const botonVolver = () =>{
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            return(<Link to="/verMensajes" className="anyadirUsuarioDatos">Volver</Link>)
+        }else{
+            return(<Link to="/verMensajesEmpleado" className="anyadirUsuarioDatos">Volver</Link>)
+        }
+    }
+
+    const anyadirBarraNav = () =>{
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            return(<NavAdmin/>)
+        }else{
+            return(<NavCliente/>)
+        }
+    }
+
+
+    return (
+        <React.Fragment>
+            {anyadirBarraNav()}
+                <pre>{JSON.stringify(mensajeCreado, null, 3)}</pre>
+                <pre>{JSON.stringify(datosEmisor, null, 3)}</pre>
+                <pre>{JSON.stringify(datosReceptor, null, 3)}</pre>
+
+                    <div className=''>
+                        <h1 className='text-center tituloH1'>Modificar Mensaje</h1>
+                        <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
+                        <Form id="anyadir">
+                            <div className='divContenedorCampo'>
+                                <p>De:</p>
                                 <Form.Group className="w-50 mb-3">
-                                    <Form.Select 
-                                        value={mensaje.receptor}
-                                        onInput={(e) => setMensaje({ ...mensaje, receptor: e.target.value.trim() })}
-                                        className='selectpequenyo selectCrearCorreoAdmin'>
-                                        <option value="0"> - </option>
-                                        {obtenerOptions()}
-                                    </Form.Select>
+                                    <Form.Control disabled
+                                        defaultValue={datosEmisor.nombre}>
+                                    </Form.Control>
                                 </Form.Group>
-                        </div>
-                        <div className="divContenedorCampo divMensajeCorreo">
-                            <p>Mensaje</p>
-                            <Form.Group className="mb-3 w-50">
-                            <Form.Control
-                                size="lg"
-                                type="text"
-                                defaultValue={mensaje.mensaje}
-                                onChange={(e) => setMensaje({ ...mensaje, mensaje: e.target.value.trim() })}
-                            />
-                            </Form.Group>
-                        </div>
-                        <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
-                            <Link to="/verMensajes" className="anyadirUsuarioDatos">Volver</Link>
-                            <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Modificar Mensaje</button>
-                        </div>
-                    </Form>
-                    </section>
-                </div>
-        <PiePagina/>
-    </React.Fragment>
-  );
+                            </div>
+                            <div className="divContenedorCampo divMensajeCorreo">
+                                    <p>Para:</p>
+                                    <Form.Group className="w-50 mb-3">
+                                        <Form.Control disabled
+                                            defaultValue={datosReceptor.nombre}>
+                                        </Form.Control>
+                                    </Form.Group>
+                            </div>
+                            <div className="divContenedorCampo divMensajeCorreo">
+                                <p>Mensaje</p>
+                                <Form.Group className="mb-3 w-50">
+                                <Form.Control
+                                    size="lg"
+                                    type="text"
+                                    defaultValue={mensajeCreado.mensaje}
+                                    onChange={(e) => setMensajeCreado({ ...mensajeCreado, mensaje: e.target.value.trim() })}
+                                />
+                                </Form.Group>
+                            </div>
+                            <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
+                                {botonVolver()}
+                                <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Modificar Mensaje</button>
+                            </div>
+                        </Form>
+                        </section>
+                    </div>
+            <PiePagina/>
+        </React.Fragment>
+      );
 }
 
 export default ModificarMensaje;

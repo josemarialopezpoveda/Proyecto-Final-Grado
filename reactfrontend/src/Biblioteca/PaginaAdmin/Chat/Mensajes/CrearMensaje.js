@@ -122,15 +122,15 @@ function CrearMensaje() {
                     mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
                 }else{
                     console.log(peticion.data.message)
-                    if(peticion.data.message !== undefined){
+                    if(peticion.data.message !== "Mensaje creado correctamente"){
                         mostrarAlertaErronea(peticion.data.message, "", null);
                     }else{
                         mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-                        // if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){ 
-                        //     Navigate("/verMensajes")
-                        // }else{ 
-                        //     Navigate("/verMensajesEmpleado")
-                        // }
+                        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){ 
+                            Navigate("/verMensajes")
+                        }else{ 
+                            Navigate("/verMensajesEmpleado")
+                        }
                     }
                 }
             }

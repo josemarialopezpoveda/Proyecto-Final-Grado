@@ -153,7 +153,7 @@ function ChatCliente() {
                         onClick={modificarCaso}
                         >
                           <img
-                            title="Modificar Empleado"
+                            title="Modificar Caso"
                             className="imagenFotoGestionUsuarios"
                             id={option.id}
                             src={require("../../../img/modify-foto.png")}
@@ -162,7 +162,7 @@ function ChatCliente() {
                         </button>
                         <button type="button" className="sinBorde" onClick={borrarCaso}>
                           <img
-                            title="Borrar Empleado"
+                            title="Borrar Caso"
                             className="imagenFotoGestionUsuarios"
                             id={option.id}
                             src={require("../../../img/delete-foto.png")}

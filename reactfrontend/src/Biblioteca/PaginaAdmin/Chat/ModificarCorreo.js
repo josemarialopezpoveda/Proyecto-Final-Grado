@@ -9,7 +9,8 @@ import { booleanoANumber, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionG
 function ModificarCorreo() {
     
     const [form, setForm] = useState({
-        asunto: ""
+        asunto: "",
+        activo: 1
     });
 
     //Creamos la variable para poder usar el navigate.

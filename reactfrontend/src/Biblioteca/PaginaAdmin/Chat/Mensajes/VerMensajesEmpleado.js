@@ -105,6 +105,7 @@ function VerMensajesEmpleado() {
                     }else{
                         mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
                         Navigate("/verMensajesEmpleado");
+                        recoleccionDatos();
                     }
                 }
             } catch (error) {
@@ -127,7 +128,7 @@ function VerMensajesEmpleado() {
                 <div>
                     <button type="button" className="sinBorde" onClick={modificarMensaje}>
                         <img
-                            title="Borrar Mensaje"
+                            title="Modificar Mensaje"
                             className="imagenFotoGestionUsuarios"
                             id={option.id}
                             src={require("../../../../img/modify-foto.png")}

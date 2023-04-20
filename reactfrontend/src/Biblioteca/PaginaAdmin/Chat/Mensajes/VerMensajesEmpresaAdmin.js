@@ -111,6 +111,7 @@ function VerMensajesEmpresaAdmin() {
                     }else{
                         mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
                         Navigate("/verMensajes");
+                        recoleccionDatos();
                     }
                 }
             } catch (error) {

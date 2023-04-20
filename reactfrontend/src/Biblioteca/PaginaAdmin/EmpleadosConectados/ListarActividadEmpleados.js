@@ -1,8 +1,10 @@
 //Importamos todos los .js que necesitamos para esta práctica.
 import React, { useState, useEffect } from 'react';
-import { generarUUID, peticionGetAuth } from '../../FuncionesAuxiliares/Funciones';
+import { cogerFecha, generarUUID, peticionGetAuth,cogerHora } from '../../FuncionesAuxiliares/Funciones';
 import { useNavigate } from "react-router-dom";
 import { URL_API } from 'services/http/const';
+import Table from 'react-bootstrap/Table';
+import BuscadorEmpleadosConectados from 'Biblioteca/Buscador/BuscadorEmpleadosConectados';
 
 function ListarActividadEmpleados() {
     //Creamos la variable para el uso del useNavigate.
@@ -38,6 +40,7 @@ function ListarActividadEmpleados() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
         },
         };
+        console.log(URL_API + "empleadosOnline")
         let datosEmpresa = await peticionGetAuth(URL_API + "empleadosOnline", header);
         console.log(datosEmpresa)
         if (datosEmpresa.data.length !== 0) {
@@ -45,9 +48,10 @@ function ListarActividadEmpleados() {
             var newEmpresa = {
                 nombre: datosE.nombre,
                 apellidos: datosE.apellidos,
-                dni: datosE.nif,
                 correo: datosE.email,
                 telefono: datosE.telefono,
+                fechaInicio: datosE.inicio,
+                horaInicio: datosE.inicio,
             };
             return newEmpresa;
         });
@@ -62,22 +66,56 @@ function ListarActividadEmpleados() {
     }, []);
 
     if(empleadosEstaticos !== undefined && empleadosEstaticos[0].nombre !== ""){
-        return empleadosEstaticos.map((option)=> {
-            console.log(option)
-            if(option.apellidos !== ""){
-                return(<tr key={generarUUID()}>
-                    <td>{option.nombre}</td>
-                    <td className='campoOpcional'>{option.apellidos}</td>
-                    <td className='campoOpcional'>{option.dni}</td>
-                    <td className='campoOpcional'>{option.correo}</td>
-                    <td className='campoOpcional'>{option.telefono}</td>
-                </tr>)
-            }
-        });
+        return(
+        <div>
+            <BuscadorEmpleadosConectados datosEstaticos={setEmpleadosEstaticos} datosDinamicos={empleadosDinamicos}/>
+            <div className='TablaDatosUser'>
+                <Table striped>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th className='campoOpcional'>Correo</th>
+                            <th className='campoOpcional'>Teléfono</th>
+                            <th>Fecha Inicio</th>
+                            <th>Hora Inicio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {empleadosEstaticos.map((option)=> {
+                        if(option.apellidos !== ""){
+                            return(<tr key={generarUUID()}>
+                                <td>{option.nombre} {option.apellidos}</td>
+                                <td className='campoOpcional'>{option.correo}</td>
+                                <td className='campoOpcional'>{option.telefono}</td>
+                                <td>{cogerFecha(option.fechaInicio)}</td>
+                                <td>{cogerHora(option.horaInicio)}</td>
+                            </tr>)
+                        }
+                    })}
+                    </tbody>
+                </Table>
+            </div>
+        </div>)
     }else{
-        return(<tr><td colSpan={"5"}>No hay empleados conectados en este momento.</td></tr>)
+        return(
+        <div className='TablaDatosUser'>
+            <Table striped>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th className='campoOpcional'>Correo</th>
+                        <th className='campoOpcional'>Teléfono</th>
+                        <th>Fecha Inicio</th>
+                        <th>Hora Inicio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colSpan={"5"}>No hay empleados conectados en este momento.</td></tr>
+                </tbody>
+            </Table>
+        </div>
+        )
     }
-   
 }
 
 export default ListarActividadEmpleados;
