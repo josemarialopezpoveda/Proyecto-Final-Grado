@@ -332,3 +332,11 @@ export const cogerHora = (hora) =>{
   return horaFormateada;
 }
 
+//Función para recoger el id de los trabajadores de localStorage.
+export const recogerIdEmpleadoLogueado = () =>{
+  if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+      return(`${localStorage.getItem("idEmpleadoAdmin")}`)
+  }else{
+      return(`${localStorage.getItem("id")}`)
+  }
+}

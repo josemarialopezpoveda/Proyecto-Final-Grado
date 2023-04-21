@@ -1,3 +1,4 @@
+
 //Importamos todos los .js que necesitamos para esta práctica.
 import React, { useState, useEffect } from 'react';
 import Form from 'react-bootstrap/Form';
@@ -5,29 +6,30 @@ import './CrearCorreoAdmin.css';
 import {Link, useNavigate} from 'react-router-dom';
 import PiePagina from '../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../Nav/NavAdmin';
-import { mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPost } from "../../../FuncionesAuxiliares/Funciones";
+import { mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPost, recogerIdEmpleadoLogueado } from "../../../FuncionesAuxiliares/Funciones";
 import { URL_API } from 'services/http/const';
 
 function CrearCorreoAdmin() {
     //Creamos la variable para poder usar el navigate.
     const Navigate = useNavigate();
     const [casoCreado, setCasoCreado] = useState({
-        empleado_id: `${localStorage.getItem("id")}`,
+        empleado_id: recogerIdEmpleadoLogueado(),
         asunto: ""
     });
 
     const [mensajeCreado, setMensajeCreado] = useState({
         casos_id: "",
-        empresa_id: `${localStorage.getItem("id")}`,
-        emisor: "",
+        empresa_id: "",
         receptor:"",
         mensaje: ""
     });
 
-    const [nombresUsuarios, setNombresUsuarios] = useState({
+    const [nombresUsuarios, setNombresUsuarios] = useState([{
         nombreCompleto: "",
         id: ""
-    });
+    }]);
+
+    const [emisor,setEmisor] = useState();
 
     const recoleccionDatos = async () => {
         const header = {
@@ -46,12 +48,33 @@ function CrearCorreoAdmin() {
         //console.log(datosEmpresaLogueada.data.empresa.empleados)
         if (datosEmpresaLogueada.data.empleados !== 0) {
           var nombreCompletoEmpleado = datosEmpresaLogueada.data.empleados.map((datosEmpleado) => {
-            var newEmpleado = {
-              id: datosEmpleado.id,
-              nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,
-            };
-            return newEmpleado;
+            // console.log("PRUEBAS")
+            // console.log(`${localStorage.getItem('tipoUsuario')}`)
+            console.log(typeof(datosEmpleado.id.toString()))
+            console.log(typeof(`${localStorage.getItem("idEmpleadoAdmin")}`))
+            if(`${localStorage.getItem('tipoUsuario')}` === "Trabajador" && datosEmpleado.id.toString() === `${localStorage.getItem("id")}`){
+                setEmisor(datosEmpleado.nombre + " " + datosEmpleado.apellidos)
+            }else if(`${localStorage.getItem('tipoUsuario')}` === "Administrador" && datosEmpleado.id.toString() === `${localStorage.getItem("idEmpleadoAdmin")}`){
+                setEmisor(datosEmpleado.nombre + " " + datosEmpleado.apellidos)
+            }
+
+
+
+            if(`${localStorage.getItem('tipoUsuario')}` === "Administrador" && datosEmpleado.id.toString() !== `${localStorage.getItem("idEmpleadoAdmin")}`){
+                var newEmpleado = {
+                    id: datosEmpleado.id,
+                    nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,
+                };
+                return newEmpleado;
+            }else if(`${localStorage.getItem('tipoUsuario')}` === "Trabajador" && datosEmpleado.id.toString() !== `${localStorage.getItem("id")}`){
+                var newEmpleado = {
+                    id: datosEmpleado.id,
+                    nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,
+                };
+                return newEmpleado;
+            }
           });
+          console.log(nombreCompletoEmpleado)
           setNombresUsuarios(nombreCompletoEmpleado);
         }
       };
@@ -61,11 +84,11 @@ function CrearCorreoAdmin() {
     }, []);
 
     const obtenerOptions = () =>{
-        if(nombresUsuarios.id !== "" && typeof(nombresUsuarios) === 'object'){
-            return(nombresUsuarios.map((empleado, index)=>{
+        return(nombresUsuarios.map((empleado, index)=>{
+            if(empleado !== undefined){    
                 return(<option key={index} value={String(empleado.id)}>{empleado.nombreCompleto}</option>)
-            }))
-        }
+            }
+        }))
     }
 
     const TodoCorrecto = async() =>{
@@ -88,8 +111,7 @@ function CrearCorreoAdmin() {
         }else{
             mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
             setMensajeCreado({...mensajeCreado, casos_id: peticion.data.caso.id});
-            crearMensaje();
-            Navigate("/chatAdmin")
+            crearMensaje(peticion.data.caso.id, peticion.data.empresa_id);
         }
       } catch (error) {
           mostrarAlertaErronea(error.message, error.stack, null);
@@ -97,15 +119,15 @@ function CrearCorreoAdmin() {
     
     }
 
-    const crearMensaje = async() =>{
-        console.log(mensajeCreado.casos_id,)
+    const crearMensaje = async(idMensaje, idEmpresa) =>{
+        console.log("ARRIBA ESPAÑA")
         let raw = {
-            "casos_id": mensajeCreado.casos_id,
-            "empresa_id": mensajeCreado.empresa_id,
-            "emisor": mensajeCreado.emisor,
+            "casos_id": idMensaje,
+            "empresa_id": idEmpresa,
+            "emisor": recogerIdEmpleadoLogueado(),
             "receptor": mensajeCreado.receptor,
             "mensaje": mensajeCreado.mensaje,
-          }
+        }
           console.log(raw)
           try {
             const header = {
@@ -131,6 +153,7 @@ function CrearCorreoAdmin() {
   return (
     <React.Fragment>
         <NavAdmin/>
+        <pre>{JSON.stringify(mensajeCreado, null, 3)}</pre>
                 <div className=''>
                     <h1 className='text-center tituloH1'>Crear Caso</h1>
                     <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
@@ -149,13 +172,9 @@ function CrearCorreoAdmin() {
                         <div className='divContenedorCampo'>
                             <p>De:</p>
                             <Form.Group className="w-50 mb-3">
-                                <Form.Select 
-                                    value={mensajeCreado.emisor}
-                                    onInput={(e) => setMensajeCreado({ ...mensajeCreado, emisor: e.target.value.trim() })}
-                                    className='selectpequenyo selectCrearCorreoAdmin'>
-                                    <option value="0"> - </option>
-                                    {obtenerOptions()}
-                                </Form.Select>
+                                <Form.Control disabled
+                                    defaultValue={emisor}>
+                                </Form.Control>
                             </Form.Group>
                         </div>
                         <div className="divContenedorCampo divMensajeCorreo">

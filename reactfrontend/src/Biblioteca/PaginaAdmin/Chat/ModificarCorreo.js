@@ -5,6 +5,7 @@ import { URL_API } from 'services/http/const';
 import NavAdmin from '../Nav/NavAdmin';
 import PiePagina from 'Biblioteca/PaginaPrincipal/Footer/PiePagina';
 import { booleanoANumber, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPut, valorCheck } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import NavCliente from 'Biblioteca/PaginaCliente/Nav/NavCliente';
 
 function ModificarCorreo() {
     
@@ -75,9 +76,25 @@ function ModificarCorreo() {
     }, []);
 
 
+    const botonVolver = () =>{
+        console.log(`${localStorage.getItem('tipoUsuario')}`)
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            return(<Link to="/chatAdmin" className="anyadirUsuarioDatos">Volver</Link>);
+        }else{
+            return(<Link to="/chatCliente" className="anyadirUsuarioDatos">Volver</Link>);
+        }
+    }
+
+    const anyadirBarraNav = () =>{
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            return(<NavAdmin/>)
+        }else{
+            return(<NavCliente/>)
+        }
+    }
   return (
     <React.Fragment>
-        <NavAdmin/>
+        {anyadirBarraNav()}
             <pre>{JSON.stringify(form, null, 3)}</pre>
             <div>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
@@ -100,7 +117,7 @@ function ModificarCorreo() {
                         </div>
                     </Form>
                     <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
-                        <Link to="/chatAdmin" className="anyadirUsuarioDatos">Volver</Link>
+                        {botonVolver()}
                         <button type='button' onClick={TodoCorrecto} className="anyadirUsuarioDatos">MODIFICAR</button>
                     </div>
                 </section>  

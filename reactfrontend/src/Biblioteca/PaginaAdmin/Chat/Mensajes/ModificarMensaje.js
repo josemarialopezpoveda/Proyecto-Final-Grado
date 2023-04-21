@@ -125,6 +125,7 @@ function ModificarMensaje() {
     }
 
     const botonVolver = () =>{
+        console.log(`${localStorage.getItem('tipoUsuario')}`)
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
             return(<Link to="/verMensajes" className="anyadirUsuarioDatos">Volver</Link>)
         }else{
