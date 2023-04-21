@@ -151,10 +151,11 @@ class CasoController extends Controller {
                 ) ? $request['activo'] : true; // Si no se proporciona el valor de activo, se establece como true por defecto
                 $caso->fechaCreacion = Carbon::now();
                 $caso->save();
-
+                $empleado = Empleado::find($caso->empleado_id);
                 $data = [
                     'message' => 'Caso creado correctamente',
                     'caso' => $caso,
+                    'empresa_id'=> $empleado->empresa_id,
                 ];
             } else {
                 $data = [
