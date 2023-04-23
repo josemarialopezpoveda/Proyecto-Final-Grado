@@ -47,11 +47,10 @@ Route::get('/error', [EmpresaController::class, 'paginaError']);
 
 
 //Empleado
-
 Route::post('/loginEmpleado', 'App\Http\Controllers\EmpleadoController@login');
 
-// Turnos
 
+// Turnos
 Route::get('/turnos', [TurnoController::class, 'index']);
 Route::get('/turnos/{turno}', [TurnoController::class, 'show']);
 Route::get('/turnosEmpresa/{empresaId}', [TurnoController::class, 'turnosEmpresa']);
@@ -68,24 +67,17 @@ Route::put('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'up
 Route::delete('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'destroy']);
 
 // Ausencias
-Route::get('/ausencias', [AusenciaController::class, 'index']);
-Route::get('/ausencias/{ausencias}', [AusenciaController::class, 'show']);
 Route::post('/ausencias', [AusenciaController::class, 'store']);
 Route::put('/ausencias/{ausencias}', [AusenciaController::class, 'update']);
 Route::delete('/ausencias/{ausencias}', [AusenciaController::class, 'destroy']);
 
-Route::get('/ausenciasEmpleados', [AusenciaController::class, 'ausenciasEmpleados']);
-Route::get('/ausenciasEmpleados/{empleadoId}', [AusenciaController::class, 'ausenciasEmpleado']);
 
 // Tiempos
-
-
 Route::post('/tiempos', [TiempoController::class, 'store']);
 Route::put('/tiempos/{tiempos}', [TiempoController::class, 'update']);
 Route::delete('/tiempos/{tiempos}', [TiempoController::class, 'destroy']);
 
 // Empleado_Turno
-
 Route::post('/empleados/turno', [EmpleadoController::class, 'attach']);
 Route::get('/turnosEmpleado/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
 //Route::get('/turnosEmpleado', [EmpleadoController::class, 'turnosEmpleados']);
@@ -109,7 +101,7 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/empleado/{empleadoId}', [EmpleadoController::class, 'show']);
         Route::post('/empleados', [EmpleadoController::class, 'store']);
         Route::put('/empleados/{empleados}', [EmpleadoController::class, 'update']);
-        Route::delete('/empleados/{empleados}', [EmpleadoController::class, 'destroy']);
+        Route::delete('/empleados/{empleadoId}', [EmpleadoController::class, 'destroy']);
         Route::get('/logoutEmpleado', [EmpleadoController::class, 'logout']);
 
         //Tiempos
@@ -138,6 +130,12 @@ Route::middleware('auth:sanctum')->group(
 
         //Turnos
         Route::get('/turnosEmpleado/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
+
+        //Ausencias
+        //Route::get('/ausencias', [AusenciaController::class, 'index']);
+        //Route::get('/ausencias/{empleadoId}', [AusenciaController::class, 'show']);
+        Route::get('/ausenciasEmpleados', [AusenciaController::class, 'ausenciasEmpleados']);
+        Route::get('/ausenciasEmpleados/{empleadoId}', [AusenciaController::class, 'ausenciasEmpleado']);
 
     }
 );

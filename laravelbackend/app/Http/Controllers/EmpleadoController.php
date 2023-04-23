@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Auxiliares;
 use App\Models\Empleado;
 use App\Models\Empresa;
 use App\Models\Turno;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -267,23 +269,40 @@ class EmpleadoController extends Controller {
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy($empleadoId)
     {
-        $user = Auth::user();  //Un empleado puede borrarlo el administrador de la empresa.
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
 
-        $empleado = Empleado::find($id);
+        if (is_numeric($empresaId)) {
+            $empleado = Empleado::find($empleadoId);
 
-        if ($empleado) {
-            $empleado->delete();
-            $data = [
-                'user' => $user,
-                'message' => 'Empleado eliminado correctamente',
-                'empleado' => $empleado
-            ];
+            if ($empleado) {
+                try {
+                    $empleado->delete();
+                    $data = [
+                        'user' => $user,
+                        'message' => 'Empleado eliminado correctamente',
+                        'empleado' => $empleado
+                    ];
+                } catch (QueryException $e) {
+                    if (str_contains($e->getMessage(), 'Integrity constraint violation')) {
+                        $data = [
+                            'message' => 'No se puede eliminar el empleado debido a que tiene registros relacionados en otras tablas.'
+                        ];
+                    } else {
+                        // Si la excepción no se debe a una violación de integridad referencial,
+                        // propagamos la excepción para que se maneje en otro lugar.
+                        throw $e;
+                    }
+                }
+            } else {
+                $data = [
+                    'message' => 'Empleado no existe'
+                ];
+            }
         } else {
-            $data = [
-                'message' => 'Empleado no existe'
-            ];
+            $data = ['message' => $empresaId['message'],];
         }
         return response()->json($data);
     }

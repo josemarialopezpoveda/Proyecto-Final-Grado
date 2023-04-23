@@ -2,105 +2,147 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Auxiliares;
 use App\Models\Ausencia;
 use App\Models\Empleado;
 use App\Models\Tipoausencia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AusenciaController extends Controller {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function ausenciasEmpleados()
     {
-        $ausencias = Ausencia::with('tipoausencias')->get();
-        return response()->json($ausencias);
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+
+        if (is_numeric($empresaId)) {
+            // Obtener IDs de los empleados de la empresa
+            $empleados = DB::table('empleados')
+                ->where('empresa_id', $empresaId)
+                ->select('id')
+                ->get();
+
+            $ausencias = DB::table('ausencias')
+                ->whereIn('empleado_id', $empleados->pluck('id')->toArray())
+                ->join('tipoausencias', 'ausencias.tipoausencias_id', '=', 'tipoausencias.id')
+                ->join('empleados', 'ausencias.empleado_id', '=', 'empleados.id')
+                ->select('ausencias.*', 'tipoausencias.descripcion as descripcionAusencia', 'empleados.nombre as nombreEmpleado')
+                ->get();
+
+
+            $data =['ausencias' => $ausencias];
+        } else {
+            $data = ['message' => $empresaId['message'],];
+        }
+        return response()->json($data);
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
-    {
-        $ausencia = Ausencia::with('tipoausencias')->find($id);
-        return response()->json($ausencia);
-    }
-
-    public function ausenciasEmpleados()
-    {
-        $empleado = new Empleado;
-        $ausencia = Ausencia::all();
-        $listaEmpleados = array();
-        for ($i = 0; $i < count($ausencia); $i++) {
-            if (!(in_array($ausencia[$i]->empleado_id, $listaEmpleados))) {
-                $listaEmpleados[$i] = $ausencia[$i]->empleado_id;
-                $aux = Empleado::find($ausencia[$i]->empleado_id);
-                $empleado[$i] = $aux;
-            }
-        }
-
-        $data = [
-            'message' => 'Ausencias por empleado',
-            'ausencias' => $ausencia,
-            'empleados' => $empleado
-        ];
-        return response()->json($data);
-    }
-
-
     public function ausenciasEmpleado($empleadoId)
     {
-        if (Empleado::where('id', $empleadoId)->exists()) {
-            $empleado = Empleado::find($empleadoId);
-            $ausencias = Ausencia::where('empleado_id', $empleado->id)->get();
-
-            if (count($ausencias) === 0) {
-                $data = [
-                    'message' => 'El empleado no tiene ausencias',
-                    'cantidad de ausencias' => count($ausencias),
-                ];
+        $user = Auth::user();
+        $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
+        if ($loginOk === true) {
+            $ausencias = DB::table('ausencias')
+                ->where('empleado_id', $empleadoId)
+                ->join('tipoausencias', 'ausencias.tipoausencias_id', '=', 'tipoausencias.id')
+                ->join('empleados', 'ausencias.empleado_id', '=', 'empleados.id')
+                ->select('ausencias.*', 'tipoausencias.descripcion as descripcionAusencia', 'empleados.nombre as nombreEmpleado')
+                ->get();
+            if (count($ausencias)!=0){
+                $data =['ausencias' => $ausencias];
             } else {
-
-                // Crear un arreglo vacío para las ausencias
-                $ausenciasData = [];
-
-                // Iterar por cada ausencia y agregar los datos al arreglo
-                foreach ($ausencias as $ausencia) {
-                    $tipoAusencia = Tipoausencia::find($ausencia->tipoausencias_id);
-                    $nombreTipoAusencia = $tipoAusencia->tipo;
-                    $descripcionTipoAusencia = $tipoAusencia->descripcion;
-
-                    // Crear un objeto JSON para la ausencia actual
-                    $ausenciaData = [
-                        'tipo' => $nombreTipoAusencia,
-                        'descripcion' => $descripcionTipoAusencia,
-                        'ausencia' => $ausencia->descripcion,
-                        'fecha inicio' => $ausencia->fechaInicio,
-                        'fecha fin' => $ausencia->fechaFin,
-                        'justificada' => $ausencia->justificada,
-                    ];
-
-                    // Agregar el objeto JSON al arreglo de ausencias
-                    $ausenciasData[] = $ausenciaData;
-                }
-
-                // Crear el arreglo final con los datos
-                $data = [
-                    'message' => 'Ausencias de un empleado',
-                    'cantidad de ausencias' => count($ausencias),
-                    'ausencias' => $ausenciasData
-                ];
-
-
+                $data =['message' => 'El empleado no tiene ausencias'];
             }
-        }
-        else{
-            $data = [
-                'message' => 'No se encontró el empleado con el ID proporcionado'
-            ];
+
+        } else {
+            $data = ['message' => $loginOk['message'],];
         }
         return response()->json($data);
     }
+
+//    public function ausenciasEmpleados()
+//    {
+//        $empleado = new Empleado;
+//        $ausencia = Ausencia::all();
+//        $listaEmpleados = array();
+//        for ($i = 0; $i < count($ausencia); $i++) {
+//            if (!(in_array($ausencia[$i]->empleado_id, $listaEmpleados))) {
+//                $listaEmpleados[$i] = $ausencia[$i]->empleado_id;
+//                $aux = Empleado::find($ausencia[$i]->empleado_id);
+//                $empleado[$i] = $aux;
+//            }
+//        }
+//
+//        $data = [
+//            'message' => 'Ausencias por empleado',
+//            'ausencias' => $ausencia,
+//            'empleados' => $empleado
+//        ];
+//        return response()->json($data);
+//    }
+//
+
+//    public function ausenciasEmpleado($empleadoId)
+//    {
+//        if (Empleado::where('id', $empleadoId)->exists()) {
+//            $empleado = Empleado::find($empleadoId);
+//            $ausencias = Ausencia::where('empleado_id', $empleado->id)->get();
+//
+//            if (count($ausencias) === 0) {
+//                $data = [
+//                    'message' => 'El empleado no tiene ausencias',
+//                    'cantidad de ausencias' => count($ausencias),
+//                ];
+//            } else {
+//
+//                // Crear un arreglo vacío para las ausencias
+//                $ausenciasData = [];
+//
+//                // Iterar por cada ausencia y agregar los datos al arreglo
+//                foreach ($ausencias as $ausencia) {
+//                    $tipoAusencia = Tipoausencia::find($ausencia->tipoausencias_id);
+//                    $nombreTipoAusencia = $tipoAusencia->tipo;
+//                    $descripcionTipoAusencia = $tipoAusencia->descripcion;
+//
+//                    // Crear un objeto JSON para la ausencia actual
+//                    $ausenciaData = [
+//                        'tipo' => $nombreTipoAusencia,
+//                        'descripcion' => $descripcionTipoAusencia,
+//                        'ausencia' => $ausencia->descripcion,
+//                        'fecha inicio' => $ausencia->fechaInicio,
+//                        'fecha fin' => $ausencia->fechaFin,
+//                        'justificada' => $ausencia->justificada,
+//                    ];
+//
+//                    // Agregar el objeto JSON al arreglo de ausencias
+//                    $ausenciasData[] = $ausenciaData;
+//                }
+//
+//                // Crear el arreglo final con los datos
+//                $data = [
+//                    'message' => 'Ausencias de un empleado',
+//                    'cantidad de ausencias' => count($ausencias),
+//                    'ausencias' => $ausenciasData
+//                ];
+//
+//
+//            }
+//        }
+//        else{
+//            $data = [
+//                'message' => 'No se encontró el empleado con el ID proporcionado'
+//            ];
+//        }
+//        return response()->json($data);
+//    }
 
     /**
      * Store a newly created resource in storage.
