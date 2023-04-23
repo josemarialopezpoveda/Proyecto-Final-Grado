@@ -164,7 +164,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "4|vxS0bMyY75n7SkSioIv7FtMLOgZd9ig2kULth0vW",
+							"value": "25|1qqzRfJ7vu3hZfwcuka29kE26SYE57Owmyqj6GYv",
 							"type": "string"
 						}
 					]
@@ -187,7 +187,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8000/api/empresa",
+					"raw": "http://localhost:8000/api/empresa/2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -195,7 +195,8 @@
 					"port": "8000",
 					"path": [
 						"api",
-						"empresa"
+						"empresa",
+						"2"
 					]
 				}
 			},
@@ -1643,7 +1644,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "8|aqcUze0CI4P3Q4kSWBMC1zPgMXnI0vFHoSTzblFl",
+							"value": "4|S1rASlP4jKkhsVdFMpBNjL0kmpPkT13jLWVioN1x",
 							"type": "string"
 						}
 					]
@@ -1681,7 +1682,7 @@
 			"response": []
 		},
 		{
-			"name": "TIEMPOS GET por ID EMPLEADO",
+			"name": "REGISTRO HORARIO GET por ID EMPLEADO",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -1691,7 +1692,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "8|aqcUze0CI4P3Q4kSWBMC1zPgMXnI0vFHoSTzblFl",
+							"value": "4|S1rASlP4jKkhsVdFMpBNjL0kmpPkT13jLWVioN1x",
 							"type": "string"
 						}
 					]
@@ -1877,7 +1878,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "8|aqcUze0CI4P3Q4kSWBMC1zPgMXnI0vFHoSTzblFl",
+							"value": "4|S1rASlP4jKkhsVdFMpBNjL0kmpPkT13jLWVioN1x",
 							"type": "string"
 						}
 					]
@@ -1925,7 +1926,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "8|aqcUze0CI4P3Q4kSWBMC1zPgMXnI0vFHoSTzblFl",
+							"value": "4|S1rASlP4jKkhsVdFMpBNjL0kmpPkT13jLWVioN1x",
 							"type": "string"
 						}
 					]
@@ -2384,7 +2385,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "1|M1qxxJjEjAIpEO94FjWUSvWZGYLtSVCXwUJgov8b",
+							"value": "9|HJ8c9fJFJejh4vca1e4B7XiQ04LgZZn0ekqVWNd8",
 							"type": "string"
 						}
 					]
@@ -2407,7 +2408,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8000/api/casos/4",
+					"raw": "http://localhost:8000/api/casos/24",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -2416,7 +2417,7 @@
 					"path": [
 						"api",
 						"casos",
-						"4"
+						"24"
 					]
 				}
 			},
@@ -2511,6 +2512,104 @@
 					"path": [
 						"api",
 						"casos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REGISTRO HORARIO GET por ID EMPLEADO",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "8|Wmza1GVpvMG057kxmJ8TufFZ1WH07Nfm2o9QBFX8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n        \"cif\": \"A12345678\",\n        \"razonSocial\": \"ZAPATOS, S.L.\",\n        \"nombreComercial\": \"KIDS SHOES\",\n        \"direccion\": \"MAYOR, 2000\",\n        \"poblacion\": \"MADRID\",\n        \"provincia\": \"MADRID\",\n        \"pais\": \"España\",\n        \"telefonoFijo\": \"915967968\",\n        \"telefonoMovil\": \"614655656\",\n        \"email\": \"info@kidshoes.com\",\n        \"password\": \"123456\",\n        \"logotipo\": null,\n        \"created_at\": null,\n        \"updated_at\": null,\n        \"empleados\": []\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/registroHorario/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"registroHorario",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TIEMPOS GET diferencia horario por ID EMPLEADO",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "4|S1rASlP4jKkhsVdFMpBNjL0kmpPkT13jLWVioN1x",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n        \"cif\": \"A12345678\",\n        \"razonSocial\": \"ZAPATOS, S.L.\",\n        \"nombreComercial\": \"KIDS SHOES\",\n        \"direccion\": \"MAYOR, 2000\",\n        \"poblacion\": \"MADRID\",\n        \"provincia\": \"MADRID\",\n        \"pais\": \"España\",\n        \"telefonoFijo\": \"915967968\",\n        \"telefonoMovil\": \"614655656\",\n        \"email\": \"info@kidshoes.com\",\n        \"password\": \"123456\",\n        \"logotipo\": null,\n        \"created_at\": null,\n        \"updated_at\": null,\n        \"empleados\": []\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/tiempos/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"tiempos",
+						"1"
 					]
 				}
 			},
