@@ -30,7 +30,7 @@ class AusenciaController extends Controller {
                 ->whereIn('empleado_id', $empleados->pluck('id')->toArray())
                 ->join('tipoausencias', 'ausencias.tipoausencias_id', '=', 'tipoausencias.id')
                 ->join('empleados', 'ausencias.empleado_id', '=', 'empleados.id')
-                ->select('ausencias.*', 'tipoausencias.descripcion as descripcionAusencia', 'empleados.nombre as nombreEmpleado')
+                ->select('ausencias.*', 'tipoausencias.descripcion as descripcionAusencia', 'tipoausencias.tipo as tipo','empleados.nombre as nombreEmpleado')
                 ->get();
 
 
@@ -54,7 +54,7 @@ class AusenciaController extends Controller {
                 ->where('empleado_id', $empleadoId)
                 ->join('tipoausencias', 'ausencias.tipoausencias_id', '=', 'tipoausencias.id')
                 ->join('empleados', 'ausencias.empleado_id', '=', 'empleados.id')
-                ->select('ausencias.*', 'tipoausencias.descripcion as descripcionAusencia', 'empleados.nombre as nombreEmpleado')
+                ->select('ausencias.*', 'tipoausencias.descripcion as descripcionAusencia', 'tipoausencias.tipo as tipo','empleados.nombre as nombreEmpleado')
                 ->get();
             if (count($ausencias)!=0){
                 $data =['ausencias' => $ausencias];
