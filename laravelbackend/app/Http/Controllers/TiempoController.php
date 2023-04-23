@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Dia;
+
+use App\Helpers\Holidays;
 use App\Models\Empleado;
 use App\Models\Empresa;
 use App\Models\Tiempo;
+use App\Models\Turno;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\DiasMeses;
+use App\Helpers\Auxiliares;
+use App\Helpers\Intervalo;
 
 class TiempoController extends Controller {
     /**
@@ -18,61 +22,356 @@ class TiempoController extends Controller {
      */
     public function index()
     {
-        $tiempo = Tiempo::all();
-        return response()->json($tiempo);
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+
+        if (is_numeric($empresaId)) {
+            $tiempos = Tiempo::whereHas('empleado', function ($query) use ($empresaId) {
+                $query->where('empresa_id', $empresaId);
+            })->get();
+            $data = [
+                'empresaId' => $empresaId,
+                'tiempos' => $tiempos,
+            ];
+        } else {
+            $data = ['message' => $empresaId['message'],];
+        }
+        return response()->json($data);
+    }
+
+    public function registroHorario($empleadoId)
+    {
+        $user = Auth::user();
+        $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
+
+        if ($loginOk === true) {
+            $empleado = Empleado::find($empleadoId);
+            $tiempos = Tiempo::select('inicio', 'fin')
+                ->where('empleado_id', $empleadoId)
+                ->orderBy('inicio', 'asc')
+                ->get();
+            $empresa = Empresa::find($empleado->empresa_id);
+            //Empiezo a buscar turnos a partir del primer registro que tenga el empleado en la tabla tiempos.
+            $primerRegistroTiempos = $tiempos->first();
+            $fechaInicioRegistros = Carbon::parse($primerRegistroTiempos->inicio)->format('Y-m-d');
+            $fechaHoy = Carbon::today()->format('Y-m-d');
+            $turnos = [];
+
+            while (Carbon::parse($fechaInicioRegistros) < Carbon::parse($fechaHoy)) {
+                $empleadoTurno = DB::table('empleados_turnos')->where('empleado_id', $empleado->id)
+                    ->where('fechaInicioTurno', '<=', $fechaInicioRegistros)
+                    ->where('fechaFinTurno', '>=', $fechaInicioRegistros)
+                    ->first();
+                $diaSemanaNumero = Carbon::parse($fechaInicioRegistros)->format('N');
+                $dia = DB::table('dias')
+                    ->where('turno_id', $empleadoTurno->turno_id)
+                    ->where('diaSemana', $diaSemanaNumero)->first();
+
+                if ($dia) {
+                    if (!Carbon::parse($fechaInicioRegistros)->isWeekend() && !Holidays::isHoliday(
+                            $fechaInicioRegistros
+                        )) {
+                        $totalTiempoATrabajar = Intervalo::sumaHorasIntervalos($dia);
+
+                        $turnos [] = [
+                            'empleado_id' => $empleado->id,
+                            'empleado' => $empleado->nombre . " " . $empleado->apellidos,
+                            'empresa_id' => $empleado->empresa_id,
+                            'empresa' => $empresa->nombreComercial,
+                            'fecha' => Carbon::parse($fechaInicioRegistros)->format('Y-m-d'),
+                            'dia' => DiasMeses::getDaysOfWeek($diaSemanaNumero),
+                            'turnoId' => $empleadoTurno->turno_id,
+                            'InicioTurno' => $empleadoTurno->fechaInicioTurno,
+                            'FinTurno' => $empleadoTurno->fechaFinTurno,
+                            'horasJornada' => $totalTiempoATrabajar,
+                        ];
+                    }
+                }
+                $fechaInicioRegistros = Carbon::parse($fechaInicioRegistros);
+                $fechaInicioRegistros->addDay();
+            }
+
+            foreach ($turnos as $turno) {
+                // Realizar una consulta para buscar los registros con la misma fecha en la tabla tiempos
+                $tiempos = Tiempo::select(DB::raw('SUM(TIME_TO_SEC(TIMEDIFF(fin, inicio))) AS segundos'))
+                    ->where('empleado_id', $turno['empleado_id'])
+                    ->whereDate('inicio', $turno['fecha'])
+                    ->get();
+                if ($tiempos) {
+                    $tiemposRegistrados = Tiempo::select('inicio', 'fin')
+                        ->where('empleado_id', $turno['empleado_id'])
+                        ->whereDate('inicio', $turno['fecha'])
+                        ->get();
+
+                    $segundos = $tiempos[0]->segundos ?? 0;
+                    $turno_con_segundos = Auxiliares::obtenerTiempos($turno, $segundos);
+                } else {
+                    //el empleado no ha trabajo este día.
+                    //$segundos = $tiempos[0]->segundos ?? 0;
+                    $turno_con_segundos = Auxiliares::obtenerTiempos($turno, 0);
+                }
+                $turno_con_segundos['registroHorario'] = $tiemposRegistrados;
+                $turnos_con_segundos[] = $turno_con_segundos;
+            }
+            $data = ['turnos' => $turnos_con_segundos,];
+        } else {
+            $data = ['message' => $loginOk['message'],];
+        }
+        return response()->json($data);
     }
 
     /**
      * Display the specified resource.
+     * Devuelve todos los tiempos del empleado.
      */
-    public function show($id)
-    {
-        $tiempo = Tiempo::where('empleado_id', $id)->get();
-        return response()->json($tiempo);
-    }
 
-    public function empleadoOnline($idEmpleado)
+    public function show($empleadoId)
     {
         $user = Auth::user();
-        $empleado = Empleado::find($idEmpleado);
-        if ($empleado) {
-            $tiempo = Tiempo::where('empleado_id', $idEmpleado)->where('fin', null)->get();
-            if ($tiempo) {
-                if ($user instanceof Empresa && $empleado->empresa_id == $user->id) {
-                    return response()->json($tiempo);
-                } elseif ($user instanceof Empleado && $empleado->empresa_id == $user->empresa_id) {
-                    $empleadoAutenticado = Empleado::find($user->id);
-                    if ($empleadoAutenticado->tipoEmpleado == "Administrador") {
-                        return response()->json($tiempo);
-                    } elseif ($empleadoAutenticado->tipoEmpleado == "Trabajador" && $empleadoAutenticado->id == $idEmpleado) {
-                        return response()->json($tiempo);
+        $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
+
+        if ($loginOk === true) {
+            $empleado = Empleado::find($empleadoId);
+            $tiempos = Tiempo::select('inicio', 'fin')
+                ->where('empleado_id', $empleadoId)
+                ->orderBy('inicio', 'asc')
+                ->get();
+            $empresa = Empresa::find($empleado->empresa_id);
+//        $loginOk = false;
+//        $empleado = Empleado::find($empleadoId);
+//        if ($empleado) {
+//            $tiempos = Tiempo::select('inicio', 'fin')
+//                ->where('empleado_id', $empleadoId)
+//                ->orderBy('inicio', 'asc')
+//                ->get();
+//            if ($tiempos) {
+//                $empresa = Empresa::find($empleado->empresa_id);
+//                if ($user instanceof Empresa && $user->id == $empleado->empresa_id) {
+//                    $loginOk = true;
+//                } elseif ($user instanceof Empleado && $user->empresa_id == $empleado->empresa_id) {
+//                    if ($user->tipoEmpleado == "Administrador" || $user->id == $empleadoId) {
+//                        $loginOk = true;
+//                    } else {
+//                        $data = [
+//                            'message' => 'No estás autorizado.',
+//                        ];
+//                    }
+//                } else {
+//                    $data = [
+//                        'message' => 'El empleado no pertenece a la empresa del usuario autenticado.',
+//                    ];
+//                }
+//            } else {
+//                $data = [
+//                    'message' => 'El empleado no tiene tiempos registrados.',
+//                ];
+//            }
+//        } else {
+//            $data = [
+//                'message' => 'Empleado no existe.',
+//            ];
+//        }
+//        if ($loginOk) {
+            foreach ($tiempos as $tiempo) {
+                $empleadoTurno = DB::table('empleados_turnos')->where('empleado_id', $empleado->id)
+                    ->where('fechaInicioTurno', '<=', Carbon::parse($tiempo->inicio)->format('Y:m:d'))
+                    ->where('fechaFinTurno', '>=', Carbon::parse($tiempo->inicio)->format('Y:m:d'))
+                    //->where('activo', true)
+                    ->first();
+                if ($empleadoTurno) {
+                    $turno = Turno::find($empleadoTurno->turno_id);
+                    $diaSemanaNumero = Carbon::parse($tiempo->inicio)->format('N');
+                    $dia = DB::table('dias')
+                        ->where('turno_id', $empleadoTurno->turno_id)
+                        ->where('diaSemana', $diaSemanaNumero)->first();
+
+                    if ($dia) {
+                        $horaLlegadaEmpleado = Carbon::parse($tiempo->inicio)->format('H:i:s');
+                        $horaSalidaEmpleado = Carbon::parse($tiempo->fin)->format('H:i:s');
+
+                        $turnoM = Auxiliares::isTurno($dia->horaInicioM);
+                        $turnoT = Auxiliares::isTurno($dia->horaInicioT);
+                        $turnoN = Auxiliares::isTurno($dia->horaInicioN);
+                        $turnoMOk = false;
+                        $turnoTOk = false;
+
+                        if ($turnoM) {
+                            $horaInicioTrabajo = Carbon::parse($dia->horaInicioM)->format('H:i:s');
+                            $horaFinTrabajo = Carbon::parse($dia->horaFinM)->format('H:i:s');
+                            $intervaloTrabajo = new Intervalo($horaLlegadaEmpleado, $horaSalidaEmpleado);
+                            $intervaloTurno = new Intervalo($horaInicioTrabajo, $horaFinTrabajo);
+                            if ($intervaloTrabajo->dentroDe($intervaloTurno)) {
+                                // El empleado trabajó dentro del turno correspondiente
+                                $turnoMOk = true;
+                                $horaInicioTrabajo = Carbon::parse($dia->horaInicioM)->format('H:i:s');
+                                $horaFinTrabajo = Carbon::parse($dia->horaFinM)->format('H:i:s');
+                            } else {
+                                // El empleado no trabajó dentro del turno correspondiente
+                                $turnoMOk = false;
+                            }
+                        }
+
+                        if ($turnoT) {
+                            $horaInicioTrabajo = Carbon::parse($dia->horaInicioT)->format('H:i:s');
+                            $horaFinTrabajo = Carbon::parse($dia->horaFinT)->format('H:i:s');
+                            $intervaloTrabajo = new Intervalo($horaLlegadaEmpleado, $horaSalidaEmpleado);
+                            $intervaloTurno = new Intervalo($horaInicioTrabajo, $horaFinTrabajo);
+                            if ($intervaloTrabajo->dentroDe($intervaloTurno)) {
+                                // El empleado trabajó dentro del turno correspondiente
+                                $turnoTOk = true;
+                                $horaInicioTrabajo = Carbon::parse($dia->horaInicioT)->format('H:i:s');
+                                $horaFinTrabajo = Carbon::parse($dia->horaFinT)->format('H:i:s');
+                            } else {
+                                // El empleado no trabajó dentro del turno correspondiente
+                                $turnoTOk = false;
+                            }
+                        }
+
+                        if ($tiempo->fin) {
+                            // Entrada
+                            if ($horaLlegadaEmpleado > $horaInicioTrabajo) {
+                                // El empleado llegó tarde
+                                $retrasoEntrada = true;
+                                $adelantoEntrada = false;
+                                $diferenciaSegundosEntrada = Carbon::parse($horaLlegadaEmpleado)->diffInSeconds(
+                                    $horaInicioTrabajo
+                                );
+                                $signo = '-';
+                            } else {
+                                // El empleado llegó temprano o a tiempo
+                                $retrasoEntrada = false;
+                                $adelantoEntrada = true;
+                                $diferenciaSegundosEntrada = Carbon::parse($horaInicioTrabajo)->diffInSeconds(
+                                    $horaLlegadaEmpleado
+                                );
+                                $signo = '';
+                            }
+                            $diferenciaFormateadaEntrada = $signo . gmdate(
+                                    'H:i:s',
+                                    abs($diferenciaSegundosEntrada)
+                                );
+
+                            //Salida
+                            if ($horaSalidaEmpleado < $horaFinTrabajo) {
+                                // El empleado salió antes de la hora
+                                $retrasoSalida = false;
+                                $adelantoSalida = true;
+                                $diferenciaSegundosSalida = Carbon::parse($horaSalidaEmpleado)->diffInSeconds(
+                                    $horaFinTrabajo
+                                );
+                                $signo = '-';
+                            } else {
+                                // El empleado salió después de la hora o en punto.
+                                $retrasoSalida = true;
+                                $adelantoSalida = false;
+                                $diferenciaSegundosSalida = Carbon::parse($horaFinTrabajo)->diffInSeconds(
+                                    $horaSalidaEmpleado
+                                );
+                                $signo = '';
+                            }
+
+                            $diferenciaFormateadaSalida = $signo . gmdate('H:i:s', abs($diferenciaSegundosSalida));
+
+                            // Obtener las horas que debía trabajar en un día
+                            $horasDeberTrabajar = Carbon::parse($dia->horaInicioM)->diffInSeconds(
+                                Carbon::parse($dia->horaFinM)
+                            );
+
+                            // Obtener las horas trabajadas
+                            $horasTrabajadas = Carbon::parse($horaSalidaEmpleado)->diffInSeconds(
+                                Carbon::parse($horaLlegadaEmpleado)
+                            );
+
+                            // Calcular la diferencia
+                            $diferenciaSegundos = $horasDeberTrabajar - $horasTrabajadas;
+
+                            if ($diferenciaSegundos > 0) {
+                                // El empleado trabajó menos horas de las que debía
+                                $retrasoDia = true;
+                                $adelantoDia = false;
+                                $signo = '-';
+                            } elseif ($diferenciaSegundos < 0) {
+                                // El empleado trabajó más horas de las que debía
+                                $retrasoDia = false;
+                                $adelantoDia = true;
+                                $signo = '';
+                            } else {
+                                // El empleado trabajó las horas que debía
+                                $retrasoDia = false;
+                                $adelantoDia = false;
+                                $signo = '';
+                            }
+                            $diferenciaFormateadaDia = $signo . gmdate('H:i:s', abs($diferenciaSegundos));
+
+                            $tiempo->mes = DiasMeses::getMonthName(date('n', strtotime($tiempo->inicio)));
+                            $tiempo->diaSemana = DiasMeses::getDaysOfWeek($dia->diaSemana);
+                            $tiempo->descripcionTruno = $turno->descripcion;
+                            $tiempo->horaLlegadaEmpleado = $horaLlegadaEmpleado;
+                            $tiempo->horaInicioTrabajo = $horaInicioTrabajo;
+                            $tiempo->diferenciaEntrada = $diferenciaFormateadaEntrada;
+                            $tiempo->horaSalidaEmpleado = $horaSalidaEmpleado;
+                            $tiempo->horaFinTrabajo = $horaFinTrabajo;
+                            $tiempo->diferenciaSalida = $diferenciaFormateadaSalida;
+                            $tiempo->diferenciaDia = $diferenciaFormateadaDia;
+                            $tiempo->retrasoDia = $retrasoDia;
+                            $tiempo->adelentoDia = $adelantoDia;
+                            $tiempo->turnoMañana = $turnoM;
+                            $tiempo->turnoTarde = $turnoT;
+                            $tiempo->turnoNoche = $turnoN;
+                            $tiempo->turnoMañanaOK = $turnoMOk;
+                            $tiempo->turnoTardeOK = $turnoTOk;
+                            //$tiempo->dias = $dia;
+                        } else {
+                            $tiempo->mes = DiasMeses::getMonthName(date('n', strtotime($tiempo->inicio)));
+                            $tiempo->diaSemana = DiasMeses::getDaysOfWeek($dia->diaSemana);
+                            $tiempo->empleadoOnline = true;
+                            $tiempo->descripcionTruno = $turno->descripcion;
+                            $tiempo->horaLlegadaEmpleado = $horaLlegadaEmpleado;
+                            $tiempo->horaInicioTrabajo = $horaInicioTrabajo;
+                            $tiempo->diferenciaEntrada = $diferenciaFormateadaEntrada;
+                        }
                     } else {
-                        return response()->json(['message' => 'No estás autorizado.']);
+                        //No tiene turno ese día.
                     }
-                } else {
-                    return response()->json(
-                        ['message' => 'El empleado no pertenece a la empresa del usuario autenticado.']
-                    );
                 }
-            } else {
-                return response()->json(['message' => 'El empleado está offline']);
             }
+            $data = [
+                'empleado_id' => $empleado->id,
+                'empleado' => $empleado->nombre . " " . $empleado->apellidos,
+                'empresa_id' => $empleado->empresa_id,
+                'empresa' => $empresa->nombreComercial,
+                '$tiempos' => $tiempos,
+            ];
         } else {
-            return response()->json(['message' => 'El empleado solicitado no existe']);
+            $data = ['message' => $loginOk['message'],];
+        }
+        return response()->json($data);
+
+//        $tiempo = Tiempo::where('empleado_id', $id)->get();
+//        return response()->json($tiempo);
+    }
+
+    public function empleadoOnline($empleadoId): \Illuminate\Http\JsonResponse
+    {
+        $user = Auth::user();
+        $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
+
+        if ($loginOk === true) {
+            $tiempo = Tiempo::where('empleado_id', $empleadoId)->where('fin', null)->get();
+            return response()->json($tiempo);
+        } else {
+            $data = ['message' => $loginOk['message'],];
+            return response()->json($data);
         }
     }
 
-    public function empleadosOnline()
+    public
+    function empleadosOnline()
     {
         $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
 
-        if ($user->tipoEmpleado != 'Trabajador') {
-            if ($user instanceof Empresa) {
-                $empresaId = $user->getKey();
-            } elseif ($user->tipoEmpleado == 'Administrador') {
-                $empresaId = $user->empresa_id;
-            }
-
+        if (is_numeric($empresaId)) {
             //Obtener los empleados con fin igual a null que pertenezcan a la empresa autenticada
             $empleados = Tiempo::where('fin', null)
                 ->whereHas('empleado', function ($query) use ($empresaId) {
@@ -105,13 +404,17 @@ class TiempoController extends Controller {
                         // El empleado llegó tarde
                         $retraso = true;
                         $adelanto = false;
-                        $diferenciaSegundos = Carbon::parse($horaLlegadaEmpleado)->diffInSeconds($horaInicioTrabajo);
+                        $diferenciaSegundos = Carbon::parse($horaLlegadaEmpleado)->diffInSeconds(
+                            $horaInicioTrabajo
+                        );
                         $signo = '-';
                     } else {
                         // El empleado llegó temprano o a tiempo
                         $retraso = false;
                         $adelanto = true;
-                        $diferenciaSegundos = Carbon::parse($horaInicioTrabajo)->diffInSeconds($horaLlegadaEmpleado);
+                        $diferenciaSegundos = Carbon::parse($horaInicioTrabajo)->diffInSeconds(
+                            $horaLlegadaEmpleado
+                        );
                         $signo = '';
                     }
                     $diferenciaFormateada = $signo . gmdate('H:i:s', abs($diferenciaSegundos));
@@ -140,18 +443,17 @@ class TiempoController extends Controller {
                 );
             }
         } else {
-            return response()->json(
-                ['message' => 'No estás autorizado.'],
-                404
-            );
+            $data = ['message' => $empresaId['message'],];
         }
+        return response()->json($data);
     }
 
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public
+    function create()
     {
         //
     }
@@ -178,8 +480,10 @@ class TiempoController extends Controller {
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
+    public
+    function edit(
+        string $id
+    ) {
         //
     }
 
@@ -216,8 +520,10 @@ class TiempoController extends Controller {
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
+    public
+    function destroy(
+        string $id
+    ) {
         $tiempo = Tiempo::find($id);
         if ($tiempo) {
             $tiempo->delete();

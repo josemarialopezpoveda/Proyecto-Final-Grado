@@ -35,10 +35,16 @@ class TiempoFactory extends Factory {
 
         $fechaActual = Carbon::parse($fechaInicio);
 
-        while ($fechaActual <= Carbon::parse($fechaFin)) {
+        while ($fechaActual < Carbon::parse($fechaFin)) {
+            $diaSemana = $fechaActual->format('N');
             if (!$fechaActual->isWeekend() && !Holidays::isHoliday($fechaActual)) {
-                $horaAleatoriaE = $faker->dateTimeBetween($horaInicioI, $horaInicioF)->format('H:i:s');
-                $horaAleatoriaS = $faker->dateTimeBetween($horaFinI, $horaFinF)->format('H:i:s');
+                if ($diaSemana == 5) { // Si la fecha actual es un viernes
+                    $horaAleatoriaE = $faker->dateTimeBetween(Carbon::parse($horaInicioI)->addHours(2), Carbon::parse($horaInicioF)->addHours(2))->format('H:i:s');
+                    $horaAleatoriaS = $faker->dateTimeBetween(Carbon::parse($horaFinI)->addHours(2), Carbon::parse($horaFinF)->addHours(2))->format('H:i:s');
+                } else{
+                    $horaAleatoriaE = $faker->dateTimeBetween($horaInicioI, $horaInicioF)->format('H:i:s');
+                    $horaAleatoriaS = $faker->dateTimeBetween($horaFinI, $horaFinF)->format('H:i:s');
+                }
                 $fechaHoraEntrada = Carbon::instance($fechaActual);
                 $fechaHoraSalida = Carbon::instance($fechaActual);
                 $fechaHoraEntrada->setTimeFromTimeString($horaAleatoriaE);

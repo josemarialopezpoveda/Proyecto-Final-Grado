@@ -78,8 +78,8 @@ Route::get('/ausenciasEmpleados', [AusenciaController::class, 'ausenciasEmpleado
 Route::get('/ausenciasEmpleados/{empleadoId}', [AusenciaController::class, 'ausenciasEmpleado']);
 
 // Tiempos
-Route::get('/tiempos', [TiempoController::class, 'index']);
-Route::get('/tiempos/{tiempos}', [TiempoController::class, 'show']);
+
+
 Route::post('/tiempos', [TiempoController::class, 'store']);
 Route::put('/tiempos/{tiempos}', [TiempoController::class, 'update']);
 Route::delete('/tiempos/{tiempos}', [TiempoController::class, 'destroy']);
@@ -112,8 +112,12 @@ Route::middleware('auth:sanctum')->group(
         Route::delete('/empleados/{empleados}', [EmpleadoController::class, 'destroy']);
         Route::get('/logoutEmpleado', [EmpleadoController::class, 'logout']);
 
+        //Tiempos
+        Route::get('/tiempos', [TiempoController::class, 'index']);
+        Route::get('/tiempos/{empleadoId}', [TiempoController::class, 'show']);
+        Route::get('/registroHorario/{empleadoId}', [TiempoController::class, 'registroHorario']);
         Route::get('/empleadosOnline', [TiempoController::class, 'empleadosOnline']);
-        Route::get('/empleadoOnline/{empleado}', [TiempoController::class, 'empleadoOnline']);
+        Route::get('/empleadoOnline/{empleadoId}', [TiempoController::class, 'empleadoOnline']);
 
 
         //Casos

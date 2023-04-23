@@ -10,7 +10,7 @@ class Tiempo extends Model
     use HasFactory;
 
     protected $table = 'tiempos'; // Nombre de la tabla en la base de datos
-
+    protected $fillable  = ['empleado_id', 'inicio', 'fin'];
     // Definir relación con el modelo Empleado
     public function empleado()
     {
