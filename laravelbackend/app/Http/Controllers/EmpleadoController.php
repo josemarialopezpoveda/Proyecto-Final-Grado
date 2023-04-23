@@ -121,7 +121,7 @@ class EmpleadoController extends Controller {
             'telefono' => 'required|integer|digits:9|unique:empleados',
             'fechaNacimiento' => 'required|date',
             'email' => 'required|string|email|max:255|unique:empleados',
-            'password' => 'required|confirmed|string|min:8',
+            'password' => 'required|string|min:8',
             'numSegSoc' => 'required|digits:12|unique:empleados',
             'fotografia' => 'string',
             'ultimaConexion' => 'required|date_format:Y-m-d H:i:s',
