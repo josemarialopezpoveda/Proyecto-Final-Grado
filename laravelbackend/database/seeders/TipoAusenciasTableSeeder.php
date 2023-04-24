@@ -16,77 +16,77 @@ class TipoAusenciasTableSeeder extends Seeder
     {
         DB::table('tipoausencias')->insert([
             'tipo' => 'BAJA',
-            'descripcionAusencia' => "BAJA POR ENFERMEDAD COMÚN",
+            'descripcion' => "BAJA POR ENFERMEDAD COMÚN",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
 
         DB::table('tipoausencias')->insert([
             'tipo' => 'BAJA',
-            'descripcionAusencia' => "BAJA POR ACCIDENTE LABORAL",
+            'descripcion' => "BAJA POR ACCIDENTE LABORAL",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
 
         DB::table('tipoausencias')->insert([
             'tipo' => 'BAJA',
-            'descripcionAusencia' => "BAJA POR MATERNIDAD",
+            'descripcion' => "BAJA POR MATERNIDAD",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
 
         DB::table('tipoausencias')->insert([
             'tipo' => 'BAJA',
-            'descripcionAusencia' => "BAJA POR PATERNIDAD",
+            'descripcion' => "BAJA POR PATERNIDAD",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
 
         DB::table('tipoausencias')->insert([
             'tipo' => 'BAJA',
-            'descripcionAusencia' => "BAJA POR RIESGO DURANTE EL EMBARAZO",
+            'descripcion' => "BAJA POR RIESGO DURANTE EL EMBARAZO",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
 
         DB::table('tipoausencias')->insert([
             'tipo' => 'BAJA',
-            'descripcionAusencia' => "BAJA POR ENFERMEDAD PROFESIONAL",
+            'descripcion' => "BAJA POR ENFERMEDAD PROFESIONAL",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
 
         DB::table('tipoausencias')->insert([
             'tipo' => 'AUSENCIA',
-            'descripcionAusencia' => "AUSENCIA POR LICENCIA SIN SUELDO",
+            'descripcion' => "AUSENCIA POR LICENCIA SIN SUELDO",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
 
         DB::table('tipoausencias')->insert([
             'tipo' => 'AUSENCIA',
-            'descripcionAusencia' => "AUSENCIA POR PERMISO REMUNERADO",
+            'descripcion' => "AUSENCIA POR PERMISO REMUNERADO",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
 
         DB::table('tipoausencias')->insert([
             'tipo' => 'AUSENCIA',
-            'descripcionAusencia' => "OTRAS AUSENCIAS",
+            'descripcion' => "OTRAS AUSENCIAS",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
 
         DB::table('tipoausencias')->insert([
             'tipo' => 'VACACIONES',
-            'descripcionAusencia' => "VACACIONES EMPLEADO",
+            'descripcion' => "VACACIONES EMPLEADO",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
 
         DB::table('tipoausencias')->insert([
             'tipo' => 'VACACIONES',
-            'descripcionAusencia' => "VACACIONES EMPRESA",
+            'descripcion' => "VACACIONES EMPRESA",
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now()
         ]);
