@@ -110,6 +110,7 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/registroHorario/{empleadoId}', [TiempoController::class, 'registroHorario']);
         Route::get('/empleadosOnline', [TiempoController::class, 'empleadosOnline']);
         Route::get('/empleadoOnline/{empleadoId}', [TiempoController::class, 'empleadoOnline']);
+        Route::get('tiempoActivo/{empleadoId}', [TiempoController::class, 'tiempoActivo']);
 
 
         //Casos

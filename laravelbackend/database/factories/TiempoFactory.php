@@ -35,7 +35,7 @@ class TiempoFactory extends Factory {
 
         $fechaActual = Carbon::parse($fechaInicio);
 
-        while ($fechaActual < Carbon::parse($fechaFin)) {
+        while ($fechaActual <= Carbon::parse($fechaFin)) {
             $diaSemana = $fechaActual->format('N');
             if (!$fechaActual->isWeekend() && !Holidays::isHoliday($fechaActual)) {
                 if ($diaSemana == 5) { // Si la fecha actual es un viernes

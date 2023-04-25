@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Dia;
 use App\Models\Empleado;
 use App\Models\Empresa;
 use App\Models\Tiempo;
@@ -149,6 +150,43 @@ class Auxiliares {
         } else {
             return ['message' => 'No estás autorizado.'];
         }
+    }
+
+    public static function determinarTurno ($dia, $horaLlegada)
+    {
+
+        $horaInicioM = Carbon::createFromFormat('H:i:s', $dia->horaInicioM);
+        $horaFinM = Carbon::createFromFormat('H:i:s', $dia->horaFinM);
+        $horaInicioT = Carbon::createFromFormat('H:i:s', $dia->horaInicioT);
+        $horaFinT = Carbon::createFromFormat('H:i:s', $dia->horaFinT);
+
+        // Comprobar si la hora de llegada está dentro del primer turno
+        if ($horaLlegada->between($horaInicioM, $horaFinM)) {
+            // Asignar el primer turno del día
+            $horaInicio = $horaInicioM;
+        }
+        // Comprobar si la hora de llegada está dentro del segundo turno
+        elseif ($horaLlegada->between($horaInicioT, $horaFinT)) {
+            // Asignar el segundo turno del día
+            $horaInicio = $horaInicioT;
+        }
+        // Comprobar si la hora de llegada es antes del primer turno
+        elseif ($horaLlegada->lt($horaInicioM)) {
+            // Asignar el primer turno del día
+            $horaInicio = $horaInicioM;
+        }
+        // Comprobar si la hora de llegada es después del segundo turno
+        elseif ($horaLlegada->gt($horaFinT)) {
+            // Asignar el último turno del día
+            $horaInicio = $horaInicioT;
+        }
+        // Si la hora de llegada está entre los dos turnos, asignar el turno de tarde
+        else {
+            $horaInicio = $horaInicioT;
+        }
+
+        return $horaInicio;
+
     }
 
 }

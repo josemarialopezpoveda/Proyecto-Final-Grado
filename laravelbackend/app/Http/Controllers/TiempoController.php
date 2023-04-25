@@ -80,7 +80,7 @@ class TiempoController extends Controller {
                             'empresa_id' => $empleado->empresa_id,
                             'empresa' => $empresa->nombreComercial,
                             'fecha' => Carbon::parse($fechaInicioRegistros)->format('Y-m-d'),
-                            'mes'=> DiasMeses::getMonthName(date('n', strtotime($fechaInicioRegistros))),
+                            'mes' => DiasMeses::getMonthName(date('n', strtotime($fechaInicioRegistros))),
                             'dia' => DiasMeses::getDaysOfWeek($diaSemanaNumero),
                             'turnoId' => $empleadoTurno->turno_id,
                             'InicioTurno' => $empleadoTurno->fechaInicioTurno,
@@ -400,6 +400,9 @@ class TiempoController extends Controller {
                         ->where('diaSemana', $diaSemanaNumero)
                         ->first();
                     $horaLlegadaEmpleado = Carbon::parse($empleado->inicio)->format('H:i:s');
+
+                    // Aquí hay que buscar la horaInicio según el turno y si es mañana o tarde.
+                    //$horaInicioTrabajo = Carbon::parse(Auxiliares::determinarTurno($dia, $horaLlegadaEmpleado))->format('H:i:s');
                     $horaInicioTrabajo = Carbon::parse($dia->horaInicioM)->format('H:i:s');
 
                     if ($horaLlegadaEmpleado > $horaInicioTrabajo) {
@@ -446,6 +449,58 @@ class TiempoController extends Controller {
             }
         } else {
             $data = ['message' => $empresaId['message'],];
+        }
+        return response()->json($data);
+    }
+
+    /*
+     * tiempoActivo: tiempo activo en el día actual.
+     */
+    public function tiempoActivo($empleadoId)
+    {
+        $user = Auth::user();
+        $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
+
+        if ($loginOk === true) {
+            $hoy = Carbon::now();
+            $empleado = Empleado::find($empleadoId);
+            // Buscar todos los tiempos para hoy
+            $tiempo = Tiempo::where('empleado_id', $empleado->id)
+                ->where('fin', null)
+                ->orderBy('inicio', 'asc')
+                ->first();
+
+            // ver aquí si hay más de un registro con el $tiempo->fin = null, en ese caso
+            if ($tiempo) {
+                $empleadoTurno = DB::table('empleados_turnos')->where('empleado_id', $empleado->id)
+                    ->where('activo', true)
+                    ->first();
+
+                $fecha = Carbon::parse($tiempo->inicio)->format('Y-m-d');
+                $diaSemanaNumero = Carbon::parse($fecha)->format('N');
+
+                $dia = DB::table('dias')
+                    ->where('turno_id', $empleadoTurno->turno_id)
+                    ->where('diaSemana', $diaSemanaNumero)->first();
+
+                if ($dia) {
+                    $tiempoATrabajar = Intervalo::sumaHorasIntervalos($dia);
+                    $tiempoTrabajado = gmdate('H:i:s:', $hoy->diffInSeconds($tiempo->inicio));
+                    $data = [
+                        'empleado_id' => $empleado->id,
+                        'empleado' => $empleado->nombre . " " . $empleado->apellidos,
+                        'fecha' => $fecha,
+                        'jornadaLaboral' => $tiempoATrabajar,
+                        'tiempoActivo' => $tiempoTrabajado,
+                    ];
+                } else {
+                    $data = ['message' => 'No existe turno para hoy'];
+                }
+            } else {
+                $data = ['message' => 'No has iniciado sesión'];
+            }
+        } else {
+            $data = ['message' => $loginOk['message'],];
         }
         return response()->json($data);
     }
