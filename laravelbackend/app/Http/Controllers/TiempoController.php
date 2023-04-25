@@ -456,67 +456,66 @@ class TiempoController extends Controller {
     /*
      * tiempoActivo: tiempo activo en el día actual.
      */
-    public function tiempoActivo($empleadoId)
+    public function tiempoActivo($empleadoId): \Illuminate\Http\JsonResponse
     {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
         if ($loginOk === true) {
             $hoy = Carbon::now();
-            $empleado = Empleado::find($empleadoId);
-            // Buscar todos los tiempos para hoy
+            $horario = [];
+            $empleado = DB::table('empleados')
+                ->where('id', $empleadoId)
+                ->first();
 
-//            $tiempo = Tiempo::where('empleado_id', $empleado->id)
-//                ->where('fin', null)
-//                ->orderBy('inicio', 'asc')
-//                ->first();
-            $tiempos = Tiempo::where('empleado_id', $empleado->id)
-                ->whereDate('inicio', Carbon::today())
+            // Buscamos los tiempos registrados hoy para el empleadoId.
+            $tiempos = DB::table('tiempos')
+                ->where('empleado_id', $empleado->id)
+                ->whereDate('inicio', $hoy)
                 ->orderBy('inicio', 'asc')
                 ->get();
 
-            // ver aquí si hay más de un registro con el $tiempo->fin = null, en ese caso
             if ($tiempos) {
-                $empleadoTurno = DB::table('empleados_turnos')->where('empleado_id', $empleado->id)
+                $empleadoTurno = DB::table('empleados_turnos')
+                    ->where('empleado_id', $empleado->id)
                     ->where('activo', true)
                     ->first();
 
-
-                //$fecha = Carbon::parse($tiempos->inicio)->format('Y-m-d');
                 $diaSemanaNumero = Carbon::parse($hoy)->format('N');
-
                 $dia = DB::table('dias')
                     ->where('turno_id', $empleadoTurno->turno_id)
-                    ->where('diaSemana', $diaSemanaNumero)->first();
+                    ->where('diaSemana', $diaSemanaNumero)
+                    ->first();
 
                 if ($dia) {
                     $tiempoATrabajar = Intervalo::sumaHorasIntervalos($dia);
                     $tiempoTrabajado = 0;
                     foreach ($tiempos as $tiempo) {
                         if ($tiempo->fin != null) {
-                            $tiempoTrabajado += Carbon::parse($tiempo->fin)->diffInSeconds(Carbon::parse($tiempo->inicio));
+                            $tiempoTrabajado += Carbon::parse($tiempo->fin)->diffInSeconds(
+                                Carbon::parse($tiempo->inicio)
+                            );
                             $horario[] = [
                                 'inicio' => Carbon::parse($tiempo->inicio)->format('H:i:s'),
                                 'fin' => Carbon::parse($tiempo->fin)->format('H:i:s'),
                             ];
                         } else {
                             $tiempoTrabajado += $hoy->diffInSeconds($tiempo->inicio);
-                            //$tiempoTrabajado += gmdate('H:i:s:', $hoy->diffInSeconds($tiempo->inicio));
                             $horario[] = [
                                 'inicio' => Carbon::parse($tiempo->inicio)->format('H:i:s'),
                                 'fin' => null,
                             ];
                         }
                     }
-                $data = [
-                    'fecha' => $hoy->format('d-m-Y'),
-                    'hora' => $hoy->format('H:i:s'),
-                    'empleado_id' => $empleado->id,
-                    'empleado' => $empleado->nombre . " " . $empleado->apellidos,
-                    'jornadaLaboral' => $tiempoATrabajar,
-                    'tiempoActivo' => gmdate('H:i:s:', $tiempoTrabajado),
-                    'horario' => $horario,
-                ];
+                    $data = [
+                        'fecha' => $hoy->format('d-m-Y'),
+                        'hora' => $hoy->format('H:i:s'),
+                        'empleado_id' => $empleado->id,
+                        'empleado' => $empleado->nombre . " " . $empleado->apellidos,
+                        'jornadaLaboral' => $tiempoATrabajar,
+                        'tiempoActivo' => gmdate('H:i:s:', $tiempoTrabajado),
+                        'horario' => $horario,
+                    ];
                 } else {
                     $data = ['message' => 'No existe turno para hoy'];
                 }

@@ -14,22 +14,32 @@ class EmpleadosTurnosTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $empleadosCount = Empleado::count();
-        for ($i = 0; $i < $empleadosCount; $i++) {
+        $empleados = DB::table('empleados')
+            ->whereIn('empresa_id', [1, 2, 3])
+            ->get();
+        $turno_id = 1;
+
+        foreach ($empleados as $empleado) {
+            switch ($empleado->empresa_id) {
+                case 1:
+                    $turno_id = 1;
+                    break;
+                case 2:
+                    $turno_id = 2;
+                    break;
+                case 3:
+                    $turno_id = 3;
+                    break;
+                default:
+                    break;
+            }
             DB::table('empleados_turnos')->insert([
-                'empleado_id' => $i + 1,
-                'turno_id' => 1,
+                'empleado_id' => $empleado->id,
+                'turno_id' => $turno_id,
                 'fechaInicioTurno' => "2023-01-01",
                 'fechaFinTurno' => "2023-12-31",
                 'activo' => 1
             ]);
         }
-
-//        DB::table('empleados_turnos')->insert([
-//            'empleado_id' => 1,
-//            'turno_id' => 4,
-//            'fechaInicioTurno' => "2023-03-01",
-//            'fechaFinTurno' => "2023-06-30"
-//        ]);
     }
 }

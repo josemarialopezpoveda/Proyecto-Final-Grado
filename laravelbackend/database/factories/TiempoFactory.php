@@ -7,6 +7,7 @@ use Faker\Factory as Faker;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Helpers\Holidays;
+use Illuminate\Support\Facades\DB;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tiempo>
@@ -19,6 +20,10 @@ class TiempoFactory extends Factory {
      */
 
     private static int $contador = 1;
+
+    /**
+     * @throws \Exception
+     */
     public function definition(): array
     {
         $faker = Faker::create('es_ES');
