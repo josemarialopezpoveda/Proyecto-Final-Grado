@@ -492,6 +492,7 @@ class TiempoController extends Controller {
                         'fecha' => $fecha,
                         'jornadaLaboral' => $tiempoATrabajar,
                         'tiempoActivo' => $tiempoTrabajado,
+                        'horaActual' => $hoy->format('H:i:s'),
                     ];
                 } else {
                     $data = ['message' => 'No existe turno para hoy'];
