@@ -1,0 +1,57 @@
+canvas{
+    border: 2px solid black;
+    width: 93%;
+    height: 50px;
+    margin: auto;
+}
+
+.quitarEspacios{
+    padding: 0;
+}
+
+.divContenedorCampo3{
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.divContenedorCampo3 *{
+    margin: 5px;
+}
+
+.contenedorBuscarResumen{
+    display: flex;
+    justify-content: center;
+}
+
+.tituloResumen{
+    font-size: 24px;
+    color: #51CEF4;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+}
+
+.tituloHoras{
+    font-size: 20px;
+    text-align: center;
+}
+
+.datosHorasResumen{
+    font-size: 24px;
+}
+
+.contenedorDatosHorasResumen{
+    padding: 10px;
+    margin: 10px;
+    background-color: #B8E7F6;
+}
+
+.flexDatosHorasResumen{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+}

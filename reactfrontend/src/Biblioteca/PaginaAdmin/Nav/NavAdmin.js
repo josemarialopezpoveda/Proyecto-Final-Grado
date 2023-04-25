@@ -6,36 +6,79 @@ import ListarOpciones from "../../FuncionesAuxiliares/ListarOpciones";
 
 
 function NavAdmin() {
-  const opciones = [
-    {
-      titulo: "Gestion Empleados",
-      path: "/accionesEmpleados",
-    },
-    {
-      titulo: "Alta Empleados",
-      path: "/altaEmpleado",
-    },
-    {
-      titulo: "Chat",
-      path: "/chatAdmin",
-    },
-    {
-      titulo: "Tipos de Ausencias",
-      path: "/verTipoAusencias",
-    },
-    {
-      titulo: "Turnos",
-      path: "/paginaPrincipalTurnos",
-    },
-    {
-      titulo: "Mis Datos",
-      path: "/datosEmpresa",
-    },
-    {
-      titulo: "Cerrar Sesión",
-      path: "/",
-    },
-  ];
+  var opciones = [{}];
+  console.log(localStorage.getItem('tipoUsuario'))
+  if(localStorage.getItem('tipoUsuario') === "Administrador" ){
+    opciones = [
+      {
+          titulo:"Fichar",
+          path:"/fichar"
+      },
+      {
+          titulo:"Mis Datos",
+          path:"/misDatos"
+      },
+      {
+        titulo: "Gestion Empleados",
+        path: "/accionesEmpleados",
+      },
+      {
+        titulo: "Alta Empleados",
+        path: "/altaEmpleado",
+      },
+      {
+        titulo: "Chat",
+        path: "/chatAdmin",
+      },
+      {
+        titulo: "Tipos de Ausencias",
+        path: "/verTipoAusencias",
+      },
+      {
+        titulo: "Turnos",
+        path: "/paginaPrincipalTurnos",
+      },
+      {
+        titulo: "Mis Datos",
+        path: "/datosEmpresa",
+      },
+      {
+        titulo: "Cerrar Sesión",
+        path: "/",
+      },
+    ];
+  }else if(localStorage.getItem('tipoUsuario') === null){
+    opciones = [
+      {
+        titulo: "Gestion Empleados",
+        path: "/accionesEmpleados",
+      },
+      {
+        titulo: "Alta Empleados",
+        path: "/altaEmpleado",
+      },
+      {
+        titulo: "Chat",
+        path: "/chatAdmin",
+      },
+      {
+        titulo: "Tipos de Ausencias",
+        path: "/verTipoAusencias",
+      },
+      {
+        titulo: "Turnos",
+        path: "/paginaPrincipalTurnos",
+      },
+      {
+        titulo: "Mis Datos",
+        path: "/datosEmpresa",
+      },
+      {
+        titulo: "Cerrar Sesión",
+        path: "/",
+      },
+    ];
+  }
 
   return (
     <React.Fragment>

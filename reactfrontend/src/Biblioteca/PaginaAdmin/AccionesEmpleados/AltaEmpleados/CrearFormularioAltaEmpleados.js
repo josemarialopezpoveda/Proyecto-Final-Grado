@@ -60,6 +60,7 @@ function CrearFormularioAltaEmpleados() {
   };
   //Esta función crea un objeto con los datos del formulario validado y se lo mandamos a servidor y dependiendo de la respuesta informamos al usuario de que ha ido bien o mal.
   const TodoCorrecto = async () => {
+    console.log("paso?")
     setComprobarCampo(true);
     let correcto =
       /^(?!\s*$).+/.test(form.nombre) &&
@@ -69,7 +70,7 @@ function CrearFormularioAltaEmpleados() {
       /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(form.email) &&
       /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/.test(formatDate(form.fnac)) &&
       /^\d{9}$/.test(form.telefono) &&
-      validarFoto(/.+\.(png|jpg|jpeg)$/.test(form.fotografia)) &&
+      //validarFoto(/.+\.(png|jpg|jpeg)$/.test(form.fotografia)) &&
       /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/.test(formatDate(form.fechaAlta)) &&
       /^(?!\s*$).+/.test(form.direccion) &&
       /^(?!\s*$).+/.test(form.poblacion) &&
@@ -93,7 +94,7 @@ function CrearFormularioAltaEmpleados() {
         email: form.email,
         password: form.contrasenya,
         numSegSoc: form.numSegSoc,
-        fotografia: form.fotografia,
+        //fotografia: form.fotografia,
         ultimaConexion: formatearFechaHora(),
         activo: true,
         fechaAlta: form.fechaAlta,
@@ -118,6 +119,8 @@ function CrearFormularioAltaEmpleados() {
         mostrarAlertaErronea(error.message, error.stack, null);
       }
       // Navigate("/accionesEmpleados");
+    }else{
+      mostrarAlertaErronea("Error campos incorrectos.", "Algunos de los campos rellenados no tienen un formato correcto o están vacios.", null);
     }
   };
   //Función que oculta y muestra el icono del "ojo" partiendo de la contraseña.
@@ -134,7 +137,7 @@ function CrearFormularioAltaEmpleados() {
     <React.Fragment>
       <Form id="anyadir">
         <fieldset className="fieldset bordeRedondo">
-          <legend>Información Personal Empelado</legend>
+          <legend>Información Personal Empleado</legend>
           <div className="divContenedorCampo">
             <p>Nombre</p>
             <Form.Group className="mb-3 width500">

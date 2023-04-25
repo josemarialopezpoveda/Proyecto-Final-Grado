@@ -1,6 +1,6 @@
 //Importamos todos los .js que necesitamos para esta práctica.
 import React, {useState, useEffect} from 'react';
-import { generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete, peticionGetAuth } from '../../../../FuncionesAuxiliares/Funciones';
+import { formatoFechaDDMMYYYY, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete, peticionGetAuth } from '../../../../FuncionesAuxiliares/Funciones';
 import {useNavigate} from 'react-router-dom';
 import { URL_API } from 'services/http/const';
 import Table from 'react-bootstrap/Table'
@@ -20,22 +20,22 @@ function VerInfoAusencia(props) {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosAusencia = await peticionGetAuth(URL_API + "ausencias", header);
-        if (datosAusencia.data !== 0) {
-            var todosDatosAusencia = datosAusencia.data.map((dia)=>{
-              if(dia.tipoausencias.tipo === props.titulo.toUpperCase()){
-                var newTurno = {
-                    id: dia.id,
-                    descripcion: dia.descripcion,
-                    tipoAusencia: dia.tipoausencias.descripcion,
-                    justificada: dia.justificada,
-                    fInicio: dia.fechaInicio,
-                    fFin: dia.fechaFin
-                    };
-                if(newTurno !== undefined){
-                  setEstaVacio(true);
-                  return newTurno;
-                }
+        let datosAusencia = await peticionGetAuth(URL_API + "ausenciasEmpleados/" + `${localStorage.getItem("idEmpleado")}`, header);
+        console.log(datosAusencia)
+        if (datosAusencia.data.ausencias !== 0 && datosAusencia.data.message !== "El empleado no tiene ausencias") {
+            var todosDatosAusencia = datosAusencia.data.ausencias.map((dia)=>{
+              var newTurno = {
+                id: dia.id,
+                descripcion: dia.descripcion,
+                descripcionAusencia: dia.descripcionAusencia,
+                tipoAusencia: dia.tipo,
+                justificada: dia.justificada,
+                fInicio: dia.fechaInicio,
+                fFin: dia.fechaFin
+              };
+              if(newTurno !== undefined){
+                setEstaVacio(true);
+                return newTurno;
               }
             });
             if(todosDatosAusencia !== undefined){
@@ -53,7 +53,7 @@ function VerInfoAusencia(props) {
         if(fecha === null){
             return "Fecha no indicada";
         }else{
-            return fecha;
+            return formatoFechaDDMMYYYY(fecha);
         }
     }
 
@@ -61,7 +61,7 @@ function VerInfoAusencia(props) {
         if(justificacion===1){
             return "SI"
         }else{
-            return "no"
+            return "NO"
         }
     }
 
@@ -110,6 +110,7 @@ function VerInfoAusencia(props) {
         if(option !== undefined){
           return(<tr key={generarUUID()}>
                       <td className='formatoTextoCorrecto'>{option.descripcion}</td>
+                      <td className='formatoTextoCorrecto'>{option.descripcionAusencia}</td>
                       <td className='formatoTextoCorrecto campoOpcional'>{fechaNula(option.fInicio)}</td>
                       <td className='formatoTextoCorrecto campoOpcional'>{fechaNula(option.fFin)}</td>
                       <td className='formatoTextoCorrecto campoOpcional'>{estaJustificada(option.justificada)}</td>
@@ -137,6 +138,7 @@ function VerInfoAusencia(props) {
               <thead>
                   <tr>
                       <th>Descripción</th>
+                      <th>Descripción Ausencia</th>
                       <th className='campoOpcional'>Fecha Inicio</th>
                       <th className='campoOpcional'>Fecha Fin</th>
                       <th className='campoOpcional'>Justificada</th>
@@ -158,6 +160,7 @@ function VerInfoAusencia(props) {
               <thead>
                   <tr>
                       <th>Descripción</th>
+                      <th>Descripción Ausencia</th>
                       <th className='campoOpcional'>Fecha Inicio</th>
                       <th className='campoOpcional'>Fecha Fin</th>
                       <th className='campoOpcional'>Justificada</th>
@@ -180,6 +183,7 @@ function VerInfoAusencia(props) {
               <thead>
                   <tr>
                       <th>Descripción</th>
+                      <th>Descripción Ausencia</th>
                       <th className='campoOpcional'>Fecha Inicio</th>
                       <th className='campoOpcional'>Fecha Fin</th>
                       <th className='campoOpcional'>Justificada</th>

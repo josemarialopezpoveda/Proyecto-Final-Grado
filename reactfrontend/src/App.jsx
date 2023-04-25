@@ -40,6 +40,7 @@ import ModificarMensaje from 'Biblioteca/PaginaAdmin/Chat/Mensajes/ModificarMens
 import VerMensajesEmpresaAdmin from 'Biblioteca/PaginaAdmin/Chat/Mensajes/VerMensajesEmpresaAdmin';
 import VerMensajesEmpleado from 'Biblioteca/PaginaAdmin/Chat/Mensajes/VerMensajesEmpleado';
 import VerTiemposEmpleado from 'Biblioteca/PaginaAdmin/Tiempos/VerTiemposEmpleado';
+import Resumen from 'Biblioteca/PaginaCliente/Resumen/Resumen';
 
 function App() {
   return(
@@ -60,6 +61,7 @@ function App() {
                   <Route exact path="/verCorreoSeleccionadoCliente" element={<InfoCorreoSeleccionadoCliente/>}/>
                   <Route exact path="/fichar" element={<Fichar/>}/>
                   <Route exact path="/verCalendario" element={<Calendar/>}/>
+                  <Route exact path="/verResumenLaboral" element={<Resumen/>}/>
 
                 {/*PARTE ADMINISTRADOR/EMPRESA. */}
                   {/*Empleados*/}
@@ -97,17 +99,9 @@ function App() {
                   <Route exact path="/verTurnoCliente" element={<VerTurnoCliente/>} />
 
                   {/*Vacaciones / Bajas / Ausencias*/}
-                  <Route exact path="/verBajas" element={<VerAusenciasGenerales titulo="Baja" link="/modificarBaja" linkActual="verBajas"/>}/>
-                  <Route exact path="/anyadirBaja" element={<AnyadirAusenciaGeneral titulo="Baja"/>}/>
-                  <Route exact path="/modificarBaja" element={<ModificarAusenciaGeneral titulo="Baja" link="/verBajas"/>}/>
-
                   <Route exact path="/verAusencias" element={<VerAusenciasGenerales titulo="Ausencia" link="/modificarAusencia" linkActual="verAusencias"/>}/>
                   <Route exact path="/anyadirAusencia" element={<AnyadirAusenciaGeneral titulo="Ausencia"/>}/>
                   <Route exact path="/modificarAusencia" element={<ModificarAusenciaGeneral titulo="Ausencia" link="/verAusencias"/>}/>
-
-                  <Route exact path="/verVacaciones" element={<VerAusenciasGenerales titulo="Vacaciones" link="/modificarVacaciones" linkActual="verVacaciones"/>}/>
-                  <Route exact path="/anyadirVacaciones" element={<AnyadirAusenciaGeneral titulo="Vacaciones"/>}/>
-                  <Route exact path="/modificarVacaciones" element={<ModificarAusenciaGeneral titulo="Vacaciones" link="/verVacaciones"/>}/>
 
                   {/*Tipos de Ausencias */}
                   <Route exact path="/verTipoAusencias" element={<VerTiposAusencias/>}/>

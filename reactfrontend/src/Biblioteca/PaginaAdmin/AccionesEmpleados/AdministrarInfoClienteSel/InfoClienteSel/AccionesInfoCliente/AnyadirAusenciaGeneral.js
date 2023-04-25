@@ -76,7 +76,7 @@ function AnyadirAusenciaGeneral(props) {
         mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
     }else{
         mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-        //Navigate("/verTipoAusencias")
+        Navigate("/pagInfoClienteSel")
     }
   } catch (error) {
       mostrarAlertaErronea(error.message, error.stack, null);

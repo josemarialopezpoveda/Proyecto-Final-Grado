@@ -10,7 +10,7 @@ function AltaEmpleados() {
     <React.Fragment>
       <NavAdmin/>
       <div className='contenedorSectionFormAccionesUsuario'>
-        <h1 className='text-center tituloH1'>Dar de alta empleados</h1>
+        <h1 className='text-center tituloH1'>Alta empleado</h1>
         <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottom'>
           <CrearFormularioAltaEmpleados/>
         </section>

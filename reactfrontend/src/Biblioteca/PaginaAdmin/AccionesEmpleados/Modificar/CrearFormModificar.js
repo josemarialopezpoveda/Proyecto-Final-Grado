@@ -50,35 +50,28 @@ function CrearFormModificar() {
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
-    let url = URL_API + "empresa";
+    let url = URL_API + "empleado/" + localStorage.getItem("idEmpleado");
     let datosEmpleado = await peticionGetAuth(`${url}`, header);
-    if (datosEmpleado.data.empresa.empleados !== undefined) {
-      datosEmpleado.data.empresa.empleados.map((datosE) => {
-        if (datosE.id == localStorage.getItem("idEmpleado")) {
+    console.log(datosEmpleado)
           setForm({
-            id: datosE.id,
-            nombre: datosE.nombre,
-            apellidos: datosE.apellidos,
-            dni: datosE.nif,
-            email: datosE.email,
-            fnac: datosE.fechaNacimiento,
-            numSegSoc: datosE.numSegSoc,
-            telefono: datosE.telefono,
-            //fotografia: datosE.fotografia,
-            fechaAlta: datosE.fechaAlta,
-            tipoEmpleado: datosE.tipoEmpleado,
-            poblacion: datosE.poblacion,
-            direccion: datosE.direccion,
-            provincia: datosE.provincia,
-            pais: datosE.pais,
-            codPostal: datosE.cPostal,
-            activo: valorCheck(datosE.activo),
-          });
-        }
+            id: datosEmpleado.data.id,
+            nombre: datosEmpleado.data.nombre,
+            apellidos: datosEmpleado.data.apellidos,
+            dni: datosEmpleado.data.nif,
+            email: datosEmpleado.data.email,
+            fnac: datosEmpleado.data.fechaNacimiento,
+            numSegSoc: datosEmpleado.data.numSegSoc,
+            telefono: datosEmpleado.data.telefono,
+            //fotografia: datosEmpleado.data.fotografia,
+            fechaAlta: datosEmpleado.data.fechaAlta,
+            tipoEmpleado: datosEmpleado.data.tipoEmpleado,
+            poblacion: datosEmpleado.data.poblacion,
+            direccion: datosEmpleado.data.direccion,
+            provincia: datosEmpleado.data.provincia,
+            pais: datosEmpleado.data.pais,
+            codPostal: datosEmpleado.data.cPostal,
+            activo: valorCheck(datosEmpleado.data.activo),
       });
-    } else {
-      mostrarAlertaErronea("Ruta de la petición incorrecta", "Error de red", null);
-    }
   };
 
   const [comprobarCampo, setComprobarCampo] = useState(false);
@@ -166,6 +159,7 @@ function CrearFormModificar() {
 
   return (
     <React.Fragment>
+      <pre>{JSON.stringify(form, null, 3)}</pre>
       <Form id="anyadir">
         <fieldset className="fieldset bordeRedondo">
           <legend>Información Personal Empelado</legend>

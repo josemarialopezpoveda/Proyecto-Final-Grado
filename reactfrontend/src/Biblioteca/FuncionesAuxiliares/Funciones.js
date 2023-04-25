@@ -340,3 +340,19 @@ export const recogerIdEmpleadoLogueado = () =>{
       return(`${localStorage.getItem("id")}`)
   }
 }
+
+//Función que a partir de una fecha 2023-05-04 te da 04/05/2023.
+export const formatoFechaDDMMYYYY = (dateStr) =>{
+  // Convertir la cadena de fecha en un objeto de fecha
+  const date = new Date(dateStr);
+  
+  // Obtener los componentes de la fecha (día, mes y año)
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+  
+  // Formatear la fecha en el formato deseado
+  const formattedDate = `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year}`;
+  
+  return formattedDate;
+}

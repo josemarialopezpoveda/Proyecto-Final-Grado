@@ -7,6 +7,7 @@ import PiePagina from "../../PaginaPrincipal/Footer/PiePagina";
 import { mostrarAlertaErronea, peticionGetAuth } from "Biblioteca/FuncionesAuxiliares/Funciones";
 import { format } from 'date-fns';
 import { URL_API } from "../../../services/http/const";
+import NavAdmin from "Biblioteca/PaginaAdmin/Nav/NavAdmin";
 
 function MisDatos() {
   /**
@@ -55,9 +56,17 @@ function MisDatos() {
     recoleccionDatos();
   }, []);
 
+  const anyadirBarraNav = () =>{
+    if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+        return(<NavAdmin/>)
+    }else{
+        return(<NavCliente/>)
+    }
+}
+
   return (
     <React.Fragment>
-      <NavCliente />
+      {anyadirBarraNav()}
       <section>
         <div className="TablaDatosUser">
           <div className="fotoUsuarioLogueado">

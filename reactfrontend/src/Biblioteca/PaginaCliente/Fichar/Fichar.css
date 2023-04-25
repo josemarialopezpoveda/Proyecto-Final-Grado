@@ -34,7 +34,7 @@
 
 .Fecha p{
     text-align: center;
-    font-size: 28px;
+    font-size: 24px;
 }
 
 .horas p span{
@@ -44,17 +44,17 @@
 }
 
 .horas p {
-    font-size: 16px;
+    font-size: 24px;
+    margin: 10px;
 }
 
 .horas div h1{
-    font-size: 22px;
+    font-size: 30px;
 }
 
 .horas div{
     border: 3px solid black;
-    background-color: #B8E7F6;
-    padding: 20px;
+    background-color: #51CEF4;
 }
 
 .botonParaFichar a{
@@ -83,4 +83,9 @@
         margin: 0;
         padding: 0;
     }
+}
+
+.horas2{
+    background-color: #B8E7F6 !important;
+    padding: 10px;
 }
