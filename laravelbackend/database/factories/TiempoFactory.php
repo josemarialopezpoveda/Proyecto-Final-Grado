@@ -30,6 +30,9 @@ class TiempoFactory extends Factory {
 
         $empleadoId = self::$contador;
         self::$contador++;
+        $empleado = DB::table('empleados')
+            ->where ('id', $empleadoId)
+            ->first();
 
         $fechaInicio = '2023-01-01';
         $fechaFin = Carbon::now()->format('Y-m-d');
@@ -40,40 +43,53 @@ class TiempoFactory extends Factory {
 
         $fechaActual = Carbon::parse($fechaInicio);
 
-        while ($fechaActual <= Carbon::parse($fechaFin)) {
-            $diaSemana = $fechaActual->format('N');
-            if (!$fechaActual->isWeekend() && !Holidays::isHoliday($fechaActual)) {
-                if ($diaSemana == 5) { // Si la fecha actual es un viernes
-                    $horaAleatoriaE = $faker->dateTimeBetween(Carbon::parse($horaInicioI)->addHours(2), Carbon::parse($horaInicioF)->addHours(2))->format('H:i:s');
-                    $horaAleatoriaS = $faker->dateTimeBetween(Carbon::parse($horaFinI)->addHours(2), Carbon::parse($horaFinF)->addHours(2))->format('H:i:s');
-                } else{
-                    $horaAleatoriaE = $faker->dateTimeBetween($horaInicioI, $horaInicioF)->format('H:i:s');
-                    $horaAleatoriaS = $faker->dateTimeBetween($horaFinI, $horaFinF)->format('H:i:s');
-                }
-                $fechaHoraEntrada = Carbon::instance($fechaActual);
-                $fechaHoraSalida = Carbon::instance($fechaActual);
-                $fechaHoraEntrada->setTimeFromTimeString($horaAleatoriaE);
-                $fechaHoraSalida->setTimeFromTimeString($horaAleatoriaS);
+        if ($empleado->empresa_id == 1 || $empleado->empresa_id == 2 || $empleado->empresa_id == 3) {
+            while ($fechaActual <= Carbon::parse($fechaFin)) {
+                $diaSemana = $fechaActual->format('N');
+                if (!$fechaActual->isWeekend() && !Holidays::isHoliday($fechaActual)) {
+                    if ($diaSemana == 5) { // Si la fecha actual es un viernes
+                        $horaAleatoriaE = $faker->dateTimeBetween(
+                            Carbon::parse($horaInicioI)->addHours(2),
+                            Carbon::parse($horaInicioF)->addHours(2)
+                        )->format('H:i:s');
+                        $horaAleatoriaS = $faker->dateTimeBetween(
+                            Carbon::parse($horaFinI)->addHours(2),
+                            Carbon::parse($horaFinF)->addHours(2)
+                        )->format('H:i:s');
+                    } else {
+                        $horaAleatoriaE = $faker->dateTimeBetween($horaInicioI, $horaInicioF)->format('H:i:s');
+                        $horaAleatoriaS = $faker->dateTimeBetween($horaFinI, $horaFinF)->format('H:i:s');
+                    }
+                    $fechaHoraEntrada = Carbon::instance($fechaActual);
+                    $fechaHoraSalida = Carbon::instance($fechaActual);
+                    $fechaHoraEntrada->setTimeFromTimeString($horaAleatoriaE);
+                    $fechaHoraSalida->setTimeFromTimeString($horaAleatoriaS);
 
-                if ($fechaActual != Carbon::parse($fechaFin)) {
-                    Tiempo::create([
-                        'empleado_id' => $empleadoId,
-                        'created_at' => $fechaHoraEntrada,
-                        'updated_at' => $fechaHoraSalida,
-                        'inicio' => $fechaHoraEntrada,
-                        'fin' => $fechaHoraSalida,
-                    ]);
+                    if ($fechaActual != Carbon::parse($fechaFin)) {
+                        Tiempo::create([
+                            'empleado_id' => $empleadoId,
+                            'created_at' => $fechaHoraEntrada,
+                            'updated_at' => $fechaHoraSalida,
+                            'inicio' => $fechaHoraEntrada,
+                            'fin' => $fechaHoraSalida,
+                        ]);
+                    }
                 }
+                $fechaActual->addDay();
             }
-            $fechaActual->addDay();
+            return [
+                'empleado_id' => $empleadoId,
+                'created_at' => $fechaHoraEntrada,
+                'updated_at' => $fechaHoraSalida,
+                'inicio' => $fechaHoraEntrada,
+            ];
+        } else {
+            return [
+                'empleado_id' => $empleadoId,
+                'created_at' => $fechaFin,
+                'updated_at' => $fechaFin,
+                'inicio' => $fechaFin,
+            ];
         }
-
-        return [
-            'empleado_id' => $empleadoId,
-            'created_at' => $fechaHoraEntrada,
-            'updated_at' => $fechaHoraSalida,
-            'inicio' => $fechaHoraEntrada,
-        ];
-
     }
 }

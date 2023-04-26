@@ -57,7 +57,7 @@ class TiempoController extends Controller {
             $fechaHoy = Carbon::today()->format('Y-m-d');
             $turnos = [];
 
-            while (Carbon::parse($fechaInicioRegistros) < Carbon::parse($fechaHoy)) {
+            while (Carbon::parse($fechaInicioRegistros) <= Carbon::parse($fechaHoy)) {
                 $empleadoTurno = DB::table('empleados_turnos')->where('empleado_id', $empleado->id)
                     ->where('fechaInicioTurno', '<=', $fechaInicioRegistros)
                     ->where('fechaFinTurno', '>=', $fechaInicioRegistros)
@@ -95,10 +95,12 @@ class TiempoController extends Controller {
 
             foreach ($turnos as $turno) {
                 // Realizar una consulta para buscar los registros con la misma fecha en la tabla tiempos
-                $tiempos = Tiempo::select(DB::raw('SUM(TIME_TO_SEC(TIMEDIFF(fin, inicio))) AS segundos'))
+                $tiempos = Tiempo::select(DB::raw('SUM(TIME_TO_SEC(TIMEDIFF(COALESCE(fin, NOW()), inicio))) AS segundos'))
                     ->where('empleado_id', $turno['empleado_id'])
                     ->whereDate('inicio', $turno['fecha'])
                     ->get();
+
+
                 if ($tiempos) {
                     $tiemposRegistrados = Tiempo::select('inicio', 'fin')
                         ->where('empleado_id', $turno['empleado_id'])
@@ -115,6 +117,7 @@ class TiempoController extends Controller {
                 $turno_con_segundos['registroHorario'] = $tiemposRegistrados;
                 $turnos_con_segundos[] = $turno_con_segundos;
             }
+
             $data = ['turnos' => $turnos_con_segundos,];
         } else {
             $data = ['message' => $loginOk['message'],];
