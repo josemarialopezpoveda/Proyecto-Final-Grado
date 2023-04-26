@@ -52,7 +52,7 @@
     font-size: 30px;
 }
 
-.horas div{
+.horas div.jornadaPrevista{
     border: 3px solid black;
     background-color: #51CEF4;
 }

@@ -46,6 +46,7 @@ function ListarActividadEmpleados() {
         if (datosEmpresa.data.length !== 0) {
         var todosDatosEmpresa = datosEmpresa.data.map((datosE) => {
             var newEmpresa = {
+                id: datosE.empleado_id,
                 nombre: datosE.nombre,
                 apellidos: datosE.apellidos,
                 correo: datosE.email,
@@ -68,12 +69,11 @@ function ListarActividadEmpleados() {
         recoleccionDatos();
     }, []);
 
-    const tieneAdelanto = (option) =>{
-        if(option.retraso == false){
-            return(<td className='adelanto'>{option.diferencia}</td>)
-        }else{
-            return(<td className='retraso'>{option.diferencia}</td>)
-        }
+    //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
+    const verJornada = (e) => {
+        console.log(e.target.id)
+        localStorage.setItem("idEmpleado", e.target.id);
+        Navigate("/verJornadaEmpleado");
     }
 
     if(empleadosEstaticos !== undefined && empleadosEstaticos[0].nombre !== ""){
@@ -89,7 +89,7 @@ function ListarActividadEmpleados() {
                             <th className='campoOpcional'>Teléfono</th>
                             <th>Fecha Inicio</th>
                             <th>Hora Inicio</th>
-                            <th>Diferencia Horaria</th>
+                            <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -101,7 +101,15 @@ function ListarActividadEmpleados() {
                                 <td className='campoOpcional'>{option.telefono}</td>
                                 <td>{cogerFecha(option.fechaInicio)}</td>
                                 <td>{cogerHora(option.horaInicio)}</td>
-                                {tieneAdelanto(option)}
+                                <td>
+                                    <button type="button"
+                                    title="Ver Jornada Del Empleado"
+                                    onClick={verJornada}
+                                    id={option.id}
+                                    className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
+                                    Ver Jornada
+                                    </button>
+                                </td>
                             </tr>)
                         }
                     })}
@@ -120,6 +128,7 @@ function ListarActividadEmpleados() {
                         <th className='campoOpcional'>Teléfono</th>
                         <th>Fecha Inicio</th>
                         <th>Hora Inicio</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>

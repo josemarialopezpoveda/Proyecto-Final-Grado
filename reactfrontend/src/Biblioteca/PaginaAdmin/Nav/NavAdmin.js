@@ -7,7 +7,6 @@ import ListarOpciones from "../../FuncionesAuxiliares/ListarOpciones";
 
 function NavAdmin() {
   var opciones = [{}];
-  console.log(localStorage.getItem('tipoUsuario'))
   if(localStorage.getItem('tipoUsuario') === "Administrador" ){
     opciones = [
       {

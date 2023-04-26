@@ -4,7 +4,7 @@ import NavCliente from '../Nav/NavCliente.js';
 import { Link } from "react-router-dom";
 import './Fichar.css';
 import PiePagina from '../../PaginaPrincipal/Footer/PiePagina.js';
-import { peticionGet, calculoFechaHoy, diaSemana, quitarSegundos, formatearFechaHora, peticionPost, peticionPut, peticionGetAuth } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
+import { peticionGet, calculoFechaHoy, diaSemana, quitarSegundos, formatearFechaHora, peticionPost, peticionPut, peticionGetAuth, restarHoras, generarUUID } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
 import { URL_API } from 'services/http/const.js';
 import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 
@@ -12,11 +12,11 @@ import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 function Fichar(){
     const boton = useRef(null);
     const estadoTiempoEmpleado = useRef(null);
-    const [datosTiempoEmpleado, setDatosTiempoEmpleado] = useState({});
-    const [datosTablaPibot, setDatosTablaPibot] = useState({});
+    const [datosRegistro, setDatosTiempoEmpleado] = useState({});
+    const [datosJornada, setDatosJornada] = useState({
+      horario: [],
+    });
     const [datosHorarioEmpleado, setDatosHorarioEmpleado] = useState({});
-
-    const [datosHorario, setDatosHorario] = useState({});
 
     //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
     useEffect(() => {
@@ -25,81 +25,37 @@ function Fichar(){
         recoleccionTiempoOnline();
 
         recoleccionRegistroHorario()
-
     }, []);
 
     const recoleccionDatos = async () => {
-        const header = {
-          headers: {
-            Accept: "application/json",
-            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-          },
-        };
-        let datosEmpleado = await peticionGetAuth(URL_API + "empleadoOnline/" + `${localStorage.getItem("id")}`, header);
-        if (datosEmpleado.data.length !== 0) {
-          datosEmpleado.data.map((datosE) => {
-            if(`${localStorage.getItem("id")}` == datosE.id){
-                var newTiempo = {
-                    inicio: datosE.inicio,
-                    fin: datosE.fin,
-                  };
-                setDatosTiempoEmpleado(newTiempo);
-            }
-          });
-        }
+      const header = {
+        headers: {
+          Accept: "application/json",
+          Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+        },
       };
+      let datosEmpleado = undefined;
+      if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+          datosEmpleado = await peticionGetAuth(URL_API + "empleadoOnline/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+      }else{
+          datosEmpleado = await peticionGetAuth(URL_API + "empleadoOnline/" + `${localStorage.getItem("id")}`, header);
+      }
+      if(datosEmpleado !== undefined){
+          if (datosEmpleado.data.length !== 0) {
+          datosEmpleado.data.map((datosE) => {
+              if(`${localStorage.getItem("id")}` == datosE.id){
+                  var newTiempo = {
+                      inicio: datosE.inicio,
+                      fin: datosE.fin,
+                  };
+                  setDatosTiempoEmpleado(newTiempo);
+              }
+          });
+          }
+      }
+    };
 
-    // const recoleccionDatosTablaPibot = async() =>{
-    //     const header = {
-    //         headers: {
-    //           Accept: "application/json",
-    //           Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-    //         },
-    //       };
-    //       let datosHorario = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem("id")}`, header);
-    //       //console.log(datosHorario)
-    //       if (datosHorario.data.dias.length !== 0) {
-    //         if(`${localStorage.getItem("id")}` == datosHorario.data.id || `${localStorage.getItem("idEmpleadoAdmin")}` == datosHorario.data.id){
-    //             let obj = {
-    //               idTurno: datosHorario.data.dias,
-    //             }
-    //             setDatosTablaPibot(obj);
-    //             recoleccionHorario(obj);
-    //         }
-    //       }
-
-    // }
-
-    // const recoleccionHorario = async(obj) =>{
-    //     const header = {
-    //         headers: {
-    //           Accept: "application/json",
-    //           Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-    //         },
-    //       };
-    //       let datosHorario = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${obj.idTurno}`, header);
-    //       console.log(datosHorario)
-    //       let diaNumeroHoy = diaSemana();
-    //       if(diaNumeroHoy == 0){
-    //         diaNumeroHoy = 7;
-    //       }
-    //       if (datosHorario.data.dias.length !== 0) {
-    //         datosHorario.data.dias.map((datosE) => {
-    //           //if(diaNumeroHoy == datosE.diaSemana){
-    //             let obj = {
-    //               horaInicioM: quitarSegundos(estaVacio(datosE.horaInicioM)),
-    //               horaInicioT: quitarSegundos(estaVacio(datosE.horaInicioT)),
-    //               horaInicioN: quitarSegundos(estaVacio(datosE.horaInicioN)),
-    //               horaFinM: quitarSegundos(estaVacio(datosE.horaFinM)),
-    //               horaFinT: quitarSegundos(estaVacio(datosE.horaFinT)),
-    //               horaFinN: quitarSegundos(estaVacio(datosE.horaFinN)),
-    //             }
-    //             setDatosHorarioEmpleado(obj);
-    //           //}
-    //         });
-    //       }
-    // }
-
+    
     const recoleccionTiempoOnline = async() =>{
         const header = {
             headers: {
@@ -134,16 +90,10 @@ function Fichar(){
                       fin: formatearFechaHora(),
                   }
                   let datosTiempoPost = await peticionPut(URL_API + "tiempos/" + datosEmpleado.data[0].id, obj, header);
+                  console.log(datosTiempoPost)
+                  recoleccionRegistroHorario();
           }
     }
-
-    // const estaVacio = (hora) =>{
-    //     if(hora !== "00:00:00"){
-    //         return hora;
-    //     }else{
-    //         return "";
-    //     }
-    // }
 
     const entrar = async() =>{
         const header = {
@@ -152,7 +102,6 @@ function Fichar(){
               Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
             },
           };
-          console.log(formatearFechaHora());
           const obj = {
             "empleado_id": localStorage.getItem("id"),
             "inicio": formatearFechaHora(),
@@ -160,9 +109,8 @@ function Fichar(){
           }
 
           let datosEmpleado = await peticionPost(URL_API + "tiempos", obj, header);
-          console.log("4º PETICION")
-          console.log(datosEmpleado)
             if (datosEmpleado.data.length !== 0) {
+                recoleccionRegistroHorario();
                 return datosEmpleado.data.id;
             }   
     }
@@ -197,10 +145,22 @@ function Fichar(){
           Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
         },
       };
-      let datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("id")}`, header);
-      console.log(datosEmpleado);
-      //datosEmpleado.turnos[0]
-      //setDatosHorario
+      let datosEmpleado = undefined;
+      if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+        datosEmpleado = await peticionGetAuth(URL_API + "tiempoActivo/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+      }else{
+        datosEmpleado = await peticionGetAuth(URL_API + "tiempoActivo/" + `${localStorage.getItem("id")}`, header);
+      }
+
+      if(datosEmpleado !== undefined){
+        const obj = {
+          jornadaLaboral: datosEmpleado.data.jornadaLaboral,
+          tiempoActivo: datosEmpleado.data.tiempoActivo,
+          horario: datosEmpleado.data.horario,
+          tiempoRestante: restarHoras(datosEmpleado.data.jornadaLaboral, datosEmpleado.data.tiempoActivo)
+        }
+        setDatosJornada(obj)
+      }
     }
 
     const anyadirBarraNav = () =>{
@@ -211,10 +171,32 @@ function Fichar(){
         }
     }
 
+    const esNula = (fecha) =>{
+      if(fecha !== null){
+        return(<p>Salida  ➜  {fecha}</p>)
+      }else{
+        return(null);
+      }
+    }
+
+    const getEntradasYSalidas = () =>{
+        if(datosJornada.horario.length !== 0){
+          return(datosJornada.horario.map((horario)=>{
+            return(
+              <div key={generarUUID()}>
+                <p>Entrada  ➜ {horario.inicio}</p>
+                {esNula(horario.fin)}
+              </div>
+            )
+          }))
+        }else{
+          return(<p>No hay registros de entrada o salida.</p>)
+        }
+    }
+
     return(
     <React.Fragment>
       {anyadirBarraNav()}
-      <pre>{JSON.stringify(datosHorarioEmpleado, null, 3)}</pre>
         <div className='contenedorSectionParaFichar'>
           <div className='contenedorBotonCrearCorreo'>
             <Link to="/verResumenLaboral" className='crearCorreoBoton'>Ver Resumen</Link>
@@ -225,22 +207,20 @@ function Fichar(){
                       <p>{calculoFechaHoy()}</p>
                   </article>
                   <article className='horas'>
-                      <div>
+                      <div className='jornadaPrevista'>
                           <h1>Jornada Prevista</h1>
-                          <p className="horasPrevistas">08:00:00</p>
+                          <p className="horasPrevistas">{datosJornada.jornadaLaboral}</p>
                       </div>
                   </article>
                   <article className='horas'>
-                      <p>Estado Actual: <span ref={estadoTiempoEmpleado} className="mayus offline"></span></p>
-                      <p>Horas restantes: 00:15</p>
+                      <p>Estado Actual: <span ref={estadoTiempoEmpleado} className="mayus"></span></p>
+                      <p>Horas restantes: {datosJornada.tiempoRestante}</p>
+                      <p>Horas realizadas: {datosJornada.tiempoActivo}</p>
                       <article className='botonParaFichar'>
                         <Link onClick={fichar} ref={boton} className='anyadirTurnoBoton'></Link>
                       </article>
                       <div className="horas2">
-                          <p>Entrada  ➜ 08:01</p>
-                          <p>Salida  ➜  14:25</p>
-                          <p>Entrada  ➜  14:45</p>
-                          <p>Salida  ➜  17:00</p>
+                          {getEntradasYSalidas()}
                       </div>
                   </article>
                   

@@ -356,3 +356,80 @@ export const formatoFechaDDMMYYYY = (dateStr) =>{
   
   return formattedDate;
 }
+
+//Función para restar dos horas en formato "HH:MM:SS" .
+export const restarHoras = (hora1, hora2) =>{
+  // Convertir las horas en segundos
+  var arr1 = hora1.split(":");
+  var arr2 = hora2.split(":");
+  var segundos1 = (+arr1[0]) * 60 * 60 + (+arr1[1]) * 60 + (+arr1[2]);
+  var segundos2 = (+arr2[0]) * 60 * 60 + (+arr2[1]) * 60 + (+arr2[2]);
+
+  // Calcular la diferencia en segundos
+  var diferenciaSegundos = segundos1 - segundos2;
+
+  // Convertir la diferencia en formato "HH:MM:SS"
+  var horas = Math.floor(diferenciaSegundos / 3600);
+  diferenciaSegundos %= 3600;
+  var minutos = Math.floor(diferenciaSegundos / 60);
+  var segundos = diferenciaSegundos % 60;
+
+  // Formatear el resultado
+  return ("0" + horas).slice(-2) + ":" + ("0" + minutos).slice(-2) + ":" + ("0" + segundos).slice(-2);
+}
+
+//Función para sumar dos horas en formato "HH:MM:SS" .
+export const sumarHoras = (hora1, hora2) =>{
+  // Convertir las horas en segundos
+  var arr1 = hora1.split(":");
+  var arr2 = hora2.split(":");
+  var segundos1 = (+arr1[0]) * 60 * 60 + (+arr1[1]) * 60 + (+arr1[2]);
+  var segundos2 = (+arr2[0]) * 60 * 60 + (+arr2[1]) * 60 + (+arr2[2]);
+
+  // Calcular la diferencia en segundos
+  var diferenciaSegundos = segundos1 + segundos2;
+
+  // Convertir la diferencia en formato "HH:MM:SS"
+  var horas = Math.floor(diferenciaSegundos / 3600);
+  diferenciaSegundos %= 3600;
+  var minutos = Math.floor(diferenciaSegundos / 60);
+  var segundos = diferenciaSegundos % 60;
+
+  // Formatear el resultado
+  return ("0" + horas).slice(-2) + ":" + ("0" + minutos).slice(-2) + ":" + ("0" + segundos).slice(-2);
+}
+
+
+//Funcion que pasa de "HH:MM:SS" a  44 horas y 40 min por ejemplo.
+export const convertirHorasFormatoExplicativo = (tiempo) =>{
+  const [horas, minutos, segundos] = tiempo.split(':').map(Number);
+  const signo = horas < 0 ? '-' : '';
+  const horasAbs = Math.abs(horas);
+  const minutosAbs = Math.floor((segundos / 60) + minutos + (horasAbs * 60));
+  const horasResultado = Math.floor(minutosAbs / 60);
+  const minutosResultado = minutosAbs % 60;
+  return `${signo}${horasResultado} horas y ${minutosResultado} minutos`;
+}
+
+export const convertirHoraANumero = (hora)=>{
+  const [horas, minutos, segundos] = hora.split(':').map(Number);
+  const horaEnNumero = horas + minutos / 60 + segundos / 3600;
+  return parseFloat(horaEnNumero.toFixed(2));
+}
+
+//Una funcion que reciba una fechainicio una fechaFin y una fecha y si dicha decha esta entre la de inicio y la de fin devuelva true.
+export const fechaEntreRango = (fechaInicio, fechaFin, fechaComprobar) =>{
+  const inicio = new Date(fechaInicio);
+  const fin = new Date(fechaFin);
+  const comprobar = new Date(fechaComprobar);
+  return comprobar >= inicio && comprobar <= fin;
+}
+
+//Función que a partir de 2023-12-30T23:00:00.000Z saque 2023-12-30.
+export const formatoDateAFecha = (fechaAFormatear) =>{
+  const fecha = new Date(fechaAFormatear);
+  const anio = fecha.getFullYear();
+  const mes = fecha.getMonth() + 1;
+  const dia = fecha.getDate();
+  return `${anio}-${mes.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`;
+}

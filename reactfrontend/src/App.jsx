@@ -41,6 +41,7 @@ import VerMensajesEmpresaAdmin from 'Biblioteca/PaginaAdmin/Chat/Mensajes/VerMen
 import VerMensajesEmpleado from 'Biblioteca/PaginaAdmin/Chat/Mensajes/VerMensajesEmpleado';
 import VerTiemposEmpleado from 'Biblioteca/PaginaAdmin/Tiempos/VerTiemposEmpleado';
 import Resumen from 'Biblioteca/PaginaCliente/Resumen/Resumen';
+import VerJornada from 'Biblioteca/PaginaAdmin/EmpleadosConectados/VerJornada/VerJornada';
 
 function App() {
   return(
@@ -70,6 +71,9 @@ function App() {
                   <Route exact path="/altaEmpleado" element={<AltaEmpleados/>} />
                   <Route exact path="/modificarEmpleado" element={<Modificar/>} />
                   <Route exact path="/pagInfoClienteSel" element={<PagInfoClienteSel/>} />
+
+                  {/* Ver jornada del empleado */}
+                  <Route exact path="/verJornadaEmpleado" element={<VerJornada/>} />
 
                   {/*Ver datos empresa y modificarlos*/}
                   <Route exact path="/datosEmpresa" element={<DatosEmpresa/>}/>

@@ -7,9 +7,20 @@ import PiePagina from '../../PaginaPrincipal/Footer/PiePagina.js';
 import { URL_API } from 'services/http/const.js';
 import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 import Form from 'react-bootstrap/Form';
+import { convertirHoraANumero, convertirHorasFormatoExplicativo, fechaEntreRango, formatoDateAFecha, peticionGetAuth, sumarHoras } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
 
 function Resumen(){
     const canvasRef = useRef(null);
+    const [datosJornada, setDatosJornada] = useState({
+        contadorHorasPlanificadas: "00:00:00",
+        contadorHorasTrabajadas: "00:00:00",
+        contadorBalanceHorario: "00:00:00",
+    });
+
+    const [fechasBuscador, setFechasBuscador] = useState({
+        desde: formatoDateAFecha(new Date(new Date().getFullYear(), 0, 1)),
+        hasta: formatoDateAFecha(new Date(new Date().getFullYear(), 11, 31)),
+    });
 
     const anyadirBarraNav = () =>{
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
@@ -21,15 +32,56 @@ function Resumen(){
 
     //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
     useEffect(() => {
-        usoCanvas();
+        recoleccionDatos();
     }, []);
 
-    const usoCanvas = () =>{
+    const recoleccionDatos = async () => {
+        const header = {
+          headers: {
+            Accept: "application/json",
+            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+          },
+        };
+        let datosEmpleado = undefined
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+        }else{
+            datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("id")}`, header);
+        }
+        console.log(datosEmpleado)
+        if(datosEmpleado !== undefined){
+            if(datosEmpleado.data.turnos.length !== 0){
+                let contadores = {
+                    contadorHorasPlanificadas: "00:00:00",
+                    contadorHorasTrabajadas: "00:00:00",
+                    contadorBalanceHorario: "00:00:00"
+                }
+
+                datosEmpleado.data.turnos.forEach(turno => {
+                    if(fechaEntreRango(fechasBuscador.desde, fechasBuscador.hasta, turno.fecha)){
+                        contadores.contadorHorasPlanificadas = sumarHoras(turno.horasJornada,contadores.contadorHorasPlanificadas);
+                        contadores.contadorHorasTrabajadas = sumarHoras(turno.horasTrabajadas,contadores.contadorHorasTrabajadas);
+                        contadores.contadorBalanceHorario = sumarHoras(turno.horasFaltantes,contadores.contadorBalanceHorario);
+                    }
+                });
+
+                usoCanvas(convertirHoraANumero(contadores.contadorBalanceHorario));
+
+                contadores = {
+                    contadorHorasPlanificadas: convertirHorasFormatoExplicativo(contadores.contadorHorasPlanificadas),
+                    contadorHorasTrabajadas: convertirHorasFormatoExplicativo(contadores.contadorHorasTrabajadas),
+                    contadorBalanceHorario: convertirHorasFormatoExplicativo(contadores.contadorBalanceHorario)
+                }
+                setDatosJornada(contadores)  
+            }
+        }
+      };
+
+    const usoCanvas = (num) =>{
         const canvas = canvasRef.current;
         if(canvas !== null){
             const ctx = canvas.getContext('2d');
         const centro = canvas.width / 2;
-            let num = +60;
             ctx.beginPath();
             ctx.moveTo(centro, 0);
             ctx.lineTo(centro, canvas.height);
@@ -46,19 +98,21 @@ function Resumen(){
             }else{
                 ctx.moveTo(centro + 1, canvas.height/2);
             }
-            ctx.lineTo(centro + num, canvas.height / 2);
+            ctx.lineTo(centro + num , canvas.height / 2);
             ctx.stroke();
         }
         
     }
 
     const TodoCorrecto = () =>{
-
+        recoleccionDatos();
     }
 
     return(
     <React.Fragment>
         {anyadirBarraNav()}
+        <pre>{JSON.stringify(datosJornada, null, 3)}</pre>
+        <pre>{JSON.stringify(fechasBuscador, null, 3)}</pre>
             <div className='contenedorSectionParaFichar'>
                 <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar'>
                     <Form>
@@ -67,21 +121,21 @@ function Resumen(){
                                 <p>Desde:</p>
                                 <Form.Group className="mb-3">
                                         <Form.Control required size="lg" type="date"
-                                        onInput={console.log("hola")}
-                                        defaultValue={60}/>
+                                        onInput={e=>{setFechasBuscador({ ...fechasBuscador, desde: e.target.value.trim() })}}
+                                        defaultValue={fechasBuscador.desde}/>
                                 </Form.Group>
                             </div>
                             <div className="divContenedorCampo3">
-                                <p>Hacia:</p>
+                                <p>Hasta:</p>
                                 <Form.Group className="mb-3">
                                         <Form.Control required size="lg" type="date"
-                                        onInput={console.log("hola2")}
-                                        defaultValue={60}/>
+                                        onInput={e=>{setFechasBuscador({ ...fechasBuscador, hasta: e.target.value.trim() })}}
+                                        defaultValue={fechasBuscador.hasta}/>
                                 </Form.Group>
                             </div>
                         </div>
                         <div className='contenedorBuscarResumen'>
-                            <button type='button' onClick={TodoCorrecto} className="anyadirUsuarioDatos">Buscar</button>
+                            <button type='button' onClick={TodoCorrecto} className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">Buscar</button>
                         </div>
                         
                     </Form>
@@ -93,23 +147,26 @@ function Resumen(){
                         <div>
                             <h1 className='tituloHoras'>Horas Planificadas</h1>
                             <div className='contenedorDatosHorasResumen'>
-                                <p className='datosHorasResumen'>100 horas 30 min</p>
+                                <p className='datosHorasResumen'>{datosJornada.contadorHorasPlanificadas}</p>
                             </div>
                         </div>
                         <div>
                             <h1 className='tituloHoras'>Horas Trabajadas</h1>
                             <div className='contenedorDatosHorasResumen'>
-                                <p className='datosHorasResumen'>98 horas 30 min</p>
+                                <p className='datosHorasResumen'>{datosJornada.contadorHorasTrabajadas}</p>
                             </div>
                         </div>
                         <div>
                             <h1 className='tituloHoras'>Balance</h1>
                             <div className='contenedorDatosHorasResumen'>
-                                <p className='datosHorasResumen'>-2 horas 00 min</p>
+                                <p className='datosHorasResumen'>{datosJornada.contadorBalanceHorario}</p>
                             </div>
                         </div>
                     </div>
                 </section>
+                <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
+                    <Link to="/fichar" className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">Volver</Link>
+                </div>
             </div>
         <PiePagina/>
     </React.Fragment>
