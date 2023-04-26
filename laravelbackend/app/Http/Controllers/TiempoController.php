@@ -516,7 +516,7 @@ class TiempoController extends Controller {
                         'empleado_id' => $empleado->id,
                         'empleado' => $empleado->nombre . " " . $empleado->apellidos,
                         'jornadaLaboral' => $tiempoATrabajar,
-                        'tiempoActivo' => gmdate('H:i:s:', $tiempoTrabajado),
+                        'tiempoActivo' => gmdate('H:i:s', $tiempoTrabajado),
                         'horario' => $horario,
                     ];
                 } else {
