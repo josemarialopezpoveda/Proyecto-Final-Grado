@@ -18,7 +18,6 @@ function CalendarioEmpleado(){
     });
 
     const [nombreEmpleado, setNombreEmpleado] = useState();
-    const [datosRegistro, setDatosTiempoEmpleado] = useState({});
 
     const anyadirBarraNav = () =>{
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
@@ -43,22 +42,20 @@ function CalendarioEmpleado(){
         };
         let datosEmpleado = undefined;
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
-            datosEmpleado = await peticionGetAuth(URL_API + "empleadoOnline/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+            datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
         }else{
-            datosEmpleado = await peticionGetAuth(URL_API + "empleadoOnline/" + `${localStorage.getItem("id")}`, header);
+            datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("id")}`, header);
         }
         console.log(datosEmpleado)
-        console.log(localStorage.getItem('tipoUsuario'))
         if(datosEmpleado !== undefined){
-            if (datosEmpleado.data.length !== 0) {
-            console.log(datosEmpleado)
-            datosEmpleado.data.map((datosE) => {
-                if(`${localStorage.getItem("id")}` == datosE.id){
-                    var newTiempo = {
-                        inicio: datosE.inicio,
-                        fin: datosE.fin,
-                    };
-                    setDatosTiempoEmpleado(newTiempo);
+            if (datosEmpleado.data.turnos.length !== 0) {
+            datosEmpleado.data.turnos.map((turno) => {
+                if(turno.fecha === fechasBuscador.diaSeleccionado){
+                    const obj = {
+                        horario: turno.registroHorario,
+                      }
+                    console.log(obj)
+                    setDatosJornada(obj)
                 }
             });
             }
@@ -98,7 +95,7 @@ function CalendarioEmpleado(){
             )
           }))
         }else{
-          return(<p>No hay registros de entrada o salida.</p>)
+          return(<p>No hay registros para este dia.</p>)
         }
     }
 
@@ -113,6 +110,8 @@ function CalendarioEmpleado(){
     return(
     <React.Fragment>
         {anyadirBarraNav()}
+        <pre>{JSON.stringify(fechasBuscador, null, 3)}</pre>
+        <pre>{JSON.stringify(datosJornada, null, 3)}</pre>
             <div className='contenedorSectionParaFichar'>
             <h1 className='text-center tituloH1'>Calendario del empleado {nombreEmpleado}</h1>
                 <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar pd10-0'>
@@ -122,8 +121,8 @@ function CalendarioEmpleado(){
                                 <p>Dia a buscar:</p>
                                 <Form.Group className="mb-3">
                                         <Form.Control required size="lg" type="date"
-                                        onInput={e=>{setFechasBuscador({ ...fechasBuscador, desde: e.target.value.trim() })}}
-                                        defaultValue={fechasBuscador.desde}/>
+                                        onInput={e=>{setFechasBuscador({ ...fechasBuscador, diaSeleccionado: e.target.value.trim() })}}
+                                        defaultValue={fechasBuscador.diaSeleccionado}/>
                                 </Form.Group>
                             </div>
                         </div>
