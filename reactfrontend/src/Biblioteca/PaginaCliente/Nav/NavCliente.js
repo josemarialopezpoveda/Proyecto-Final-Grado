@@ -7,10 +7,6 @@ import ListarOpciones from '../../FuncionesAuxiliares/ListarOpciones';
 function NavCliente(){
     const opciones = [
         {
-            titulo: "Ver Calendario",
-            path:"/verCalendario"
-        },
-        {
             titulo:"Fichar",
             path:"/fichar"
         },
