@@ -42,8 +42,6 @@ class TiempoFactory extends Factory {
         $horaFinF = '15:30:00';
 
         $fechaActual = Carbon::parse($fechaInicio);
-
-        if ($empleado->empresa_id == 1 || $empleado->empresa_id == 2 || $empleado->empresa_id == 3) {
             while ($fechaActual <= Carbon::parse($fechaFin)) {
                 $diaSemana = $fechaActual->format('N');
                 if (!$fechaActual->isWeekend() && !Holidays::isHoliday($fechaActual)) {
@@ -65,7 +63,7 @@ class TiempoFactory extends Factory {
                     $fechaHoraEntrada->setTimeFromTimeString($horaAleatoriaE);
                     $fechaHoraSalida->setTimeFromTimeString($horaAleatoriaS);
 
-                    if ($fechaActual != Carbon::parse($fechaFin)) {
+                    if ($fechaActual <= Carbon::parse($fechaFin) && (($empleado->empresa_id == 1 || $empleado->empresa_id == 2 || $empleado->empresa_id == 3))) {
                         Tiempo::create([
                             'empleado_id' => $empleadoId,
                             'created_at' => $fechaHoraEntrada,
@@ -83,13 +81,5 @@ class TiempoFactory extends Factory {
                 'updated_at' => $fechaHoraSalida,
                 'inicio' => $fechaHoraEntrada,
             ];
-        } else {
-            return [
-                'empleado_id' => $empleadoId,
-                'created_at' => $fechaFin,
-                'updated_at' => $fechaFin,
-                'inicio' => $fechaFin,
-            ];
-        }
     }
 }
