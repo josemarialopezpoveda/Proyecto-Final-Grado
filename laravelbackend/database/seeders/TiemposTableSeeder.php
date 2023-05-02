@@ -52,7 +52,7 @@ class TiemposTableSeeder extends Seeder {
             ->whereNull('fin')
             ->where('inicio', '<', $currentDate)
             ->update([
-                'fin' => DB::raw("CONCAT(DATE(inicio), ' 19:00:00')")
+                'fin' => DB::raw("CONCAT(DATE(inicio), ' 17:00:00')")
             ]);*/
 
 
