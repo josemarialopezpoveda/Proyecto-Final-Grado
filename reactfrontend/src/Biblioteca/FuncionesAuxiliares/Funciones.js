@@ -375,11 +375,21 @@ export const restarHoras = (hora1, hora2) =>{
   var segundos = diferenciaSegundos % 60;
 
   // Formatear el resultado
-  return ("0" + horas).slice(-2) + ":" + ("0" + minutos).slice(-2) + ":" + ("0" + segundos).slice(-2);
+  var resultadoHoras = horas.toString();
+  var resultadoMinutos = ("0" + minutos).slice(-2);
+  var resultadoSegundos = ("0" + segundos).slice(-2);
+
+  if (resultadoHoras.length < 2) {
+    resultadoHoras = "0" + resultadoHoras;
+  }else if(resultadoHoras.length < 3){
+    resultadoHoras = "00" + resultadoHoras;
+  }
+
+  return resultadoHoras + ":" + resultadoMinutos + ":" + resultadoSegundos;
 }
 
 //Función para sumar dos horas en formato "HH:MM:SS" .
-export const sumarHoras = (hora1, hora2) =>{
+export const sumarHoras = (hora1, hora2) => {
   // Convertir las horas en segundos
   var arr1 = hora1.split(":");
   var arr2 = hora2.split(":");
@@ -396,7 +406,17 @@ export const sumarHoras = (hora1, hora2) =>{
   var segundos = diferenciaSegundos % 60;
 
   // Formatear el resultado
-  return ("0" + horas).slice(-2) + ":" + ("0" + minutos).slice(-2) + ":" + ("0" + segundos).slice(-2);
+  var resultadoHoras = horas.toString();
+  var resultadoMinutos = ("0" + minutos).slice(-2);
+  var resultadoSegundos = ("0" + segundos).slice(-2);
+
+  if (resultadoHoras.length < 2) {
+    resultadoHoras = "0" + resultadoHoras;
+  }else if(resultadoHoras.length < 3 && restarHoras.length > 2){
+    resultadoHoras = "00" + resultadoHoras;
+  }
+
+  return resultadoHoras + ":" + resultadoMinutos + ":" + resultadoSegundos;
 }
 
 

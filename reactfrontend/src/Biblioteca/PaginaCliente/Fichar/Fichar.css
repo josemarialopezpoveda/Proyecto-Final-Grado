@@ -28,7 +28,7 @@
     margin: 30px;
 }
 
-.sectionParaFichar * {
+.sectionParaFichar div article * {
     margin: 20px;
 }
 
@@ -67,6 +67,10 @@
 
 .sectionFormMarginBottomFichar{
     margin-bottom: 100px!important;
+}
+
+.divFlexFichar *{
+    margin: 0 20px;
 }
 
 @media (max-width: 450px) {

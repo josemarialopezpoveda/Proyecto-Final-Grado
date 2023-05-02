@@ -26,7 +26,6 @@ import PaginaPrincipalTurnos from 'Biblioteca/PaginaAdmin/GestionTurnos/PaginaPr
 import VerTurno from 'Biblioteca/PaginaAdmin/GestionTurnos/PaginaPrincipalTurnos/VerTurnos/VerTurno';
 import ModificarTurno from 'Biblioteca/PaginaAdmin/GestionTurnos/PaginaPrincipalTurnos/ModificarTurno/ModificarTurno';
 import VerTurnoCliente from 'Biblioteca/PaginaAdmin/AccionesEmpleados/AdministrarInfoClienteSel/InfoClienteSel/VerTurnoCliente';
-import Calendar from 'Biblioteca/Calendar/Calendar';
 import PagInfoClienteSel from 'Biblioteca/PaginaAdmin/AccionesEmpleados/AdministrarInfoClienteSel/PagInfoClienteSel';
 import VerAusenciasGenerales from 'Biblioteca/PaginaAdmin/AccionesEmpleados/AdministrarInfoClienteSel/InfoClienteSel/VerAusenciasGenerales';
 import AnyadirAusenciaGeneral from 'Biblioteca/PaginaAdmin/AccionesEmpleados/AdministrarInfoClienteSel/InfoClienteSel/AccionesInfoCliente/AnyadirAusenciaGeneral';
@@ -42,6 +41,7 @@ import VerMensajesEmpleado from 'Biblioteca/PaginaAdmin/Chat/Mensajes/VerMensaje
 import VerTiemposEmpleado from 'Biblioteca/PaginaAdmin/Tiempos/VerTiemposEmpleado';
 import Resumen from 'Biblioteca/PaginaCliente/Resumen/Resumen';
 import VerJornada from 'Biblioteca/PaginaAdmin/EmpleadosConectados/VerJornada/VerJornada';
+import CalendarioEmpleado from 'Biblioteca/PaginaCliente/CalendarioEmpleado/CalendarioEmpleado';
 
 function App() {
   return(
@@ -61,7 +61,7 @@ function App() {
                   <Route exact path="/crearCorreoCliente" element={<CrearCorreoCliente/>}/>
                   <Route exact path="/verCorreoSeleccionadoCliente" element={<InfoCorreoSeleccionadoCliente/>}/>
                   <Route exact path="/fichar" element={<Fichar/>}/>
-                  <Route exact path="/verCalendario" element={<Calendar/>}/>
+                  <Route exact path="/verCalendarioEmpleado" element={<CalendarioEmpleado/>}/>
                   <Route exact path="/verResumenLaboral" element={<Resumen/>}/>
 
                 {/*PARTE ADMINISTRADOR/EMPRESA. */}

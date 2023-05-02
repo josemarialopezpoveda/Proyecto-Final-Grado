@@ -18,9 +18,11 @@ function Resumen(){
     });
 
     const [fechasBuscador, setFechasBuscador] = useState({
-        desde: formatoDateAFecha(new Date(new Date().getFullYear(), 0, 1)),
-        hasta: formatoDateAFecha(new Date(new Date().getFullYear(), 11, 31)),
+        desde: formatoDateAFecha(new Date(new Date().getFullYear(), new Date().getMonth(), 1)),
+        hasta: formatoDateAFecha(new Date()),
     });
+
+    const [nombreEmpleado, setNombreEmpleado] = useState();
 
     const anyadirBarraNav = () =>{
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
@@ -33,7 +35,26 @@ function Resumen(){
     //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
     useEffect(() => {
         recoleccionDatos();
+        recoleccionNombreUser();
     }, []);
+
+    const recoleccionNombreUser = async () => {
+        const header = {
+          headers: {
+            Accept: "application/json",
+            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+          },
+        };
+        let datosEmpleado = undefined;
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+        }else{
+            datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("id")}`, header);
+        }
+        if(datosEmpleado !== undefined){
+            setNombreEmpleado(datosEmpleado.data.nombre + " " + datosEmpleado.data.apellidos)
+        }
+    };
 
     const recoleccionDatos = async () => {
         const header = {
@@ -62,7 +83,11 @@ function Resumen(){
                         contadores.contadorHorasPlanificadas = sumarHoras(turno.horasJornada,contadores.contadorHorasPlanificadas);
                         contadores.contadorHorasTrabajadas = sumarHoras(turno.horasTrabajadas,contadores.contadorHorasTrabajadas);
                         contadores.contadorBalanceHorario = sumarHoras(turno.horasFaltantes,contadores.contadorBalanceHorario);
+                        console.log(contadores.contadorHorasPlanificadas)
+                        // console.log(contadores.contadorHorasTrabajadas)
+                        // console.log(contadores.contadorBalanceHorario)
                     }
+
                 });
 
                 usoCanvas(convertirHoraANumero(contadores.contadorBalanceHorario));
@@ -111,12 +136,11 @@ function Resumen(){
     return(
     <React.Fragment>
         {anyadirBarraNav()}
-        <pre>{JSON.stringify(datosJornada, null, 3)}</pre>
-        <pre>{JSON.stringify(fechasBuscador, null, 3)}</pre>
             <div className='contenedorSectionParaFichar'>
-                <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar'>
+            <h1 className='text-center tituloH1'>Resumen de la jornada de {nombreEmpleado}</h1>
+                <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar pd10-0'>
                     <Form>
-                        <div className="divContenedorCampo2">
+                        <div className="divContenedorCampo2 margin10-0">
                             <div className="divContenedorCampo3">
                                 <p>Desde:</p>
                                 <Form.Group className="mb-3">
@@ -134,13 +158,13 @@ function Resumen(){
                                 </Form.Group>
                             </div>
                         </div>
-                        <div className='contenedorBuscarResumen'>
+                        <div className='contenedorBuscarResumen margin10-0'>
                             <button type='button' onClick={TodoCorrecto} className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">Buscar</button>
                         </div>
                         
                     </Form>
                 </section>
-                <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar quitarEspacios'>
+                <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar quitarEspacios pd10-0'>
                     <h1 className='tituloResumen'>Saldo de horas</h1>
                     <canvas ref={canvasRef} id="canvas"></canvas>
                     <div className='flexDatosHorasResumen'>
