@@ -47,13 +47,13 @@ class TiemposTableSeeder extends Seeder {
         //Si la última fecha registrada es null y menor que la fecha actual
         // entonces actualizar el campo fin con la hora correspondiente al fin del turno.
 
-        $currentDate = Carbon::now()->format('Y-m-d H:i:s');
+        /*$currentDate = Carbon::now()->format('Y-m-d H:i:s');
         DB::table('tiempos')
             ->whereNull('fin')
             ->where('inicio', '<', $currentDate)
             ->update([
                 'fin' => DB::raw("CONCAT(DATE(inicio), ' 19:00:00')")
-            ]);
+            ]);*/
 
 
     }
