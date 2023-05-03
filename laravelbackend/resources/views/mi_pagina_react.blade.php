@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Mi Página con React</title>
+    <title>Timemana</title>
     <script>
         window.location.href = 'http://localhost:3000';
     </script>
