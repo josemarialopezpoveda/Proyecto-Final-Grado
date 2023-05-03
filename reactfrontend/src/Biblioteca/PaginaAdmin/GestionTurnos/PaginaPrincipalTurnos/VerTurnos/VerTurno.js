@@ -22,10 +22,10 @@ function VerTurno() {
         };
         let datosTurno = await peticionGetAuth(URL_API + "turnos/" + `${localStorage.getItem("idTurno")}`, header);
         console.log(datosTurno)
-        if (datosTurno.data !== 0) {
+        if (datosTurno.data !== undefined) {
             var newTurno = {
-              descripcion: datosTurno.data.descripcion,
-              dias: datosTurno.data.dias,
+              descripcion: datosTurno.data.turno.descripcion,
+              dias: datosTurno.data.turno.dias,
             };
           setTurno(newTurno);
         }
@@ -56,7 +56,7 @@ function VerTurno() {
     <React.Fragment>
         <NavAdmin/>
         <section>
-            <h4 className='tituloH1 text-center'>Horario: {turno.descripcion}</h4>
+            <h4 className='tituloH1 text-center'>Turno {turno.descripcion}</h4>
             <div>
                 <div className='tablaMediaQuery TablaDatosUser'>
                     {/*PENDIENTE BUSCADOR TURNOS*/ }

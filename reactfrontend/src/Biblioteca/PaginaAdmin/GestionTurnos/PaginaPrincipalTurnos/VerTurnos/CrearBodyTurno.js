@@ -6,7 +6,6 @@ import Table from 'react-bootstrap/Table';
 
 function CrearBodyTurno() {
     const [turno, setTurno] = useState({});
-    const [fila, setFila] = useState("");
 
     const recoleccionDatos = async () => {
         const header = {
@@ -15,7 +14,7 @@ function CrearBodyTurno() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosTurno = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem("idEmpleado")}`, header);
+        let datosTurno = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem("idTurno")}`, header);
         if(datosTurno.data.dias !== undefined){
             if (datosTurno.data.dias.length !== 0) {
                     var newTurno = {
@@ -125,7 +124,7 @@ function CrearBodyTurno() {
             <Table>
                 <tbody>
                     <tr>
-                        <td>El empleado seleccionado no tiene un turno activado.</td>
+                        <td>No hay datos sobre el turno.</td>
                     </tr>
                 </tbody>
             </Table>

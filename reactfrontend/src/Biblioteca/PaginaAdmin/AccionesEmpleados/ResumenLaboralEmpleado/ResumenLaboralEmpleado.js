@@ -1,15 +1,13 @@
 //Importamos los estilos CSS del pie de página.
 import React, {useRef, useState, useEffect} from 'react';
-import NavCliente from '../Nav/NavCliente.js';
 import { Link } from "react-router-dom";
-import './Resumen.css';
-import PiePagina from '../../PaginaPrincipal/Footer/PiePagina.js';
 import { URL_API } from 'services/http/const.js';
 import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 import Form from 'react-bootstrap/Form';
 import { convertirHoraANumero, convertirHorasFormatoExplicativo, fechaEntreRango, formatoDateAFecha, peticionGetAuth, restarHoras, sumarHoras } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
+import PiePagina from 'Biblioteca/PaginaPrincipal/Footer/PiePagina';
 
-function Resumen(){
+function ResumenLaboralEmpleado(){
     const canvasRef = useRef(null);
     const [datosJornada, setDatosJornada] = useState({
         contadorHorasPlanificadas: "00:00:00",
@@ -23,14 +21,6 @@ function Resumen(){
     });
 
     const [nombreEmpleado, setNombreEmpleado] = useState();
-
-    const anyadirBarraNav = () =>{
-        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
-            return(<NavAdmin/>)
-        }else{
-            return(<NavCliente/>)
-        }
-    }
 
     //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
     useEffect(() => {
@@ -46,11 +36,7 @@ function Resumen(){
           },
         };
         let datosEmpleado = undefined;
-        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
-            datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
-        }else{
-            datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("id")}`, header);
-        }
+        datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleado")}`, header);
         if(datosEmpleado !== undefined){
             setNombreEmpleado(datosEmpleado.data.nombre + " " + datosEmpleado.data.apellidos)
         }
@@ -64,11 +50,7 @@ function Resumen(){
           },
         };
         let datosEmpleado = undefined
-        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
-            datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
-        }else{
-            datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("id")}`, header);
-        }
+        datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("idEmpleado")}`, header);
         console.log(datosEmpleado)
         if(datosEmpleado !== undefined){
             if(datosEmpleado.data.turnos.length !== 0){
@@ -132,7 +114,7 @@ function Resumen(){
 
     return(
     <React.Fragment>
-        {anyadirBarraNav()}
+        <NavAdmin/>
             <div className='contenedorSectionParaFichar'>
             <h1 className='text-center tituloH1'>Resumen de la jornada de {nombreEmpleado}</h1>
                 <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar pd10-0'>
@@ -186,7 +168,7 @@ function Resumen(){
                     </div>
                 </section>
                 <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
-                    <Link to="/fichar" className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">Volver</Link>
+                    <Link to="/pagInfoClienteSel" className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">Volver</Link>
                 </div>
             </div>
         <PiePagina/>
@@ -195,4 +177,4 @@ function Resumen(){
     );
 }
 
-export default Resumen;
+export default ResumenLaboralEmpleado;

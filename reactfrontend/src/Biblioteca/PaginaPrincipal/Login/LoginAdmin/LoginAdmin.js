@@ -44,6 +44,7 @@ function LoginAdmin() {
       if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
         mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
       } else {
+        localStorage.clear();
         mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "3000");
         localStorage.setItem("token", peticion.data.token);
         localStorage.setItem("tipoToken", peticion.data.token_type);

@@ -358,34 +358,21 @@ export const formatoFechaDDMMYYYY = (dateStr) =>{
 }
 
 //Función para restar dos horas en formato "HH:MM:SS" .
-export const restarHoras = (hora1, hora2) =>{
-  // Convertir las horas en segundos
-  var arr1 = hora1.split(":");
-  var arr2 = hora2.split(":");
-  var segundos1 = (+arr1[0]) * 60 * 60 + (+arr1[1]) * 60 + (+arr1[2]);
-  var segundos2 = (+arr2[0]) * 60 * 60 + (+arr2[1]) * 60 + (+arr2[2]);
-
-  // Calcular la diferencia en segundos
-  var diferenciaSegundos = segundos1 - segundos2;
-
-  // Convertir la diferencia en formato "HH:MM:SS"
-  var horas = Math.floor(diferenciaSegundos / 3600);
-  diferenciaSegundos %= 3600;
-  var minutos = Math.floor(diferenciaSegundos / 60);
-  var segundos = diferenciaSegundos % 60;
-
-  // Formatear el resultado
-  var resultadoHoras = horas.toString();
-  var resultadoMinutos = ("0" + minutos).slice(-2);
-  var resultadoSegundos = ("0" + segundos).slice(-2);
-
-  if (resultadoHoras.length < 2) {
-    resultadoHoras = "0" + resultadoHoras;
-  }else if(resultadoHoras.length < 3){
-    resultadoHoras = "00" + resultadoHoras;
-  }
-
-  return resultadoHoras + ":" + resultadoMinutos + ":" + resultadoSegundos;
+export const restarHoras = (fecha1, fecha2) =>{
+  console.log(fecha1)
+  console.log(fecha2)
+  const [hora1, minuto1, segundo1] = fecha1.split(':');
+  const [hora2, minuto2, segundo2] = fecha2.split(':');
+  console.log(hora1)
+  console.log(minuto1)
+  console.log(segundo1)
+  
+  let fechaRestada = new Date();
+  fechaRestada.setHours(parseInt(hora1) - parseInt(hora2));
+  fechaRestada.setMinutes(parseInt(minuto1) - parseInt(minuto2));
+  fechaRestada.setSeconds(parseInt(segundo1) - parseInt(segundo2));
+  
+  return fechaRestada.toLocaleTimeString('en-US', {hour12: false});
 }
 
 //Función para sumar dos horas en formato "HH:MM:SS" .
@@ -415,7 +402,7 @@ export const sumarHoras = (hora1, hora2) => {
   }else if(resultadoHoras.length < 3 && restarHoras.length > 2){
     resultadoHoras = "00" + resultadoHoras;
   }
-
+  console.log(resultadoHoras + ":" + resultadoMinutos + ":" + resultadoSegundos)
   return resultadoHoras + ":" + resultadoMinutos + ":" + resultadoSegundos;
 }
 

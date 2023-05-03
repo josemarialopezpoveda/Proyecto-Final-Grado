@@ -42,6 +42,7 @@ import VerTiemposEmpleado from 'Biblioteca/PaginaAdmin/Tiempos/VerTiemposEmplead
 import Resumen from 'Biblioteca/PaginaCliente/Resumen/Resumen';
 import VerJornada from 'Biblioteca/PaginaAdmin/EmpleadosConectados/VerJornada/VerJornada';
 import CalendarioEmpleado from 'Biblioteca/PaginaCliente/CalendarioEmpleado/CalendarioEmpleado';
+import ResumenLaboralEmpleado from 'Biblioteca/PaginaAdmin/AccionesEmpleados/ResumenLaboralEmpleado/ResumenLaboralEmpleado';
 
 function App() {
   return(
@@ -71,6 +72,9 @@ function App() {
                   <Route exact path="/altaEmpleado" element={<AltaEmpleados/>} />
                   <Route exact path="/modificarEmpleado" element={<Modificar/>} />
                   <Route exact path="/pagInfoClienteSel" element={<PagInfoClienteSel/>} />
+
+                  {/* Ver Resumen laboral empleado */}
+                  <Route exact path="/verResumenLaboralEmpleado" element={<ResumenLaboralEmpleado/>} />
 
                   {/* Ver jornada del empleado */}
                   <Route exact path="/verJornadaEmpleado" element={<VerJornada/>} />

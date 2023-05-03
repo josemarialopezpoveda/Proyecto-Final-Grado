@@ -60,6 +60,12 @@ function PagInfoClienteSel() {
                         <p><Link className="botonInfoCliente" to="/verTiemposEmpleado">Ver Tiempos</Link></p>
                     </div>
                 </div>
+                <div className='infoclienteSel'>
+                    <h3>Resumen empleado</h3>
+                    <div>
+                        <p><Link className="botonInfoCliente" to="/verResumenLaboralEmpleado">Ver Jornada laboral</Link></p>
+                    </div>
+                </div>
             </div>
             <div className='contenedorBotonVolver pagInfoClienteSelVolver'>
                 <Link to="/accionesEmpleados" className="botonInfoCliente">Volver</Link>
