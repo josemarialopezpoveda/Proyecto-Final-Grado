@@ -345,7 +345,7 @@ class TiempoController extends Controller {
                 'empleado' => $empleado->nombre . " " . $empleado->apellidos,
                 'empresa_id' => $empleado->empresa_id,
                 'empresa' => $empresa->nombreComercial,
-                '$tiempos' => $tiempos,
+                'tiempos' => $tiempos,
             ];
         } else {
             $data = ['message' => $loginOk['message'],];
