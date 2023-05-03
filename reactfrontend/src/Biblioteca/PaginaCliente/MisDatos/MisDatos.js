@@ -56,6 +56,10 @@ function MisDatos() {
     recoleccionDatos();
   }, []);
 
+  /**
+   * 
+   * Función que a partir del tipo del empleado devuelve una barra de navegación o otra.
+   */
   const anyadirBarraNav = () =>{
     if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
         return(<NavAdmin/>)

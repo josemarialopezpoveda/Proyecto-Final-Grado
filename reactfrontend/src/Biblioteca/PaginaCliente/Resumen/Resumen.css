@@ -4,6 +4,7 @@ canvas{
     width: 93%;
     height: 50px;
     margin: 20px;
+    margin-top: 0;
 }
 
 .quitarEspacios{
@@ -63,4 +64,10 @@ canvas{
 
 .pd10-0{
     padding: 10px 0;
+}
+
+.infoPBalance{
+    text-align: center;
+    margin: 0;
+    font-size: 13px;
 }

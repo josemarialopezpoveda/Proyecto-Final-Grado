@@ -15,6 +15,7 @@ function CrearCorreoCliente() {
         asunto: ""
     });
 
+    //Estado para almacenar los datos del mensaje creado.
     const [mensajeCreado, setMensajeCreado] = useState({
         casos_id: "",
         empresa_id: `${localStorage.getItem("id")}`,
@@ -23,11 +24,13 @@ function CrearCorreoCliente() {
         mensaje: ""
     });
 
+    //Estado que almacena el nombre de los empleados.
     const [nombresUsuarios, setNombresUsuarios] = useState({
         nombreCompleto: "",
         id: ""
     });
 
+    //Recolecta los datos de los empleados para listarlos y sus ids.
     const recoleccionDatos = async () => {
         const header = {
           headers: {
@@ -49,10 +52,12 @@ function CrearCorreoCliente() {
         }
       };
 
+    //useEffect para que recolecte los datos al cargar la página
     useEffect(() => {
         recoleccionDatos();
     }, []);
 
+    //Función que a partir del estado devuelve options con el nombre y el id de todos los empleados.
     const obtenerOptions = () =>{
         if(nombresUsuarios.id !== "" && typeof(nombresUsuarios) === 'object'){
             return(nombresUsuarios.map((empleado, index)=>{
@@ -61,6 +66,7 @@ function CrearCorreoCliente() {
         }
     }
 
+    //Función que crea el caso si todo ha funcionado correctamente y si no avisa al usuario.
     const TodoCorrecto = async() =>{
         let raw = {
           "empleado_id": casoCreado.empleado_id,
@@ -90,6 +96,7 @@ function CrearCorreoCliente() {
     
     }
 
+    //Función que una vez creas el caso crea el primer mensaje y si falla avisa al usuario.
     const crearMensaje = async() =>{
         console.log(mensajeCreado.casos_id,)
         let raw = {

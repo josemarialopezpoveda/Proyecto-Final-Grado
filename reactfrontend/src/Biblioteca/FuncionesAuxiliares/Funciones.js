@@ -359,13 +359,8 @@ export const formatoFechaDDMMYYYY = (dateStr) =>{
 
 //Función para restar dos horas en formato "HH:MM:SS" .
 export const restarHoras = (fecha1, fecha2) =>{
-  console.log(fecha1)
-  console.log(fecha2)
   const [hora1, minuto1, segundo1] = fecha1.split(':');
   const [hora2, minuto2, segundo2] = fecha2.split(':');
-  console.log(hora1)
-  console.log(minuto1)
-  console.log(segundo1)
   
   let fechaRestada = new Date();
   fechaRestada.setHours(parseInt(hora1) - parseInt(hora2));
@@ -402,7 +397,6 @@ export const sumarHoras = (hora1, hora2) => {
   }else if(resultadoHoras.length < 3 && restarHoras.length > 2){
     resultadoHoras = "00" + resultadoHoras;
   }
-  console.log(resultadoHoras + ":" + resultadoMinutos + ":" + resultadoSegundos)
   return resultadoHoras + ":" + resultadoMinutos + ":" + resultadoSegundos;
 }
 

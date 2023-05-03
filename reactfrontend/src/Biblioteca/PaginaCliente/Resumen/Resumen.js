@@ -10,7 +10,9 @@ import Form from 'react-bootstrap/Form';
 import { convertirHoraANumero, convertirHorasFormatoExplicativo, fechaEntreRango, formatoDateAFecha, peticionGetAuth, restarHoras, sumarHoras } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
 
 function Resumen(){
+    //Un useref para el boton de tikar.
     const canvasRef = useRef(null);
+    //Estados para los datos de lab base de datos.
     const [datosJornada, setDatosJornada] = useState({
         contadorHorasPlanificadas: "00:00:00",
         contadorHorasTrabajadas: "00:00:00",
@@ -24,6 +26,7 @@ function Resumen(){
 
     const [nombreEmpleado, setNombreEmpleado] = useState();
 
+    //Según el tipo de usuario devuelvo una barra de navegación o otra.
     const anyadirBarraNav = () =>{
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
             return(<NavAdmin/>)
@@ -38,6 +41,7 @@ function Resumen(){
         recoleccionNombreUser();
     }, []);
 
+    //Recoge el nombre del usuario logueado.
     const recoleccionNombreUser = async () => {
         const header = {
           headers: {
@@ -56,6 +60,7 @@ function Resumen(){
         }
     };
 
+    //Recoge los datos de las horas planificadas, trabajadas y el balance de las mismas.
     const recoleccionDatos = async () => {
         const header = {
           headers: {
@@ -99,6 +104,7 @@ function Resumen(){
         }
       };
 
+    //Canvas a partir del balance horario
     const usoCanvas = (num) =>{
         const canvas = canvasRef.current;
         if(canvas !== null){
@@ -126,6 +132,7 @@ function Resumen(){
         
     }
 
+    //Función que una vez puestas las fechas recoge los datos entre una fecha y la otra.
     const TodoCorrecto = () =>{
         recoleccionDatos();
     }
@@ -163,6 +170,7 @@ function Resumen(){
                 </section>
                 <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar quitarEspacios pd10-0'>
                     <h1 className='tituloResumen'>Saldo de horas</h1>
+                    <p className='infoPBalance'>{datosJornada.contadorBalanceHorario}</p>
                     <canvas ref={canvasRef} id="canvas"></canvas>
                     <div className='flexDatosHorasResumen'>
                         <div>

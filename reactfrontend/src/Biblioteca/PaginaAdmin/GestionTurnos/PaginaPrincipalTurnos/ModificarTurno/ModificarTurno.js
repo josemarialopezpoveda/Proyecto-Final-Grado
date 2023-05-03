@@ -5,8 +5,10 @@ import NavAdmin from '../../../Nav/NavAdmin';
 import Table from 'react-bootstrap/Table';
 import { Link, useNavigate } from "react-router-dom";
 import './ModificarTurno.css';
-import { mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPut } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { convertirNumeroDiaSemana, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPut } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import { URL_API } from 'services/http/const';
+import ChecksDiasSemana from '../../CrearTurno/ComponentesAuxTurno/ChecksDiasSemana';
+import Form from 'react-bootstrap/Form';
 
 function ModificarTurno() {
     //Creamos la variable para poder usar el navigate.
@@ -23,10 +25,10 @@ function ModificarTurno() {
         };
         let datosTurno = await peticionGetAuth(URL_API + "turnos/" + `${localStorage.getItem("idTurno")}`, header);
         console.log(datosTurno)
-        if (datosTurno.data !== 0) {
+        if (datosTurno.data.turno !== undefined) {
             var newTurno = {
-              descripcion: datosTurno.data.descripcion,
-              dias: datosTurno.data.dias,
+              descripcion: datosTurno.data.turno.descripcion,
+              dias: datosTurno.data.turno.dias,
             };
           setTurno(newTurno);
           setHorasModificadas(newTurno.dias);
@@ -41,6 +43,7 @@ function ModificarTurno() {
       console.log(horasModificadas)
       let raw = {
         "descripcion" : turno.descripcion,
+        "empresa_id": `${localStorage.getItem('id')}`,
         "dias": horasModificadas
       }
       console.log(raw)
@@ -51,7 +54,7 @@ function ModificarTurno() {
                   "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
               }
           }
-        let peticion = await peticionPut(URL_API + "turnos/" + `${localStorage.getItem('idTurno')}`, raw)
+        let peticion = await peticionPut(URL_API + "turnos/" + `${localStorage.getItem('idTurno')}`, raw, header)
         console.log(peticion)
         if(peticion.data.errores !== undefined && peticion.data.errores !== null){
             mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
@@ -64,6 +67,25 @@ function ModificarTurno() {
       }
     }
 
+    const diasTurno = () =>{
+          if(turno !== {} && turno.dias !== undefined){
+          return(
+              <tr>
+                  <th>Horas Asignadas</th>
+                  {turno.dias.map((dia)=>{
+                    if(dia.horaInicioM !== "00:00:00" && dia.horaFinM !== "00:00:00" ||
+                      dia.horaInicioT !== "00:00:00" && dia.horaFinT !== "00:00:00" ||
+                      dia.horaInicioN !== "00:00:00" && dia.horaFinN !== "00:00:00"){
+                      return(<th key={generarUUID()}>{convertirNumeroDiaSemana(dia.diaSemana)}</th>)
+                    }
+                  })}
+              </tr>
+          );
+          }
+      }
+
+    
+
   return (
     <React.Fragment>
         <NavAdmin/>
@@ -73,16 +95,7 @@ function ModificarTurno() {
                     {/*PENDIENTE BUSCADOR TURNOS*/ }
                     <Table striped>
                         <thead>
-                            <tr>
-                                <th>Horas Asignadas</th>
-                                <th>Lunes</th>
-                                <th>Martes</th>
-                                <th>Miércoles</th>
-                                <th>Jueves</th>
-                                <th>Viernes</th>
-                                <th>Sábado</th>
-                                <th>Domingo</th>
-                            </tr>
+                          {diasTurno()}
                         </thead>
                             <CrearBodyModificarTurno setTurno={setTurno} turno={turno} horasModificadas={horasModificadas} setHorasModificadas={setHorasModificadas}/>
                     </Table>
@@ -94,7 +107,6 @@ function ModificarTurno() {
                     </div>
                 </div>
             </section>
-            <pre>{JSON.stringify(turno, null, 3)}</pre>
         <PiePagina/>
     </React.Fragment>
   );

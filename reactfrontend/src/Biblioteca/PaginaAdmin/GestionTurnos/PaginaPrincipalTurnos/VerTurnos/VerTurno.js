@@ -25,7 +25,6 @@ function VerTurno() {
         if (datosTurno.data !== undefined) {
             var newTurno = {
               descripcion: datosTurno.data.turno.descripcion,
-              dias: datosTurno.data.turno.dias,
             };
           setTurno(newTurno);
         }
@@ -34,23 +33,6 @@ function VerTurno() {
     useEffect(() => {
         recoleccionDatos();
     }, []);
-
-    const diasTurno = () =>{
-        if(turno !== {} && turno.dias !== undefined){
-        return(
-            <tr>
-                <th>Horas Asignadas</th>
-                {turno.dias.map((dia)=>{
-                  if(dia.horaInicioM !== "00:00:00" && dia.horaFinM !== "00:00:00" ||
-                     dia.horaInicioT !== "00:00:00" && dia.horaFinT !== "00:00:00" ||
-                     dia.horaInicioN !== "00:00:00" && dia.horaFinN !== "00:00:00"){
-                    return(<th key={generarUUID()}>{convertirNumeroDiaSemana(dia.diaSemana)}</th>)
-                  }
-                })}
-            </tr>
-        );
-        }
-    }
 
   return (
     <React.Fragment>

@@ -43,7 +43,7 @@ function ListarEmpresas() {
       setEmpresasEstatico(todosDatosEmpresa);
     } else {
       mostrarAlertaErronea(
-        "Error: algo raro ha pasado...",
+        "Error: Algo raro ha pasado...",
         "Error inesperado algo no ha funcionado correctamente.",
         "7000"
       );

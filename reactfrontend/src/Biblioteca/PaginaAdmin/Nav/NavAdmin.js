@@ -7,6 +7,7 @@ import ListarOpciones from "../../FuncionesAuxiliares/ListarOpciones";
 
 function NavAdmin() {
   var opciones = [{}];
+  //Dependiendo de si eres empresa o empleado Administrados pintamos una barra o otra.
   if(localStorage.getItem('tipoUsuario') === "Administrador" ){
     opciones = [
       {

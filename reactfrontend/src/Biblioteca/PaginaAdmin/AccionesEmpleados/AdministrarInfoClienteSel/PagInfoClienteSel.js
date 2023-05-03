@@ -43,7 +43,7 @@ function PagInfoClienteSel() {
                 <div className='infoclienteSel'>
                     <h3>Turno</h3>
                     <div>
-                        <p><Link className="botonInfoCliente"to="/verTurnoCliente">Ver Turno</Link></p>
+                        <p><Link className="botonInfoCliente" to="/verTurnoCliente">Ver Turno</Link></p>
                         <p><Link className="botonInfoCliente">Quitar Turno</Link></p>
                     </div>
                 </div>
@@ -67,7 +67,7 @@ function PagInfoClienteSel() {
                     </div>
                 </div>
             </div>
-            <div className='contenedorBotonVolver pagInfoClienteSelVolver'>
+            <div className='contenedorBotonVolver text-center pagInfoClienteSelVolver'>
                 <Link to="/accionesEmpleados" className="botonInfoCliente">Volver</Link>
             </div>
         </section>

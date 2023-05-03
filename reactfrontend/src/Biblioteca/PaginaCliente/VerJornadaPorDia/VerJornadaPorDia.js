@@ -8,7 +8,8 @@ import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 import Form from 'react-bootstrap/Form';
 import { generarUUID, formatoDateAFecha, peticionGetAuth, calculoFechaHoy } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
 
-function CalendarioEmpleado(){
+function VerJornadaPorDia(){
+    //Estados para los datos de la base de datos.
     const [fechasBuscador, setFechasBuscador] = useState({
         diaSeleccionado: formatoDateAFecha(new Date()),
     });
@@ -19,6 +20,7 @@ function CalendarioEmpleado(){
 
     const [nombreEmpleado, setNombreEmpleado] = useState();
 
+    //Segun el tipo de usuario devyuelvo un barra de navegación o otra.
     const anyadirBarraNav = () =>{
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
             return(<NavAdmin/>)
@@ -27,12 +29,13 @@ function CalendarioEmpleado(){
         }
     }
 
-    //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
+    //Creamos un useEffect que nada más cargar recoge los datos.
     useEffect(() => {
         recoleccionDatos()
         recoleccionNombreUser();
     }, []);
 
+    //Recogemos el horario del empleado del dia seleccionado.
     const recoleccionDatos = async () => {
         const header = {
           headers: {
@@ -62,6 +65,7 @@ function CalendarioEmpleado(){
         }
       };
 
+    //Recogemos el nombre del usuario logueado.
     const recoleccionNombreUser = async () => {
         const header = {
           headers: {
@@ -80,10 +84,12 @@ function CalendarioEmpleado(){
         }
     };
 
+    //Al pulsar al botón recoge los datos con las nuevas fechas.
     const TodoCorrecto = () =>{
         recoleccionDatos();
     }
 
+    //Recoge las entradas y salidas del estado.
     const getEntradasYSalidas = () =>{
         if(datosJornada.horario.length !== 0){
           return(datosJornada.horario.map((horario)=>{
@@ -99,6 +105,7 @@ function CalendarioEmpleado(){
         }
     }
 
+    //Función para saber si la fecha es nula.
     const esNula = (fecha) =>{
         if(fecha !== null){
           return(<p>Salida  ➜  {fecha}</p>)
@@ -110,10 +117,8 @@ function CalendarioEmpleado(){
     return(
     <React.Fragment>
         {anyadirBarraNav()}
-        <pre>{JSON.stringify(fechasBuscador, null, 3)}</pre>
-        <pre>{JSON.stringify(datosJornada, null, 3)}</pre>
             <div className='contenedorSectionParaFichar'>
-            <h1 className='text-center tituloH1'>Calendario del empleado {nombreEmpleado}</h1>
+            <h1 className='text-center tituloH1'>Buscar jornada del empleado {nombreEmpleado}</h1>
                 <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar pd10-0'>
                     <Form>
                         <div className="divContenedorCampo2 margin10-0">
@@ -154,4 +159,4 @@ function CalendarioEmpleado(){
     );
 }
 
-export default CalendarioEmpleado;
+export default VerJornadaPorDia;

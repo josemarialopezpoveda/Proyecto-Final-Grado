@@ -153,7 +153,6 @@ function CrearCorreoAdmin() {
   return (
     <React.Fragment>
         <NavAdmin/>
-        <pre>{JSON.stringify(mensajeCreado, null, 3)}</pre>
                 <div className=''>
                     <h1 className='text-center tituloH1'>Crear Caso</h1>
                     <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>

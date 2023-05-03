@@ -26,10 +26,7 @@ function ChatCliente() {
   const [casosEmpresaEstaticos, setCasosEmpresaEstaticos] = useState([{}]);
   const [casosEmpresaDinamicos,setCasosEmpresaDinamicos] = useState([{}]);
 
-  const [emisor,setEmisor] = useState("");
-  const [receptor,setReceptor] = useState("");
-
-  //Función para recoger todos los empleados y los guarda en el estado.
+  //Función para recoger todos casos y sus datos.
   const recoleccionDatos = async () => {
     const header = {
       headers: {
@@ -55,12 +52,12 @@ function ChatCliente() {
   };
 
 
-   //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
+   //Creamos un useEffect que nada más cargar recoge los datos del chat.
    useEffect(() => {
     recoleccionDatos();
   }, []);
 
-  //BorrarCaso
+  //Función que pide confirmación al usuario y si de verdad lo desea borra el caso seleccionado.
   const borrarCaso = async (e) => {
     SweetAlert.fire({
       title: "¿Estás seguro que quieres eliminar este caso?",
@@ -100,6 +97,7 @@ function ChatCliente() {
     });
   };
 
+  //Función que añade al localStorage el id del caso y te mueve a otra página.
   const modificarCaso = (e) =>{
     localStorage.setItem("idCaso", e.target.id);
     Navigate("/modificarCorreo");
@@ -112,6 +110,7 @@ function ChatCliente() {
     Navigate("/verMensajesEmpleado");
   };
 
+  //Función que a partir de la actividad devuelve un td con una clase o otra.
   const estaActivo = (activo) =>{
     if(activo === "Activo"){
       return(<td className="campoOpcional activo">{activo}</td>)

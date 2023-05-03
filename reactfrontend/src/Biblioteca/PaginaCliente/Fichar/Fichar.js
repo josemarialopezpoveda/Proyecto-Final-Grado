@@ -22,12 +22,12 @@ function Fichar(){
     //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
     useEffect(() => {
         recoleccionDatos();
-        // recoleccionDatosTablaPibot();
         recoleccionTiempoOnline();
         recoleccionRegistroHorario();
         recoleccionNombreUser();
     }, []);
 
+    //Recoge el nombre completo del usuario.
     const recoleccionNombreUser = async () => {
       const header = {
         headers: {
@@ -46,6 +46,7 @@ function Fichar(){
       }
   };
 
+    //Recoge los datos de inicio y fin del empleado.
     const recoleccionDatos = async () => {
       const header = {
         headers: {
@@ -59,6 +60,7 @@ function Fichar(){
       }else{
           datosEmpleado = await peticionGetAuth(URL_API + "empleadoOnline/" + `${localStorage.getItem("id")}`, header);
       }
+      console.log(datosEmpleado)
       if(datosEmpleado !== undefined){
           if (datosEmpleado.data.length !== 0) {
           datosEmpleado.data.map((datosE) => {
@@ -74,7 +76,7 @@ function Fichar(){
       }
     };
 
-    
+    //Recoge el estado del empleado seleccionado si esta online o no.
     const recoleccionTiempoOnline = async() =>{
         const header = {
             headers: {
@@ -101,6 +103,7 @@ function Fichar(){
         }
     }
 
+    //Función que añade tiempo de fin al empleado.
     const salir = async() =>{
         const header = {
           headers: {
@@ -128,6 +131,7 @@ function Fichar(){
         }
     }
 
+    //Función que añade tiempo de inicio al empleado.
     const entrar = async() =>{
         const header = {
             headers: {
@@ -147,6 +151,7 @@ function Fichar(){
           return datosEmpleado.data.id;
     }
 
+    //Función que llama a entrar o salir dependiendo del estado y cambia la clase y el inner del botón.
     const fichar = (e) =>{
         if(estadoTiempoEmpleado !== null && estadoTiempoEmpleado !== undefined){
             //Si esta conectado.
@@ -170,6 +175,7 @@ function Fichar(){
         }
     }
 
+    //Función que recoge los datos de la jornada del usuario.
     const recoleccionRegistroHorario = async() =>{
       const header = {
         headers: {
@@ -195,6 +201,7 @@ function Fichar(){
       }
     }
 
+    //Función que dependiendo del tipo de usuario devuelve una barra de navegación o otra.
     const anyadirBarraNav = () =>{
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
             return(<NavAdmin/>)
@@ -203,6 +210,7 @@ function Fichar(){
         }
     }
 
+    //Informa de si la fecha esta nula.
     const esNula = (fecha) =>{
       if(fecha !== null){
         return(<p>Salida  ➜  {fecha}</p>)
@@ -211,6 +219,7 @@ function Fichar(){
       }
     }
 
+    //Función que devuelve las entradas y las salidas a partir del estado.
     const getEntradasYSalidas = () =>{
         if(datosJornada.horario.length !== 0){
           return(datosJornada.horario.map((horario)=>{
@@ -226,6 +235,7 @@ function Fichar(){
         }
     }
 
+    //Funcion que di es positivo devuelve horas restantes y si es negativo horas extras.
     const horasQueLleva = () =>{
       const num = parseFloat(datosJornada.tiempoRestante);
       if (num < 0) {
@@ -238,10 +248,10 @@ function Fichar(){
     return(
     <React.Fragment>
       {anyadirBarraNav()}
-      <pre>{JSON.stringify(datosJornada, null, 3)}</pre>
         <div className='contenedorSectionParaFichar'>
           <div className='contenedorBotonCrearCorreo divFlexFichar'>
             <Link to="/verResumenLaboral" className='crearCorreoBoton'>Ver Resumen</Link>
+            <Link to="/verJornadaPorDia" className='crearCorreoBoton'>Buscar jornada por dia</Link>
             <Link to="/verCalendarioEmpleado" className='crearCorreoBoton'>Ver Calendario</Link>
           </div>
           <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar'>

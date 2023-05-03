@@ -14,12 +14,13 @@ function CrearBodyTurno() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosTurno = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem("idTurno")}`, header);
-        if(datosTurno.data.dias !== undefined){
-            if (datosTurno.data.dias.length !== 0) {
+        let datosTurno = await peticionGetAuth(URL_API + "turnos/" + `${localStorage.getItem("idTurno")}`, header);
+        console.log(datosTurno)
+        if(datosTurno.data.turno.dias !== undefined){
+            if (datosTurno.data.turno.dias.length !== 0) {
                     var newTurno = {
-                        descripcion: datosTurno.data.descripcion,
-                        dias: datosTurno.data.dias,
+                        descripcion: datosTurno.data.turno.descripcion,
+                        dias: datosTurno.data.turno.dias,
                     };
                     setTurno(newTurno);
             }

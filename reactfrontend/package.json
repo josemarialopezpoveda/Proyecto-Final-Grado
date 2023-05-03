@@ -12,6 +12,7 @@
     "@fullcalendar/interaction": "^6.1.1",
     "@fullcalendar/react": "^6.1.2",
     "@fullcalendar/timegrid": "^6.1.1",
+    "@mobiscroll/react": "https://npm.mobiscroll.com/@mobiscroll/react-trial/-/react-trial-5.23.2.tgz",
     "@mui/lab": "^5.0.0-alpha.114",
     "@mui/material": "^5.11.2",
     "@mui/x-date-pickers": "^5.0.12",

@@ -16,10 +16,8 @@ import Fichar from 'Biblioteca/PaginaCliente/Fichar/Fichar';
 import Empleados from 'Biblioteca/PaginaAdmin/EmpleadosConectados/Empleados';
 import ChatCliente from 'Biblioteca/PaginaCliente/Chat/ChatCliente';
 import CrearCorreoCliente from 'Biblioteca/PaginaCliente/Chat/CrearCorreoCliente';
-import InfoCorreoSeleccionadoCliente from 'Biblioteca/PaginaCliente/Chat/InfoCorreo/InfoCorreoSeleccionadoCliente';
 import ChatAdmin from 'Biblioteca/PaginaAdmin/Chat/ChatAdmin';
 import CrearCorreoAdmin from 'Biblioteca/PaginaAdmin/Chat/CrearCorreo/CrearCorreoAdmin';
-import InfoCorreoSeleccionadoAdmin from 'Biblioteca/PaginaAdmin/Chat/InfoCorreoSeleccionadoAdmin';
 import CambiarTurno from 'Biblioteca/PaginaAdmin/AccionesEmpleados/Turno/CambiarTurno';
 import CrearTurno from 'Biblioteca/PaginaAdmin/GestionTurnos/CrearTurno/CrearTurno';
 import PaginaPrincipalTurnos from 'Biblioteca/PaginaAdmin/GestionTurnos/PaginaPrincipalTurnos/PaginaPrincipalTurnos';
@@ -41,8 +39,9 @@ import VerMensajesEmpleado from 'Biblioteca/PaginaAdmin/Chat/Mensajes/VerMensaje
 import VerTiemposEmpleado from 'Biblioteca/PaginaAdmin/Tiempos/VerTiemposEmpleado';
 import Resumen from 'Biblioteca/PaginaCliente/Resumen/Resumen';
 import VerJornada from 'Biblioteca/PaginaAdmin/EmpleadosConectados/VerJornada/VerJornada';
-import CalendarioEmpleado from 'Biblioteca/PaginaCliente/CalendarioEmpleado/CalendarioEmpleado';
 import ResumenLaboralEmpleado from 'Biblioteca/PaginaAdmin/AccionesEmpleados/ResumenLaboralEmpleado/ResumenLaboralEmpleado';
+import VerJornadaPorDia from 'Biblioteca/PaginaCliente/VerJornadaPorDia/VerJornadaPorDia';
+import CalendarioGeneral from 'Biblioteca/PaginaCliente/CalendarioGeneral/CalendarioGeneral';
 
 function App() {
   return(
@@ -60,10 +59,10 @@ function App() {
                   <Route exact path="/misDatos" element={<MisDatos/>}/>
                   <Route exact path="/chatCliente" element={<ChatCliente/>}/>
                   <Route exact path="/crearCorreoCliente" element={<CrearCorreoCliente/>}/>
-                  <Route exact path="/verCorreoSeleccionadoCliente" element={<InfoCorreoSeleccionadoCliente/>}/>
                   <Route exact path="/fichar" element={<Fichar/>}/>
-                  <Route exact path="/verCalendarioEmpleado" element={<CalendarioEmpleado/>}/>
+                  <Route exact path="/verJornadaPorDia" element={<VerJornadaPorDia/>}/>
                   <Route exact path="/verResumenLaboral" element={<Resumen/>}/>
+                  <Route exact path="/verCalendarioEmpleado" element={<CalendarioGeneral/>}/>
 
                 {/*PARTE ADMINISTRADOR/EMPRESA. */}
                   {/*Empleados*/}
@@ -89,7 +88,6 @@ function App() {
                   {/*Chat / Correo*/}
                   <Route exact path="/chatAdmin" element={<ChatAdmin/>} />
                   <Route exact path="/crearCorreoAdmin" element={<CrearCorreoAdmin/>} />
-                  <Route exact path="/verCorreoSeleccionadoAdmin" element={<InfoCorreoSeleccionadoAdmin/>}/>
                   <Route exact path="/modificarCorreo" element={<ModificarCorreo/>}/>
                   
                   {/* Mensajes */}
