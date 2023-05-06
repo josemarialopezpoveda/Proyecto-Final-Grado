@@ -63,23 +63,55 @@ class TiempoFactory extends Factory {
                     $fechaHoraEntrada->setTimeFromTimeString($horaAleatoriaE);
                     $fechaHoraSalida->setTimeFromTimeString($horaAleatoriaS);
 
-                    if ($fechaActual <= Carbon::parse($fechaFin) && (($empleado->empresa_id == 1 || $empleado->empresa_id == 2 || $empleado->empresa_id == 3))) {
+//                    if ($fechaActual <= Carbon::parse($fechaFin) && (($empleado->empresa_id == 1 || $empleado->empresa_id == 2 || $empleado->empresa_id == 3))) {
+//                        Tiempo::create([
+//                            'empleado_id' => $empleadoId,
+//                            'created_at' => $fechaHoraEntrada,
+//                            'updated_at' => $fechaHoraSalida,
+//                            'inicio' => $fechaHoraEntrada,
+//                            'fin' => $fechaHoraSalida,
+//                        ]);
+//                    }
+                    if ($fechaActual <= Carbon::parse($fechaFin)) {
+                        if ($empleado->empresa_id == 1){
+                            $turno_id = 1;
+                        } else if ($empleado->empresa_id == 2){
+                            $turno_id = 2;
+                        } else {
+                            $turno_id = 3;
+                        }
                         Tiempo::create([
                             'empleado_id' => $empleadoId,
                             'created_at' => $fechaHoraEntrada,
                             'updated_at' => $fechaHoraSalida,
                             'inicio' => $fechaHoraEntrada,
                             'fin' => $fechaHoraSalida,
+                            'turno_id'=>$turno_id,
                         ]);
                     }
                 }
                 $fechaActual->addDay();
             }
+        switch ($empleado->empresa_id) {
+            case 1:
+                $turno_id = 1;
+                break;
+            case 2:
+                $turno_id = 2;
+                break;
+            case 3:
+                $turno_id = 3;
+                break;
+            default:
+                break;
+        }
             return [
                 'empleado_id' => $empleadoId,
                 'created_at' => $fechaHoraEntrada,
                 'updated_at' => $fechaHoraSalida,
                 'inicio' => $fechaHoraEntrada,
+                'turno_id'=> $turno_id,
+
             ];
     }
 }

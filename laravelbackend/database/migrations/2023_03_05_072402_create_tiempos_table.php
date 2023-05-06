@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('empleado_id')->constrained()->cascadeOnDelete();
             $table->dateTime('inicio');
             $table->dateTime('fin')->nullable();
+            $table->foreignId('turno_id')->constrained()->cascadeOnDelete();;
             $table->timestamps();
         });
     }

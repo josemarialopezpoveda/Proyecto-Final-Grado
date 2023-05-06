@@ -10,10 +10,16 @@ class Tiempo extends Model
     use HasFactory;
 
     protected $table = 'tiempos'; // Nombre de la tabla en la base de datos
-    protected $fillable  = ['empleado_id', 'inicio', 'fin'];
+    protected $fillable  = ['empleado_id', 'inicio', 'fin', 'turno_id'];
     // Definir relación con el modelo Empleado
     public function empleado()
     {
         return $this->belongsTo(Empleado::class, 'empleado_id');
     }
+
+    public function turno()
+    {
+        return $this->belongsTo(Turno::class, 'turno_id');
+    }
+
 }

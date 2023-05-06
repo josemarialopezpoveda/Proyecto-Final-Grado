@@ -37,7 +37,7 @@ class Intervalo {
         }
     }
 
-    public static function sumaHorasIntervalos($dia)
+    public static function sumaHorasIntervalos($dia): string
     {
         $intervalos = [
             [$dia->horaInicioM, $dia->horaFinM],

@@ -38,7 +38,7 @@ class TiemposTableSeeder extends Seeder {
                 // Comprobamos si los dos últimos tiempos del empleado actual son iguales
                 if($tiempos[0]->inicio == $tiempos[1]->inicio){
                     // Eliminamos el último tiempo registrado para el empleado actual
-                    DB::table('tiempos')->where('id', $tiempos[0]->id)->delete();
+                    DB::table('tiempos')->where('id', $tiempos[1]->id)->delete();
                 }
             }
         }

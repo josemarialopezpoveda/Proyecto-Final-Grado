@@ -44,7 +44,7 @@ class TiempoController extends Controller {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
-        if ($loginOk === true) {
+        if ($loginOk) {
             $empleado = Empleado::find($empleadoId);
             $tiempos = Tiempo::select('inicio', 'fin')
                 ->where('empleado_id', $empleadoId)
@@ -95,7 +95,9 @@ class TiempoController extends Controller {
 
             foreach ($turnos as $turno) {
                 // Realizar una consulta para buscar los registros con la misma fecha en la tabla tiempos
-                $tiempos = Tiempo::select(DB::raw('SUM(TIME_TO_SEC(TIMEDIFF(COALESCE(fin, NOW()), inicio))) AS segundos'))
+                $tiempos = Tiempo::select(
+                    DB::raw('SUM(TIME_TO_SEC(TIMEDIFF(COALESCE(fin, NOW()), inicio))) AS segundos')
+                )
                     ->where('empleado_id', $turno['empleado_id'])
                     ->whereDate('inicio', $turno['fecha'])
                     ->get();
@@ -142,41 +144,6 @@ class TiempoController extends Controller {
                 ->orderBy('inicio', 'asc')
                 ->get();
             $empresa = Empresa::find($empleado->empresa_id);
-//        $loginOk = false;
-//        $empleado = Empleado::find($empleadoId);
-//        if ($empleado) {
-//            $tiempos = Tiempo::select('inicio', 'fin')
-//                ->where('empleado_id', $empleadoId)
-//                ->orderBy('inicio', 'asc')
-//                ->get();
-//            if ($tiempos) {
-//                $empresa = Empresa::find($empleado->empresa_id);
-//                if ($user instanceof Empresa && $user->id == $empleado->empresa_id) {
-//                    $loginOk = true;
-//                } elseif ($user instanceof Empleado && $user->empresa_id == $empleado->empresa_id) {
-//                    if ($user->tipoEmpleado == "Administrador" || $user->id == $empleadoId) {
-//                        $loginOk = true;
-//                    } else {
-//                        $data = [
-//                            'message' => 'No estás autorizado.',
-//                        ];
-//                    }
-//                } else {
-//                    $data = [
-//                        'message' => 'El empleado no pertenece a la empresa del usuario autenticado.',
-//                    ];
-//                }
-//            } else {
-//                $data = [
-//                    'message' => 'El empleado no tiene tiempos registrados.',
-//                ];
-//            }
-//        } else {
-//            $data = [
-//                'message' => 'Empleado no existe.',
-//            ];
-//        }
-//        if ($loginOk) {
             foreach ($tiempos as $tiempo) {
                 $empleadoTurno = DB::table('empleados_turnos')->where('empleado_id', $empleado->id)
                     ->where('fechaInicioTurno', '<=', Carbon::parse($tiempo->inicio)->format('Y:m:d'))
@@ -351,9 +318,6 @@ class TiempoController extends Controller {
             $data = ['message' => $loginOk['message'],];
         }
         return response()->json($data);
-
-//        $tiempo = Tiempo::where('empleado_id', $id)->get();
-//        return response()->json($tiempo);
     }
 
     public function empleadoOnline($empleadoId): \Illuminate\Http\JsonResponse
@@ -361,18 +325,24 @@ class TiempoController extends Controller {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
-        if ($loginOk === true) {
+        if ($loginOk) {
             $tiempo = Tiempo::where('empleado_id', $empleadoId)->where('fin', null)->get();
-            return response()->json($tiempo);
+            if ($tiempo->count() > 0) {
+                return response()->json($tiempo);
+            } else {
+                $empleado = DB::table('empleados')->where('id', $empleadoId)->first();
+                $data = [
+                    'message' => 'El empleado '.$empleado->nombre. ' '. $empleado->apellidos. ' no está online',
+                ];
+                return response()->json($data);
+            }
         } else {
             $data = ['message' => $loginOk['message'],];
             return response()->json($data);
         }
     }
 
-    public
-    function empleadosOnline()
-    {
+    public function empleadosOnline(){
         $user = Auth::user();
         $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
 
@@ -390,7 +360,7 @@ class TiempoController extends Controller {
                 ->get();
 
             // Verificar si se encontraron empleados y retornar la respuesta JSON
-            if (!empty($empleados)) {
+            if ($empleados->count()>0) {
                 $resultados = [];
                 foreach ($empleados as $empleado) {
                     $turnoActivo = DB::table('empleados_turnos')
@@ -478,7 +448,7 @@ class TiempoController extends Controller {
                 ->orderBy('inicio', 'asc')
                 ->get();
 
-            if ($tiempos) {
+            if ($tiempos->count()>0){
                 $empleadoTurno = DB::table('empleados_turnos')
                     ->where('empleado_id', $empleado->id)
                     ->where('activo', true)
@@ -510,7 +480,14 @@ class TiempoController extends Controller {
                             ];
                         }
                     }
+                    if ($tiempoATrabajar=="00:00:00"){
+                        $mensaje = "No exite turno para hoy.";
+                    }else{
+                        $mensaje = "Existe turno para hoy.";
+                    }
+
                     $data = [
+                        'mensaje'=>$mensaje,
                         'fecha' => $hoy->format('d-m-Y'),
                         'hora' => $hoy->format('H:i:s'),
                         'empleado_id' => $empleado->id,
@@ -546,16 +523,30 @@ class TiempoController extends Controller {
      */
     public function store(Request $request)
     {
-        $tiempo = new Tiempo();
-        $tiempo->empleado_id = $request->empleado_id;
-        $tiempo->inicio = $request->inicio;
-        $tiempo->fin = $request->fin;
-
-        $tiempo->save();
-        $data = [
-            'message' => 'Tiempo insertado correctamente',
-            'tiempo' => $tiempo
-        ];
+        $user = Auth::user();
+        if ($user->nif && $user->id == $request->empleado_id){
+            $turno = DB::table('empleados_turnos')
+                ->where ('turno_id', $request->turno_id)
+                ->where ('empleado_id',$request->empleado_id)
+                ->where ('activo', true)
+                ->first();
+            if (isset($turno)) {
+                $tiempo = new Tiempo();
+                $tiempo->empleado_id = $request->empleado_id;
+                $tiempo->inicio = $request->inicio;
+                $tiempo->fin = $request->fin;
+                $tiempo->turno_id = $request->turno_id;
+                $tiempo->save();
+                $data = [
+                    'message' => 'Tiempo insertado correctamente',
+                    'tiempo' => $tiempo
+                ];
+            } else {
+                $data = ['message' => 'No existe turno',];
+            }
+        }else {
+            $data = ['message' => 'No autorizado',];
+        }
         return response()->json($data);
     }
 
@@ -563,30 +554,51 @@ class TiempoController extends Controller {
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $tiempoId)
     {
-        $tiempo = Tiempo::find($id);
-        $empleado = Empleado::find($request->empleado_id);
-        if ($empleado) {
-            if ($tiempo) {
-                $tiempo->empleado_id = $request->empleado_id;
-                $tiempo->inicio = $request->inicio;
-                $tiempo->fin = $request->fin;
-                $tiempo->save();
-                $data = [
-                    'message' => 'Tiempo actualizado correctamente',
-                    'tiempo' => $tiempo
-                ];
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+        if (is_numeric($empresaId)) {
+            $tiempo = Tiempo::find($tiempoId);
+            if ($tiempo){
+                $empleado = Empleado::find($request->empleado_id);
+                if ($empleado && $empleado->empresa_id == $empresaId && $tiempo->empleado_id == $empleado->id) {
+                        if (Auxiliares::esElMismoDia($request->inicio, $tiempo->inicio)){
+                            $tiempo->inicio = $request->inicio;
+                            $tiempo->fin = $request->fin;
+                            $tiempo->save();
+                            $data = [
+                                '$request->inicio'=>$request->inicio,
+                                '$tiempo->inicio'=>$tiempo->inicio,
+                                '$empleado->empresa_id'=>$empleado->empresa_id,
+                                '$empresaId'=> $empresaId,
+                                '$tiempo->empleado_id'=>$tiempo->empleado_id,
+                                '$empleado->id'=>$empleado->id,
+                                'message' => 'Tiempo actualizado correctamente',
+                                'tiempo' => $tiempo
+                            ];
+                        }else{
+                            $data = [
+                                'message' => 'Error, no se puede cambiar la fecha'
+                            ];
+                        }
+
+
+                } else {
+                    $data = [
+                        'message' => 'Empleado no existe'
+                    ];
+                }
             } else {
                 $data = [
                     'message' => 'Tiempo no existe'
                 ];
             }
-        } else {
-            $data = [
-                'message' => 'Empleado no existe'
-            ];
+
+        }else {
+            $data = ['message' => $empresaId['message'],];
         }
+
         return response()->json($data);
     }
 

@@ -7,6 +7,7 @@ use App\Models\Empleado;
 use App\Models\Empresa;
 use App\Models\Tiempo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class Auxiliares {
 
@@ -138,7 +139,7 @@ class Auxiliares {
      * @param mixed $user El usuario a verificar.
      * @return mixed El id de la empresa o una respuesta HTTP con código 404.
      */
-    public static function verificarAutorizacionEmpresa($user)
+    public static function verificarAutorizacionEmpresa(mixed $user): mixed
     {
         if ($user->tipoEmpleado != 'Trabajador') {
             if ($user instanceof Empresa) {
@@ -152,9 +153,8 @@ class Auxiliares {
         }
     }
 
-    public static function determinarTurno ($dia, $horaLlegada)
+    public static function determinarTurno($dia, $horaLlegada)
     {
-
         $horaInicioM = Carbon::createFromFormat('H:i:s', $dia->horaInicioM);
         $horaFinM = Carbon::createFromFormat('H:i:s', $dia->horaFinM);
         $horaInicioT = Carbon::createFromFormat('H:i:s', $dia->horaInicioT);
@@ -164,29 +164,43 @@ class Auxiliares {
         if ($horaLlegada->between($horaInicioM, $horaFinM)) {
             // Asignar el primer turno del día
             $horaInicio = $horaInicioM;
-        }
-        // Comprobar si la hora de llegada está dentro del segundo turno
+        } // Comprobar si la hora de llegada está dentro del segundo turno
         elseif ($horaLlegada->between($horaInicioT, $horaFinT)) {
             // Asignar el segundo turno del día
             $horaInicio = $horaInicioT;
-        }
-        // Comprobar si la hora de llegada es antes del primer turno
+        } // Comprobar si la hora de llegada es antes del primer turno
         elseif ($horaLlegada->lt($horaInicioM)) {
             // Asignar el primer turno del día
             $horaInicio = $horaInicioM;
-        }
-        // Comprobar si la hora de llegada es después del segundo turno
+        } // Comprobar si la hora de llegada es después del segundo turno
         elseif ($horaLlegada->gt($horaFinT)) {
             // Asignar el último turno del día
             $horaInicio = $horaInicioT;
-        }
-        // Si la hora de llegada está entre los dos turnos, asignar el turno de tarde
+        } // Si la hora de llegada está entre los dos turnos, asignar el turno de tarde
         else {
             $horaInicio = $horaInicioT;
         }
 
         return $horaInicio;
-
     }
 
+    public static function esElMismoDia($fecha1, $fecha2): bool
+    {
+        $carbonFecha1 = Carbon::parse($fecha1);
+        $carbonFecha2 = Carbon::parse($fecha2);
+        return $carbonFecha1->isSameDay($carbonFecha2);
+    }
+
+    public static function verificarTurnoEmpresa($turno, $user)
+    {
+        $primaryKey = $user->getKey();
+        if ($user->cif) {
+            $empresa = DB::table('empresas')->where('id', $primaryKey)->first();
+            return $empresa->id === $turno->empresa_id;
+        }
+        if ($user->nif) {
+            $empleado = DB::table('empleados')->where('id', $primaryKey)->first();
+            return $empleado->tipoEmpleado === "Administrador" && $empleado->empresa_id === $turno->empresa_id;
+        }
+    }
 }
