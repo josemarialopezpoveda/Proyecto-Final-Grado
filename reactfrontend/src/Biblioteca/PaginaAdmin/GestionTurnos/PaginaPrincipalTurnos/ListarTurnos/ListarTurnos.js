@@ -35,15 +35,24 @@ function ListarTurnos() {
         let datosTurno = await peticionGetAuth(URL_API + "turnosEmpresa/" + `${localStorage.getItem("id")}`, header);
         console.log(datosTurno)
         if (datosTurno.data !== 0) {
-          var todosDatosEmpresa = datosTurno.data.turnos.map((datosE) => {
+          if(datosTurno.data.turnos !== undefined){
+            var todosDatosEmpresa = datosTurno.data.turnos.map((datosE) => {
+              var newEmpresa = {
+                id: datosE.id,
+                descripcion: datosE.descripcion,
+              };
+              return newEmpresa;
+            });
+            setTurnoDinamico(todosDatosEmpresa);
+            setTurnoEstatico(todosDatosEmpresa);
+          }else{
             var newEmpresa = {
-              id: datosE.id,
-              descripcion: datosE.descripcion,
+              id: "",
+              descripcion: "",
             };
-            return newEmpresa;
-          });
-          setTurnoDinamico(todosDatosEmpresa);
-          setTurnoEstatico(todosDatosEmpresa);
+            setTurnoDinamico(newEmpresa);
+            setTurnoEstatico(newEmpresa);
+          }
         }
       };
 
