@@ -448,7 +448,8 @@ class TiempoController extends Controller {
                 ->orderBy('inicio', 'asc')
                 ->get();
 
-            if ($tiempos->count()>0){
+            //if ($tiempos->count()>0){
+            if ($tiempos){
                 $empleadoTurno = DB::table('empleados_turnos')
                     ->where('empleado_id', $empleado->id)
                     ->where('activo', true)
