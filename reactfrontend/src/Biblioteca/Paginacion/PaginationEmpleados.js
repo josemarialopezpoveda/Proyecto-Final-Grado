@@ -6,8 +6,7 @@ import SweetAlert from "sweetalert2";
 import Table from 'react-bootstrap/Table';
 import './Paginacion.css';
 
-const PaginationItem = ({ data, perPage }) => {
-  console.log(data)
+const PaginationEmpleados = ({ data, perPage }) => {
   //Creamos la variable para el uso del useNavigate.
   const Navigate = useNavigate();
   //Función que guarda el ID del empleado a modificar en localStorage y te lleva a la ruta del formulario de modificar el empleado.
@@ -133,4 +132,4 @@ const PaginationItem = ({ data, perPage }) => {
   );
 }
 
-export default PaginationItem;
+export default PaginationEmpleados;

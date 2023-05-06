@@ -13,7 +13,7 @@ import SweetAlert from "sweetalert2";
 import { Link } from "react-router-dom";
 import { URL_API } from "../../../services/http/const";
 import BuscadorEmpleados from "Biblioteca/Buscador/BuscadorEmpleados";
-import PaginationItem from "Biblioteca/Paginacion/Pagination";
+import PaginationEmpleados from "Biblioteca/Paginacion/PaginationEmpleados";
 
 function ListarEmpleados() {
   //Creamos la variable para el uso del useNavigate.
@@ -120,7 +120,7 @@ function ListarEmpleados() {
   <div>
   <BuscadorEmpleados datosEstaticos={setEmpleadosEstaticos} datosDinamicos={empleadosDinamicos}/>
     <div className='TablaDatosUser'>
-      <PaginationItem data={empleadosEstaticos} perPage={2}/>
+      <PaginationEmpleados data={empleadosEstaticos} perPage={2}/>
     </div>
   </div>)
 }

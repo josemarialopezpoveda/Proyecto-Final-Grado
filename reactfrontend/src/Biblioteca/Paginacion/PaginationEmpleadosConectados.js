@@ -1,0 +1,80 @@
+import { cogerFecha, cogerHora, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { URL_API } from 'services/http/const';
+import SweetAlert from "sweetalert2";
+import Table from 'react-bootstrap/Table';
+import './Paginacion.css';
+
+const PaginationEmpleadosConectados = ({ data, perPage }) => {
+    //Creamos la variable para el uso del useNavigate.
+    const Navigate = useNavigate();
+  
+    //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
+    const verJornada = (e) => {
+        console.log(e.target.id)
+        localStorage.setItem("idEmpleado", e.target.id);
+        Navigate("/verJornadaEmpleado");
+    }
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(data.length / perPage);
+
+  const handleClick = (page) => {
+    setCurrentPage(page);
+  }
+
+  const renderData = () => {
+    const start = (currentPage - 1) * perPage;
+    const end = start + perPage;
+
+    return data.slice(start, end).map((option, index) => (
+        <tr key={generarUUID()}>
+            <td>{option.nombre} {option.apellidos}</td>
+            <td className='campoOpcional'>{option.correo}</td>
+            <td className='campoOpcional'>{option.telefono}</td>
+            <td>{cogerFecha(option.fechaInicio)}</td>
+            <td>{cogerHora(option.horaInicio)}</td>
+            <td>
+                <button type="button"
+                title="Ver Jornada Del Empleado"
+                onClick={verJornada}
+                id={option.id}
+                className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
+                Ver Jornada
+                </button>
+            </td>
+        </tr>
+    ));
+  }
+
+  return (
+    <React.Fragment>
+      <Table striped>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th className='campoOpcional'>Correo</th>
+                <th className='campoOpcional'>Teléfono</th>
+                <th>Fecha Inicio</th>
+                <th>Hora Inicio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {renderData()}
+        </tbody>
+        </Table>
+        <div className='botonesPaginacion'>
+          {Array.from({ length: totalPages }, (_, i) => (
+              <button className='botonPaginacion' key={i} onClick={() => handleClick(i + 1)}>
+                {i + 1}
+              </button>
+            ))}
+        </div>
+    </React.Fragment>
+  );
+}
+
+export default PaginationEmpleadosConectados;

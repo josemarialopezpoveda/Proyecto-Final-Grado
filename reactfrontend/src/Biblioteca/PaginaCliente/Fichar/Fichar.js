@@ -60,7 +60,6 @@ function Fichar(){
       }else{
           datosEmpleado = await peticionGetAuth(URL_API + "empleadoOnline/" + `${localStorage.getItem("id")}`, header);
       }
-      console.log(datosEmpleado)
       if(datosEmpleado !== undefined){
           if (datosEmpleado.data.length !== 0) {
           datosEmpleado.data.map((datosE) => {
@@ -112,19 +111,27 @@ function Fichar(){
           },
         };
         let datosEmpleado = undefined;
+        let datosTurnoEmpleado = undefined;
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
             datosEmpleado = await peticionGetAuth(URL_API + "empleadoOnline/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+            datosTurnoEmpleado = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
         }else{
             datosEmpleado = await peticionGetAuth(URL_API + "empleadoOnline/" + `${localStorage.getItem("id")}`, header);
+            datosTurnoEmpleado = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("id")}`, header);
         }
-        if(datosEmpleado !== undefined){
+        console.log(datosEmpleado)
+        console.log(datosTurnoEmpleado)
+        if(datosEmpleado !== undefined && datosTurnoEmpleado !== undefined){
           if (datosEmpleado.data.length !== 0) {
                   const obj = {
                       empleado_id: datosEmpleado.data[0].empleado_id,
                       inicio: datosEmpleado.data[0].inicio,
                       fin: formatearFechaHora(),
+                      turno_id:datosTurnoEmpleado.data.turnoId
                   }
+                  console.log(obj)
                   let datosTiempoPost = await peticionPut(URL_API + "tiempos/" + datosEmpleado.data[0].id, obj, header);
+                  console.log(datosTiempoPost)
                   mostrarAlertaCorrecta("Salida realizada correctamente", "¡Buen trabajo hoy! Esperamos verte mañana con energía y listo para otra jornada productiva 👋 ", "5000");
                   recoleccionRegistroHorario();
           }
@@ -139,13 +146,26 @@ function Fichar(){
               Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
             },
           };
+
+          let datosTurnoEmpleado = undefined;
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            datosTurnoEmpleado = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+        }else{
+            datosTurnoEmpleado = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("id")}`, header);
+        }
+        console.log(datosTurnoEmpleado)
+
           const obj = {
             "empleado_id": localStorage.getItem("id"),
             "inicio": formatearFechaHora(),
-            "fin": null
+            "fin": null,
+            "turno_id": datosTurnoEmpleado.data.turnoId
           }
 
+          console.log(obj)
+
           let datosEmpleado = await peticionPost(URL_API + "tiempos", obj, header);
+          console.log(datosEmpleado)
           recoleccionRegistroHorario();
           mostrarAlertaCorrecta("Entrada realizada correctamente", "Buenos días, esperamos que tenga un excelente día lleno de productividad y logros. Recuerden que su trabajo es valioso y apreciado, y que su dedicación es clave para el éxito de nuestra empresa. ¡A darle con todo! 😊 ", "5000");
           return datosEmpleado.data.id;
@@ -189,7 +209,6 @@ function Fichar(){
       }else{
         datosEmpleado = await peticionGetAuth(URL_API + "tiempoActivo/" + `${localStorage.getItem("id")}`, header);
       }
-      console.log(datosEmpleado)
       if(datosEmpleado !== undefined){
         const obj = {
           jornadaLaboral: datosEmpleado.data.jornadaLaboral,

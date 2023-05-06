@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { URL_API } from 'services/http/const';
 import Table from 'react-bootstrap/Table';
 import BuscadorEmpleadosConectados from 'Biblioteca/Buscador/BuscadorEmpleadosConectados';
+import PaginationEmpleadosConectados from 'Biblioteca/Paginacion/PaginationEmpleadosConectados';
 
 function ListarActividadEmpleados() {
     //Creamos la variable para el uso del useNavigate.
@@ -69,19 +70,19 @@ function ListarActividadEmpleados() {
         recoleccionDatos();
     }, []);
 
-    //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
-    const verJornada = (e) => {
-        console.log(e.target.id)
-        localStorage.setItem("idEmpleado", e.target.id);
-        Navigate("/verJornadaEmpleado");
-    }
+    // //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
+    // const verJornada = (e) => {
+    //     console.log(e.target.id)
+    //     localStorage.setItem("idEmpleado", e.target.id);
+    //     Navigate("/verJornadaEmpleado");
+    // }
 
     if(empleadosEstaticos !== undefined && empleadosEstaticos[0].nombre !== ""){
         return(
         <div>
             <BuscadorEmpleadosConectados datosEstaticos={setEmpleadosEstaticos} datosDinamicos={empleadosDinamicos}/>
             <div className='TablaDatosUser'>
-                <Table striped>
+                {/* <Table striped>
                     <thead>
                         <tr>
                             <th>Nombre</th>
@@ -114,7 +115,8 @@ function ListarActividadEmpleados() {
                         }
                     })}
                     </tbody>
-                </Table>
+                </Table> */}
+                <PaginationEmpleadosConectados data={empleadosEstaticos} perPage={2}/>
             </div>
         </div>)
     }else{

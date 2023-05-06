@@ -168,7 +168,6 @@ const Calendario = () => {
 
   return (
     <>
-      { <pre>{JSON.stringify(ausencias, null, 3)}</pre> }
       {/* <div className='contenedorBotonCrearCorreo divFlexFichar'>
           <button type="button" onClick={crearEvento} className='crearCorreoBoton'>Añadir Evento</button>
           <button type="button" onClick={borrarEvento} className='crearCorreoBoton'>Eliminar Evento</button>
