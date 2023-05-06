@@ -250,9 +250,9 @@ function Fichar(){
       {anyadirBarraNav()}
         <div className='contenedorSectionParaFichar'>
           <div className='contenedorBotonCrearCorreo divFlexFichar'>
-            <Link to="/verResumenLaboral" className='crearCorreoBoton'>Ver Resumen</Link>
+            <Link to="/verResumenLaboral" className='crearCorreoBoton'>Resumen</Link>
             <Link to="/verJornadaPorDia" className='crearCorreoBoton'>Buscar jornada por dia</Link>
-            <Link to="/verCalendarioEmpleado" className='crearCorreoBoton'>Ver Calendario</Link>
+            <Link to="/verCalendarioEmpleado" className='crearCorreoBoton'>Calendario</Link>
           </div>
           <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar'>
               <div>

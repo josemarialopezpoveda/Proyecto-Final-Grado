@@ -118,6 +118,11 @@ function VerJornadaPorDia(){
     <React.Fragment>
         {anyadirBarraNav()}
             <div className='contenedorSectionParaFichar'>
+                <div className='contenedorBotonCrearCorreo divFlexFichar'>   
+                    <Link to="/fichar" className='crearCorreoBoton'>Fichar</Link>
+                    <Link to="/verResumenLaboral" className='crearCorreoBoton'>Resumen</Link>
+                    <Link to="/verCalendarioEmpleado" className='crearCorreoBoton'>Calendario</Link>
+                </div>
             <h1 className='text-center tituloH1'>Buscar jornada del empleado {nombreEmpleado}</h1>
                 <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar pd10-0'>
                     <Form>
@@ -149,9 +154,6 @@ function VerJornadaPorDia(){
                             </article>
                         </div>
                     </section>
-                <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
-                    <Link to="/fichar" className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">Volver</Link>
-                </div>
             </div>
         <PiePagina/>
     </React.Fragment>

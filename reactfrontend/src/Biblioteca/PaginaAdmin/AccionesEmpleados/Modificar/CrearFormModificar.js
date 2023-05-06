@@ -159,7 +159,6 @@ function CrearFormModificar() {
 
   return (
     <React.Fragment>
-      <pre>{JSON.stringify(form, null, 3)}</pre>
       <Form id="anyadir">
         <fieldset className="fieldset bordeRedondo">
           <legend>Información Personal Empelado</legend>
@@ -384,7 +383,7 @@ function CrearFormModificar() {
           </div>
         </fieldset>
         <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
-          <Link to="/verTipoAusencias" className="anyadirUsuarioDatos">Volver</Link>
+          <Link to="/accionesEmpleados" className="anyadirUsuarioDatos">Volver</Link>
           <button type="button" onClick={TodoCorrecto} className="anyadirUsuarioDatos">MODIFICAR</button>
         </div>
       </Form>

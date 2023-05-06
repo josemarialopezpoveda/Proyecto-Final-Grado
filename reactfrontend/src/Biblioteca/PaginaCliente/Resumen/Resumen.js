@@ -7,7 +7,7 @@ import PiePagina from '../../PaginaPrincipal/Footer/PiePagina.js';
 import { URL_API } from 'services/http/const.js';
 import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 import Form from 'react-bootstrap/Form';
-import { convertirHoraANumero, convertirHorasFormatoExplicativo, fechaEntreRango, formatoDateAFecha, peticionGetAuth, restarHoras, sumarHoras } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
+import { convertirHoraANumero, convertirHorasFormatoExplicativo, fechaEntreRango, formatoDateAFecha, peticionGetAuth, ponerNumeroBalanceFormatoCorrecto, restarHoras, sumarHoras } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
 
 function Resumen(){
     //Un useref para el boton de tikar.
@@ -74,7 +74,6 @@ function Resumen(){
         }else{
             datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("id")}`, header);
         }
-        console.log(datosEmpleado)
         if(datosEmpleado !== undefined){
             if(datosEmpleado.data.turnos.length !== 0){
                 let contadores = {
@@ -91,7 +90,7 @@ function Resumen(){
                     }
 
                 });
-
+                console.log(convertirHoraANumero(contadores.contadorBalanceHorario))
                 usoCanvas(convertirHoraANumero(contadores.contadorBalanceHorario));
 
                 contadores = {
@@ -109,11 +108,12 @@ function Resumen(){
         const canvas = canvasRef.current;
         if(canvas !== null){
             const ctx = canvas.getContext('2d');
-        const centro = canvas.width / 2;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const centro = canvas.width / 2;
             ctx.beginPath();
             ctx.moveTo(centro, 0);
             ctx.lineTo(centro, canvas.height);
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 1;
             ctx.strokeStyle = "black";
             ctx.stroke();
 
@@ -141,6 +141,11 @@ function Resumen(){
     <React.Fragment>
         {anyadirBarraNav()}
             <div className='contenedorSectionParaFichar'>
+                <div className='contenedorBotonCrearCorreo divFlexFichar'>
+                    <Link to="/fichar" className='crearCorreoBoton'>Fichar</Link>
+                    <Link to="/verJornadaPorDia" className='crearCorreoBoton'>Buscar jornada por dia</Link>
+                    <Link to="/verCalendarioEmpleado" className='crearCorreoBoton'>Calendario</Link>
+                </div>
             <h1 className='text-center tituloH1'>Resumen de la jornada de {nombreEmpleado}</h1>
                 <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar pd10-0'>
                     <Form>
@@ -193,9 +198,6 @@ function Resumen(){
                         </div>
                     </div>
                 </section>
-                <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
-                    <Link to="/fichar" className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">Volver</Link>
-                </div>
             </div>
         <PiePagina/>
     </React.Fragment>

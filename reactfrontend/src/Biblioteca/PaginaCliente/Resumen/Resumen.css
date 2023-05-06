@@ -71,3 +71,7 @@ canvas{
     margin: 0;
     font-size: 13px;
 }
+
+.contenedorBotonVolver{
+    text-align: center;
+}

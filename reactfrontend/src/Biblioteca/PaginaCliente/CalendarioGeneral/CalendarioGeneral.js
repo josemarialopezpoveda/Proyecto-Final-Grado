@@ -5,7 +5,8 @@ import NavCliente from '../Nav/NavCliente';
 import PiePagina from 'Biblioteca/PaginaPrincipal/Footer/PiePagina';
 import { URL_API } from 'services/http/const';
 import { peticionGetAuth } from 'Biblioteca/FuncionesAuxiliares/Funciones';
-import Calendario from './Calendario';
+import { Link } from "react-router-dom";
+import Calendario from 'Biblioteca/Calendar/Calendario.js';
 
 
 function CalendarioGeneral(){
@@ -47,6 +48,11 @@ function CalendarioGeneral(){
     return(
     <React.Fragment>
       {anyadirBarraNav()}
+        <div className='contenedorBotonCrearCorreo divFlexFichar'>
+            <Link to="/fichar" className='crearCorreoBoton'>Fichar</Link>
+            <Link to="/verJornadaPorDia" className='crearCorreoBoton'>Buscar jornada por dia</Link>
+            <Link to="/verCalendarioEmpleado" className='crearCorreoBoton'>Calendario</Link>
+        </div>
         <h1 className='text-center tituloH1'>Calendario del empleado {nombreEmpleado}</h1>
         <Calendario/>
         <PiePagina/>

@@ -1,0 +1,67 @@
+.contenedorCalendario{
+    padding: 5%;
+}
+
+.contenedorCalendario *{
+    text-decoration: none;
+}
+
+.contenedorCalendario a{
+    font-size: 15px;
+}
+
+a.fc-col-header-cell-cushion{
+    color: #484242;
+    font-weight: bold;
+}
+
+.contenedorCalendario a.fc-daygrid-day-number{
+    color: black;
+    font-size: 18px;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: #B8E7F6!important;
+}
+
+.rbc-toolbar-label{
+    color: #51CEF4;
+    text-transform: uppercase;
+    font-size: 40px;
+}
+
+.rbc-header span{
+    text-transform: uppercase;
+}
+
+.rbc-date-cell a:hover{
+    color: #51CEF4 !important;
+    font-weight: bolder;
+}
+
+.rbc-off-range-bg{
+    background-color: #B8E7F6 !important;
+}
+
+.formularioEvento div div div div:nth-child(2){
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.formularioEvento label{
+    text-align: start !important;
+}
+
+.formularioEvento div div h3{
+    text-align: center;
+}
+
+.rbc-calendar{
+    margin: 0 50px;
+}
+
+.MuiPaper-root{
+    width: 700px;
+}

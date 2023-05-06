@@ -358,16 +358,46 @@ export const formatoFechaDDMMYYYY = (dateStr) =>{
 }
 
 //Función para restar dos horas en formato "HH:MM:SS" .
-export const restarHoras = (fecha1, fecha2) =>{
-  const [hora1, minuto1, segundo1] = fecha1.split(':');
-  const [hora2, minuto2, segundo2] = fecha2.split(':');
+export const restarHoras = (fecha2, fecha1) => {
+  // Convierte las cadenas de fecha en milisegundos
+  let fecha1_ms = fechaEnMs(fecha1);
+  let fecha2_ms = fechaEnMs(fecha2);
+
+  // Resta las fechas y convierte el resultado en una cadena en formato "HH:mm:ss"
+  let diff_ms = fecha2_ms - fecha1_ms;
+  let signo = diff_ms < 0 ? "-" : "";
+  diff_ms = Math.abs(diff_ms);
+  let horas = Math.floor(diff_ms / 3600000);
+  let rem = diff_ms % 3600000;
+  let minutos = Math.floor(rem / 60000);
+  rem %= 60000;
+  let segundos = Math.floor(rem / 1000);
+  let resultado = signo + horas.toString().padStart(2, "0") + ":" + minutos.toString().padStart(2, "0") + ":" + segundos.toString().padStart(2, "0");
   
-  let fechaRestada = new Date();
-  fechaRestada.setHours(parseInt(hora1) - parseInt(hora2));
-  fechaRestada.setMinutes(parseInt(minuto1) - parseInt(minuto2));
-  fechaRestada.setSeconds(parseInt(segundo1) - parseInt(segundo2));
+  return resultado;
+}
+
+function fechaEnMs(fecha) {
+  // Divide la cadena de fecha en horas, minutos y segundos
+  let partes = fecha.split(":");
+  let horas = parseInt(partes[0]);
+  let minutos = parseInt(partes[1]);
+  let segundos = parseInt(partes[2]);
   
-  return fechaRestada.toLocaleTimeString('en-US', {hour12: false});
+  // Convierte cada componente en milisegundos y suma
+  let ms = (((horas * 60) + minutos) * 60 + segundos) * 1000;
+  
+  return ms;
+}
+
+export const ponerNumeroBalanceFormatoCorrecto = (total) =>{
+  const partes = total.split(':');
+  const diasSeparados = parseInt(partes[0]);
+  const horasSeparadas = parseInt(partes[1]);
+  const minutosSeparados = parseInt(partes[2]);
+  const segundosSeparados = parseInt(partes[3]);
+
+  return `${diasSeparados} dias ${horasSeparadas} horas ${minutosSeparados} minutos ${segundosSeparados} segundos.`;
 }
 
 //Función para sumar dos horas en formato "HH:MM:SS" .
@@ -404,15 +434,24 @@ export const sumarHoras = (hora1, hora2) => {
 //Funcion que pasa de "HH:MM:SS" a  44 horas y 40 min por ejemplo.
 export const convertirHorasFormatoExplicativo = (tiempo) =>{
   const [horas, minutos, segundos] = tiempo.split(':').map(Number);
-  const signo = horas < 0 ? '-' : '';
+  let signo = tiempo.charAt(0);
+
+  if (signo === "-") {
+    signo = "-"; // Agregar "-" al inicio
+  } else {
+    signo = "+"; // Agregar "+" al inicio
+  }
+
   const horasAbs = Math.abs(horas);
   const minutosAbs = Math.floor((segundos / 60) + minutos + (horasAbs * 60));
   const horasResultado = Math.floor(minutosAbs / 60);
   const minutosResultado = minutosAbs % 60;
-  return `${signo}${horasResultado} horas y ${minutosResultado} minutos`;
+  return `${signo}${horasResultado} horas y ${minutosResultado} minutos y ${segundos} segundos`;
 }
 
+//Convierte una hora en un número.
 export const convertirHoraANumero = (hora)=>{
+  console.log(hora)
   const [horas, minutos, segundos] = hora.split(':').map(Number);
   const horaEnNumero = horas + minutos / 60 + segundos / 3600;
   return parseFloat(horaEnNumero.toFixed(2));
@@ -433,4 +472,14 @@ export const formatoDateAFecha = (fechaAFormatear) =>{
   const mes = fecha.getMonth() + 1;
   const dia = fecha.getDate();
   return `${anio}-${mes.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`;
+}
+
+//Función que a partir de 2023-12-30 saque 2023-12-30T23:00:00.000Z.
+export const convertirFechaISO = (fecha) =>{
+  if(fecha !== null && fecha !== undefined){
+    const fechaISO = new Date(fecha + "T00:00:00.000Z").toISOString();
+    return fechaISO;
+  }else{
+    return null;
+  }
 }

@@ -6,6 +6,7 @@ import NavCliente from "../Nav/NavCliente";
 import PiePagina from "../../PaginaPrincipal/Footer/PiePagina";
 import { mostrarAlertaErronea, peticionGetAuth } from "Biblioteca/FuncionesAuxiliares/Funciones";
 import { format } from 'date-fns';
+import { Link } from "react-router-dom";
 import { URL_API } from "../../../services/http/const";
 import NavAdmin from "Biblioteca/PaginaAdmin/Nav/NavAdmin";
 
@@ -24,8 +25,12 @@ function MisDatos() {
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
-    let url = URL_API + "empleado/" + `${localStorage.getItem("id")}`;
-    let datosEmpleado = await peticionGetAuth(`${url}`, header);
+    let datosEmpleado = undefined;
+    if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+      datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+    }else{
+      datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("id")}`, header);
+    }
     if (datosEmpleado !== undefined && datosEmpleado.data !== undefined) {
       setDatos({
         apellidos: datosEmpleado.data.apellidos,
@@ -66,11 +71,24 @@ function MisDatos() {
     }else{
         return(<NavCliente/>)
     }
-}
+  }
+
+  const botonDatosEmpresa = () =>{
+    if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+        return(
+          <div className='contenedorBotonCrearCorreo divFlexFichar'>
+            <Link to="/datosEmpresa" className='crearCorreoBoton'>Ver Datos Empresa</Link>
+          </div>
+        );
+    }
+  }
+
+
 
   return (
     <React.Fragment>
       {anyadirBarraNav()}
+      {botonDatosEmpresa()}
       <section>
         <div className="TablaDatosUser">
           <div className="fotoUsuarioLogueado">

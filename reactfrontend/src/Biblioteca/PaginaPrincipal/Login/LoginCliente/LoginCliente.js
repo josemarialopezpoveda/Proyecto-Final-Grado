@@ -53,8 +53,9 @@ function LoginCliente() {
             localStorage.setItem("idEmpleadoAdmin", peticion.data.empleado);
             Navigate("/fichar");
           }else{
+
             localStorage.setItem("idEmpresa", peticion.data.empresa); 
-            localStorage.setItem("id", peticion.data.empresa);
+            localStorage.setItem("id", peticion.data.empleado);
             Navigate("/fichar") 
           }
       }

@@ -40,7 +40,7 @@ function NavAdmin() {
       },
       {
         titulo: "Mis Datos",
-        path: "/datosEmpresa",
+        path: "/misDatos",
       },
       {
         titulo: "Cerrar Sesión",

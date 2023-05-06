@@ -91,6 +91,14 @@ function DatosEmpresa(){
         }
     }
 
+    const botonVolver = () =>{
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            return(
+                <Link className="linkSignInLogin" id="signIn" to="/misDatos">Volver</Link>
+            );
+        }
+      }
+
     return(
     <React.Fragment>
         <NavAdmin/>
@@ -158,6 +166,7 @@ function DatosEmpresa(){
                     <div className='text-center classFlexBotones'>
                         <Link className="linkSignInLogin" id="signIn" to="/modificarDatosEmpresa">Modificar</Link>
                         {verificarUserAdmin()}
+                        {botonVolver()}
                     </div>
                 </section>
             </div>
