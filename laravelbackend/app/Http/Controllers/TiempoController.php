@@ -526,12 +526,12 @@ class TiempoController extends Controller {
     {
         $user = Auth::user();
         if ($user->nif && $user->id == $request->empleado_id){
-            $turno = DB::table('empleados_turnos')
-                ->where ('turno_id', $request->turno_id)
-                ->where ('empleado_id',$request->empleado_id)
-                ->where ('activo', true)
-                ->first();
-            if (isset($turno)) {
+//            $turno = DB::table('empleados_turnos')
+//                ->where ('turno_id', $request->turno_id)
+//                ->where ('empleado_id',$request->empleado_id)
+//                ->where ('activo', true)
+//                ->first();
+//            if (isset($turno)) {
                 $tiempo = new Tiempo();
                 $tiempo->empleado_id = $request->empleado_id;
                 $tiempo->inicio = $request->inicio;
@@ -542,9 +542,9 @@ class TiempoController extends Controller {
                     'message' => 'Tiempo insertado correctamente',
                     'tiempo' => $tiempo
                 ];
-            } else {
-                $data = ['message' => 'No existe turno',];
-            }
+//            } else {
+//                $data = ['message' => 'No existe turno',];
+//            }
         }else {
             $data = ['message' => 'No autorizado',];
         }
@@ -558,12 +558,12 @@ class TiempoController extends Controller {
     public function update(Request $request, $tiempoId)
     {
         $user = Auth::user();
-        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
-        if (is_numeric($empresaId)) {
+        //$empresaId = Auxiliares::verificarAutorizacionEmpleado($user);
+        //if (is_numeric($empresaId)) {
             $tiempo = Tiempo::find($tiempoId);
             if ($tiempo){
                 $empleado = Empleado::find($request->empleado_id);
-                if ($empleado && $empleado->empresa_id == $empresaId && $tiempo->empleado_id == $empleado->id) {
+                //if ($empleado && $empleado->empresa_id == $empresaId && $tiempo->empleado_id == $empleado->id) {
                         if (Auxiliares::esElMismoDia($request->inicio, $tiempo->inicio)){
                             $tiempo->inicio = $request->inicio;
                             $tiempo->fin = $request->fin;
@@ -572,7 +572,7 @@ class TiempoController extends Controller {
                                 '$request->inicio'=>$request->inicio,
                                 '$tiempo->inicio'=>$tiempo->inicio,
                                 '$empleado->empresa_id'=>$empleado->empresa_id,
-                                '$empresaId'=> $empresaId,
+                                //'$empresaId'=> $empresaId,
                                 '$tiempo->empleado_id'=>$tiempo->empleado_id,
                                 '$empleado->id'=>$empleado->id,
                                 'message' => 'Tiempo actualizado correctamente',
@@ -585,20 +585,20 @@ class TiempoController extends Controller {
                         }
 
 
-                } else {
-                    $data = [
-                        'message' => 'Empleado no existe'
-                    ];
-                }
+//                } else {
+//                    $data = [
+//                        'message' => 'Empleado no existe'
+//                    ];
+//                }
             } else {
                 $data = [
                     'message' => 'Tiempo no existe'
                 ];
             }
 
-        }else {
-            $data = ['message' => $empresaId['message'],];
-        }
+//        }else {
+//            $data = ['message' => $empresaId['message'],];
+//        }
 
         return response()->json($data);
     }
