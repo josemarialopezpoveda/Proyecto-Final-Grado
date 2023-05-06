@@ -327,15 +327,15 @@ class TiempoController extends Controller {
 
         if ($loginOk) {
             $tiempo = Tiempo::where('empleado_id', $empleadoId)->where('fin', null)->get();
-            if ($tiempo->count() > 0) {
+//            if ($tiempo->count() > 0) {
                 return response()->json($tiempo);
-            } else {
-                $empleado = DB::table('empleados')->where('id', $empleadoId)->first();
-                $data = [
-                    'message' => 'El empleado '.$empleado->nombre. ' '. $empleado->apellidos. ' no está online',
-                ];
-                return response()->json($data);
-            }
+//            } else {
+//                $empleado = DB::table('empleados')->where('id', $empleadoId)->first();
+//                $data = [
+//                    'message' => 'El empleado '.$empleado->nombre. ' '. $empleado->apellidos. ' no está online',
+//                ];
+//                return response()->json($data);
+//            }
         } else {
             $data = ['message' => $loginOk['message'],];
             return response()->json($data);
