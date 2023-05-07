@@ -6,7 +6,7 @@ import PiePagina from '../../PaginaPrincipal/Footer/PiePagina.js';
 import { URL_API } from 'services/http/const.js';
 import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 import Form from 'react-bootstrap/Form';
-import { generarUUID, formatoDateAFecha, peticionGetAuth, calculoFechaHoy, cogerFecha, formatoFechaDDMMYYYY, cogerHora, formatearFechaFormatoDiaDeMesDelAnyo } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
+import { generarUUID, formatoDateAFecha, peticionGetAuth, calculoFechaHoy, cogerFecha, formatoFechaDDMMYYYY, cogerHora, formatearFechaFormatoDiaDeMesDelAnyo, convertirNumeroDiaSemana, recogerDiaSemanaFecha } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
 
 function VerJornadaPorDia(){
     //Estados para los datos de la base de datos.
@@ -19,6 +19,7 @@ function VerJornadaPorDia(){
     });
 
     const [nombreEmpleado, setNombreEmpleado] = useState();
+    const [horasEnSaPredefinidas, setHorasEnSaPredefinidas] = useState([]);
 
     //Segun el tipo de usuario devyuelvo un barra de navegación o otra.
     const anyadirBarraNav = () =>{
@@ -33,7 +34,30 @@ function VerJornadaPorDia(){
     useEffect(() => {
         recoleccionDatos()
         recoleccionNombreUser();
+        recoleccionHorasEnSaPredefinidas();
     }, []);
+
+    //Recoge la hora de entrada y salida que debería tener el usuario.
+    const recoleccionHorasEnSaPredefinidas = async () => {
+        const header = {
+          headers: {
+            Accept: "application/json",
+            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+          },
+        };
+        let datosHoras = undefined;
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            datosHoras = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+        }else{
+            datosHoras = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("id")}`, header);
+        }
+        console.log(datosHoras)
+        if(datosHoras !== undefined){
+          if(datosHoras.data.dias !== undefined){
+            setHorasEnSaPredefinidas(datosHoras.data.dias)
+          }
+        }
+    };
 
     //Recogemos el horario del empleado del dia seleccionado.
     const recoleccionDatos = async () => {
@@ -114,6 +138,60 @@ function VerJornadaPorDia(){
         }
     }
 
+    //Informa de si la fecha esta nula.
+    const estaVaciaFecha = (fecha, texto) =>{
+        console.log(fecha)
+        if(fecha !== "00:00:00"){
+          console.log("HAY HORA")
+          return(<p>{texto}  {fecha}</p>)
+        }else{
+          return(null);
+        }
+      }
+  
+  
+      //Función que devuelve las entradas y salidas que debería tener el usuario.
+      const getEntradasYSalidasPredefinidas = () =>{
+        if(horasEnSaPredefinidas.length !== 0){
+          let hayRegistrosPlaneados = false;
+  
+          const elementos =(horasEnSaPredefinidas.map((dia)=>{
+            if(convertirNumeroDiaSemana(dia.diaSemana) === recogerDiaSemanaFecha(fechasBuscador.diaSeleccionado)){
+              if(dia.horaInicioM !== "00:00:00" && dia.horaFinM !== "00:00:00" && 
+              dia.horaInicioT !== "00:00:00" && dia.horaFinT!== "00:00:00" && 
+              dia.horaInicioN !== "00:00:00" && dia.horaFinN!== "00:00:00"){
+  
+                hayRegistrosPlaneados = true;
+  
+                return(
+                  <div key={generarUUID()}>
+                    {estaVaciaFecha(dia.horaInicioM,"Entrada  ➜")}
+                    {estaVaciaFecha(dia.horaFinM, "Salida  ➜" )}
+                    {estaVaciaFecha(dia.horaInicioT,"Entrada  ➜")}
+                    {estaVaciaFecha(dia.horaFinT, "Salida  ➜" )}
+                    {estaVaciaFecha(dia.horaInicioN,"Entrada  ➜")}
+                    {estaVaciaFecha(dia.horaFinN, "Salida  ➜" )}
+                  </div>
+                )
+              }
+            }
+           }))
+  
+           if (!hayRegistrosPlaneados) {
+            elementos.push(
+              <div key={generarUUID()}>
+                <p>Hoy no tienes registros de entrada o salida planeados</p>
+              </div>
+            );
+          }
+  
+          return elementos;
+  
+        }else{
+          return(<p>No hay registros de entrada o salida.</p>)
+        }
+    }
+
     return(
     <React.Fragment>
         {anyadirBarraNav()}
@@ -149,7 +227,12 @@ function VerJornadaPorDia(){
                             </article>
                             <article className='horas'>
                                 <div className="horas2">
+                                    <h2>Entradas y salidas realizadas</h2>
                                     {getEntradasYSalidas()}
+                                </div>
+                                <div className="horas2">
+                                    <h2>Entradas y salidas planeadas</h2>
+                                    {getEntradasYSalidasPredefinidas()}
                                 </div>
                             </article>
                         </div>

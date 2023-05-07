@@ -242,6 +242,7 @@ export const diaSemana = () =>{
   return dia === 0 ? 7 : dia; // Convertir el domingo (0) a 7
 }
 
+//Función que a partir del dia de la semana devuelve un número.
 export const convertirDiaSemanaNumero = (diaSemana) =>{
   switch (diaSemana.toLowerCase()) {
     case "lunes":
@@ -263,6 +264,7 @@ export const convertirDiaSemanaNumero = (diaSemana) =>{
   }
 }
 
+//Función que a partir de un número devuelve el dia de la semana.
 export const convertirNumeroDiaSemana = (diaSemanaNumero)=> {
   switch (diaSemanaNumero) {
     case 1:
@@ -284,6 +286,7 @@ export const convertirNumeroDiaSemana = (diaSemanaNumero)=> {
   }
 }
 
+//Función que quita los segundos de una hora.
 export const quitarSegundos = (hora) =>{
   if(hora !== "" && hora !== undefined){ 
     const partes = hora.split(":");
@@ -293,6 +296,7 @@ export const quitarSegundos = (hora) =>{
   }
 }
 
+//Función que a partir de la actividad devuelve un valor.
 export const mirarActividad =(valor)=>{
   if (valor === 1) {
     return "Activo";
@@ -487,7 +491,7 @@ export const convertirFechaISO = (fecha) =>{
   }
 }
 
-//Función en JavaScript que formatea una fecha en el formato "Domingo 7 de Mayo del 2023":
+//Función en JavaScript que formatea una fecha en el formato "Domingo 7 de Mayo del 2023"
 export const formatearFechaFormatoDiaDeMesDelAnyo =(fecha) =>{
   const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -500,4 +504,23 @@ export const formatearFechaFormatoDiaDeMesDelAnyo =(fecha) =>{
   const fechaFormateada = `${diasSemana[new Date(fecha).getDay()]} ${dia} de ${meses[mes - 1]} del ${anio}`;
 
   return fechaFormateada;
+}
+
+//Función en JavaScript que formatea una fecha en el formato "Domingo 7 de Mayo del 2023" y me devuelves el dia.
+export const recogerDiaSemanaFecha =(fecha) =>{
+  const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+  const partesFecha = fecha.split('-');
+  const dia = parseInt(partesFecha[2]);
+
+  return dia;
+}
+
+//Función que devuelve el dia de la semana de hoy.
+export const obtenerDiaSemana =() =>{
+  const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const fechaActual = new Date();
+  const diaSemana = fechaActual.getDay();
+  return diasSemana[diaSemana];
 }

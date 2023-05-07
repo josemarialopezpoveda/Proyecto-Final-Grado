@@ -4,7 +4,7 @@ import NavCliente from '../Nav/NavCliente.js';
 import { Link } from "react-router-dom";
 import './Fichar.css';
 import PiePagina from '../../PaginaPrincipal/Footer/PiePagina.js';
-import { peticionGet, calculoFechaHoy, diaSemana, quitarSegundos, formatearFechaHora, peticionPost, peticionPut, peticionGetAuth, restarHoras, generarUUID, mostrarAlertaCorrecta } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
+import {calculoFechaHoy, formatearFechaHora, peticionPost, peticionPut, peticionGetAuth, restarHoras, generarUUID, mostrarAlertaCorrecta, convertirNumeroDiaSemana, obtenerDiaSemana } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
 import { URL_API } from 'services/http/const.js';
 import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 
@@ -16,8 +16,8 @@ function Fichar(){
     const [datosJornada, setDatosJornada] = useState({
       horario: [],
     });
-    const [datosHorarioEmpleado, setDatosHorarioEmpleado] = useState({});
     const [nombreEmpleado, setNombreEmpleado] = useState();
+    const [horasEnSaPredefinidas, setHorasEnSaPredefinidas] = useState([]);
 
     //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
     useEffect(() => {
@@ -25,7 +25,30 @@ function Fichar(){
         recoleccionTiempoOnline();
         recoleccionRegistroHorario();
         recoleccionNombreUser();
+        recoleccionHorasEnSaPredefinidas();
     }, []);
+
+    //Recoge la hora de entrada y salida que debería tener el usuario.
+    const recoleccionHorasEnSaPredefinidas = async () => {
+      const header = {
+        headers: {
+          Accept: "application/json",
+          Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+        },
+      };
+      let datosHoras = undefined;
+      if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+          datosHoras = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+      }else{
+          datosHoras = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("id")}`, header);
+      }
+      console.log(datosHoras)
+      if(datosHoras !== undefined){
+        if(datosHoras.data.dias !== undefined){
+          setHorasEnSaPredefinidas(datosHoras.data.dias)
+        }
+      }
+  };
 
     //Recoge el nombre completo del usuario.
     const recoleccionNombreUser = async () => {
@@ -260,6 +283,60 @@ function Fichar(){
         }
     }
 
+     //Informa de si la fecha esta nula.
+     const estaVaciaFecha = (fecha, texto) =>{
+      console.log(fecha)
+      if(fecha !== "00:00:00"){
+        console.log("HAY HORA")
+        return(<p>{texto}  {fecha}</p>)
+      }else{
+        return(null);
+      }
+    }
+
+
+    //Función que devuelve las entradas y salidas que debería tener el usuario.
+    const getEntradasYSalidasPredefinidas = () =>{
+      if(horasEnSaPredefinidas.length !== 0){
+        let hayRegistrosPlaneados = false;
+
+        const elementos =(horasEnSaPredefinidas.map((dia)=>{
+          if(convertirNumeroDiaSemana(dia.diaSemana) === obtenerDiaSemana()){
+            if(dia.horaInicioM !== "00:00:00" && dia.horaFinM !== "00:00:00" && 
+            dia.horaInicioT !== "00:00:00" && dia.horaFinT!== "00:00:00" && 
+            dia.horaInicioN !== "00:00:00" && dia.horaFinN!== "00:00:00"){
+
+              hayRegistrosPlaneados = true;
+
+              return(
+                <div key={generarUUID()}>
+                  {estaVaciaFecha(dia.horaInicioM,"Entrada  ➜")}
+                  {estaVaciaFecha(dia.horaFinM, "Salida  ➜" )}
+                  {estaVaciaFecha(dia.horaInicioT,"Entrada  ➜")}
+                  {estaVaciaFecha(dia.horaFinT, "Salida  ➜" )}
+                  {estaVaciaFecha(dia.horaInicioN,"Entrada  ➜")}
+                  {estaVaciaFecha(dia.horaFinN, "Salida  ➜" )}
+                </div>
+              )
+            }
+          }
+         }))
+
+         if (!hayRegistrosPlaneados) {
+          elementos.push(
+            <div key={generarUUID()}>
+              <p>Hoy no tienes registros de entrada o salida planeados</p>
+            </div>
+          );
+        }
+
+        return elementos;
+
+      }else{
+        return(<p>No hay registros de entrada o salida.</p>)
+      }
+  }
+
     //Funcion que di es positivo devuelve horas restantes y si es negativo horas extras.
     const horasQueLleva = () =>{
       const num = parseFloat(datosJornada.tiempoRestante);
@@ -273,6 +350,7 @@ function Fichar(){
     return(
     <React.Fragment>
       {anyadirBarraNav()}
+      {/* <pre>{JSON.stringify(horasEnSaPredefinidas, null, 3)}</pre> */}
         <div className='contenedorSectionParaFichar'>
           <div className='contenedorBotonCrearCorreo divFlexFichar'>
             <Link to="/verResumenLaboral" className='crearCorreoBoton'>Resumen</Link>
@@ -298,7 +376,12 @@ function Fichar(){
                         <Link onClick={fichar} ref={boton} className='anyadirTurnoBoton'></Link>
                       </article>
                       <div className="horas2">
+                          <h2>Entradas y salidas realizadas</h2>
                           {getEntradasYSalidas()}
+                      </div>
+                      <div className="horas2">
+                        <h2>Entradas y salidas planeadas</h2>
+                          {getEntradasYSalidasPredefinidas()}
                       </div>
                   </article>
                   
