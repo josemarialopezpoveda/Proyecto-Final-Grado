@@ -390,24 +390,18 @@ class EmpleadoController extends Controller {
         if ($empleado) {
             if ($user instanceof Empresa) {
                 if ($user->getKey() != $empleado->empresa_id) {
-                    $data = [
-                        'message' => 'El empleado con el ID proporcionado no pertenece a la empresa'
-                    ];
-                    return response()->json($data);
+                    $data = ['message' => 'El empleado con el ID proporcionado no pertenece a la empresa'];
+                    return response()->json($data, 404);
                 }
             } else {
                 if ($user instanceof Empleado) {
                     if ($user->empresa_id != $empleado->empresa_id) {
-                        $data = [
-                            'message' => 'La empresa del empleado proporcionado no coincide con la empresa del usuario autenticado.'
-                        ];
-                        return response()->json($data);
+                        $data = ['message' => 'La empresa del empleado proporcionado no coincide con la empresa del usuario autenticado.'];
+                        return response()->json($data,401);
                     }
                     if ($user->tipoEmpleado != "Administrador" && $user->getKey() != $empleadoId) {
-                        $data = [
-                            'message' => 'No estás autorizado.'
-                        ];
-                        return response()->json($data);
+                        $data = ['message' => 'No estás autorizado.'];
+                        return response()->json($data, 401);
                     }
                 }
             }
@@ -424,30 +418,14 @@ class EmpleadoController extends Controller {
                     'Fecha fin turno' => $turnoActivo->pivot->fechaFinTurno,
                     'dias' => $turnos->dias,
                 ];
+                return response()->json($data);
             } else {
-                $data = [
-                    'message' => 'No se encontró turno activo para el empleado'
-                ];
+                $data = ['message' => 'No se encontró turno activo para el empleado'];
+                return response()->json($data,404);
             }
         } else {
-            $data = [
-                'message' => 'No se encontró el empleado con el ID proporcionado'
-            ];
+            $data = ['message' => 'No se encontró el empleado con el ID proporcionado'];
+            return response()->json($data,404);
         }
-        return response()->json($data);
     }
-
-    /* public function turnosEmpleados()
-    {
-        $empleados = Empleado::all();
-        $data = [];
-        foreach ($empleados as $empleado) {
-            $data = [
-                'message' => 'Turnos de un empleado',
-                'empleado' => $empleado,
-                'turnos' => $empleado->turnos
-            ];
-        }
-        return response()->json($data);
-    } */
 }

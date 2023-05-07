@@ -442,30 +442,27 @@ class TiempoController extends Controller {
             $empleado = DB::table('empleados')
                 ->where('id', $empleadoId)
                 ->first();
-
-            // Buscamos los tiempos registrados hoy para el empleadoId.
-            $tiempos = DB::table('tiempos')
+            //Comprobar que el empleado tenga un turno asignado.
+            $empleadoTurno = DB::table('empleados_turnos')
                 ->where('empleado_id', $empleado->id)
-                ->whereDate('inicio', $hoy)
-                ->orderBy('inicio', 'asc')
-                ->get();
-
-            //if ($tiempos->count()>0){
-            if ($tiempos) {
-                $empleadoTurno = DB::table('empleados_turnos')
+                ->where('activo', true)
+                ->first();
+            if (!is_null($empleadoTurno)) {
+                // Buscamos los tiempos registrados hoy para el empleadoId.
+                $tiempos = DB::table('tiempos')
                     ->where('empleado_id', $empleado->id)
-                    ->where('activo', true)
-                    ->first();
-
+                    ->whereDate('inicio', $hoy)
+                    ->orderBy('inicio', 'asc')
+                    ->get();
                 $diaSemanaNumero = Carbon::parse($hoy)->format('N');
                 $dia = DB::table('dias')
                     ->where('turno_id', $empleadoTurno->turno_id)
                     ->where('diaSemana', $diaSemanaNumero)
                     ->first();
+                $tiempoATrabajar = Intervalo::sumaHorasIntervalos($dia);
+                $tiempoTrabajado = 0;
 
-                if ($dia) {
-                    $tiempoATrabajar = Intervalo::sumaHorasIntervalos($dia);
-                    $tiempoTrabajado = 0;
+                if ($tiempos->count() > 0) {
                     foreach ($tiempos as $tiempo) {
                         if ($tiempo->fin != null) {
                             $tiempoTrabajado += Carbon::parse($tiempo->fin)->diffInSeconds(
@@ -484,7 +481,7 @@ class TiempoController extends Controller {
                         }
                     }
                     if ($tiempoATrabajar == "00:00:00") {
-                        $mensaje = "No exite turno para hoy.";
+                        $mensaje = "No existe turno para hoy.";
                     } else {
                         $mensaje = "Existe turno para hoy.";
                     }
@@ -499,18 +496,31 @@ class TiempoController extends Controller {
                         'tiempoActivo' => gmdate('H:i:s', $tiempoTrabajado),
                         'horario' => $horario,
                     ];
+                    return response()->json($data);
                 } else {
-                    $data = ['message' => 'No existe turno para hoy'];
+                    $data = [
+                        '$empleadoTurno' => $empleadoTurno,
+                        '$dia' => $dia,
+                        'mensaje' => 'No has iniciado sesión',
+                        'fecha' => $hoy->format('d-m-Y'),
+                        'hora' => $hoy->format('H:i:s'),
+                        'empleado_id' => $empleado->id,
+                        'empleado' => $empleado->nombre . " " . $empleado->apellidos,
+                        'jornadaLaboral' => $tiempoATrabajar,
+                        'tiempoActivo' => gmdate('H:i:s', 0),
+                        'horario' => $horario,
+                    ];
+                    return response()->json($data);
                 }
             } else {
-                $data = ['message' => 'No has iniciado sesión'];
+                $data = ['message' => 'El empleado no tiene turno activo',];
+                return response()->json($data, 400);
             }
         } else {
             $data = ['message' => $loginOk['message'],];
+            return response()->json($data, 403);
         }
-        return response()->json($data);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -641,13 +651,14 @@ class TiempoController extends Controller {
             if ($tiempo) {
                 $empleado = DB::table('empleados')->where('id', $tiempo->empleado_id)->first();
                 // Comprobar que el empleado pertenezca a la empresa del usuario logueado.
-                if($empleado->empresa_id === $empresaId) {
+                if ($empleado->empresa_id === $empresaId) {
                     $tiempo->delete();
                     $data = [
                         'message' => 'Tiempo eliminado correctamente',
-                        'tiempo' => $tiempo];
+                        'tiempo' => $tiempo
+                    ];
                     return response()->json($data);
-                }else{
+                } else {
                     $data = ['message' => 'El empleado no pertenece a la empresa'];
                     return response()->json($data, 400);
                 }
