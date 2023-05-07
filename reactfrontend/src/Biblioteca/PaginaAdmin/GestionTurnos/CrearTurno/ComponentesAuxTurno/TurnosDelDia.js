@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import {useNavigate} from 'react-router-dom';
 import './TurnosDelDia.css';
 import { contexto } from 'Biblioteca/Contextos/ContextoTurnos/ContextoTurnos.js';
-import { mostrarAlertaCorrecta, mostrarAlertaErronea, peticionPost } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { mostrarAlertaCorrecta, mostrarAlertaErronea, obtenerMilisegundosDesdeHora, peticionPost } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import { URL_API } from 'services/http/const';
 
 function TurnosDelDia() {
@@ -23,25 +23,37 @@ function TurnosDelDia() {
   })
 
   const crearTurno = () =>{
-    let dias = [];
-    contextoTurno.dias.map((dia)=>{
-      let obj = {
-        "diaSemana":dia,
-        "horaInicioM": horas.horaInicioM,
-        "horaInicioT": horas.horaInicioT,
-        "horaInicioN": horas.horaInicioN,
-        "horaFinM": horas.horaFinM, 
-        "horaFinT": horas.horaFinT,
-        "horaFinN": horas.horaFinN, 
+    console.log(obtenerMilisegundosDesdeHora(horas.horaInicioM))
+    console.log(obtenerMilisegundosDesdeHora(horas.horaFinM))
+    if(form.descripcion === ""){
+      mostrarAlertaErronea("Error a la hora de crear el turno","La descripción está vacia.",5000);
+    }else if(contextoTurno.dias.length === 0){
+      mostrarAlertaErronea("Error a la hora de crear el turno","No has seleccionado ningún dia.",5000);
+    }else if(obtenerMilisegundosDesdeHora(horas.horaInicioM) > obtenerMilisegundosDesdeHora(horas.horaFinM) ||
+            obtenerMilisegundosDesdeHora(horas.horaInicioT) > obtenerMilisegundosDesdeHora(horas.horaFinT) ||
+            obtenerMilisegundosDesdeHora(horas.horaInicioN) > obtenerMilisegundosDesdeHora(horas.horaFinN) ){
+      mostrarAlertaErronea("Error a la hora de crear el turno","La hora de fin no puede ser inferior a la hora de inicio.",5000);
+    }else{
+      let dias = [];
+      contextoTurno.dias.map((dia)=>{
+        let obj = {
+          "diaSemana":dia,
+          "horaInicioM": horas.horaInicioM,
+          "horaInicioT": horas.horaInicioT,
+          "horaInicioN": horas.horaInicioN,
+          "horaFinM": horas.horaFinM, 
+          "horaFinT": horas.horaFinT,
+          "horaFinN": horas.horaFinN, 
+        }
+        dias.push(obj);
+      })
+      let raw = {
+        "descripcion": form.descripcion,
+        "dias": dias,
+        "empresa_id": localStorage.getItem("id")
       }
-      dias.push(obj);
-    })
-    let raw = {
-      "descripcion": form.descripcion,
-      "dias": dias,
-      "empresa_id": localStorage.getItem("id")
+      postTurno(raw);
     }
-    postTurno(raw);
   }
 
   const postTurno = async(raw) =>{

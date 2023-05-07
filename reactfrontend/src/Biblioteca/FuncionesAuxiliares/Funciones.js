@@ -508,9 +508,6 @@ export const formatearFechaFormatoDiaDeMesDelAnyo =(fecha) =>{
 
 //Función en JavaScript que formatea una fecha en el formato "Domingo 7 de Mayo del 2023" y me devuelves el dia.
 export const recogerDiaSemanaFecha =(fecha) =>{
-  const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-  const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
   const partesFecha = fecha.split('-');
   const dia = parseInt(partesFecha[2]);
 
@@ -523,4 +520,13 @@ export const obtenerDiaSemana =() =>{
   const fechaActual = new Date();
   const diaSemana = fechaActual.getDay();
   return diasSemana[diaSemana];
+}
+
+//Función que recoge los milisegundos de una hora.
+export const obtenerMilisegundosDesdeHora =(hora) =>{
+  console.log(hora)
+  const [horas, minutos] = hora.split(':');
+  const milisegundos = (parseInt(horas) * 60 * 60 + parseInt(minutos) * 60) * 1000;
+  console.log(milisegundos)
+  return milisegundos;
 }
