@@ -15,19 +15,19 @@ return new class extends Migration {
         Schema::create('empresas', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->string('cif')->unique();
-            $table->string('razonSocial');
-            $table->string('nombreComercial');
-            $table->string('direccion');
-            $table->string('cPostal');
-            $table->string('poblacion');
-            $table->string('provincia');
-            $table->string('pais')->default('España');
-            $table->integer('telefonoFijo')->unique();
-            $table->integer('telefonoMovil')->unique();
-            $table->string('email')->unique();
-            $table->string('password');
-            $table->string('logotipo')->nullable();
+            $table->string('cif', 10)->unique(); // Tamaño máximo de 10 caracteres
+            $table->string('razonSocial', 255); // Tamaño máximo de 255 caracteres
+            $table->string('nombreComercial', 255); // Tamaño máximo de 255 caracteres
+            $table->string('direccion', 255); // Tamaño máximo de 255 caracteres
+            $table->string('cPostal', 10); // Tamaño máximo de 10 caracteres
+            $table->string('poblacion', 255); // Tamaño máximo de 255 caracteres
+            $table->string('provincia', 255); // Tamaño máximo de 255 caracteres
+            $table->string('pais', 255)->default('España'); // Tamaño máximo de 255 caracteres
+            $table->string('telefonoFijo', 20)->unique(); // Tamaño máximo de 20 caracteres
+            $table->string('telefonoMovil', 20)->unique(); // Tamaño máximo de 20 caracteres
+            $table->string('email', 191)->unique(); // Tamaño máximo de 191 caracteres
+            $table->string('password', 191);
+            $table->string('logotipo', 191)->nullable();
             $table->dateTime('ultimaConexion');
             $table->boolean('activo')->default(false);
             $table->date('fechaAlta')->nullable();
@@ -35,6 +35,7 @@ return new class extends Migration {
             $table->rememberToken();
             $table->timestamps();
         });
+
     }
 
     /**

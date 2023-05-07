@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('tipoausencias', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->string('tipo');
-            $table->string('descripcion');
+            $table->string('tipo', 100);
+            $table->string('descripcion', 255);
             $table->timestamps();
         });
     }

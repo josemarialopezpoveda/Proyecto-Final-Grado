@@ -14,11 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('ausencias', function (Blueprint $table) {
-            $table->engine = 'InnoDB';            
+            $table->engine = 'InnoDB';
             $table->id();
             $table->foreignId('tipoausencias_id')->constrained()->cascadeOnDelete();
             $table->foreignId('empleado_id')->constrained()->cascadeOnDelete();
-            $table->string('descripcion');
+            $table->string('descripcion', 255);
             $table->date('fechaInicio');
             $table->date('fechaFin')->nullable();
             $table->boolean('justificada')->default(true);

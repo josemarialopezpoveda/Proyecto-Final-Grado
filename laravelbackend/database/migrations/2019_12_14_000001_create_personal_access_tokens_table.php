@@ -15,13 +15,15 @@ return new class extends Migration
             $table->engine = 'InnoDB';
             $table->id();
             $table->morphs('tokenable');
-            $table->string('name');
+            $table->string('name', 255); // Tamaño máximo de 255 caracteres
             $table->string('token', 64)->unique();
             $table->text('abilities')->nullable();
             $table->timestamp('last_used_at')->nullable();
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
         });
+
+
     }
 
     /**

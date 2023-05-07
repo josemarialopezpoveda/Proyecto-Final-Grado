@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('mensajes', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->foreignId('empresa_id')->constrained();
+            $table->foreignId('empresa_id')->constrained()->cascadeOnDelete();
             $table->foreignId('casos_id')->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger ('emisor');
             $table->unsignedBigInteger ('receptor');

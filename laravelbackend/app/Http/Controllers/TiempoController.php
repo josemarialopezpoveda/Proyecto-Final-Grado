@@ -141,7 +141,7 @@ class TiempoController extends Controller {
 
         if ($loginOk === true) {
             $empleado = Empleado::find($empleadoId);
-            $tiempos = Tiempo::select('inicio', 'fin')
+            $tiempos = Tiempo::select('id','inicio', 'fin')
                 ->where('empleado_id', $empleadoId)
                 ->orderBy('inicio', 'asc')
                 ->get();
