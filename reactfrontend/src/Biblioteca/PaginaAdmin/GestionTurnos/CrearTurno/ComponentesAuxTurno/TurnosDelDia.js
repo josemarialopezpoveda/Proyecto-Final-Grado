@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import Form from 'react-bootstrap/Form';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import './TurnosDelDia.css';
 import { contexto } from 'Biblioteca/Contextos/ContextoTurnos/ContextoTurnos.js';
 import { mostrarAlertaCorrecta, mostrarAlertaErronea, obtenerMilisegundosDesdeHora, peticionPost } from 'Biblioteca/FuncionesAuxiliares/Funciones';
@@ -145,6 +145,7 @@ function TurnosDelDia() {
         <button type="button" onClick={crearTurno} className="anyadirTurnoBoton" id='botonCrearTurno'>
           Crear Turno
         </button>
+        <Link to="/paginaPrincipalTurnos" className="margin0-20 anyadirTurnoBoton" id="botonCrearTurno">Volver</Link>
       </div>
     </Form>
   );
