@@ -646,7 +646,7 @@ class TiempoController extends Controller {
                     $tiempo->delete();
                     $data = [
                         'message' => 'Tiempo eliminado correctamente',
-                        'registro horario eliminado' => $tiempo];
+                        'tiempo' => $tiempo];
                     return response()->json($data);
                 }else{
                     $data = ['message' => 'El empleado no pertenece a la empresa'];
