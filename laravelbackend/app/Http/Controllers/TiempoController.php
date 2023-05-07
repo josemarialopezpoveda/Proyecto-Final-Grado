@@ -528,30 +528,23 @@ class TiempoController extends Controller {
     public function store(Request $request)
     {
         $user = Auth::user();
-        if ($user->nif && $user->id == $request->empleado_id) {
-//            $turno = DB::table('empleados_turnos')
-//                ->where ('turno_id', $request->turno_id)
-//                ->where ('empleado_id',$request->empleado_id)
-//                ->where ('activo', true)
-//                ->first();
-//            if (isset($turno)) {
-            $tiempo = new Tiempo();
-            $tiempo->empleado_id = $request->empleado_id;
-            $tiempo->inicio = $request->inicio;
-            $tiempo->fin = $request->fin;
-            $tiempo->turno_id = $request->turno_id;
-            $tiempo->save();
-            $data = [
-                'message' => 'Tiempo insertado correctamente',
-                'tiempo' => $tiempo
-            ];
-//            } else {
-//                $data = ['message' => 'No existe turno',];
-//            }
+        $primaryKey = $user->getKey();
+        // Soy un empleado y mi id coincide con el id del empleado de la request.
+        if ($user instanceof Empleado && $primaryKey == $request->empleado_id) {
+            return $this->extracted($request);
+            // Si soy empresa o empleado administrador y quiero insertar un tiempo a otro empleado de la empresa.
+        } elseif ($user instanceof Empleado && $user->tipoEmpleado === "Administrador") {
+            $empleado = DB::table('empleados')->where('id', $request->empleado_id)->first();
+            if ($empleado->empresa_id === $user->empresa_id) {
+                return $this->extracted($request);
+            } else {
+                $data = ['message' => 'El empleado no pertenece a la empresa.',];
+                return response()->json($data);
+            }
         } else {
             $data = ['message' => 'No autorizado',];
+            return response()->json($data);
         }
-        return response()->json($data);
     }
 
 
@@ -594,7 +587,7 @@ class TiempoController extends Controller {
                         $empleado = Empleado::where('id', $request->empleado_id)
                             ->where('empresa_id', $user->empresa_id)
                             ->first();
-                        if ($empleado && $empleado->tipoEmpleado ==="Administrador") {
+                        if ($empleado && $empleado->tipoEmpleado === "Administrador") {
                             $tiempo->inicio = $request->inicio;
                             $tiempo->fin = $request->fin;
                             $tiempo->save();
@@ -603,7 +596,7 @@ class TiempoController extends Controller {
                                 'tiempo' => $tiempo,
                             ];
                             return response()->json($data);
-                        }elseif ($empleado && $empleado->tipoEmpleado ==="Trabajador"){
+                        } elseif ($empleado && $empleado->tipoEmpleado === "Trabajador") {
                             $tiempo->fin = $request->fin;
                             $tiempo->save();
                             $data = [
@@ -637,21 +630,55 @@ class TiempoController extends Controller {
 
     /**
      * Remove the specified resource from storage.
+     * Puede eliminarlo una Empresa o un empleado Administrador.
      */
-    public function destroy(string $id)
+    public function destroy($tiempoId)
     {
-        $tiempo = Tiempo::find($id);
-        if ($tiempo) {
-            $tiempo->delete();
-            $data = [
-                'message' => 'Tiempo eliminado correctamente',
-                'registro horario eliminado' => $tiempo
-            ];
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+        if (is_numeric($empresaId)) {
+            //Comprobar que el tiempo pertenezca al usuario logueado.
+            $tiempo = Tiempo::find($tiempoId);
+            if ($tiempo) {
+                $empleado = DB::table('empleados')->where('id', $tiempo->empleado_id)->first();
+                // Comprobar que el empleado pertenezca a la empresa del usuario logueado.
+                if($empleado->empresa_id === $empresaId) {
+                    $tiempo->delete();
+                    $data = [
+                        'message' => 'Tiempo eliminado correctamente',
+                        'registro horario eliminado' => $tiempo
+                    ];
+                    return response()->json($data, 200);
+                }else{
+                    $data = ['message' => 'El empleado no pertenece a la empresa'];
+                    return response()->json($data, 400);
+                }
+            } else {
+                $data = ['message' => 'Tiempo no existe'];
+                return response()->json($data, 404);
+            }
         } else {
-            $data = [
-                'message' => 'Tiempo no existe'
-            ];
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data, 403);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function extracted(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $tiempo = new Tiempo();
+        $tiempo->empleado_id = $request->empleado_id;
+        $tiempo->inicio = $request->inicio;
+        $tiempo->fin = $request->fin;
+        $tiempo->turno_id = $request->turno_id;
+        $tiempo->save();
+        $data = [
+            'message' => 'Tiempo insertado correctamente',
+            'tiempo' => $tiempo
+        ];
         return response()->json($data);
     }
 }

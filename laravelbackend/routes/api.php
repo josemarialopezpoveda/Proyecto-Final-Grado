@@ -74,9 +74,6 @@ Route::delete('/ausencias/{ausencias}', [AusenciaController::class, 'destroy']);
 
 // Tiempos
 
-
-Route::delete('/tiempos/{tiempos}', [TiempoController::class, 'destroy']);
-
 // Empleado_Turno
 Route::post('/empleados/turno', [EmpleadoController::class, 'attach']);
 Route::get('/turnosEmpleado/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
@@ -115,6 +112,7 @@ Route::middleware('auth:sanctum')->group(
 
         Route::post('/tiempos', [TiempoController::class, 'store']);
         Route::put('/tiempos/{tiempoId}', [TiempoController::class, 'update']);
+        Route::delete('/tiempos/{tiempos}', [TiempoController::class, 'destroy']);
 
         //Casos
         Route::get('/casos/{casoId}', [CasoController::class, 'show']);
