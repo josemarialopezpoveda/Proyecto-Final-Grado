@@ -420,7 +420,6 @@ class TiempoController extends Controller {
             } else {
                 return response()->json(
                     ['message' => 'No se encontraron empleados OnLine pertenecientes a la empresa autenticada.'],
-                    404
                 );
             }
         } else {
