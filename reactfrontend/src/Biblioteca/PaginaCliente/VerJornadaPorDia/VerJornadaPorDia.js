@@ -6,7 +6,7 @@ import PiePagina from '../../PaginaPrincipal/Footer/PiePagina.js';
 import { URL_API } from 'services/http/const.js';
 import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 import Form from 'react-bootstrap/Form';
-import { generarUUID, formatoDateAFecha, peticionGetAuth, calculoFechaHoy } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
+import { generarUUID, formatoDateAFecha, peticionGetAuth, calculoFechaHoy, cogerFecha, formatoFechaDDMMYYYY, cogerHora, formatearFechaFormatoDiaDeMesDelAnyo } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
 
 function VerJornadaPorDia(){
     //Estados para los datos de la base de datos.
@@ -95,7 +95,7 @@ function VerJornadaPorDia(){
           return(datosJornada.horario.map((horario)=>{
             return(
               <div key={generarUUID()}>
-                <p>Entrada  ➜ {horario.inicio}</p>
+                <p>Entrada  ➜ {formatoFechaDDMMYYYY(cogerFecha(horario.inicio)) + " " + cogerHora(horario.inicio)}</p>
                 {esNula(horario.fin)}
               </div>
             )
@@ -108,7 +108,7 @@ function VerJornadaPorDia(){
     //Función para saber si la fecha es nula.
     const esNula = (fecha) =>{
         if(fecha !== null){
-          return(<p>Salida  ➜  {fecha}</p>)
+          return(<p>Salida  ➜  {formatoFechaDDMMYYYY(cogerFecha(fecha)) + " " + cogerHora(fecha)}</p>)
         }else{
           return(null);
         }
@@ -145,7 +145,7 @@ function VerJornadaPorDia(){
                 <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar'>
                         <div>
                             <article className='Fecha'>
-                                <p>{calculoFechaHoy()}</p>
+                                <p>{formatearFechaFormatoDiaDeMesDelAnyo(fechasBuscador.diaSeleccionado)}</p>
                             </article>
                             <article className='horas'>
                                 <div className="horas2">

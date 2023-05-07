@@ -193,6 +193,7 @@ export const formatearFecha = ()=>{
     return (year + '-' + month + '-' + day);
 }
 
+//Función que depara el dia de la semana de una fecha.
 export function separarFechaDiaSemana(fechaCompleta) {
   // Separar la fecha y la hora
   const partes = fechaCompleta.split(' ');
@@ -204,6 +205,7 @@ export function separarFechaDiaSemana(fechaCompleta) {
   return [diaSemana];
 }
 
+//Función que a partir de una fecha la devuelve en formato 23 de Mayo del 2023.
 export const separarFecha =(fechaCompleta) =>{
   // Separar la fecha y la hora
   const partes = fechaCompleta.split(' ');
@@ -220,6 +222,7 @@ export const separarFecha =(fechaCompleta) =>{
   return [fechaFinal];
 }
 
+//Función qwue devuelve la fecha de hoy en formato Domingo 7 de Mayo del 2023.
 export const calculoFechaHoy = () =>{
   const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
   const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -482,4 +485,19 @@ export const convertirFechaISO = (fecha) =>{
   }else{
     return null;
   }
+}
+
+//Función en JavaScript que formatea una fecha en el formato "Domingo 7 de Mayo del 2023":
+export const formatearFechaFormatoDiaDeMesDelAnyo =(fecha) =>{
+  const diasSemana = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+  const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+  const partesFecha = fecha.split('-');
+  const anio = parseInt(partesFecha[0]);
+  const mes = parseInt(partesFecha[1]);
+  const dia = parseInt(partesFecha[2]);
+
+  const fechaFormateada = `${diasSemana[new Date(fecha).getDay()]} ${dia} de ${meses[mes - 1]} del ${anio}`;
+
+  return fechaFormateada;
 }

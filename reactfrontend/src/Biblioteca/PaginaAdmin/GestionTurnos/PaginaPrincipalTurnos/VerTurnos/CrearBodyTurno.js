@@ -14,15 +14,31 @@ function CrearBodyTurno() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosTurno = await peticionGetAuth(URL_API + "turnos/" + `${localStorage.getItem("idTurno")}`, header);
+        let datosTurno = undefined;
+        if(localStorage.getItem("idTurno") === null){
+            datosTurno = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem("idEmpleado")}`, header);
+        }else{
+            datosTurno = await peticionGetAuth(URL_API + "turnos/" + `${localStorage.getItem("idTurno")}`, header);
+        }
+        console.log(URL_API + "turnos/" + `${localStorage.getItem("idEmpleado")}`)
         console.log(datosTurno)
-        if(datosTurno.data.turno.dias !== undefined){
-            if (datosTurno.data.turno.dias.length !== 0) {
+        if(datosTurno !== undefined){
+            if(datosTurno.data.turno === undefined){
+                if (datosTurno.data.dias.length !== 0) {
+                        var newTurno = {
+                            descripcion: datosTurno.data.descripcion,
+                            dias: datosTurno.data.dias,
+                        };
+                        setTurno(newTurno);
+                }
+            }else{
+                if (datosTurno.data.turno.dias.length !== 0) {
                     var newTurno = {
                         descripcion: datosTurno.data.turno.descripcion,
                         dias: datosTurno.data.turno.dias,
                     };
                     setTurno(newTurno);
+            }
             }
         }
     };

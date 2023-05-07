@@ -8,6 +8,7 @@ function VerTurnoCliente() {
   return (
     <React.Fragment>
         <NavAdmin/>
+        <section className="contenedorEmpleadosAcciones">
                 <div className='TablaDatosUser'>
                     {/*PENDIENTE BUSCADOR TURNOS*/ }
                     <CrearBodyTurno/>
@@ -16,6 +17,7 @@ function VerTurnoCliente() {
                 <p className='botonCambiarTurno'><Link className="botonInfoCliente" to="/cambiarTurno">Cambiar Turno</Link></p>
                 <Link to="/pagInfoClienteSel" className="botonInfoCliente">Volver</Link>
             </div>
+          </section>
         <PiePagina/>
     </React.Fragment>
   );

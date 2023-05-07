@@ -154,21 +154,29 @@ function Fichar(){
             datosTurnoEmpleado = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("id")}`, header);
         }
         console.log(datosTurnoEmpleado)
-
-          const obj = {
-            "empleado_id": localStorage.getItem("id"),
-            "inicio": formatearFechaHora(),
-            "fin": null,
-            "turno_id": datosTurnoEmpleado.data.turnoId
+        let obj = undefined;
+          if(localStorage.getItem("tipoUsuario") === "Administrador"){
+             obj = {
+              "empleado_id": localStorage.getItem("idEmpleadoAdmin"),
+              "inicio": formatearFechaHora(),
+              "fin": null,
+              "turno_id": datosTurnoEmpleado.data.turnoId
+            }
+          }else{
+             obj = {
+              "empleado_id": localStorage.getItem("id"),
+              "inicio": formatearFechaHora(),
+              "fin": null,
+              "turno_id": datosTurnoEmpleado.data.turnoId
+            }
           }
-
-          console.log(obj)
-
-          let datosEmpleado = await peticionPost(URL_API + "tiempos", obj, header);
-          console.log(datosEmpleado)
-          recoleccionRegistroHorario();
-          mostrarAlertaCorrecta("Entrada realizada correctamente", "Buenos días, esperamos que tenga un excelente día lleno de productividad y logros. Recuerden que su trabajo es valioso y apreciado, y que su dedicación es clave para el éxito de nuestra empresa. ¡A darle con todo! 😊 ", "5000");
-          return datosEmpleado.data.id;
+          if(obj !== undefined){
+            let datosEmpleado = await peticionPost(URL_API + "tiempos", obj, header);
+            console.log(datosEmpleado)
+            recoleccionRegistroHorario();
+            mostrarAlertaCorrecta("Entrada realizada correctamente", "Buenos días, esperamos que tenga un excelente día lleno de productividad y logros. Recuerden que su trabajo es valioso y apreciado, y que su dedicación es clave para el éxito de nuestra empresa. ¡A darle con todo! 😊 ", "5000");
+            return datosEmpleado.data.id;
+          }
     }
 
     //Función que llama a entrar o salir dependiendo del estado y cambia la clase y el inner del botón.
@@ -180,7 +188,6 @@ function Fichar(){
                 estadoTiempoEmpleado.current.classList.remove("online");
                 estadoTiempoEmpleado.current.classList.add("offline");
                 e.target.innerHTML = "ENTRADA";
-
                 salir();
 
             //Si no esta conectado.
@@ -189,7 +196,6 @@ function Fichar(){
                 estadoTiempoEmpleado.current.classList.remove("offline");
                 estadoTiempoEmpleado.current.classList.add("online");
                 e.target.innerHTML = "SALIDA";
-
                 entrar();
             }
         }

@@ -44,24 +44,26 @@ function ListarActividadEmpleados() {
         console.log(URL_API + "empleadosOnline")
         let datosEmpresa = await peticionGetAuth(URL_API + "empleadosOnline", header);
         console.log(datosEmpresa)
-        if (datosEmpresa.data.length !== 0) {
-        var todosDatosEmpresa = datosEmpresa.data.map((datosE) => {
-            var newEmpresa = {
-                id: datosE.empleado_id,
-                nombre: datosE.nombre,
-                apellidos: datosE.apellidos,
-                correo: datosE.email,
-                telefono: datosE.telefono,
-                fechaInicio: datosE.inicio,
-                horaInicio: datosE.inicio,
-                adelanto: datosE.adelanto,
-                retraso: datosE.retraso,
-                diferencia: datosE.diferencia
-            };
-            return newEmpresa;
-        });
-        setEmpleadosEstaticos(todosDatosEmpresa);
-        setEmpleadosDinamicos(todosDatosEmpresa);
+        if(datosEmpresa.data.message !== "No se encontraron empleados OnLine pertenecientes a la empresa autenticada."){
+            if (datosEmpresa.data.length !== 0) {
+                var todosDatosEmpresa = datosEmpresa.data.map((datosE) => {
+                    var newEmpresa = {
+                        id: datosE.empleado_id,
+                        nombre: datosE.nombre,
+                        apellidos: datosE.apellidos,
+                        correo: datosE.email,
+                        telefono: datosE.telefono,
+                        fechaInicio: datosE.inicio,
+                        horaInicio: datosE.inicio,
+                        adelanto: datosE.adelanto,
+                        retraso: datosE.retraso,
+                        diferencia: datosE.diferencia
+                    };
+                    return newEmpresa;
+                });
+                setEmpleadosEstaticos(todosDatosEmpresa);
+                setEmpleadosDinamicos(todosDatosEmpresa);
+                }
         }
     };
 
@@ -134,7 +136,7 @@ function ListarActividadEmpleados() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td colSpan={"5"}>No hay empleados conectados en este momento.</td></tr>
+                    <tr><td colSpan={"6"}>No hay empleados conectados en este momento.</td></tr>
                 </tbody>
             </Table>
         </div>
