@@ -5,7 +5,7 @@ import NavAdmin from '../../../Nav/NavAdmin';
 import Table from 'react-bootstrap/Table';
 import { Link, useNavigate } from "react-router-dom";
 import './ModificarTurno.css';
-import { convertirNumeroDiaSemana, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPut } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { convertirNumeroDiaSemana, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, obtenerMilisegundosDesdeHora, peticionGetAuth, peticionPut } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import { URL_API } from 'services/http/const';
 import ChecksDiasSemana from '../../CrearTurno/ComponentesAuxTurno/ChecksDiasSemana';
 import Form from 'react-bootstrap/Form';
@@ -14,7 +14,45 @@ function ModificarTurno() {
     //Creamos la variable para poder usar el navigate.
     const Navigate = useNavigate();
     const [turno, setTurno] = useState({});
-    const [horasModificadas, setHorasModificadas] = useState({});
+    const [horasModificadas, setHorasModificadas] = useState([{}]);
+
+    //Función que ordena los el array de los turnos de la semana a partir del dia de la semana.
+    const ordenarPorDiaSemana =(array) =>{
+      array.sort((a, b) => a.diaSemana - b.diaSemana);
+      return array;
+    }
+
+    const verificarTodosCero = (objeto) =>{
+      const valores = Object.values(objeto);
+      const resultados = valores.map(elemento => {
+        return (
+          elemento.horaFinM === '00:00:00' &&
+          elemento.horaFinN === '00:00:00' &&
+          elemento.horaFinT === '00:00:00' &&
+          elemento.horaInicioM === '00:00:00' &&
+          elemento.horaInicioN === '00:00:00' &&
+          elemento.horaInicioT === '00:00:00'
+        );
+      });
+
+      return resultados.every(resultado => resultado);
+    }
+
+    const comprobarInicioAntesFin = (objeto)=>{
+      for (const key in objeto) {
+        if (objeto.hasOwnProperty(key)) {
+          const horas = objeto[key];
+            // Realiza las operaciones necesarias con cada elemento
+            if(obtenerMilisegundosDesdeHora(horas.horaInicioM) > obtenerMilisegundosDesdeHora(horas.horaFinM) ||
+            obtenerMilisegundosDesdeHora(horas.horaInicioT) > obtenerMilisegundosDesdeHora(horas.horaFinT) ||
+            obtenerMilisegundosDesdeHora(horas.horaInicioN) > obtenerMilisegundosDesdeHora(horas.horaFinN)){
+              return true;
+            }else{
+              return false;
+            }
+        }
+      }
+    }
 
     const recoleccionDatos = async () => {
         const header = {
@@ -24,14 +62,13 @@ function ModificarTurno() {
           },
         };
         let datosTurno = await peticionGetAuth(URL_API + "turnos/" + `${localStorage.getItem("idTurno")}`, header);
-        console.log(datosTurno)
         if (datosTurno.data.turno !== undefined) {
             var newTurno = {
               descripcion: datosTurno.data.turno.descripcion,
               dias: datosTurno.data.turno.dias,
             };
           setTurno(newTurno);
-          setHorasModificadas(newTurno.dias);
+          setHorasModificadas(ordenarPorDiaSemana(newTurno.dias));
         }
       };
 
@@ -40,30 +77,33 @@ function ModificarTurno() {
     }, []);
 
     const modificarTurno = async() =>{
-      console.log(horasModificadas)
       let raw = {
         "descripcion" : turno.descripcion,
         "empresa_id": `${localStorage.getItem('id')}`,
         "dias": horasModificadas
       }
-      console.log(raw)
-      try {
-          const header = {
-              headers: {
-                  "Accept": "application/json",
-                  "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
-              }
+      if(verificarTodosCero(horasModificadas)){
+        mostrarAlertaErronea("Error al modificar el turno", "Todas las horas estan a cero.", 5000)
+      }else if(comprobarInicioAntesFin(horasModificadas)){
+        mostrarAlertaErronea("Error al modificar el turno", "La hora de fin no puede ser antes de la hora de inicio.", 5000)
+      }else{
+        try {
+            const header = {
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
+                }
+            }
+          let peticion = await peticionPut(URL_API + "turnos/" + `${localStorage.getItem('idTurno')}`, raw, header)
+          if(peticion.data.errores !== undefined && peticion.data.errores !== null){
+              mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
+          }else{
+              mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
+              Navigate("/verTurno")
           }
-        let peticion = await peticionPut(URL_API + "turnos/" + `${localStorage.getItem('idTurno')}`, raw, header)
-        console.log(peticion)
-        if(peticion.data.errores !== undefined && peticion.data.errores !== null){
-            mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
-        }else{
-            mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-            Navigate("/verTurno")
+        } catch (error) {
+          mostrarAlertaErronea(error.message, error.stack, null);
         }
-      } catch (error) {
-        mostrarAlertaErronea(error.message, error.stack, null);
       }
     }
 
@@ -88,6 +128,18 @@ function ModificarTurno() {
             <section>
                 <h4 className='tituloH1 text-center'>Horario: {turno.descripcion}</h4>
                 <div className='TablaDatosUser'>
+                <p className='desc-Titulo'>Descripcion del turno</p>
+                <div className="divContenedorCampo">
+                  <Form.Group className="mb-3 width500">
+                    <Form.Control
+                      size="lg"
+                      type="text"
+                      defaultValue={turno.descripcion}
+                      onChange={(e) => setTurno({ ...turno, descripcion: e.target.value.trim() })}
+                    />
+                  </Form.Group>
+                </div>
+
                     {/*PENDIENTE BUSCADOR TURNOS*/ }
                     <Table striped>
                         <thead>

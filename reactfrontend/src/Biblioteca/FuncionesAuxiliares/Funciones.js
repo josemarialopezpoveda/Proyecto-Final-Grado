@@ -524,9 +524,7 @@ export const obtenerDiaSemana =() =>{
 
 //Función que recoge los milisegundos de una hora.
 export const obtenerMilisegundosDesdeHora =(hora) =>{
-  console.log(hora)
   const [horas, minutos] = hora.split(':');
   const milisegundos = (parseInt(horas) * 60 * 60 + parseInt(minutos) * 60) * 1000;
-  console.log(milisegundos)
   return milisegundos;
 }

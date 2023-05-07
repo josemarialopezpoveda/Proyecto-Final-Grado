@@ -20,7 +20,6 @@ function CrearBodyTurno() {
         }else{
             datosTurno = await peticionGetAuth(URL_API + "turnos/" + `${localStorage.getItem("idTurno")}`, header);
         }
-        console.log(URL_API + "turnos/" + `${localStorage.getItem("idEmpleado")}`)
         console.log(datosTurno)
         if(datosTurno !== undefined){
             if(datosTurno.data.turno === undefined){
