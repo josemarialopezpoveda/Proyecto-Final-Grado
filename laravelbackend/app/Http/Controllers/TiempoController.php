@@ -16,6 +16,8 @@ use App\Helpers\DiasMeses;
 use App\Helpers\Auxiliares;
 use App\Helpers\Intervalo;
 
+use function PHPUnit\Framework\isNull;
+
 class TiempoController extends Controller {
     /**
      * Display a listing of the resource.
@@ -328,7 +330,7 @@ class TiempoController extends Controller {
         if ($loginOk) {
             $tiempo = Tiempo::where('empleado_id', $empleadoId)->where('fin', null)->get();
 //            if ($tiempo->count() > 0) {
-                return response()->json($tiempo);
+            return response()->json($tiempo);
 //            } else {
 //                $empleado = DB::table('empleados')->where('id', $empleadoId)->first();
 //                $data = [
@@ -342,7 +344,8 @@ class TiempoController extends Controller {
         }
     }
 
-    public function empleadosOnline(){
+    public function empleadosOnline()
+    {
         $user = Auth::user();
         $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
 
@@ -360,7 +363,7 @@ class TiempoController extends Controller {
                 ->get();
 
             // Verificar si se encontraron empleados y retornar la respuesta JSON
-            if ($empleados->count()>0) {
+            if ($empleados->count() > 0) {
                 $resultados = [];
                 foreach ($empleados as $empleado) {
                     $turnoActivo = DB::table('empleados_turnos')
@@ -449,7 +452,7 @@ class TiempoController extends Controller {
                 ->get();
 
             //if ($tiempos->count()>0){
-            if ($tiempos){
+            if ($tiempos) {
                 $empleadoTurno = DB::table('empleados_turnos')
                     ->where('empleado_id', $empleado->id)
                     ->where('activo', true)
@@ -481,14 +484,14 @@ class TiempoController extends Controller {
                             ];
                         }
                     }
-                    if ($tiempoATrabajar=="00:00:00"){
+                    if ($tiempoATrabajar == "00:00:00") {
                         $mensaje = "No exite turno para hoy.";
-                    }else{
+                    } else {
                         $mensaje = "Existe turno para hoy.";
                     }
 
                     $data = [
-                        'mensaje'=>$mensaje,
+                        'mensaje' => $mensaje,
                         'fecha' => $hoy->format('d-m-Y'),
                         'hora' => $hoy->format('H:i:s'),
                         'empleado_id' => $empleado->id,
@@ -525,27 +528,27 @@ class TiempoController extends Controller {
     public function store(Request $request)
     {
         $user = Auth::user();
-        if ($user->nif && $user->id == $request->empleado_id){
+        if ($user->nif && $user->id == $request->empleado_id) {
 //            $turno = DB::table('empleados_turnos')
 //                ->where ('turno_id', $request->turno_id)
 //                ->where ('empleado_id',$request->empleado_id)
 //                ->where ('activo', true)
 //                ->first();
 //            if (isset($turno)) {
-                $tiempo = new Tiempo();
-                $tiempo->empleado_id = $request->empleado_id;
-                $tiempo->inicio = $request->inicio;
-                $tiempo->fin = $request->fin;
-                $tiempo->turno_id = $request->turno_id;
-                $tiempo->save();
-                $data = [
-                    'message' => 'Tiempo insertado correctamente',
-                    'tiempo' => $tiempo
-                ];
+            $tiempo = new Tiempo();
+            $tiempo->empleado_id = $request->empleado_id;
+            $tiempo->inicio = $request->inicio;
+            $tiempo->fin = $request->fin;
+            $tiempo->turno_id = $request->turno_id;
+            $tiempo->save();
+            $data = [
+                'message' => 'Tiempo insertado correctamente',
+                'tiempo' => $tiempo
+            ];
 //            } else {
 //                $data = ['message' => 'No existe turno',];
 //            }
-        }else {
+        } else {
             $data = ['message' => 'No autorizado',];
         }
         return response()->json($data);
@@ -554,54 +557,83 @@ class TiempoController extends Controller {
 
     /**
      * Update the specified resource in storage.
+     * Dos situaciones
+     * 1-Insertar por parte del empleado el tiempo final
+     * 2-Actualizar por parte de Empresa o administrador el tiempo.
      */
     public function update(Request $request, $tiempoId)
     {
         $user = Auth::user();
-        //$empresaId = Auxiliares::verificarAutorizacionEmpleado($user);
-        //if (is_numeric($empresaId)) {
-            $tiempo = Tiempo::find($tiempoId);
-            if ($tiempo){
-                $empleado = Empleado::find($request->empleado_id);
-                //if ($empleado && $empleado->empresa_id == $empresaId && $tiempo->empleado_id == $empleado->id) {
-                        if (Auxiliares::esElMismoDia($request->inicio, $tiempo->inicio)){
+        $primaryKey = $user->getKey();
+        $tiempo = Tiempo::find($tiempoId);
+        // Comprobar que el tiempo exista
+        if ($tiempo) {
+            // Comprobar que el tiempo corresponda con el empleado
+            if ($request->empleado_id === $tiempo->empleado_id) {
+                if ($user instanceof Empresa) {
+                    $empresa = DB::table('empresas')->where('id', $primaryKey)->first();
+                    $empleado = Empleado::where('id', $request->empleado_id)
+                        ->where('empresa_id', $empresa->id)
+                        ->first();
+                    if ($empleado) {
+                        //if (Auxiliares::esElMismoDia($request->inicio, $tiempo->inicio)){
+                        $tiempo->inicio = $request->inicio;
+                        $tiempo->fin = $request->fin;
+                        $tiempo->save();
+                        $data = [
+                            'message' => 'Tiempo actualizado correctamente',
+                            'tiempo' => $tiempo
+                        ];
+                        return response()->json($data);
+                    } else {
+                        $data = ['message' => 'Error, el empleado no pertenece a la empresa',];
+                        return response()->json($data);
+                    }
+                } else {
+                    if ($user instanceof Empleado) {
+                        $empleado = Empleado::where('id', $request->empleado_id)
+                            ->where('empresa_id', $user->empresa_id)
+                            ->first();
+                        if ($empleado && $empleado->tipoEmpleado ==="Administrador") {
                             $tiempo->inicio = $request->inicio;
                             $tiempo->fin = $request->fin;
                             $tiempo->save();
                             $data = [
-                                '$request->inicio'=>$request->inicio,
-                                '$tiempo->inicio'=>$tiempo->inicio,
-                                '$empleado->empresa_id'=>$empleado->empresa_id,
-                                //'$empresaId'=> $empresaId,
-                                '$tiempo->empleado_id'=>$tiempo->empleado_id,
-                                '$empleado->id'=>$empleado->id,
                                 'message' => 'Tiempo actualizado correctamente',
-                                'tiempo' => $tiempo
+                                'tiempo' => $tiempo,
                             ];
-                        }else{
+                            return response()->json($data);
+                        }elseif ($empleado && $empleado->tipoEmpleado ==="Trabajador"){
+                            $tiempo->fin = $request->fin;
+                            $tiempo->save();
                             $data = [
-                                'message' => 'Error, no se puede cambiar la fecha'
+                                'message' => 'Tiempo actualizado correctamente',
+                                'tiempo' => $tiempo,
                             ];
+                            return response()->json($data);
+                        } else {
+                            $data = ['message' => 'Error, el empleado no pertenece a la empresa',];
+                            return response()->json($data);
                         }
-
-
-//                } else {
-//                    $data = [
-//                        'message' => 'Empleado no existe'
-//                    ];
-//                }
+                    } else {
+                        $data = [
+                            'message' => 'Error no controlado',
+                        ];
+                        return response()->json($data);
+                    }
+                }
             } else {
-                $data = [
-                    'message' => 'Tiempo no existe'
-                ];
+                $data = ['message' => 'Error el tiempo no corresponde con el empleado',];
+                return response()->json($data);
             }
-
-//        }else {
-//            $data = ['message' => $empresaId['message'],];
-//        }
-
-        return response()->json($data);
+        } else {
+            $data = [
+                'message' => 'Tiempo no existe'
+            ];
+            return response()->json($data);
+        }
     }
+
 
     /**
      * Remove the specified resource from storage.
