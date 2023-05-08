@@ -672,6 +672,36 @@ class TiempoController extends Controller {
         }
     }
 
+    public function mostrarTiempo($tiempoId)
+    {
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+        if (is_numeric($empresaId)) {
+            //Comprobar que el tiempo pertenezca al usuario logueado.
+            $tiempo = Tiempo::find($tiempoId);
+            if ($tiempo) {
+                $empleado = DB::table('empleados')->where('id', $tiempo->empleado_id)->first();
+                // Comprobar que el empleado pertenezca a la empresa del usuario logueado.
+                if ($empleado->empresa_id === $empresaId) {
+                    $data = [
+                        'tiempo' => $tiempo,
+                    ];
+                    return response()->json($data);
+                } else {
+                    $data = ['message' => 'El empleado no pertenece a la empresa'];
+                    return response()->json($data, 400);
+                }
+            } else {
+                $data = ['message' => 'Tiempo no existe'];
+                return response()->json($data, 404);
+            }
+        } else {
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data, 403);
+        }
+    }
+
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
