@@ -543,13 +543,15 @@ class TiempoController extends Controller {
             return $this->extracted($request);
             // Si soy empresa o empleado administrador y quiero insertar un tiempo a otro empleado de la empresa.
         } elseif ($user instanceof Empresa || $user->tipoEmpleado === "Administrador") {
-            $empleado = DB::table('empleados')->where('id', $request->empleado_id)->first();
-            if ($empleado->empresa_id === $user->empresa_id) {
+
+            //$empleado = DB::table('empleados')->where('id', $request->empleado_id)->first();
+            //$empresa = DB::table('empresas')->where('id', )
+            //if ($empleado->empresa_id === $user->empresa_id || ) {
                 return $this->extracted($request);
-            } else {
-                $data = ['message' => 'El empleado no pertenece a la empresa.',];
-                return response()->json($data);
-            }
+            //} else {
+              //  $data = ['message' => 'El empleado no pertenece a la empresa.',];
+                //return response()->json($data);
+           // }
         } else {
             $data = ['message' => 'No autorizado',];
             return response()->json($data);
