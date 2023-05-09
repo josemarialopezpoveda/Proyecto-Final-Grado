@@ -414,8 +414,8 @@ class EmpleadoController extends Controller {
                     'empleado_id' => $empleadoId,
                     'turnoId' => $turnoActivo->id,
                     'descripcion' => $turnos->descripcion,
-                    'Fecha inicio turno' => $turnoActivo->pivot->fechaInicioTurno,
-                    'Fecha fin turno' => $turnoActivo->pivot->fechaFinTurno,
+                    'FechaInicioTurno' => $turnoActivo->pivot->fechaInicioTurno,
+                    'FechaFinTurno' => $turnoActivo->pivot->fechaFinTurno,
                     'dias' => $turnos->dias,
                 ];
                 return response()->json($data);
