@@ -18,6 +18,19 @@
     justify-content: center;
 }
 
+.height180pxFlex{
+    height: 163px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.height180{
+    height: 180px;
+}
+
+
+
 .botonCambiarTurno{
     margin-bottom: 30px!important;
 }

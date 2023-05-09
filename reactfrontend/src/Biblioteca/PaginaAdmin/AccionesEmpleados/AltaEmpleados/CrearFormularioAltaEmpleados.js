@@ -93,6 +93,7 @@ function CrearFormularioAltaEmpleados() {
         fechaNacimiento: form.fnac,
         email: form.email,
         password: form.contrasenya,
+        password_confirmation: form.contrasenya,
         numSegSoc: form.numSegSoc,
         //fotografia: form.fotografia,
         ultimaConexion: formatearFechaHora(),
@@ -118,7 +119,6 @@ function CrearFormularioAltaEmpleados() {
       } catch (error) {
         mostrarAlertaErronea(error.message, error.stack, null);
       }
-      // Navigate("/accionesEmpleados");
     }else{
       mostrarAlertaErronea("Error campos incorrectos.", "Algunos de los campos rellenados no tienen un formato correcto o están vacios.", null);
     }

@@ -43,9 +43,9 @@ table tbody tr td{
         font-size: 15px;
     }
 
-    .contenedorEmpleadosAcciones table{
+    /* .contenedorEmpleadosAcciones table{
         width: 3px;
-    }
+    } */
 }
 
 @media (max-width:500px){

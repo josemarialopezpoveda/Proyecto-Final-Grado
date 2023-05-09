@@ -120,7 +120,8 @@ function ListarEmpleados() {
   <div>
   <BuscadorEmpleados datosEstaticos={setEmpleadosEstaticos} datosDinamicos={empleadosDinamicos}/>
     <div className='TablaDatosUser'>
-      <PaginationEmpleados data={empleadosEstaticos} perPage={2}/>
+      <PaginationEmpleados data={empleadosEstaticos} perPage={5}
+            setEstadoEstatico={setEmpleadosEstaticos} setEstadoDinamico={setEmpleadosDinamicos}/>
     </div>
   </div>)
 }

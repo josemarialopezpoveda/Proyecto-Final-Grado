@@ -1,4 +1,4 @@
-import { generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete, peticionGetAuth } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { URL_API } from 'services/http/const';
@@ -6,7 +6,8 @@ import SweetAlert from "sweetalert2";
 import Table from 'react-bootstrap/Table';
 import './Paginacion.css';
 
-const PaginationEmpleados = ({ data, perPage }) => {
+const PaginationEmpleados = ({ data, perPage, setEstadoDinamico, setEstadoEstatico }) => {
+  const [paginaSeleccionada, setPaginaSeleccionada] = useState(0)
   //Creamos la variable para el uso del useNavigate.
   const Navigate = useNavigate();
   //Función que guarda el ID del empleado a modificar en localStorage y te lleva a la ruta del formulario de modificar el empleado.
@@ -18,6 +19,33 @@ const PaginationEmpleados = ({ data, perPage }) => {
   const verInfo = (e) => {
     localStorage.setItem("idEmpleado", e.target.id);
     Navigate("/pagInfoClienteSel");
+  };
+
+  //Función para recoger todos los empleados y los guarda en el estado.
+  const recoleccionDatos = async () => {
+    const header = {
+      headers: {
+        Accept: "application/json",
+        Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+      },
+    };
+    let datosEmpresa = await peticionGetAuth(URL_API + "empresa/" + localStorage.getItem("id"), header);
+    console.log(datosEmpresa)
+    if (datosEmpresa.data.empleados.length !== 0) {
+      var todosDatosEmpresa = datosEmpresa.data.empleados.map((datosE) => {
+        var newEmpresa = {
+          id: datosE.id,
+          nombre: datosE.nombre,
+          apellidos: datosE.apellidos,
+          dni: datosE.nif,
+          correo: datosE.email,
+          telefono: datosE.telefono,
+        };
+        return newEmpresa;
+      });
+      setEstadoDinamico(todosDatosEmpresa);
+      setEstadoEstatico(todosDatosEmpresa);
+    }
   };
 
   //Función que borra el empleado e informa si todo ha ido bien o ha ocurrido algún error inesperado.
@@ -45,11 +73,11 @@ const PaginationEmpleados = ({ data, perPage }) => {
           } else {
             mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
             Navigate("/accionesEmpleados");
+            recoleccionDatos();            
           }
         } catch (error) {
           mostrarAlertaErronea(error.message, error.stack, null);
         }
-      } else {
       }
     });
   };
@@ -58,50 +86,63 @@ const PaginationEmpleados = ({ data, perPage }) => {
 
   const totalPages = Math.ceil(data.length / perPage);
 
-  const handleClick = (page) => {
+  const handleClick = (page,e) => {
     setCurrentPage(page);
+    setPaginaSeleccionada(page)
+    let botonesSeleccionados = document.getElementsByClassName("botonSeleccionado");
+    if(botonesSeleccionados.length !== 0){
+      botonesSeleccionados[0].classList.remove("botonSeleccionado");
+    }
+    e.target.classList.add("botonSeleccionado");
   }
 
   const renderData = () => {
     const start = (currentPage - 1) * perPage;
     const end = start + perPage;
 
-    return data.slice(start, end).map((option, index) => (
-      <tr className="EmpleadoTablaApartado" key={generarUUID()}>
-        <td>{option.nombre}</td>
-        <td className="campoOpcional">{option.apellidos}</td>
-        <td className="campoOpcional">{option.dni}</td>
-        <td className="campoOpcional">{option.correo}</td>
-        <td className="campoOpcional">{option.telefono}</td>
-        <td>
-          <button type="button" className="sinBorde" to="/modificarEmpleado" onClick={modificar}>
-            <img
-              title="Modificar Empleado"
-              className="imagenFotoGestionUsuarios"
+    
+    if(data.length !== 0){
+      return data.slice(start, end).map((option, index) => (
+        <tr className="EmpleadoTablaApartado" key={generarUUID()}>
+          <td>{option.nombre}</td>
+          <td className="campoOpcional">{option.apellidos}</td>
+          <td className="campoOpcional">{option.dni}</td>
+          <td className="campoOpcional">{option.correo}</td>
+          <td className="campoOpcional">{option.telefono}</td>
+          <td>
+            <button type="button" className="sinBorde" to="/modificarEmpleado" onClick={modificar}>
+              <img
+                title="Modificar Empleado"
+                className="imagenFotoGestionUsuarios"
+                id={option.id}
+                src={require("../../img/modify-foto.png")}
+                alt="imagen Foto Modificar"
+              />
+            </button>
+            <button type="button" className="sinBorde" onClick={borrarEmpleado}>
+              <img
+                title="Borrar Empleado"
+                className="imagenFotoGestionUsuarios"
+                id={option.id}
+                src={require("../../img/delete-foto.png")}
+                alt="imagen Foto Borrar"
+              />
+            </button>
+            <button type="button"
+              title="Ver Información Del Empleado"
+              onClick={verInfo}
               id={option.id}
-              src={require("../../img/modify-foto.png")}
-              alt="imagen Foto Modificar"
-            />
-          </button>
-          <button type="button" className="sinBorde" onClick={borrarEmpleado}>
-            <img
-              title="Borrar Empleado"
-              className="imagenFotoGestionUsuarios"
-              id={option.id}
-              src={require("../../img/delete-foto.png")}
-              alt="imagen Foto Borrar"
-            />
-          </button>
-          <button type="button"
-            title="Ver Información Del Empleado"
-            onClick={verInfo}
-            id={option.id}
-            className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
-            Ver Info.
-          </button>
-        </td>
+              className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
+              Ver Info.
+            </button>
+          </td>
+        </tr>
+      ));
+    }else{
+      <tr>
+        <td colSpan={"6"}>La empresa no dispone de empleados.</td>
       </tr>
-    ));
+    }
   }
 
   return (
@@ -123,9 +164,13 @@ const PaginationEmpleados = ({ data, perPage }) => {
         </Table>
         <div className='botonesPaginacion'>
           {Array.from({ length: totalPages }, (_, i) => (
-              <button className='botonPaginacion' key={i} onClick={() => handleClick(i + 1)}>
+              i === 0 || i === (totalPages-1) || i === (paginaSeleccionada-2) || i === (paginaSeleccionada-1) || i === (paginaSeleccionada)  ? 
+              <button className='botonPaginacion' key={i} onClick={(e) => handleClick(i + 1,e)}>
                 {i + 1}
               </button>
+              :
+              null
+              
             ))}
         </div>
     </React.Fragment>

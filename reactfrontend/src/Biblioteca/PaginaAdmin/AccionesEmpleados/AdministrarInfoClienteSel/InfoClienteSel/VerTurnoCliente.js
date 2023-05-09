@@ -3,6 +3,7 @@ import PiePagina from '../../../../PaginaPrincipal/Footer/PiePagina';
 import CrearBodyTurno from '../../../GestionTurnos/PaginaPrincipalTurnos/VerTurnos/CrearBodyTurno';
 import NavAdmin from '../../../Nav/NavAdmin';
 import {Link} from 'react-router-dom';
+import './VerAusenciasGenerales.css';
 
 function VerTurnoCliente() {
   return (
@@ -13,9 +14,9 @@ function VerTurnoCliente() {
                     {/*PENDIENTE BUSCADOR TURNOS*/ }
                     <CrearBodyTurno/>
                 </div>
-            <div className='contenedorBotonVolver verHorarioClienteVolver '>
-                <p className='botonCambiarTurno'><Link className="botonInfoCliente" to="/cambiarTurno">Cambiar Turno</Link></p>
-                <Link to="/pagInfoClienteSel" className="botonInfoCliente">Volver</Link>
+            <div className='contenedorBotonVolver verHorarioClienteVolver divFlexTurnoSelEmpleado'>
+                <Link className="botonInfoCliente margin10" to="/cambiarTurno">Cambiar Turno</Link>
+                <Link to="/pagInfoClienteSel" className="botonInfoCliente margin10">Volver</Link>
             </div>
           </section>
         <PiePagina/>

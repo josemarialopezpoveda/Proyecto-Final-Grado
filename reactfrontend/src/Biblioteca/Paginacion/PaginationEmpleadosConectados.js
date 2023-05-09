@@ -7,6 +7,7 @@ import Table from 'react-bootstrap/Table';
 import './Paginacion.css';
 
 const PaginationEmpleadosConectados = ({ data, perPage }) => {
+  const [paginaSeleccionada, setPaginaSeleccionada] = useState(0)
     //Creamos la variable para el uso del useNavigate.
     const Navigate = useNavigate();
   
@@ -21,32 +22,45 @@ const PaginationEmpleadosConectados = ({ data, perPage }) => {
 
   const totalPages = Math.ceil(data.length / perPage);
 
-  const handleClick = (page) => {
+  const handleClick = (page,e) => {
     setCurrentPage(page);
+    setPaginaSeleccionada(page)
+    
+    let botonesSeleccionados = document.getElementsByClassName("botonSeleccionado");
+    if(botonesSeleccionados.length !== 0){
+      botonesSeleccionados[0].classList.remove("botonSeleccionado");
+    }
+    e.target.classList.add("botonSeleccionado");
   }
 
   const renderData = () => {
     const start = (currentPage - 1) * perPage;
     const end = start + perPage;
 
+    if(data.length !== 0){
     return data.slice(start, end).map((option, index) => (
-        <tr key={generarUUID()}>
-            <td>{option.nombre} {option.apellidos}</td>
-            <td className='campoOpcional'>{option.correo}</td>
-            <td className='campoOpcional'>{option.telefono}</td>
-            <td>{cogerFecha(option.fechaInicio)}</td>
-            <td>{cogerHora(option.horaInicio)}</td>
-            <td>
-                <button type="button"
-                title="Ver Jornada Del Empleado"
-                onClick={verJornada}
-                id={option.id}
-                className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
-                Ver Jornada
-                </button>
-            </td>
-        </tr>
-    ));
+          <tr key={generarUUID()}>
+              <td>{option.nombre} {option.apellidos}</td>
+              <td className='campoOpcional'>{option.correo}</td>
+              <td className='campoOpcional'>{option.telefono}</td>
+              <td>{cogerFecha(option.fechaInicio)}</td>
+              <td>{cogerHora(option.horaInicio)}</td>
+              <td>
+                  <button type="button"
+                  title="Ver Jornada Del Empleado"
+                  onClick={verJornada}
+                  id={option.id}
+                  className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
+                  Ver Jornada
+                  </button>
+              </td>
+          </tr>
+      ));
+    }else{
+      <tr>
+        <td colSpan={"6"}>La empresa no dispone de empleados.</td>
+      </tr>
+    }
   }
 
   return (
@@ -68,9 +82,13 @@ const PaginationEmpleadosConectados = ({ data, perPage }) => {
         </Table>
         <div className='botonesPaginacion'>
           {Array.from({ length: totalPages }, (_, i) => (
-              <button className='botonPaginacion' key={i} onClick={() => handleClick(i + 1)}>
+              i === 0 || i === (totalPages-1) || i === (paginaSeleccionada-2) || i === (paginaSeleccionada-1) || i === (paginaSeleccionada)  ? 
+              <button className='botonPaginacion' key={i} onClick={(e) => handleClick(i + 1,e)}>
                 {i + 1}
               </button>
+              :
+              null
+              
             ))}
         </div>
     </React.Fragment>

@@ -523,8 +523,40 @@ export const obtenerDiaSemana =() =>{
 }
 
 //Función que recoge los milisegundos de una hora.
-export const obtenerMilisegundosDesdeHora =(hora) =>{
+export const obtenerMilisegundosDesdeHora = (hora) =>{
   const [horas, minutos] = hora.split(':');
   const milisegundos = (parseInt(horas) * 60 * 60 + parseInt(minutos) * 60) * 1000;
   return milisegundos;
+}
+
+//Función que a partir de "2023-05-08" y "19:02" las une con el formato "2023-05-07 09:34:37".
+export const unirFechaYHora = (fechaStr, horaStr) =>{
+  const fechaHora = new Date(`${fechaStr}T${horaStr}:00`);
+  const fechaFormateada = fechaHora.toISOString().slice(0, 10);
+  const horaFormateada = fechaHora.toTimeString().slice(0, 5);
+  return `${fechaFormateada} ${horaFormateada}`;
+}
+
+//Una función que a partir de "2023-02-02 15:17:22" recoge la fecha y la devuelve en formato "yyyy-MM-dd".
+export const recogerFechaAPartirFecha = (stringFecha) =>{
+  const fecha = new Date(stringFecha);
+  const anio = fecha.getFullYear().toString();
+  const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+  const dia = fecha.getDate().toString().padStart(2, '0');
+  return `${anio}-${mes}-${dia}`;
+}
+
+//Una función que a partir de "2023-02-02 15:17:22" recoge la hora.
+export const recogerHoraAPartirFecha = (stringFecha) =>{
+  const fecha = new Date(stringFecha);
+  var horas = fecha.getHours();
+  var minutos = fecha.getMinutes();
+  if(horas < 10){
+    horas = "0" + horas;
+  }
+
+  if(minutos < 10){
+    minutos = "0" + minutos;
+  }
+  return `${horas}:${minutos}`;
 }

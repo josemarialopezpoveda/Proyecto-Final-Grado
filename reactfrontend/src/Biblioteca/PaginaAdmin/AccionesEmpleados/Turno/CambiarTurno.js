@@ -26,9 +26,10 @@ function CambiarTurno() {
         </section>
 
         <div className='botonAnyadirTurnoDiv'>
-          <Link className="anyadirTurnoBoton" to='/verTurnoCliente'>
+          <Link className="anyadirTurnoBoton margin0-10" to='/verTurnoCliente'>
             Cambiar Turno
           </Link>
+          <Link to="/verTurnoCliente" className="anyadirTurnoBoton margin0-10">Volver</Link>
         </div>
         <div className='ContenedorBajarFooter'>
           <div className='BajarFooter'>

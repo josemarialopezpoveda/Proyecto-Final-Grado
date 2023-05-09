@@ -23,8 +23,6 @@ function TurnosDelDia() {
   })
 
   const crearTurno = () =>{
-    console.log(obtenerMilisegundosDesdeHora(horas.horaInicioM))
-    console.log(obtenerMilisegundosDesdeHora(horas.horaFinM))
     if(form.descripcion === ""){
       mostrarAlertaErronea("Error a la hora de crear el turno","La descripción está vacia.",5000);
     }else if(contextoTurno.dias.length === 0){

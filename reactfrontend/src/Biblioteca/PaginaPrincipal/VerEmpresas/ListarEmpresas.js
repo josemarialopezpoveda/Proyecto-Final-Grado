@@ -4,6 +4,7 @@ import { generarUUID, mostrarAlertaErronea, peticionGet } from "../../FuncionesA
 import { URL_API } from "../../../services/http/const";
 import Table from 'react-bootstrap/Table';
 import BuscadorNuestrosClientes from "Biblioteca/Buscador/BuscadorNuestrosClientes";
+import PaginacionNuestrosClientes from "Biblioteca/Paginacion/PaginacionNuestrosClientes";
 
 function ListarEmpresas() {
   //Creo un estado que principalmente avisa que no hay empresas aún.
@@ -23,7 +24,6 @@ function ListarEmpresas() {
       pais: "No se han registrado empresas aún",
     },
   ]);
-
 
   //Esta función hace una petición y almacena los datos de la empresa y si falla avisamos al usuario
   const recoleccionDatos = async () => {
@@ -59,7 +59,8 @@ function ListarEmpresas() {
             <h1 className='text-center mt-4'>Empresas que usan nuestra tecnología</h1>
             <BuscadorNuestrosClientes datosEstaticos={setEmpresasEstatico} datosDinamicos={empresasDinamico}/>
             <div className='TablaDatosUser'>
-                <Table id='tablaAccionesEmpleados' striped>
+              <PaginacionNuestrosClientes data={empresasEstatico} perPage={14} />
+                {/* <Table id='tablaAccionesEmpleados' striped>
                     <thead>
                         <tr>
                             <th>Nombre Comercial</th>
@@ -79,7 +80,7 @@ function ListarEmpresas() {
                         </tr>
                       )})}
                     </tbody>
-                </Table>
+                </Table> */}
             </div>
         </section>
   )

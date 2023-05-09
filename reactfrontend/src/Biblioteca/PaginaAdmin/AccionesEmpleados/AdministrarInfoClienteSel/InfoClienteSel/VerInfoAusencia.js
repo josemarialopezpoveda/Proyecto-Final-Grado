@@ -193,7 +193,7 @@ function VerInfoAusencia(props) {
               </thead>
               <tbody>
                 <tr key={generarUUID()}>
-                  <td colSpan={"6"}>Este empleado no dispone de {props.titulo}s.</td>
+                  <td colSpan={"7"}>Este empleado no dispone de {props.titulo}s.</td>
                 </tr>
               </tbody>
             </Table>

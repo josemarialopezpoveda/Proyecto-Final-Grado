@@ -5,15 +5,15 @@
 	color: #000000;
 	font-size: 12px;
 	font-weight: bold;
-	padding: 12px 45px;
+	padding: 7px 10px;
 	letter-spacing: 1px;
 	text-transform: uppercase;
 	transition: transform 80ms ease-in;
 	text-decoration: none;
-    margin: 0 15px;
+    margin: 10px 10px;
 }
 
-.botonPaginacion:hover {    
+.botonPaginacion:hover, .botonSeleccionado {    
     cursor: pointer;
     color: #51CEF4;
     background-color: white;
@@ -22,6 +22,7 @@
 .botonesPaginacion{
     margin: 10px auto;
     display: flex;
+	flex-wrap: wrap;
     justify-content: center;
 }
   

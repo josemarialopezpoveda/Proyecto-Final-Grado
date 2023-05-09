@@ -42,6 +42,8 @@ import VerJornada from 'Biblioteca/PaginaAdmin/EmpleadosConectados/VerJornada/Ve
 import ResumenLaboralEmpleado from 'Biblioteca/PaginaAdmin/AccionesEmpleados/ResumenLaboralEmpleado/ResumenLaboralEmpleado';
 import VerJornadaPorDia from 'Biblioteca/PaginaCliente/VerJornadaPorDia/VerJornadaPorDia';
 import CalendarioGeneral from 'Biblioteca/PaginaCliente/CalendarioGeneral/CalendarioGeneral';
+import CrearTiempo from 'Biblioteca/PaginaAdmin/Tiempos/CrearTiempo';
+import ModificarTiempo from 'Biblioteca/PaginaAdmin/Tiempos/ModificarTiempo';
 
 function App() {
   return(
@@ -84,6 +86,8 @@ function App() {
 
                   {/*Ver tiempos de un empleado*/}
                   <Route exact path="/verTiemposEmpleado" element={<VerTiemposEmpleado/>}/>
+                  <Route exact path="/crearTiempo" element={<CrearTiempo/>}/>
+                  <Route exact path="/modificarTiempo" element={<ModificarTiempo/>}/>
 
                   {/*Chat / Correo*/}
                   <Route exact path="/chatAdmin" element={<ChatAdmin/>} />

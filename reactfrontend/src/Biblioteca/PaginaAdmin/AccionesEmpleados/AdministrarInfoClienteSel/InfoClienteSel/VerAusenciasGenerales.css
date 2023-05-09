@@ -7,3 +7,13 @@
 .verHorarioClienteVolver{
     margin-bottom: 150px;
 }
+
+.divFlexTurnoSelEmpleado{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.margin10{
+    margin: 10px;
+}

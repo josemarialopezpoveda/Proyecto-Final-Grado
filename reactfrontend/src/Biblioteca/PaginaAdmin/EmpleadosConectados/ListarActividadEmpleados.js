@@ -118,7 +118,7 @@ function ListarActividadEmpleados() {
                     })}
                     </tbody>
                 </Table> */}
-                <PaginationEmpleadosConectados data={empleadosEstaticos} perPage={2}/>
+                <PaginationEmpleadosConectados data={empleadosEstaticos} perPage={5}/>
             </div>
         </div>)
     }else{

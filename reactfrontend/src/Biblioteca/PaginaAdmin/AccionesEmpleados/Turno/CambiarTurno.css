@@ -7,6 +7,10 @@
     flex-wrap: wrap;
 }
 
+.margin0-10{
+    margin: 0 10px;
+}
+
 .turnoDia *{
     margin: 20px;
 }
@@ -77,5 +81,5 @@
 }
 
 .selectsTurnos{
-    width: 125px;
+    width: 130px;
 }

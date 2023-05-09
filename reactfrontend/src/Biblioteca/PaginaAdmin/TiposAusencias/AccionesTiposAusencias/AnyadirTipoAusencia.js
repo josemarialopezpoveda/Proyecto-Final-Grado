@@ -10,7 +10,8 @@ import { URL_API } from 'services/http/const';
 function AnyadirTipoAusencia() {
     
     const [form, setForm] = useState({
-        tipoAusencia: ""
+        tipoAusencia: "",
+        tipo: "BAJA"
     });
 
     //Creamos la variable para poder usar el navigate.
@@ -48,6 +49,7 @@ function AnyadirTipoAusencia() {
   return (
     <React.Fragment>
         <NavAdmin/>
+        <pre>{JSON.stringify(form,null,3)}</pre>
             <div>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
                     <h1 className='tituloh1noMarBot'>Añadir Tipo Ausencia</h1>
