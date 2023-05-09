@@ -542,7 +542,7 @@ class TiempoController extends Controller {
         if ($user instanceof Empleado && $primaryKey == $request->empleado_id) {
             return $this->extracted($request);
             // Si soy empresa o empleado administrador y quiero insertar un tiempo a otro empleado de la empresa.
-        } elseif ($user instanceof Empleado && $user->tipoEmpleado === "Administrador") {
+        } elseif ($user instanceof Empresa || $user->tipoEmpleado === "Administrador") {
             $empleado = DB::table('empleados')->where('id', $request->empleado_id)->first();
             if ($empleado->empresa_id === $user->empresa_id) {
                 return $this->extracted($request);
