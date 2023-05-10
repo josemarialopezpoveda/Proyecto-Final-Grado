@@ -138,7 +138,7 @@ Route::middleware('auth:sanctum')->group(
         Route::delete('/turnos/{turnoId}', [TurnoController::class, 'destroy']);
 
         //Ausencias
-        //Route::get('/ausencias', [AusenciaController::class, 'index']);
+        Route::get('/ausencias', [AusenciaController::class, 'index']);
         Route::get('/ausencia/{ausenciaId}', [AusenciaController::class, 'show']);
         Route::get('/ausenciasEmpleados', [AusenciaController::class, 'ausenciasEmpleados']);
         Route::get('/ausenciasEmpleados/{empleadoId}', [AusenciaController::class, 'ausenciasEmpleado']);

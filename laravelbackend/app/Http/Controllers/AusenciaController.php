@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Helpers\Auxiliares;
 use App\Models\Ausencia;
 use App\Models\Empleado;
+use App\Models\Empresa;
 use App\Models\Tipoausencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -226,7 +227,6 @@ class AusenciaController extends Controller {
     }
 
     public function show ($idAusencia){
-
         $user = Auth::user();
         $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
         if (is_numeric($empresaId)) {
@@ -235,9 +235,7 @@ class AusenciaController extends Controller {
                 $empleado = DB::table('empleados')->where('id', $ausencia->empleado_id)->first();
                 // Comprobar que el empleado pertenezca a la empresa del usuario logueado.
                 if ($empleado->empresa_id === $empresaId) {
-                    $data = [
-                        'ausencia' => $ausencia,
-                    ];
+                    $data = ['ausencia' => $ausencia,];
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'El empleado no pertenece a la empresa'];
@@ -252,4 +250,25 @@ class AusenciaController extends Controller {
             return response()->json($data, 403);
         }
     }
+
+    public function index (){
+
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+        if (is_numeric($empresaId)) {
+            $empresa = Empresa::find($empresaId);
+            $ausencias = $empresa->empleados()->with('ausencias')->get()->pluck('ausencias')->flatten();
+            if (!$ausencias->isEmpty()) {
+                    $data = ['ausencias' => $ausencias,];
+                    return response()->json($data);
+            } else {
+                $data = ['message' => 'Ausencia no existe'];
+                return response()->json($data, 404);
+            }
+        } else {
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data, 403);
+        }
+    }
+
 }
