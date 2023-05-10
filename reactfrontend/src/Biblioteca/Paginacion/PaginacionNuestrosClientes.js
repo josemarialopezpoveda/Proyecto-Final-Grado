@@ -1,5 +1,5 @@
 import { cogerFecha, cogerHora, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete } from 'Biblioteca/FuncionesAuxiliares/Funciones';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { URL_API } from 'services/http/const';
 import SweetAlert from "sweetalert2";
@@ -11,7 +11,7 @@ const PaginacionNuestrosClientes = ({ data, perPage, setEstadoDinamico, setEstad
     //Creamos la variable para el uso del useNavigate.
     const Navigate = useNavigate();
 
-    const [paginaSeleccionada, setPaginaSeleccionada] = useState(0)
+    const [paginaSeleccionada, setPaginaSeleccionada] = useState(1)
 
     const modificar = (e) =>{
         localStorage.setItem("idTiempoSeleccionado", e.target.id);
@@ -44,39 +44,14 @@ const PaginacionNuestrosClientes = ({ data, perPage, setEstadoDinamico, setEstad
         }
     };
 
-  const borrarTiempo = (e) =>{
-    SweetAlert.fire({
-        title: "¿Estás seguro que quieres eliminar este empleado?",
-        text: "Los datos se eliminarán definitivamente",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Sí, eliminar",
-        cancelButtonText: "Cancelar",
-      }).then(async (resultado) => {
-        if (resultado.value) {
-            try {
-                const header = {
-                  headers: {
-                    Accept: "application/json",
-                    Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-                  },
-                };
-                let url = URL_API + "tiempos/";
-                let peticion = await peticionDelete(`${url}${e.target.id}`, header);
-                if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
-                  mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
-                } else {
-                  mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
-                  Navigate("/verTiemposEmpleado");
-                  recoleccionDatos();
-                }
-            } catch (error) {
-            mostrarAlertaErronea(error.message, error.stack, null);
-            }
-            
-        }
-      })
-}
+    const seleccionarBotonArrancar = () =>{
+      let botonesPaginacion = document.getElementsByClassName("botonPaginacion");
+      botonesPaginacion[0].classList.add("botonSeleccionado")
+    }
+  
+    useEffect(()=>{
+      seleccionarBotonArrancar();
+    },[])
 
 
 

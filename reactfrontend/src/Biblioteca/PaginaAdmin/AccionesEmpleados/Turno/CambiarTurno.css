@@ -11,8 +11,17 @@
     margin: 0 10px;
 }
 
+.classAlturaDefinida{
+    min-height: 60vh !important;
+}
+
 .turnoDia *{
     margin: 20px;
+}
+
+.widthp{
+    width: 140px !important;
+    margin: 0 !important;
 }
 
 .tituloDiaSemana,div.form-switch{

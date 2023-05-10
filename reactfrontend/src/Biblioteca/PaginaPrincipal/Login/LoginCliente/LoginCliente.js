@@ -44,7 +44,7 @@ function LoginCliente() {
         mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
       } else {
         localStorage.clear();
-        mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "3000");
+        mostrarAlertaCorrecta("¡Bienvenido a TimeMana!", "Todo correcto y funcionando perfectamenteEstamos encantados de recibirte en nuestra plataforma. Aquí descubrirás herramientas y recursos para gestionar tu tiempo de manera efectiva, alcanzar tus objetivos y equilibrar tu vida laboral y personal.", "3000");
         localStorage.setItem("token", peticion.data.token);
         localStorage.setItem("tipoToken", peticion.data.token_type);
         localStorage.setItem("tipoUsuario", peticion.data.tipo_empleado);

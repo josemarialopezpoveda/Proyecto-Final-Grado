@@ -11,6 +11,7 @@ import SweetAlert from "sweetalert2";
 import { URL_API } from "../../../services/http/const";
 import Table from 'react-bootstrap/Table';
 import BuscadorTipoAusencia from "Biblioteca/Buscador/BuscadorTipoAusencia";
+import PaginacionTipoAusencias from "Biblioteca/Paginacion/PaginacionTipoAusencias";
 
 function ContenidoTablaTipoAusencias() {
   //Creamos la variable para el uso del useNavigate.
@@ -56,84 +57,86 @@ function ContenidoTablaTipoAusencias() {
     recoleccionDatos();
   }, []);
 
-  const borrarTipoAusencia = (e) => {
-    SweetAlert.fire({
-      title: "¿Estás seguro que quieres eliminar este tipo de Ausencia?",
-      text: "Los datos se eliminarán definitivamente",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
-    }).then(async (resultado) => {
-      if (resultado.value) {
-        try {
-          const header = {
-            headers: {
-              Accept: "application/json",
-              Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-            },
-          };
-          let url = URL_API + "tipoAusencias/";
-          console.log(url + `${e.target.id}`)
-          let peticion = await peticionDelete(`${url}${e.target.id}`);
-          console.log(peticion)
-          if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
-            mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
-          } else {
-            mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
-            Navigate("/verTipoAusencias");
-            recoleccionDatos();
-          }
-        } catch (error) {
-          mostrarAlertaErronea(error.message, error.stack, null);
-        }
-      } else {
-      }
-    });
-  };
+  // const borrarTipoAusencia = (e) => {
+  //   SweetAlert.fire({
+  //     title: "¿Estás seguro que quieres eliminar este tipo de Ausencia?",
+  //     text: "Los datos se eliminarán definitivamente",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Sí, eliminar",
+  //     cancelButtonText: "Cancelar",
+  //   }).then(async (resultado) => {
+  //     if (resultado.value) {
+  //       try {
+  //         const header = {
+  //           headers: {
+  //             Accept: "application/json",
+  //             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+  //           },
+  //         };
+  //         let url = URL_API + "tipoAusencias/";
+  //         console.log(url + `${e.target.id}`)
+  //         let peticion = await peticionDelete(`${url}${e.target.id}`);
+  //         console.log(peticion)
+  //         if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
+  //           mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
+  //         } else {
+  //           mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
+  //           Navigate("/verTipoAusencias");
+  //           recoleccionDatos();
+  //         }
+  //       } catch (error) {
+  //         mostrarAlertaErronea(error.message, error.stack, null);
+  //       }
+  //     } else {
+  //     }
+  //   });
+  // };
 
-  const modificar = (e) => {
-    localStorage.setItem("idTipoAusencia", e.target.id);
-    Navigate("/modificarTipoAusencia");
-  };
+  // const modificar = (e) => {
+  //   localStorage.setItem("idTipoAusencia", e.target.id);
+  //   Navigate("/modificarTipoAusencia");
+  // };
 
-  const getTiposAusencias = () =>{
-      return tipoAusenciasEstatico.map((option) => {
-        return (
-          <tr key={generarUUID()}>
-            <td>{option.descripcion}</td>
-            <td className='campoOpcional'>{option.tipo}</td>
-            <td>
-              <button type="button" className="sinBorde" onClick={modificar}>
-                <img
-                  id={option.id}
-                  title="Modificar Tipo de ausencia"
-                  className="imagenFotoGestionUsuarios"
-                  src={require("../../../img/modify-foto.png")}
-                  alt="imagen Foto Modificar"
-                />
-              </button>
-              <button id={option.id} type="button" className="sinBorde" onClick={borrarTipoAusencia}>
-                <img
-                  id={option.id}
-                  title="Borrar el tipo de ausencia"
-                  className="imagenFotoGestionUsuarios"
-                  src={require("../../../img/delete-foto.png")}
-                  alt="imagen Foto Borrar"
-                />
-              </button>
-            </td>
-          </tr>
-        );
-      });
-  }
+  // const getTiposAusencias = () =>{
+  //     return tipoAusenciasEstatico.map((option) => {
+  //       return (
+  //         <tr key={generarUUID()}>
+  //           <td>{option.descripcion}</td>
+  //           <td className='campoOpcional'>{option.tipo}</td>
+  //           <td>
+  //             <button type="button" className="sinBorde" onClick={modificar}>
+  //               <img
+  //                 id={option.id}
+  //                 title="Modificar Tipo de ausencia"
+  //                 className="imagenFotoGestionUsuarios"
+  //                 src={require("../../../img/modify-foto.png")}
+  //                 alt="imagen Foto Modificar"
+  //               />
+  //             </button>
+  //             <button id={option.id} type="button" className="sinBorde" onClick={borrarTipoAusencia}>
+  //               <img
+  //                 id={option.id}
+  //                 title="Borrar el tipo de ausencia"
+  //                 className="imagenFotoGestionUsuarios"
+  //                 src={require("../../../img/delete-foto.png")}
+  //                 alt="imagen Foto Borrar"
+  //               />
+  //             </button>
+  //           </td>
+  //         </tr>
+  //       );
+  //     });
+  // }
 
   
   if(tipoAusenciasEstatico.id !== "" && tipoAusenciasEstatico.descripcion !== ""){
     return(
       <div className='TablaDatosUser tablaTiposAusencias'>
           <BuscadorTipoAusencia datosEstaticos={setTipoAusenciaEstatico} datosDinamicos={tipoAusenciasDinamico}/>
-          <Table striped>
+          <PaginacionTipoAusencias data={tipoAusenciasEstatico} perPage={5} 
+                setEstadoEstatico={setTipoAusenciaEstatico} setEstadoDinamico={setTipoAusenciaDinamico}/>
+          {/* <Table striped>
           <thead>
               <tr>
                   <th>Descripción</th>
@@ -144,7 +147,7 @@ function ContenidoTablaTipoAusencias() {
           <tbody>
             {getTiposAusencias()}
           </tbody>
-          </Table>
+          </Table> */}
       </div>
     );
   }else{
@@ -160,7 +163,7 @@ function ContenidoTablaTipoAusencias() {
           </thead>
           <tbody>
             <tr key={generarUUID()}>
-              <td colSpan="6">Tu empresa no dispone de tipos de ausencias.</td>
+              <td colSpan="3">Tu empresa no dispone de tipos de ausencias.</td>
             </tr>
           </tbody>
           </Table>

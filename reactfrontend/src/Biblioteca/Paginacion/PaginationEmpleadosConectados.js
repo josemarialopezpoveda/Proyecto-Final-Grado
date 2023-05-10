@@ -1,5 +1,5 @@
 import { cogerFecha, cogerHora, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete } from 'Biblioteca/FuncionesAuxiliares/Funciones';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { URL_API } from 'services/http/const';
 import SweetAlert from "sweetalert2";
@@ -7,7 +7,7 @@ import Table from 'react-bootstrap/Table';
 import './Paginacion.css';
 
 const PaginationEmpleadosConectados = ({ data, perPage }) => {
-  const [paginaSeleccionada, setPaginaSeleccionada] = useState(0)
+  const [paginaSeleccionada, setPaginaSeleccionada] = useState(1)
     //Creamos la variable para el uso del useNavigate.
     const Navigate = useNavigate();
   
@@ -32,6 +32,15 @@ const PaginationEmpleadosConectados = ({ data, perPage }) => {
     }
     e.target.classList.add("botonSeleccionado");
   }
+
+  const seleccionarBotonArrancar = () =>{
+    let botonesPaginacion = document.getElementsByClassName("botonPaginacion");
+    botonesPaginacion[0].classList.add("botonSeleccionado")
+  }
+
+  useEffect(()=>{
+    seleccionarBotonArrancar();
+  },[])
 
   const renderData = () => {
     const start = (currentPage - 1) * perPage;

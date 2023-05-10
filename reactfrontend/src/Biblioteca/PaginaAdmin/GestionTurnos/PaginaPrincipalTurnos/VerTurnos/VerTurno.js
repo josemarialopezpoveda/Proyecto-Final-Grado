@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import PiePagina from '../../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../../Nav/NavAdmin';
 import Table from 'react-bootstrap/Table';
-import CrearBodyTurno from './CrearBodyTurno';
+import CrearBodyVerTurno from './CrearBodyVerTurno';
 import { Link } from "react-router-dom";
 import './VerTurno.css'
 import { URL_API } from 'services/http/const';
@@ -38,11 +38,10 @@ function VerTurno() {
     <React.Fragment>
         <NavAdmin/>
         <section>
-            <h4 className='tituloH1 text-center'>Turno {turno.descripcion}</h4>
             <div>
                 <div className='tablaMediaQuery TablaDatosUser'>
                     {/*PENDIENTE BUSCADOR TURNOS*/ }
-                    <CrearBodyTurno/>
+                    <CrearBodyVerTurno/>
                 </div>
                 <div className='contenedorBotonModificarTurno disFlex500px'>
                     <Link className="linkSignInLogin" id="signIn" to="/modificarTurno">Modificar Turno</Link>

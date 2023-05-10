@@ -28,6 +28,8 @@ function VerMensajesEmpresaAdmin() {
         nombreCompletoInterveniente2:"",
     });
 
+    const [tituloCaso, setTituloCaso] = useState("");
+
     //Función para recoger todos los datos.
     const recoleccionDatos = async () => {
         const header = {
@@ -38,18 +40,14 @@ function VerMensajesEmpresaAdmin() {
         };
         let datosMensaje = await peticionGetAuth(URL_API + "mensajes/" + `${localStorage.getItem('idCaso')}`, header);
         let datosCaso = await peticionGetAuth(URL_API + "casos/" + `${localStorage.getItem('idCaso')}`, header);
-        //console.log(datosMensaje)
-        //console.log(datosCaso)
+        console.log(datosMensaje)
+        console.log(datosCaso)
          if (datosMensaje.data.mensajes !== undefined && datosMensaje.data.mensajes !== null && datosMensaje.data.mensajes.length !== 0) {
             var todosDatosCaso = datosMensaje.data.mensajes.map((datosM) => {
                 let empleados = {
                     emisor:"",
                     receptor:"",
                 };
-                console.log("SON IGUALES")
-                console.log(datosMensaje.data.Intervinientes.idEmisor)
-                console.log(datosMensaje.data.Intervinientes.idReceptor)
-                console.log(datosM.emisor)
                 if(datosMensaje.data.Intervinientes.idEmisor === datosM.emisor || datosMensaje.data.Intervinientes.idReceptor === datosM.receptor){
                     empleados.emisor = datosMensaje.data.Intervinientes.Emisor;
                     empleados.receptor = datosMensaje.data.Intervinientes.Receptor;
@@ -63,20 +61,19 @@ function VerMensajesEmpresaAdmin() {
                   receptor: empleados.receptor,
                   mensaje: datosM.mensaje,
                   horaEnvio: datosM.horaEnvio,
-                  tituloCaso: datosCaso.data.caso.asunto
                 };
-                console.log(newObj)
                 return newObj;
               });
               setForm(todosDatosCaso);
-                var intervinientes = {
-                    idInterveniente1: datosMensaje.data.Intervinientes.idEmisor,
-                    nombreCompletoInterveniente1: datosMensaje.data.Intervinientes.Emisor,
-                    idInterveniente2: datosMensaje.data.Intervinientes.idReceptor,
-                    nombreCompletoInterveniente2: datosMensaje.data.Intervinientes.Receptor,
-                }
-              setIntervenientes(intervinientes);
         }
+        var intervinientes = {
+            idInterveniente1: datosMensaje.data.Intervinientes.idEmisor,
+            nombreCompletoInterveniente1: datosMensaje.data.Intervinientes.Emisor,
+            idInterveniente2: datosMensaje.data.Intervinientes.idReceptor,
+            nombreCompletoInterveniente2: datosMensaje.data.Intervinientes.Receptor,
+        }
+        setIntervenientes(intervinientes);
+        setTituloCaso(datosCaso.data.caso.asunto)
     };
 
     //Creamos un useEffect que nada más cargar recoge los datos.
@@ -168,7 +165,9 @@ function VerMensajesEmpresaAdmin() {
     <React.Fragment>
         <NavAdmin/>
         <pre>{JSON.stringify(form, null, 3)}</pre>
-        <h1 className='text-center tituloH1'>{form[0].tituloCaso}</h1>
+        <pre>{JSON.stringify(tituloCaso, null, 3)}</pre>
+        <pre>{JSON.stringify(intervenientes, null, 3)}</pre>
+        <h1 className='text-center tituloH1'>{tituloCaso}</h1>
         <div className='cabeceraVerMensaje'>
             <div className="genteMensaje">
                 <h1>Involucrado 1: {intervenientes.nombreCompletoInterveniente1}</h1>

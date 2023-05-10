@@ -1,5 +1,5 @@
 import { generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete, peticionGetAuth } from 'Biblioteca/FuncionesAuxiliares/Funciones';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { URL_API } from 'services/http/const';
 import SweetAlert from "sweetalert2";
@@ -7,7 +7,7 @@ import Table from 'react-bootstrap/Table';
 import './Paginacion.css';
 
 const PaginationEmpleados = ({ data, perPage, setEstadoDinamico, setEstadoEstatico }) => {
-  const [paginaSeleccionada, setPaginaSeleccionada] = useState(0)
+  const [paginaSeleccionada, setPaginaSeleccionada] = useState(1)
   //Creamos la variable para el uso del useNavigate.
   const Navigate = useNavigate();
   //Función que guarda el ID del empleado a modificar en localStorage y te lleva a la ruta del formulario de modificar el empleado.
@@ -47,6 +47,15 @@ const PaginationEmpleados = ({ data, perPage, setEstadoDinamico, setEstadoEstati
       setEstadoEstatico(todosDatosEmpresa);
     }
   };
+
+  const seleccionarBotonArrancar = () =>{
+    let botonesPaginacion = document.getElementsByClassName("botonPaginacion");
+    botonesPaginacion[0].classList.add("botonSeleccionado")
+  }
+
+  useEffect(()=>{
+    seleccionarBotonArrancar();
+  },[])
 
   //Función que borra el empleado e informa si todo ha ido bien o ha ocurrido algún error inesperado.
   const borrarEmpleado = async (e) => {

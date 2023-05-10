@@ -19,6 +19,9 @@ function VerAusenciasGenerales(props) {
           <section>
             <div className='contenedorVerAusenciasGenerales'>
               <h1>Ver {titulo}</h1>
+              <div className='contenedorBotonCrearCorreo divFlexFichar'>
+              <Link className="crearCorreoBoton" to="/anyadirAusencia">Añadir Ausencia</Link>
+              </div>
               <VerInfoAusencia titulo={props.titulo} link={props.link}/>
             </div>
             <div className='contenedorBotonVolver'>
