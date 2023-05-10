@@ -102,7 +102,7 @@ function ModificarCorreo() {
                     <Form id="anyadir" className='formAnyadirTipoAusencia'>
                         <p>Asunto</p>
                         <Form.Group className="mb-3">
-                                <Form.Control required size="lg" type="text" placeholder={"Añade el tipo de ausencia"}
+                                <Form.Control required size="lg" type="text" placeholder={"Asunto del caso"}
                                 onChange={e=>setForm({...form,asunto:e.target.value.trim()})}
                                 defaultValue={form.asunto}/>
                         </Form.Group>

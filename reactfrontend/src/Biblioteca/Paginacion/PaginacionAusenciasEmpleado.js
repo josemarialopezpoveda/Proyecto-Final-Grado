@@ -143,7 +143,7 @@ const PaginacionAusenciasEmpleado = ({ data, perPage, setEstadoDinamico, setEsta
     if(data.length !== 0){
       return data.slice(start, end).map((option, index) => (     
           <tr key={generarUUID()}>
-                <td className='formatoTextoCorrecto'>{option.descripcion} ID{option.id}</td>
+                <td className='formatoTextoCorrecto'>{option.descripcion}</td>
                 <td className='formatoTextoCorrecto'>{option.descripcionAusencia}</td>
                 <td className='formatoTextoCorrecto campoOpcional'>{fechaNula(option.fInicio)}</td>
                 <td className='formatoTextoCorrecto campoOpcional'>{fechaNula(option.fFin)}</td>

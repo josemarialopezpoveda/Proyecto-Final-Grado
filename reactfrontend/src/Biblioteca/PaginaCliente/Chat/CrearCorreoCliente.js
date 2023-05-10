@@ -38,7 +38,8 @@ function CrearCorreoCliente() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/", header);
+        let datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/" + `${localStorage.getItem("idEmpresa")}`, header);
+        console.log(datosEmpresaLogueada)
         //console.log(datosEmpresaLogueada.data.empresa.empleados)
         if (datosEmpresaLogueada.data.empresa.empleados !== 0) {
           var nombreCompletoEmpleado = datosEmpresaLogueada.data.empresa.empleados.map((datosEmpleado) => {

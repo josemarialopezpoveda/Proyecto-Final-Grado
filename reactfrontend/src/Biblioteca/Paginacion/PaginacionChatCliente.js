@@ -68,7 +68,7 @@ const PaginacionChatCliente = ({ data, perPage, setEstadoDinamico, setEstadoEsta
           } else {
             console.log(peticion.data.message)
             if(peticion.data.message == "Error, no se puede borrar, el caso tiene mensajes."){
-              mostrarAlertaErronea(peticion.data.message, "Error mensaje con errores.", "3000")
+              mostrarAlertaErronea(peticion.data.message, "", "3000")
             }else{
               mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente.", "3000");
               Navigate("/chatCliente");

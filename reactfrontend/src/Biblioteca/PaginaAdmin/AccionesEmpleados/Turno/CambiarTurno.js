@@ -23,6 +23,27 @@ function CambiarTurno() {
 
   const [turnoDias, setTurnoDias] = useState();
 
+  const [empleado, setEmpleado] = useState({
+    nombre:"",
+})
+
+  const recoleccionNombre = async () => {
+    const header = {
+      headers: {
+        Accept: "application/json",
+        Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+      },
+    };
+    let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleado")}`, header);
+    console.log(datosEmpleado)
+    if (datosEmpleado.data.nombre !== undefined) {
+        var newEmpleado = {
+          nombre: datosEmpleado.data.nombre,
+        }
+      setEmpleado(newEmpleado);
+    }
+  };
+
   const recoleccionDatos = async () => {
     const header = {
       headers: {
@@ -30,9 +51,10 @@ function CambiarTurno() {
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
-    let datosTurnos = await peticionGetAuth(URL_API + "turnos/", header);
+    let datosTurnos = await peticionGetAuth(URL_API + "turnosEmpresa/" + `${localStorage.getItem("id")}`, header);
+    console.log(datosTurnos)
     if(datosTurnos.data.length !== 0){
-      var todosLosTurnos = datosTurnos.data.map((turno)=>{
+      var todosLosTurnos = datosTurnos.data.turnos.map((turno)=>{
         var newTurno = {
           id: turno.id,
           descripcion: turno.descripcion,
@@ -53,6 +75,7 @@ function CambiarTurno() {
 
     useEffect(() => {
       recoleccionDatos();
+      recoleccionNombre();
   }, []);
 
   useEffect(()=>{
@@ -79,11 +102,10 @@ function CambiarTurno() {
   }
 
   const mostrarTurnoSeleccionado = () =>{
-    console.log(turnoDias)
     if(turno.id !== "-" && turno.id !== ""){
       if(turnoDias !== undefined && turnoDias.length !== 0){
         return(<div>
-          <h1 className='tituloCambiarTurno'>El turno que has sleeccionado es este:</h1>
+          <h1 className='tituloCambiarTurno'>Turno seleccionado:</h1>
           <div className='tablaMediaQuery TablaDatosUser'>
             <Table striped>
               <thead>
@@ -186,9 +208,8 @@ const TodoCorrecto = async() =>{
   return (
     <React.Fragment>
         <NavAdmin/>
-        <pre>{JSON.stringify(turno,null,3)}</pre>
         <section className="contenedorEmpleadosAcciones classAlturaDefinida">
-          <h1 className='tituloCambiarTurno'>Cambiar Turno del Empleado Seleccionado</h1>
+          <h1 className='tituloCambiarTurno'>Cambiar Turno del {empleado.nombre}</h1>
           <section className='sectionPequenyo sectionCambiarTurno'>
             <Form key={generarUUID()} id="anyadir">
                 <div className='divContenedorCampo'>

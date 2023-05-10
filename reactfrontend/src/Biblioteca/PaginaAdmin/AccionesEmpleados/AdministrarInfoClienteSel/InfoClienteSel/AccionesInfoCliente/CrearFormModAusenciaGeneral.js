@@ -46,16 +46,16 @@ function CrearFormModAusenciaGeneral(props) {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        console.log(URL_API + "ausencias/" + `${localStorage.getItem("idAusencia")}`)
-        let datosAusencia = await peticionGetAuth(URL_API + "ausencias/" + `${localStorage.getItem("idAusencia")}`, header);
+        console.log(URL_API + "ausencia/" + `${localStorage.getItem("idAusencia")}`)
+        let datosAusencia = await peticionGetAuth(URL_API + "ausencia/" + `${localStorage.getItem("idAusencia")}`, header);
         console.log(datosAusencia)
-        if (datosAusencia.data !== 0) {
+        if (datosAusencia.data.ausencia !== undefined) {
             var newAusencia = {
-              descripcion: datosAusencia.data.descripcion,
-              justificada: datosAusencia.data.justificada,
-              fechaInicio: datosAusencia.data.fechaInicio,
-              fechaFin: datosAusencia.data.fechaFin,
-              tipoausencias_id: datosAusencia.data.tipoausencias.id
+              descripcion: datosAusencia.data.ausencia.descripcion,
+              justificada: datosAusencia.data.ausencia.justificada,
+              fechaInicio: datosAusencia.data.ausencia.fechaInicio,
+              fechaFin: datosAusencia.data.ausencia.fechaFin,
+              tipoausencias_id: datosAusencia.data.ausencia.tipoausencias_id
             };
           setForm(newAusencia);
         }
@@ -97,7 +97,7 @@ function CrearFormModAusenciaGeneral(props) {
           mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
       }else{
           mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-          Navigate("/verTipoAusencias")
+          Navigate("/verAusencias")
       }
     } catch (error) {
         mostrarAlertaErronea(error.message, error.stack, null);
