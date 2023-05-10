@@ -224,4 +224,23 @@ class AusenciaController extends Controller {
         }
         return response()->json($data);
     }
+
+    public function show ($idAusencia){
+
+
+        //$user = Auth::user();
+        //$empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+
+        $ausencia = DB::table('ausencias')->where('id', $idAusencia)->first();
+
+        if ($ausencia){
+            $data = ['ausencia' => $ausencia,];
+            return response()->json($data);
+        } else {
+            $data = ['message' => 'Ausencia no existe'];
+            return response()->json($data, 404);
+        }
+
+
+    }
 }

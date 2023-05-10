@@ -67,6 +67,7 @@ Route::put('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'up
 Route::delete('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'destroy']);
 
 // Ausencias
+Route::get('/ausencia/{ausenciaId}', [AusenciaController::class, 'show']);
 Route::post('/ausencias', [AusenciaController::class, 'store']);
 Route::put('/ausencias/{ausencias}', [AusenciaController::class, 'update']);
 Route::delete('/ausencias/{ausencias}', [AusenciaController::class, 'destroy']);
