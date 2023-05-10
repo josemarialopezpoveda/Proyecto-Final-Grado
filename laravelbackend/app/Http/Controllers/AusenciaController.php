@@ -227,20 +227,29 @@ class AusenciaController extends Controller {
 
     public function show ($idAusencia){
 
-
-        //$user = Auth::user();
-        //$empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
-
-        $ausencia = DB::table('ausencias')->where('id', $idAusencia)->first();
-
-        if ($ausencia){
-            $data = ['ausencia' => $ausencia,];
-            return response()->json($data);
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+        if (is_numeric($empresaId)) {
+            $ausencia = DB::table('ausencias')->where('id', $idAusencia)->first();
+            if ($ausencia) {
+                $empleado = DB::table('empleados')->where('id', $ausencia->empleado_id)->first();
+                // Comprobar que el empleado pertenezca a la empresa del usuario logueado.
+                if ($empleado->empresa_id === $empresaId) {
+                    $data = [
+                        'ausencia' => $ausencia,
+                    ];
+                    return response()->json($data);
+                } else {
+                    $data = ['message' => 'El empleado no pertenece a la empresa'];
+                    return response()->json($data, 400);
+                }
+            } else {
+                $data = ['message' => 'Ausencia no existe'];
+                return response()->json($data, 404);
+            }
         } else {
-            $data = ['message' => 'Ausencia no existe'];
-            return response()->json($data, 404);
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data, 403);
         }
-
-
     }
 }

@@ -67,7 +67,7 @@ Route::put('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'up
 Route::delete('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'destroy']);
 
 // Ausencias
-Route::get('/ausencia/{ausenciaId}', [AusenciaController::class, 'show']);
+
 Route::post('/ausencias', [AusenciaController::class, 'store']);
 Route::put('/ausencias/{ausencias}', [AusenciaController::class, 'update']);
 Route::delete('/ausencias/{ausencias}', [AusenciaController::class, 'destroy']);
@@ -139,7 +139,7 @@ Route::middleware('auth:sanctum')->group(
 
         //Ausencias
         //Route::get('/ausencias', [AusenciaController::class, 'index']);
-        //Route::get('/ausencias/{empleadoId}', [AusenciaController::class, 'show']);
+        Route::get('/ausencia/{ausenciaId}', [AusenciaController::class, 'show']);
         Route::get('/ausenciasEmpleados', [AusenciaController::class, 'ausenciasEmpleados']);
         Route::get('/ausenciasEmpleados/{empleadoId}', [AusenciaController::class, 'ausenciasEmpleado']);
 
