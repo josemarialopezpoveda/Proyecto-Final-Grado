@@ -58,20 +58,24 @@ class Empleado extends Model
 //    {
 //        return $this->belongsToMany(Turno::class, 'empleados_turnos');
 //    }
-    public function turnos()
+    public function turnos(): BelongsToMany
     {
         return $this->belongsToMany(Turno::class, 'empleados_turnos', 'empleado_id', 'turno_id')
             ->withPivot('fechaInicioTurno', 'fechaFinTurno', 'activo'); // Agrega los campos de la tabla pivot
     }
 
-
-    public function tiempos()
+    public function tiempos(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Tiempo::class);
     }
 
-    public function casos()
+    public function casos(): BelongsToMany
     {
         return $this->belongsToMany(Caso::class, 'casos_empleados');
+    }
+
+    public function ausencias(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Ausencia::class);
     }
 }
