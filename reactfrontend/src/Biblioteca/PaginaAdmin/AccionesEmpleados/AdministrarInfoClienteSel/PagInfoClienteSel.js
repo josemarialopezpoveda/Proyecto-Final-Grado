@@ -42,15 +42,14 @@ function PagInfoClienteSel() {
             <div className='contenedorInfoClienteSel'>
                 <div className='infoclienteSel'>
                     <h3>Turno</h3>
-                    <div className='height180pxFlex'>
+                    <div>
                         <p><Link className="botonInfoCliente" to="/verTurnoCliente">Ver Turno</Link></p>
                     </div>
                 </div>
                 <div className='infoclienteSel'>
                     <h3>Ausencias</h3>
-                    <div className='height180px'>
+                    <div>
                         <p><Link className="botonInfoCliente" to="/verAusencias">Ver Ausencias</Link></p>
-                        <p><Link className="botonInfoCliente" to="/anyadirAusencia">Añadir Ausencias</Link></p>
                     </div>
                 </div>
                 <div className='infoclienteSel'>

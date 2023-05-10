@@ -13,12 +13,12 @@ const handleChange=e=>{
 const filtrar=(terminoBusqueda)=>{
   var resultadosBusqueda=props.datosDinamicos.filter((elemento)=>{
     if(elemento !== undefined){   
-        console.log(elemento)
         if(elemento.fFin === null){
             if(elemento.descripcion.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
                 elemento.fInicio.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
                 elemento.justificada.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-                elemento.tipoAusencia.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())){
+                elemento.tipoAusencia.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+                elemento.descripcionAusencia.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())){
                 return elemento;
             }
         }else{
@@ -26,7 +26,8 @@ const filtrar=(terminoBusqueda)=>{
                 elemento.fFin.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
                 elemento.fInicio.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
                 elemento.justificada.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-                elemento.tipoAusencia.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())){
+                elemento.tipoAusencia.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+                elemento.descripcionAusencia.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())){
                 return elemento;
             }
         }

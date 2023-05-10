@@ -28,6 +28,8 @@ function VerMensajesEmpleado() {
         nombreCompletoInterveniente2:"",
     });
 
+    const [tituloCaso, setTituloCaso] = useState("");
+
     //Función para recoger todos los datos.
     const recoleccionDatos = async () => {
         const header = {
@@ -39,6 +41,7 @@ function VerMensajesEmpleado() {
         let datosMensaje = await peticionGetAuth(URL_API + "mensajes/" + `${localStorage.getItem('idCaso')}`, header);
         let datosCaso = await peticionGetAuth(URL_API + "casos/" + `${localStorage.getItem('idCaso')}`, header);
         console.log(datosMensaje)
+        console.log(datosCaso)
          if (datosMensaje.data.mensajes !== undefined && datosMensaje.data.mensajes !== null && datosMensaje.data.mensajes.length !== 0) {
             var todosDatosCaso = datosMensaje.data.mensajes.map((datosM) => {
                 let empleados = {
@@ -63,14 +66,15 @@ function VerMensajesEmpleado() {
                 return newObj;
               });
               setForm(todosDatosCaso);
-                var intervinientes = {
-                    idInterveniente1: datosMensaje.data.Intervinientes.idEmisor,
-                    nombreCompletoInterveniente1: datosMensaje.data.Intervinientes.Emisor,
-                    idInterveniente2: datosMensaje.data.Intervinientes.idReceptor,
-                    nombreCompletoInterveniente2: datosMensaje.data.Intervinientes.Receptor,
-                }
-              setIntervenientes(intervinientes);
         }
+        setTituloCaso(datosCaso.data.caso.asunto)
+        var intervinientes = {
+            idInterveniente1: datosMensaje.data.Intervinientes.idEmisor,
+            nombreCompletoInterveniente1: datosMensaje.data.Intervinientes.Emisor,
+            idInterveniente2: datosMensaje.data.Intervinientes.idReceptor,
+            nombreCompletoInterveniente2: datosMensaje.data.Intervinientes.Receptor,
+        }
+        setIntervenientes(intervinientes);
     };
 
     //Creamos un useEffect que nada más cargar recoge los datos.

@@ -59,7 +59,7 @@ function ListarEmpresas() {
             <h1 className='text-center mt-4'>Empresas que usan nuestra tecnología</h1>
             <BuscadorNuestrosClientes datosEstaticos={setEmpresasEstatico} datosDinamicos={empresasDinamico}/>
             <div className='TablaDatosUser'>
-              <PaginacionNuestrosClientes data={empresasEstatico} perPage={14} />
+              <PaginacionNuestrosClientes data={empresasEstatico} perPage={4} />
                 {/* <Table id='tablaAccionesEmpleados' striped>
                     <thead>
                         <tr>

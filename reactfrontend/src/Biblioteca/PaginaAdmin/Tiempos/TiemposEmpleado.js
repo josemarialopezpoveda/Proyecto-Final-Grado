@@ -89,8 +89,11 @@ function TiemposEmpleado() {
 
     if(tiemposEstaticos !== undefined){
         return(
-            <PaginacionTiempos data={tiemposEstaticos} perPage={7} 
-            setEstadoEstatico={setTiemposEstaticos} setEstadoDinamico={setTiemposDinamicos}/>)
+            <div>
+                <BuscadorTiempos datosEstaticos={setTiemposEstaticos} datosDinamicos={tiemposDinamicos}/>
+                <PaginacionTiempos data={tiemposEstaticos} perPage={5} 
+                setEstadoEstatico={setTiemposEstaticos} setEstadoDinamico={setTiemposDinamicos}/>
+            </div>)
         // <div>
         //     <BuscadorTiempos datosEstaticos={setTiemposEstaticos} datosDinamicos={tiemposDinamicos}/>
         //     <div className='TablaDatosUser'>

@@ -46,6 +46,7 @@ function CrearFormModAusenciaGeneral(props) {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
+        console.log(URL_API + "ausencias/" + `${localStorage.getItem("idAusencia")}`)
         let datosAusencia = await peticionGetAuth(URL_API + "ausencias/" + `${localStorage.getItem("idAusencia")}`, header);
         console.log(datosAusencia)
         if (datosAusencia.data !== 0) {

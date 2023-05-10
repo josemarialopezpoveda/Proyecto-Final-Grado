@@ -75,8 +75,8 @@ function AnyadirAusenciaGeneral(props) {
     if(peticion.data.errores !== undefined && peticion.data.errores !== null){
         mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
     }else{
-        mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-        Navigate("/pagInfoClienteSel")
+        mostrarAlertaCorrecta("Todo correcto y funcionando perfectamente","Ausencia añadida correctamente", "5000");
+        Navigate("/verAusencias")
     }
   } catch (error) {
       mostrarAlertaErronea(error.message, error.stack, null);
@@ -147,7 +147,7 @@ function AnyadirAusenciaGeneral(props) {
                   </div>
                   <div className='contenedorBotonAñadirAusenciaGeneral'>
                     <button type='button' className='linkSignInLogin' onClick={TodoCorrecto} id="signIn">Añadir {props.titulo}</button>
-                    <Link to="/pagInfoClienteSel" className="linkSignInLogin" id="signIn">Volver</Link>
+                    <Link to="/verAusencias" className="linkSignInLogin" id="signIn">Volver</Link>
                   </div>
                 </Form>
               </section>

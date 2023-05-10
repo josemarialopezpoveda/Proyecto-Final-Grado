@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import SweetAlert from "sweetalert2";
 import BuscadorCasos from 'Biblioteca/Buscador/BuscadorCasos';
 import NavCliente from '../Nav/NavCliente';
+import PaginacionChatCliente from 'Biblioteca/Paginacion/PaginacionChatCliente';
 
 function ChatCliente() {
   //Creamos la variable para el uso del useNavigate.
@@ -57,67 +58,67 @@ function ChatCliente() {
     recoleccionDatos();
   }, []);
 
-  //Función que pide confirmación al usuario y si de verdad lo desea borra el caso seleccionado.
-  const borrarCaso = async (e) => {
-    SweetAlert.fire({
-      title: "¿Estás seguro que quieres eliminar este caso?",
-      text: "Los datos se eliminarán definitivamente",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
-    }).then(async (resultado) => {
-      if (resultado.value) {
-        try {
-          const header = {
-            headers: {
-              Accept: "application/json",
-              Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-            },
-          };
-          let url = URL_API + "casos/";
-          let peticion = await peticionDelete(`${url}${e.target.id}`, header);
-          if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
-            mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
-          } else {
-            console.log(peticion.data.message)
-            if(peticion.data.message == "Error, no se puede borrar, el caso tiene mensajes."){
-              mostrarAlertaErronea(peticion.data.message, "Error mensaje con errores.", "3000")
-            }else{
-              mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente.", "3000");
-              Navigate("/chatCliente");
-              recoleccionDatos();
-            }
-          }
-        } catch (error) {
-          mostrarAlertaErronea(error.message, error.stack, null);
-        }
-      } else {
-      }
-    });
-  };
+  // //Función que pide confirmación al usuario y si de verdad lo desea borra el caso seleccionado.
+  // const borrarCaso = async (e) => {
+  //   SweetAlert.fire({
+  //     title: "¿Estás seguro que quieres eliminar este caso?",
+  //     text: "Los datos se eliminarán definitivamente",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Sí, eliminar",
+  //     cancelButtonText: "Cancelar",
+  //   }).then(async (resultado) => {
+  //     if (resultado.value) {
+  //       try {
+  //         const header = {
+  //           headers: {
+  //             Accept: "application/json",
+  //             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+  //           },
+  //         };
+  //         let url = URL_API + "casos/";
+  //         let peticion = await peticionDelete(`${url}${e.target.id}`, header);
+  //         if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
+  //           mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
+  //         } else {
+  //           console.log(peticion.data.message)
+  //           if(peticion.data.message == "Error, no se puede borrar, el caso tiene mensajes."){
+  //             mostrarAlertaErronea(peticion.data.message, "Error mensaje con errores.", "3000")
+  //           }else{
+  //             mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente.", "3000");
+  //             Navigate("/chatCliente");
+  //             recoleccionDatos();
+  //           }
+  //         }
+  //       } catch (error) {
+  //         mostrarAlertaErronea(error.message, error.stack, null);
+  //       }
+  //     } else {
+  //     }
+  //   });
+  // };
 
-  //Función que añade al localStorage el id del caso y te mueve a otra página.
-  const modificarCaso = (e) =>{
-    localStorage.setItem("idCaso", e.target.id);
-    Navigate("/modificarCorreo");
-  }
+  // //Función que añade al localStorage el id del caso y te mueve a otra página.
+  // const modificarCaso = (e) =>{
+  //   localStorage.setItem("idCaso", e.target.id);
+  //   Navigate("/modificarCorreo");
+  // }
 
-  //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
-  const verInfoChat = (e) => {
-    localStorage.setItem("idCaso", e.target.id);
-    // PENDIENTE DE CREAR PÁGINA DE VER MENSAJES DEL CASO
-    Navigate("/verMensajesEmpleado");
-  };
+  // //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
+  // const verInfoChat = (e) => {
+  //   localStorage.setItem("idCaso", e.target.id);
+  //   // PENDIENTE DE CREAR PÁGINA DE VER MENSAJES DEL CASO
+  //   Navigate("/verMensajesEmpleado");
+  // };
 
-  //Función que a partir de la actividad devuelve un td con una clase o otra.
-  const estaActivo = (activo) =>{
-    if(activo === "Activo"){
-      return(<td className="campoOpcional activo">{activo}</td>)
-    }else{
-      return(<td className="campoOpcional acabado">{activo}</td>)
-    }
-  }
+  // //Función que a partir de la actividad devuelve un td con una clase o otra.
+  // const estaActivo = (activo) =>{
+  //   if(activo === "Activo"){
+  //     return(<td className="campoOpcional activo">{activo}</td>)
+  //   }else{
+  //     return(<td className="campoOpcional acabado">{activo}</td>)
+  //   }
+  // }
   
   return (
     <React.Fragment>
@@ -128,7 +129,9 @@ function ChatCliente() {
           <Link to="/crearCorreoCliente" className='crearCorreoBoton'>Crear Caso</Link>
         </div>
         <BuscadorCasos datosEstaticos={setCasosEmpresaEstaticos} datosDinamicos={casosEmpresaDinamicos}/>
-        <div className='TablaDatosUser'>
+        <PaginacionChatCliente data={casosEmpresaEstaticos} perPage={5} 
+                setEstadoEstatico={setCasosEmpresaEstaticos} setEstadoDinamico={setCasosEmpresaDinamicos}/>
+        {/* <div className='TablaDatosUser'>
             <Table id='tablaAccionesEmpleados' striped>
                 <thead>
                     <tr>
@@ -181,7 +184,7 @@ function ChatCliente() {
                 })}
                 </tbody>
             </Table>
-          </div>
+          </div> */}
         </div>
         <PiePagina/>
     </React.Fragment>

@@ -1,5 +1,5 @@
 import { cogerFecha, cogerHora, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete } from 'Biblioteca/FuncionesAuxiliares/Funciones';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { URL_API } from 'services/http/const';
 import SweetAlert from "sweetalert2";
@@ -78,6 +78,14 @@ const PaginacionTiempos = ({ data, perPage, setEstadoDinamico, setEstadoEstatico
       })
 }
 
+  const seleccionarBotonArrancar = () =>{
+    let botonesPaginacion = document.getElementsByClassName("botonPaginacion");
+    botonesPaginacion[0].classList.add("botonSeleccionado")
+  }
+
+  useEffect(()=>{
+    seleccionarBotonArrancar();
+  },[])
 
 
 //   Cosas Paginación

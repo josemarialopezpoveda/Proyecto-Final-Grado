@@ -4,7 +4,7 @@ import React, {useState, useEffect} from 'react';
 import { URL_API } from 'services/http/const';
 import Table from 'react-bootstrap/Table';
 
-function CrearBodyTurno() {
+function CrearBodyVerTurno() {
     const [turno, setTurno] = useState({});
 
     const recoleccionDatos = async () => {
@@ -14,21 +14,17 @@ function CrearBodyTurno() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosTurno = undefined;
-            console.log("pasa por aqui")
-            datosTurno = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem("idEmpleado")}`, header);
+        let datosTurno = await peticionGetAuth(URL_API + "turnos/" + `${localStorage.getItem("idTurno")}`, header);
         console.log(datosTurno)
         if(datosTurno !== undefined){
-            if(datosTurno.data.turno === undefined){
-                if (datosTurno.data.dias.length !== 0) {
-                        var newTurno = {
-                            descripcion: datosTurno.data.descripcion,
-                            dias: datosTurno.data.dias,
-                            FechaInicioTurno: datosTurno.data.FechaInicioTurno,
-                            FechaFinTurno: datosTurno.data.FechaFinTurno
-                        };
-                        setTurno(newTurno);
-                }
+            if(datosTurno.data.turno !== undefined){  
+                if (datosTurno.data.turno.dias.length !== 0) {
+                    var newTurno = {
+                        descripcion: datosTurno.data.turno.descripcion,
+                        dias: datosTurno.data.turno.dias,
+                    };
+                    setTurno(newTurno);
+            }
             }
         }
     };
@@ -71,10 +67,6 @@ function CrearBodyTurno() {
         return(
             <div>
                 <h1 className='text-center tituloH1'>Turno {turno.descripcion}</h1>
-                <div className='ContenedorFechasTurno'>   
-                    <h5>Fecha de inicio del turno 🡺 {formatearFechaFormatoDiaDeMesDelAnyo(turno.FechaInicioTurno)}</h5>
-                    <h5>Fecha de fin del turno 🡺 {formatearFechaFormatoDiaDeMesDelAnyo(turno.FechaFinTurno)}</h5>
-                </div>
                 <Table striped>
                     <thead>
                         {diasTurno()}
@@ -136,6 +128,7 @@ function CrearBodyTurno() {
     }else{
         return(
             <div>
+                <pre>{JSON.stringify(turno,null,3)}</pre>
                 <h1 className='text-center tituloH1'>Turno {turno.descripcion}</h1>
                 <Table>
                     <tbody>
@@ -150,4 +143,4 @@ function CrearBodyTurno() {
             
 }
 
-export default CrearBodyTurno;
+export default CrearBodyVerTurno;
