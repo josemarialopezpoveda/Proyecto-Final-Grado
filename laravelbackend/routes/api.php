@@ -90,7 +90,7 @@ Route::middleware('auth:sanctum')->group(
 
         //Empresas
         Route::get('/empresa/{empresaId}', [EmpresaController::class, 'show']);
-        Route::put('/empresa', [EmpresaController::class, 'update']);
+        Route::put('/empresa/{empresaId}', [EmpresaController::class, 'update']);  // cambiar la ruta a /empresa/{empresaId}
         Route::delete('/empresa', [EmpresaController::class, 'destroy']);
         Route::get('/logout', [EmpresaController::class, 'logout']);
 

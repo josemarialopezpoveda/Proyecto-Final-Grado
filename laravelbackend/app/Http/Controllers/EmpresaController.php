@@ -16,8 +16,7 @@ use Illuminate\Validation\Rule;
 /**
  *
  */
-class EmpresaController extends Controller
-{
+class EmpresaController extends Controller {
 
 
     /**
@@ -29,6 +28,8 @@ class EmpresaController extends Controller
         $empresas = Empresa::with('empleados')->get();
         return response()->json($empresas);
     }
+
+
 
     /**
      * Función que crea una empresa
@@ -104,8 +105,8 @@ class EmpresaController extends Controller
     public function show($empresaId)
     {
         $user = Auth::user();
-        if ($user instanceof Empresa){
-            if ($user->id == $empresaId){
+        if ($user instanceof Empresa) {
+            if ($user->id == $empresaId) {
                 $empresa = Empresa::with('empleados')->find($empresaId);
                 return response()->json($empresa);
             } else {
@@ -113,22 +114,21 @@ class EmpresaController extends Controller
                 return response()->json($data);
             }
         } elseif ($user instanceof Empleado) {
-            if ($user->tipoEmpleado == "Administrador"){
-                if ($user->empresa_id == $empresaId){
+            if ($user->tipoEmpleado == "Administrador") {
+                if ($user->empresa_id == $empresaId) {
                     $empresa = Empresa::with('empleados')->find($empresaId);
                     return response()->json($empresa);
                 } else {
                     $data = ['message' => 'No estás autorizado.'];
                     return response()->json($data);
                 }
-            } elseif($user->tipoEmpleado == "Trabajador")  {
+            } elseif ($user->tipoEmpleado == "Trabajador") {
                 $data = ['message' => 'No estás autorizado.'];
                 return response()->json($data);
             } else {
                 $data = ['message' => 'Error no controlado.'];
                 return response()->json($data);
             }
-
         } else {
             $data = ['message' => 'Error no controlado.'];
             return response()->json($data);
@@ -140,11 +140,11 @@ class EmpresaController extends Controller
      * @param Request $request
      * @return array|JsonResponse
      */
-    public function update(Request $request)
+    public function update(Request $request, $empresaId)
     {
         $user = Auth::user();
-        $empresa = Empresa::with('empleados')->find(Auth::user()->id);
-
+        //$empresa = Empresa::with('empleados')->find(Auth::user()->id);
+        $empresa = Empresa::find($empresaId);
         $validator = Validator::make($request->all(), [
             'cif' => [
                 'required',
@@ -225,7 +225,6 @@ class EmpresaController extends Controller
      */
     public function destroy()
     {
-
         $user = Auth::user();
         $empresa = Empresa::with('empleados')->find(Auth::user()->id);
         if ($empresa) {
