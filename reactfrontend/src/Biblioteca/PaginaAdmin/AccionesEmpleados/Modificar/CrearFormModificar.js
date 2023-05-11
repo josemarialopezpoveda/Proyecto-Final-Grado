@@ -103,7 +103,7 @@ function CrearFormModificar() {
       /^(?!\s*$).+/.test(form.apellidos) &&
       checkDNI(form.dni) &&
       validarNumSecSoc(form.numSegSoc) &&
-      /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(form.email) &&
+      /[a-zA-Z0-9]+@[A-za-z]+\.[A-za-z]{2,3}/.test(form.email) &&
       /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/.test(formatDate(form.fnac)) &&
       /^\d{9}$/.test(form.telefono) &&
       /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/.test(formatDate(form.fechaAlta)) &&
@@ -246,8 +246,8 @@ function CrearFormModificar() {
                 type="email"
                 onChange={(e) => setForm({ ...form, email: e.target.value.trim() })}
                 defaultValue={form.email}
-                isValid={validarCampos(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(form.email))}
-                isInvalid={validarCampos(!/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(form.email))}
+                isValid={validarCampos( /[a-zA-Z0-9]+@[A-za-z]+\.[A-za-z]{2,3}/.test(form.email))}
+                isInvalid={validarCampos(! /[a-zA-Z0-9]+@[A-za-z]+\.[A-za-z]{2,3}/.test(form.email))}
               />
             </Form.Group>
           </div>

@@ -25,7 +25,7 @@ function CrearFormRegistroAdmin() {
             isValidCif(contextoReg.form.cif) &&
             /^\d{9}$/.test(contextoReg.form.telefonoFijo) &&
             /^\d{9}$/.test(contextoReg.form.telefonoMovil) &&
-            /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(contextoReg.form.email)&&
+            /[a-zA-Z0-9]+@[A-za-z]+\.[A-za-z]{2,3}/.test(contextoReg.form.email)&&
             contextoReg.validarContrasenyas("valido")&&
 
             /^(?!\s*$).+/.test(contextoReg.form.direccion) &&
@@ -217,8 +217,8 @@ function CrearFormRegistroAdmin() {
                                         placeholder='Correo electrónico'
                                         onChange={e => contextoReg.setForm({...contextoReg.form, email: e.target.value.trim()})}
                                         defaultValue={contextoReg.form.email}
-                                        isValid={contextoReg.validarCampos(/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(contextoReg.form.email))}
-                                        isInvalid={contextoReg.validarCampos(!/[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(contextoReg.form.email))}/>
+                                        isValid={contextoReg.validarCampos(/[a-zA-Z0-9]+@[A-za-z]+\.[A-za-z]{2,3}/.test(contextoReg.form.email))}
+                                        isInvalid={contextoReg.validarCampos(!/[a-zA-Z0-9]+@[A-za-z]+\.[A-za-z]{2,3}/.test(contextoReg.form.email))}/>
                     </Form.Group>
                     <div className='divFlex divFlexquitar'>
                         <div className="cajaPasswordLogin">
