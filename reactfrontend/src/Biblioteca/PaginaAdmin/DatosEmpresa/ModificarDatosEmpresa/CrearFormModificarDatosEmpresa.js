@@ -158,7 +158,7 @@ function CrearFormModificarDatosEmpresa() {
                               title="Razon social"
                               className='inputReducido'
                               type="text"
-                              onChange={e=>setDatos({...datos,razonS:e.target.value.trim()})}
+                              onChange={e=>setDatos({...datos,razonSocial:e.target.value.trim()})}
                               defaultValue={datos.razonSocial}
                               isValid={validarCampos(/^(?!\s*$).+/.test(datos.razonSocial))}
                               isInvalid={validarCampos(!/^(?!\s*$).+/.test(datos.razonSocial))}
