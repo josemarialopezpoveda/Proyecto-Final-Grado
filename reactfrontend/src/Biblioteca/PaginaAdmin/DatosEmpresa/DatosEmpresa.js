@@ -99,6 +99,12 @@ function DatosEmpresa(){
         }
       }
 
+      //Función que guarda el ID del empleado a modificar en localStorage y te lleva a la ruta del formulario de modificar el empleado.
+        const modificar = (e) => {
+            localStorage.setItem("idEmpresaDatos", e.target.id);
+            Navigate("/modificarDatosEmpresa");
+        };
+
     return(
     <React.Fragment>
         <NavAdmin/>
@@ -164,7 +170,7 @@ function DatosEmpresa(){
                         </tbody>
                     </Table>
                     <div className='text-center classFlexBotones'>
-                        <Link className="linkSignInLogin" id="signIn" to="/modificarDatosEmpresa">Modificar</Link>
+                        <button type='button' onClick={modificar} className="linkSignInLogin" id="signIn">Modificar</button>
                         {verificarUserAdmin()}
                         {botonVolver()}
                     </div>

@@ -142,6 +142,7 @@ function CrearFormModificar() {
           fechaBaja: formatearFechaHora(),
           tipoEmpleado: form.tipoEmpleado,
         };
+        
         console.log(raw)
         let url = URL_API + "empleados/";
         let peticion = await peticionPut(`${url}${localStorage.getItem("idEmpleado")}`, raw, header);

@@ -124,7 +124,8 @@ function CrearFormModificarDatosEmpresa() {
                         }
                   }
                     try {
-                        let url = URL_API + "empresa/";
+                        let url = URL_API + "empresa/" + localStorage.getItem('id');
+                        console.log(url)
                         let peticion = await peticionPut(`${url}`, raw, header);
                         console.log(peticion)
                         if(peticion.data !== undefined){
