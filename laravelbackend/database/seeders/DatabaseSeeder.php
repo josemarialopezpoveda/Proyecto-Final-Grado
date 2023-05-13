@@ -28,7 +28,6 @@ class DatabaseSeeder extends Seeder
             DiasTableSeeder::class,
             TipoAusenciasTableSeeder::class,
             AusenciasTableSeeder::class,
-
             CasosTableSeeder::class,
             CasosEmpleadosTableSeeder::class,
 

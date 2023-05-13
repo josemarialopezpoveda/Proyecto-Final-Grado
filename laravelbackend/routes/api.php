@@ -58,22 +58,6 @@ Route::post('/turnos', [TurnoController::class, 'store']);
 
 Route::put('/turnos/{turno}', [TurnoController::class, 'update']);
 
-// Tipos de Ausencia
-
-Route::get('/tipoAusencias', [TipoausenciaController::class, 'index']);
-Route::get('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'show']);
-Route::post('/tipoAusencias', [TipoausenciaController::class, 'store']);
-Route::put('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'update']);
-Route::delete('/tipoAusencias/{tipoAusencias}', [TipoausenciaController::class, 'destroy']);
-
-// Ausencias
-
-Route::post('/ausencias', [AusenciaController::class, 'store']);
-Route::put('/ausencias/{ausencias}', [AusenciaController::class, 'update']);
-Route::delete('/ausencias/{ausencias}', [AusenciaController::class, 'destroy']);
-
-
-// Tiempos
 
 // Empleado_Turno
 Route::post('/empleados/turno', [EmpleadoController::class, 'attach']);
@@ -141,7 +125,16 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/ausencias', [AusenciaController::class, 'index']);
         Route::get('/ausencia/{ausenciaId}', [AusenciaController::class, 'show']);
         Route::get('/ausenciasEmpleados', [AusenciaController::class, 'ausenciasEmpleados']);
-        Route::get('/ausenciasEmpleados/{empleadoId}', [AusenciaController::class, 'ausenciasEmpleado']);
+        Route::get('/ausenciasEmpleado/{empleadoId}', [AusenciaController::class, 'ausenciasEmpleado']);
+        Route::post('/ausencias', [AusenciaController::class, 'store']);
+        Route::put('/ausencias/{ausenciaId}', [AusenciaController::class, 'update']);
+        Route::delete('/ausencias/{ausenciaId}', [AusenciaController::class, 'destroy']);
 
+        //Tipos de ausencias
+        Route::get('/tipoAusencias', [TipoausenciaController::class, 'index']);
+        Route::get('/tipoAusencias/{tipoAusenciasId}', [TipoausenciaController::class, 'show']);
+        Route::post('/tipoAusencias', [TipoausenciaController::class, 'store']);
+        Route::put('/tipoAusencias/{tipoAusenciasId}', [TipoausenciaController::class, 'update']);
+        Route::delete('/tipoAusencias/{tipoAusenciasId}', [TipoausenciaController::class, 'destroy']);
     }
 );

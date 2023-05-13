@@ -25,11 +25,47 @@ class EmpresaController extends Controller {
      */
     public function index(): JsonResponse
     {
-        $empresas = Empresa::with('empleados')->get();
+        //$empresas = Empresa::with('empleados')->get();
+        $empresas = Empresa::select('nombreComercial', 'pais', 'poblacion', 'provincia')->get();
         return response()->json($empresas);
     }
 
-
+    /**
+     * Función que muestra la empresa del usuario logueado
+     * @return JsonResponse
+     */
+    public function show($empresaId)
+    {
+        $user = Auth::user();
+        if ($user instanceof Empresa) {
+            if ($user->id == $empresaId) {
+                $empresa = Empresa::with('empleados')->find($empresaId);
+                return response()->json($empresa);
+            } else {
+                $data = ['message' => 'No estás autorizado.'];
+                return response()->json($data);
+            }
+        } elseif ($user instanceof Empleado) {
+            if ($user->tipoEmpleado == "Administrador") {
+                if ($user->empresa_id == $empresaId) {
+                    $empresa = Empresa::with('empleados')->find($empresaId);
+                    return response()->json($empresa);
+                } else {
+                    $data = ['message' => 'No estás autorizado.'];
+                    return response()->json($data);
+                }
+            } elseif ($user->tipoEmpleado == "Trabajador") {
+                $data = ['message' => 'No estás autorizado.'];
+                return response()->json($data);
+            } else {
+                $data = ['message' => 'Error no controlado.'];
+                return response()->json($data);
+            }
+        } else {
+            $data = ['message' => 'Error no controlado.'];
+            return response()->json($data);
+        }
+    }
 
     /**
      * Función que crea una empresa
@@ -96,43 +132,6 @@ class EmpresaController extends Controller {
             'token_type' => 'Bearer',
         ];
         return response()->json($data);
-    }
-
-    /**
-     * Función que muestra la empresa del usuario logueado
-     * @return JsonResponse
-     */
-    public function show($empresaId)
-    {
-        $user = Auth::user();
-        if ($user instanceof Empresa) {
-            if ($user->id == $empresaId) {
-                $empresa = Empresa::with('empleados')->find($empresaId);
-                return response()->json($empresa);
-            } else {
-                $data = ['message' => 'No estás autorizado.'];
-                return response()->json($data);
-            }
-        } elseif ($user instanceof Empleado) {
-            if ($user->tipoEmpleado == "Administrador") {
-                if ($user->empresa_id == $empresaId) {
-                    $empresa = Empresa::with('empleados')->find($empresaId);
-                    return response()->json($empresa);
-                } else {
-                    $data = ['message' => 'No estás autorizado.'];
-                    return response()->json($data);
-                }
-            } elseif ($user->tipoEmpleado == "Trabajador") {
-                $data = ['message' => 'No estás autorizado.'];
-                return response()->json($data);
-            } else {
-                $data = ['message' => 'Error no controlado.'];
-                return response()->json($data);
-            }
-        } else {
-            $data = ['message' => 'Error no controlado.'];
-            return response()->json($data);
-        }
     }
 
     /**

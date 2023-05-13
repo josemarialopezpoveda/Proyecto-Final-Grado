@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('tipoausencias', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
+            $table->foreignId('empresa_id')->comment('ID de la empresa a la que pertenece la ausencia')->constrained()->cascadeOnDelete();
             $table->string('tipo', 100);
             $table->string('descripcion', 255);
             $table->timestamps();
