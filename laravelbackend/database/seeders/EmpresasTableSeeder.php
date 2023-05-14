@@ -3,16 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\Empresa;
-use Illuminate\Database\Seeder;
-
-use Illuminate\Support\Carbon;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 
-class EmpresasTableSeeder extends Seeder
-{
+class EmpresasTableSeeder extends Seeder {
     /**
      * Run the database seeds.
      *
@@ -24,6 +22,8 @@ class EmpresasTableSeeder extends Seeder
 
         // Antes de ejecutar el seeder borra el contenido del directorio storage/app/public/images
         Storage::disk('public')->deleteDirectory('images');
+        $file1 = public_path('seed_images/logo1.jpg');
+        $path1 = Storage::disk('public')->putFile('images', $file1);
 
         $empresa1 = new Empresa;
         $empresa1->cif = 'B60741428';
@@ -38,16 +38,13 @@ class EmpresasTableSeeder extends Seeder
         $empresa1->telefonoMovil = '666666666';
         $empresa1->email = 'persianas@persianas.com';
         $empresa1->password = Hash::make('12345678');
+        $empresa1->logotipo = $path1;
         $empresa1->ultimaConexion = Carbon::now('Europe/Madrid');
         $empresa1->activo = true;
         $empresa1->fechaAlta = '2023-01-01';
         $empresa1->created_at = '2023-01-01';
         $empresa1->updated_at = Carbon::now('Europe/Madrid');
-//        $file1 = public_path('seed_images\logo1.jpg');
-//        $path1 = Storage::disk('public')->putFile('images', $file1);
-//        $empresa1->logotipo = $path1;
         $empresa1->save();
-
 
 
         $empresa2 = new Empresa;
