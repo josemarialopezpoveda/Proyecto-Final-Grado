@@ -31,11 +31,31 @@ class EmpleadoFactory extends Factory {
         } while ($numSegSocial[0] === '0');
         $numSegSocial = $numSegSocial . $numSegSocial % 97;
 
+        $nombre = mb_strtoupper($faker->firstName, 'UTF-8');
+        $apellido = mb_strtoupper($faker->lastName, 'UTF-8');
+        $emailNombre = str_replace(
+            ' ',
+            '',
+            mb_strtolower($nombre, 'UTF-8')
+        ); // Eliminar espacios en el nombre y convertir a minúsculas
+        $emailNombre = str_replace(['á', 'é', 'í', 'ó', 'ú', 'ü', 'ñ'],
+            ['a', 'e', 'i', 'o', 'u', 'u', 'n'],
+            $emailNombre);
+        $emailApellido = str_replace(
+            ' ',
+            '',
+            mb_strtolower($apellido, 'UTF-8')
+        ); // Eliminar espacios en el apellido y convertir a minúsculas
+        $emailApellido = str_replace(['á', 'é', 'í', 'ó', 'ú', 'ü', 'ñ'],
+            ['a', 'e', 'i', 'o', 'u', 'u', 'n'],
+            $emailApellido);
+
+        $email = $emailNombre . $emailApellido . '@correo.com';
         return [
             'nif' => $faker->unique()->dni,
             'empresa_id' => rand(1, 14),
-            'nombre' => mb_strtoupper($faker->firstName, 'UTF-8'),
-            'apellidos' => mb_strtoupper($faker->lastName, 'UTF-8'),
+            'nombre' => $nombre,
+            'apellidos' => $apellido,
             'direccion' => mb_strtoupper($faker->streetAddress, 'UTF-8'),
             'cPostal' => $poblaciones[$aleatorio]['cPostal'],
             'provincia' => mb_strtoupper($poblaciones[$aleatorio]['provincia'], 'UTF-8'),
@@ -43,7 +63,8 @@ class EmpleadoFactory extends Factory {
             'pais' => "ESPAÑA",
             'telefono' => $faker->unique()->numerify('6########'),
             'fechaNacimiento' => $faker->dateTimeBetween($startBirthDate, $endBirthDate),
-            'email' => $faker->unique()->safeEmail,
+            //'email' => $faker->unique()->safeEmail,
+            'email' => $email,
             'password' => Hash::make('12345678'),
             'numSegSoc' => $numSegSocial,
             'ultimaConexion' => Carbon::now('Europe/Madrid'),
