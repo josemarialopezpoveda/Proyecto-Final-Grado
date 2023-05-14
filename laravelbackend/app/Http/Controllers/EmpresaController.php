@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Empleado;
+use App\Models\Empresa;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Empresa;
 use Illuminate\Validation\Rule;
 
 /**
@@ -42,8 +41,8 @@ class EmpresaController extends Controller {
                 $empresa = Empresa::with('empleados')->find($empresaId);
                 return response()->json($empresa);
             } else {
-                $data = ['message' => 'No estás autorizado.'];
-                return response()->json($data);
+                $data = ['error' => 'No estás autorizado.'];
+                return response()->json($data, 401);
             }
         } elseif ($user instanceof Empleado) {
             if ($user->tipoEmpleado == "Administrador") {
@@ -51,19 +50,68 @@ class EmpresaController extends Controller {
                     $empresa = Empresa::with('empleados')->find($empresaId);
                     return response()->json($empresa);
                 } else {
-                    $data = ['message' => 'No estás autorizado.'];
-                    return response()->json($data);
+                    $data = ['error' => 'No estás autorizado.'];
+                    return response()->json($data, 401);
                 }
             } elseif ($user->tipoEmpleado == "Trabajador") {
-                $data = ['message' => 'No estás autorizado.'];
-                return response()->json($data);
+                $data = ['error' => 'No estás autorizado.'];
+                return response()->json($data, 401);
             } else {
-                $data = ['message' => 'Error no controlado.'];
-                return response()->json($data);
+                $data = ['error' => 'Error no controlado.'];
+                return response()->json($data, 400);
+            }
+        } else {
+            $data = ['error' => 'Error no controlado.'];
+            return response()->json($data, 400);
+        }
+    }
+
+    public function empresaEmpleados($empresaId): JsonResponse
+    {
+        $user = Auth::user();
+        if ($user instanceof Empresa) {
+            if ($user->getKey() == $empresaId) {
+                return $this->extracted($empresaId);
+            } else {
+                $data = ['error' => 'No estás autorizado.'];
+                return response()->json($data, 401);
+            }
+        } elseif ($user instanceof Empleado) {
+            if ($user->empresa_id == $empresaId) {
+                return $this->extracted($empresaId);
+            } else {
+                $data = ['error' => 'No estás autorizado.'];
+                return response()->json($data, 401);
             }
         } else {
             $data = ['message' => 'Error no controlado.'];
-            return response()->json($data);
+            return response()->json($data, 400);
+        }
+    }
+
+    /**
+     * @param $empresaId
+     * @return JsonResponse
+     */
+    public function extracted($empresaId): JsonResponse
+    {
+        $empresa = Empresa::with('empleados')->find($empresaId);
+        if ($empresa) {
+            $empleados = $empresa->empleados->map(function ($empleado) {
+                return [
+                    'id' => $empleado->id,
+                    'empleado' => $empleado->nombre . " " . $empleado->apellidos,
+                ];
+            });
+            if (count($empleados) > 0) {
+                return response()->json($empleados);
+            } else {
+                $data = ['error' => 'La empresa no tiene empleados.'];
+                return response()->json($data, 404);
+            }
+        } else {
+            $data = ['error' => 'Empresa no existe.'];
+            return response()->json($data, 404);
         }
     }
 
@@ -72,8 +120,10 @@ class EmpresaController extends Controller {
      * @param Request $request
      * @return array|JsonResponse
      */
-    public function store(Request $request)
-    {
+    public
+    function store(
+        Request $request
+    ) {
         $validator = Validator::make($request->all(), [
             'cif' => 'required|string|unique:empresas',
             'razonSocial' => 'required|string',
@@ -139,8 +189,11 @@ class EmpresaController extends Controller {
      * @param Request $request
      * @return array|JsonResponse
      */
-    public function update(Request $request, $empresaId)
-    {
+    public
+    function update(
+        Request $request,
+        $empresaId
+    ) {
         $user = Auth::user();
         //$empresa = Empresa::with('empleados')->find(Auth::user()->id);
         $empresa = Empresa::find($empresaId);
@@ -222,7 +275,8 @@ class EmpresaController extends Controller {
      * Función que elimina la empresa del usuario logueado
      * @return JsonResponse
      */
-    public function destroy()
+    public
+    function destroy()
     {
         $user = Auth::user();
         $empresa = Empresa::with('empleados')->find(Auth::user()->id);
@@ -245,8 +299,10 @@ class EmpresaController extends Controller {
      * @param Request $request
      * @return JsonResponse
      */
-    public function login(Request $request)
-    {
+    public
+    function login(
+        Request $request
+    ) {
         $empresa = Empresa::where('email', $request->email)->first();
         if ($empresa) {
             if (Hash::check($request->password, $empresa->password)) {
@@ -275,7 +331,8 @@ class EmpresaController extends Controller {
      * Función cerrar sesión el usuario logueado
      * @return JsonResponse
      */
-    public function logout(): JsonResponse
+    public
+    function logout(): JsonResponse
     {
         try {
             $user = auth()->user();
@@ -299,12 +356,12 @@ class EmpresaController extends Controller {
         }
     }
 
-
     /**
      * Función que devuelve error ante cualquier error que se produzca
      * @return JsonResponse
      */
-    public function paginaError()
+    public
+    function paginaError()
     {
         return \response()->json([
             'message' => "Página no encontrada"

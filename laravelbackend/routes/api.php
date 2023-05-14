@@ -1,15 +1,15 @@
 <?php
 
+use App\Http\Controllers\AusenciaController;
 use App\Http\Controllers\CasoController;
+use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\MensajeController;
+use App\Http\Controllers\TiempoController;
+use App\Http\Controllers\TipoausenciaController;
+use App\Http\Controllers\TurnoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TurnoController;
-use App\Http\Controllers\TiempoController;
-use App\Http\Controllers\EmpresaController;
-use App\Http\Controllers\AusenciaController;
-use App\Http\Controllers\EmpleadoController;
-use App\Http\Controllers\TipoausenciaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,10 +23,10 @@ use App\Http\Controllers\TipoausenciaController;
 */
 
 Route::middleware('auth:sanctum')->get(
-    /**
-     * @param Request $request
-     * @return mixed
-     */
+/**
+ * @param Request $request
+ * @return mixed
+ */
     '/empresa',
     function (Request $request) {
         return $request->empresa();
@@ -54,16 +54,15 @@ Route::post('/empleados/turno', [EmpleadoController::class, 'attach']);
 //Route::get('/turnosEmpleado', [EmpleadoController::class, 'turnosEmpleados']);
 
 
-
 Route::middleware('auth:sanctum')->group(
-    /**
-     * @return void
-     */
+/**
+ * @return void
+ */
     function () {
-
         //Empresas
         Route::get('/empresa/{empresaId}', [EmpresaController::class, 'show']);
-        Route::put('/empresa/{empresaId}', [EmpresaController::class, 'update']);  // cambiar la ruta a /empresa/{empresaId}
+        Route::get('/empresaEmpleados/{empresaId}', [EmpresaController::class, 'empresaEmpleados']);
+        Route::put('/empresa/{empresaId}', [EmpresaController::class, 'update']);
         Route::delete('/empresa', [EmpresaController::class, 'destroy']);
         Route::get('/logout', [EmpresaController::class, 'logout']);
 
