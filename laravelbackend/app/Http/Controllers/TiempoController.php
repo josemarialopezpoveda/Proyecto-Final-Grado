@@ -139,7 +139,7 @@ class TiempoController extends Controller {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
-        if ($loginOk === true) {
+        if ($loginOk) {
             $empleado = Empleado::find($empleadoId);
             $tiempos = Tiempo::select('id','inicio', 'fin')
                 ->where('empleado_id', $empleadoId)

@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\CasoController;
 use App\Http\Controllers\MensajeController;
-use App\Models\Empresa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TurnoController;
@@ -11,7 +10,6 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\AusenciaController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\TipoausenciaController;
-use App\Models\Empleado;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,18 +48,9 @@ Route::get('/error', [EmpresaController::class, 'paginaError']);
 Route::post('/loginEmpleado', 'App\Http\Controllers\EmpleadoController@login');
 
 
-// Turnos
-Route::get('/turnos', [TurnoController::class, 'index']);
-Route::get('/turnos/{turno}', [TurnoController::class, 'show']);
-Route::get('/turnosEmpresa/{empresaId}', [TurnoController::class, 'turnosEmpresa']);
-Route::post('/turnos', [TurnoController::class, 'store']);
-
-Route::put('/turnos/{turno}', [TurnoController::class, 'update']);
-
-
 // Empleado_Turno
 Route::post('/empleados/turno', [EmpleadoController::class, 'attach']);
-Route::get('/turnosEmpleado/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
+
 //Route::get('/turnosEmpleado', [EmpleadoController::class, 'turnosEmpleados']);
 
 
@@ -81,6 +70,7 @@ Route::middleware('auth:sanctum')->group(
         //Empleados
         Route::get('/empleados', [EmpleadoController::class, 'index']);
         Route::get('/empleado/{empleadoId}', [EmpleadoController::class, 'show']);
+        Route::get('/turnosEmpleado/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
         Route::post('/empleados', [EmpleadoController::class, 'store']);
         Route::put('/empleados/{empleados}', [EmpleadoController::class, 'update']);
         Route::delete('/empleados/{empleadoId}', [EmpleadoController::class, 'destroy']);
@@ -117,9 +107,15 @@ Route::middleware('auth:sanctum')->group(
         Route::delete('/mensajes/{mensajeId}', [MensajeController::class, 'destroy']);
 
         //Turnos
+        Route::get('/turnos', [TurnoController::class, 'index']);
+        Route::get('/turnos/{turnoId}', [TurnoController::class, 'show']);
+        Route::get('/turnosEmpresa/{empresaId}', [TurnoController::class, 'turnosEmpresa']);
         Route::get('/turnoActivo/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
+        Route::post('/turnos', [TurnoController::class, 'store']);
+        Route::put('/turnos/{turno}', [TurnoController::class, 'update']);
         Route::delete('eliminarTurnoAEmpleado', [TurnoController::class, 'eliminarTurnoAEmpleado']);
         Route::delete('/turnos/{turnoId}', [TurnoController::class, 'destroy']);
+
 
         //Ausencias
         Route::get('/ausencias', [AusenciaController::class, 'index']);

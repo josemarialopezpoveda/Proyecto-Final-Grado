@@ -383,49 +383,56 @@ class EmpleadoController extends Controller {
         return response()->json($data);
     }
 
-    public function turnoActivoEmpleado($empleadoId)
+    public function turnoActivoEmpleado($empleadoId): \Illuminate\Http\JsonResponse
     {
         $user = Auth::user();
-        $empleado = Empleado::find($empleadoId);
-        if ($empleado) {
-            if ($user instanceof Empresa) {
-                if ($user->getKey() != $empleado->empresa_id) {
-                    $data = ['message' => 'El empleado con el ID proporcionado no pertenece a la empresa'];
+        $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
+        if ($loginOk) {
+            $empleado = Empleado::find($empleadoId);
+            if ($empleado) {
+                if ($user instanceof Empresa) {
+                    if ($user->getKey() != $empleado->empresa_id) {
+                        $data = ['error' => 'El empleado con el ID proporcionado no pertenece a la empresa'];
+                        return response()->json($data, 404);
+                    }
+                } else {
+                    if ($user instanceof Empleado) {
+                        if ($user->empresa_id != $empleado->empresa_id) {
+                            $data = ['error' => 'La empresa del empleado proporcionado no coincide con la empresa del usuario autenticado.'];
+                            return response()->json($data, 401);
+                        }
+                        if ($user->tipoEmpleado != "Administrador" && $user->getKey() != $empleadoId) {
+                            $data = ['error' => 'No estás autorizado.'];
+                            return response()->json($data, 401);
+                        }
+                    }
+                }
+
+                $turnoActivo = $empleado->turnos->where('pivot.activo', true)->first();
+                if ($turnoActivo) {
+                    $turnos = Turno::with('dias')->find($turnoActivo->id);
+                    $data = [
+                        'message' => 'Turno activo del empleado ' . $empleado->id . " " . $empleado->nombre,
+                        'empleado_id' => $empleadoId,
+                        'turnoId' => $turnoActivo->id,
+                        'descripcion' => $turnos->descripcion,
+                        'FechaInicioTurno' => $turnoActivo->pivot->fechaInicioTurno,
+                        'FechaFinTurno' => $turnoActivo->pivot->fechaFinTurno,
+                        'dias' => $turnos->dias,
+                    ];
+                    return response()->json($data);
+                } else {
+                    $data = ['error' => 'No se encontró turno activo para el empleado'];
                     return response()->json($data, 404);
                 }
             } else {
-                if ($user instanceof Empleado) {
-                    if ($user->empresa_id != $empleado->empresa_id) {
-                        $data = ['message' => 'La empresa del empleado proporcionado no coincide con la empresa del usuario autenticado.'];
-                        return response()->json($data,401);
-                    }
-                    if ($user->tipoEmpleado != "Administrador" && $user->getKey() != $empleadoId) {
-                        $data = ['message' => 'No estás autorizado.'];
-                        return response()->json($data, 401);
-                    }
-                }
+                $data = ['error' => 'No se encontró el empleado con el ID proporcionado'];
+                return response()->json($data, 404);
             }
-
-            $turnoActivo = $empleado->turnos->where('pivot.activo', true)->first();
-            if ($turnoActivo) {
-                $turnos = Turno::with('dias')->find($turnoActivo->id);
-                $data = [
-                    'message' => 'Turno activo del empleado ' . $empleado->id . " " . $empleado->nombre,
-                    'empleado_id' => $empleadoId,
-                    'turnoId' => $turnoActivo->id,
-                    'descripcion' => $turnos->descripcion,
-                    'FechaInicioTurno' => $turnoActivo->pivot->fechaInicioTurno,
-                    'FechaFinTurno' => $turnoActivo->pivot->fechaFinTurno,
-                    'dias' => $turnos->dias,
-                ];
-                return response()->json($data);
-            } else {
-                $data = ['message' => 'No se encontró turno activo para el empleado'];
-                return response()->json($data,404);
-            }
-        } else {
-            $data = ['message' => 'No se encontró el empleado con el ID proporcionado'];
-            return response()->json($data,404);
+        }
+        else {
+            $data = ['error' => $loginOk['message'],];
+            return response()->json($data, 403);
         }
     }
 }
