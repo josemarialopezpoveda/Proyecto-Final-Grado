@@ -38,14 +38,14 @@ function CrearCorreoCliente() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/" + `${localStorage.getItem("idEmpresa")}`, header);
+        let datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresaEmpleados/" + `${localStorage.getItem("idEmpresa")}`, header);
         console.log(datosEmpresaLogueada)
         //console.log(datosEmpresaLogueada.data.empresa.empleados)
-        if (datosEmpresaLogueada.data.empresa.empleados !== 0) {
-          var nombreCompletoEmpleado = datosEmpresaLogueada.data.empresa.empleados.map((datosEmpleado) => {
+        if (datosEmpresaLogueada.data.length !== 0) {
+          var nombreCompletoEmpleado = datosEmpresaLogueada.data.map((datosEmpleado) => {
             var newEmpleado = {
               id: datosEmpleado.id,
-              nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,
+              nombreCompleto: datosEmpleado.empleado,
             };
             return newEmpleado;
           });

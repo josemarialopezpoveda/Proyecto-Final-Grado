@@ -20,6 +20,7 @@ function ModificarTipoAusencia() {
         if(correcto){
             if(form.tipo !== "-"){
                 var raw = {
+                    "empresa_id": localStorage.getItem('id'),
                     "descripcion": form.descripcion,
                     "tipo": form.tipo,
                 }
@@ -33,7 +34,7 @@ function ModificarTipoAusencia() {
                         "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
                     }
                 }
-              let peticion = await peticionPut(URL_API + "tipoAusencias/" + `${localStorage.getItem('idTipoAusencia')}`, raw)
+              let peticion = await peticionPut(URL_API + "tipoAusencias/" + `${localStorage.getItem('idTipoAusencia')}`, raw, header)
               if(peticion.data.errores !== undefined && peticion.data.errores !== null){
                   mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
               }else{
@@ -53,10 +54,11 @@ function ModificarTipoAusencia() {
                   "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
               }
           }
-      let datosAusencia = await peticionGetAuth(URL_API + "tipoAusencias/" + `${localStorage.getItem('idAusencia')}`);
+          console.log(URL_API + "tipoAusencias/" + `${localStorage.getItem('idTipoAusencia')}`)
+      let datosAusencia = await peticionGetAuth(URL_API + "tipoAusencias/" + `${localStorage.getItem('idTipoAusencia')}`, header);
       console.log(datosAusencia)
         if(datosAusencia.data !== undefined){
-            if(datosAusencia.data.id == localStorage.getItem('idAusencia')) {
+            if(datosAusencia.data.id == localStorage.getItem('idTipoAusencia')) {
                 setForm({
                     descripcion: datosAusencia.data.descripcion,
                     tipo: datosAusencia.data.tipo

@@ -1,7 +1,7 @@
 import React, {useEffect,useState} from 'react';
 import Form from 'react-bootstrap/Form';
 import {Link, useNavigate} from 'react-router-dom';
-import { mostrarAlertaCorrecta, mostrarAlertaErronea, obtenerMilisegundosDesdeHora, peticionGetAuth, peticionPost, peticionPut, recogerFechaAPartirFecha, recogerHoraAPartirFecha, unirFechaYHora } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { mostrarAlertaCorrecta, mostrarAlertaErronea, obtenerMilisegundosDesdeHora, peticionGetAuth, peticionPut, recogerFechaAPartirFecha, recogerHoraAPartirFecha, unirFechaYHora } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import './CrearTiempo.css';
 import { URL_API } from 'services/http/const';
 import NavAdmin from '../Nav/NavAdmin';

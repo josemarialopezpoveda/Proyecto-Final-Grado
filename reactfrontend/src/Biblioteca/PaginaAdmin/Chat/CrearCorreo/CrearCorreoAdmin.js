@@ -40,22 +40,17 @@ function CrearCorreoAdmin() {
         };
         let datosEmpresaLogueada = undefined;
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){   
-            datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/" + `${localStorage.getItem("id")}`, header);
+            datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresaEmpleados/" + `${localStorage.getItem("id")}`, header);
         }else{
-            datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresa/" + `${localStorage.getItem("idEmpresa")}`, header);
+            datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresaEmpleados/" + `${localStorage.getItem("idEmpresa")}`, header);
         }
         console.log(datosEmpresaLogueada)
-        //console.log(datosEmpresaLogueada.data.empresa.empleados)
-        if (datosEmpresaLogueada.data.empleados !== 0) {
-          var nombreCompletoEmpleado = datosEmpresaLogueada.data.empleados.map((datosEmpleado) => {
-            // console.log("PRUEBAS")
-            // console.log(`${localStorage.getItem('tipoUsuario')}`)
-            console.log(typeof(datosEmpleado.id.toString()))
-            console.log(typeof(`${localStorage.getItem("idEmpleadoAdmin")}`))
+        if (datosEmpresaLogueada.data.length !== 0) {
+          var nombreCompletoEmpleado = datosEmpresaLogueada.data.map((datosEmpleado) => {
             if(`${localStorage.getItem('tipoUsuario')}` === "Trabajador" && datosEmpleado.id.toString() === `${localStorage.getItem("id")}`){
-                setEmisor(datosEmpleado.nombre + " " + datosEmpleado.apellidos)
+                setEmisor(datosEmpleado.empleado)
             }else if(`${localStorage.getItem('tipoUsuario')}` === "Administrador" && datosEmpleado.id.toString() === `${localStorage.getItem("idEmpleadoAdmin")}`){
-                setEmisor(datosEmpleado.nombre + " " + datosEmpleado.apellidos)
+                setEmisor(datosEmpleado.empleado)
             }
 
 
@@ -63,13 +58,13 @@ function CrearCorreoAdmin() {
             if(`${localStorage.getItem('tipoUsuario')}` === "Administrador" && datosEmpleado.id.toString() !== `${localStorage.getItem("idEmpleadoAdmin")}`){
                 var newEmpleado = {
                     id: datosEmpleado.id,
-                    nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,
+                    nombreCompleto: datosEmpleado.empleado,
                 };
                 return newEmpleado;
             }else if(`${localStorage.getItem('tipoUsuario')}` === "Trabajador" && datosEmpleado.id.toString() !== `${localStorage.getItem("id")}`){
                 var newEmpleado = {
                     id: datosEmpleado.id,
-                    nombreCompleto: datosEmpleado.nombre + " " + datosEmpleado.apellidos,
+                    nombreCompleto: datosEmpleado.empleado,
                 };
                 return newEmpleado;
             }

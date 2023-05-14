@@ -63,7 +63,7 @@ function CrearTiempo() {
           mostrarAlertaErronea(peticion.data.message, peticion.data.errores, 5000);
         } else {
           mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-          //Navigate("/verTiemposEmpleado");
+          Navigate("/verTiemposEmpleado");
         }
       } catch (error) {
         mostrarAlertaErronea(error.message, error.stack, 5000);

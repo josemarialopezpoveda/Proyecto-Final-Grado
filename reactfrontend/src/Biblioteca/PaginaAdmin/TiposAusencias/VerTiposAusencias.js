@@ -1,7 +1,6 @@
 import React from 'react';
 import PiePagina from '../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../Nav/NavAdmin';
-import Table from 'react-bootstrap/Table';
 import ContenidoTablaTipoAusencias from './ContenidoTablaTipoAusencias';
 import {Link} from 'react-router-dom';
 import './VerTiposAusencias.css';

@@ -22,6 +22,7 @@ function AnyadirTipoAusencia() {
         console.log(correcto)
         if(correcto){
             var raw = {
+                "empresa_id": localStorage.getItem('id'),
                 "descripcion": form.tipoAusencia,
                 "tipo": form.tipo
             }
