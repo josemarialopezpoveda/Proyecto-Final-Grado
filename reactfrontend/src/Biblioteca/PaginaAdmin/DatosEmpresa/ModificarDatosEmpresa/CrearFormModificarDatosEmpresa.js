@@ -36,28 +36,43 @@ function CrearFormModificarDatosEmpresa() {
                       "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
                   }
               }
-            let datosEmpresa = await peticionGetAuth(URL_API+"empresas", header);
+            let datosEmpresa = await peticionGetAuth(URL_API+"empresa/"+ localStorage.getItem('id'), header);
             if(datosEmpresa.data !== undefined){
-                  console.log(datosEmpresa.data)
-                  datosEmpresa.data.map(datosE => {
-                        if(datosE.id == localStorage.getItem('id')){
-                              return (setDatos({
-                                    id:datosE.id,
-                                    razonSocial: datosE.razonSocial,
-                                    nombreComercial: datosE.nombreComercial,
-                                    cif: datosE.cif,
-                                    telFijo: datosE.telefonoFijo,
-                                    telMovil: datosE.telefonoMovil,
-                                    logotipo: datosE.logotipo,
-                                    direccion: datosE.direccion,
-                                    poblacion: datosE.poblacion,
-                                    provincia: datosE.provincia,
-                                    codPostal: datosE.cPostal,
-                                    pais: datosE.pais,
-                                    email: datosE.email
-                              }))
-                        }
-                  });
+                  // console.log(datosEmpresa.data)
+                  // datosEmpresa.data.map(datosE => {
+                  //       if(datosE.id == localStorage.getItem('id')){
+                  //             return (setDatos({
+                  //                   id:datosE.id,
+                  //                   razonSocial: datosE.razonSocial,
+                  //                   nombreComercial: datosE.nombreComercial,
+                  //                   cif: datosE.cif,
+                  //                   telFijo: datosE.telefonoFijo,
+                  //                   telMovil: datosE.telefonoMovil,
+                  //                   logotipo: datosE.logotipo,
+                  //                   direccion: datosE.direccion,
+                  //                   poblacion: datosE.poblacion,
+                  //                   provincia: datosE.provincia,
+                  //                   codPostal: datosE.cPostal,
+                  //                   pais: datosE.pais,
+                  //                   email: datosE.email
+                  //             }))
+                  //       }
+                  // });
+                  setDatos({
+                        id:datosEmpresa.data.id,
+                        razonSocial: datosEmpresa.data.razonSocial,
+                        nombreComercial: datosEmpresa.data.nombreComercial,
+                        cif: datosEmpresa.data.cif,
+                        telFijo: datosEmpresa.data.telefonoFijo,
+                        telMovil: datosEmpresa.data.telefonoMovil,
+                        logotipo: datosEmpresa.data.logotipo,
+                        direccion: datosEmpresa.data.direccion,
+                        poblacion: datosEmpresa.data.poblacion,
+                        provincia: datosEmpresa.data.provincia,
+                        codPostal: datosEmpresa.data.cPostal,
+                        pais: datosEmpresa.data.pais,
+                        email: datosEmpresa.data.email
+                  })
             }else{
                   mostrarAlertaErronea("Ruta de la petición incorrecta", "Error de red", null);
             }
