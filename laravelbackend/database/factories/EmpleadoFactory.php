@@ -3,12 +3,10 @@
 namespace Database\Factories;
 
 use App\Helpers\Poblaciones;
-use App\Models\Empleado;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Faker\Factory as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\EmpleadoFactory>
@@ -31,21 +29,21 @@ class EmpleadoFactory extends Factory {
         do {
             $numSegSocial = $faker->numerify('##########');
         } while ($numSegSocial[0] === '0');
-        $numSegSocial = $numSegSocial . $numSegSocial%97;
+        $numSegSocial = $numSegSocial . $numSegSocial % 97;
 
         return [
             'nif' => $faker->unique()->dni,
-            'empresa_id' => rand(1,14),
-            'nombre' => strtoupper($faker->firstName),
-            'apellidos' => strtoupper($faker->lastName),
-            'direccion' => strtoupper($faker->streetAddress),
+            'empresa_id' => rand(1, 14),
+            'nombre' => mb_strtoupper($faker->firstName, 'UTF-8'),
+            'apellidos' => mb_strtoupper($faker->lastName, 'UTF-8'),
+            'direccion' => mb_strtoupper($faker->streetAddress, 'UTF-8'),
             'cPostal' => $poblaciones[$aleatorio]['cPostal'],
-            'provincia' => strtoupper($poblaciones[$aleatorio]['provincia']),
-            'poblacion' => strtoupper($poblaciones[$aleatorio]['poblacion']),
+            'provincia' => mb_strtoupper($poblaciones[$aleatorio]['provincia'], 'UTF-8'),
+            'poblacion' => mb_strtoupper($poblaciones[$aleatorio]['poblacion'], 'UTF-8'),
             'pais' => "ESPAÑA",
             'telefono' => $faker->unique()->numerify('6########'),
             'fechaNacimiento' => $faker->dateTimeBetween($startBirthDate, $endBirthDate),
-            'email' =>  $faker->unique()->safeEmail,
+            'email' => $faker->unique()->safeEmail,
             'password' => Hash::make('12345678'),
             'numSegSoc' => $numSegSocial,
             'ultimaConexion' => Carbon::now('Europe/Madrid'),
