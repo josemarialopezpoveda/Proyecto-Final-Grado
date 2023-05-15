@@ -18,7 +18,7 @@ class TipoausenciaController extends Controller {
         $user = Auth::user();
         $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
         if (is_numeric($empresaId)) {
-            $tiposAusencia = Tipoausencia::all()->where('empresa_id', $empresaId);
+            $tiposAusencia = Tipoausencia::where('empresa_id', $empresaId)->get();
             if (count($tiposAusencia) > 0) {
                 return response()->json($tiposAusencia);
             } else {
