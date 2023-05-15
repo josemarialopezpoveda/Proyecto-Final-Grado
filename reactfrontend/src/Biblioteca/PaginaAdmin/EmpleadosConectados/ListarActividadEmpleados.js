@@ -45,8 +45,8 @@ function ListarActividadEmpleados() {
         let datosEmpresa = await peticionGetAuth(URL_API + "empleadosOnline", header);
         console.log(datosEmpresa)
         if(datosEmpresa.data.message !== "No se encontraron empleados OnLine pertenecientes a la empresa autenticada."){
-            if (datosEmpresa.data.length !== 0) {
-                var todosDatosEmpresa = datosEmpresa.data.map((datosE) => {
+            if (datosEmpresa.data.empresa.length !== 0) {
+                var todosDatosEmpresa = datosEmpresa.data.empresa.map((datosE) => {
                     var newEmpresa = {
                         id: datosE.empleado_id,
                         nombre: datosE.nombre,

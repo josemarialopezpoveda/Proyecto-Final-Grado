@@ -14,7 +14,8 @@ function AccionesEmpleados(){
         <NavAdmin/>
         <section className="contenedorEmpleadosAcciones">
             <div className='contenedorBotonCrearCorreo'>
-                <Link className='crearCorreoBoton' to="/totalEmpleados">Ver Empleados Conectados</Link>
+                <Link className='crearCorreoBoton margin0-10' to="/totalEmpleados">Empleados Online</Link>
+                <Link className='crearCorreoBoton margin0-10' to="/altaEmpleado">Alta empleado</Link>
             </div>
             <ListarEmpleados/>
         </section>

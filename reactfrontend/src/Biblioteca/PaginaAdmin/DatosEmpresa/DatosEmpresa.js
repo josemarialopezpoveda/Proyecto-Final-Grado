@@ -15,6 +15,8 @@ function DatosEmpresa(){
     const Navigate = useNavigate();
     //Variable para el almacenamiento de los datos de la empresa.
     const [datos, setDatos] = useState({});
+    //Variable para el almacenamiento de los datos de la empresa.
+    const [foto, setFoto] = useState();
     //Función que recoge los datos de la empresa y los almacena y en caso de que algo no funcione correctamente se avisa al usuario.
     const recoleccionDatos = async() =>{
         const header = {
@@ -27,21 +29,23 @@ function DatosEmpresa(){
         console.log(url)
         let datosEmpresa = await peticionGetAuth(`${url}`, header);
         console.log(datosEmpresa)
-            if(datosEmpresa !== undefined && datosEmpresa.data !== undefined){
+            if(datosEmpresa !== undefined && datosEmpresa.data.empresa !== undefined){
                 setDatos({
-                    razonSocial: datosEmpresa.data.razonSocial,
-                    nombreComercial: datosEmpresa.data.nombreComercial,
-                    CIF: datosEmpresa.data.cif,
-                    telFijo: datosEmpresa.data.telefonoFijo,
-                    telMovil: datosEmpresa.data.telefonoMovil,
-                    Logotipo: datosEmpresa.data.logotipo,
-                    Direccion: datosEmpresa.data.direccion,
-                    Poblacion: datosEmpresa.data.poblacion,
-                    Provincia: datosEmpresa.data.provincia,
-                    Pais: datosEmpresa.data.pais,
-                    email: datosEmpresa.data.email,
-                    cPostal: datosEmpresa.data.cPostal
+                    razonSocial: datosEmpresa.data.empresa.razonSocial,
+                    nombreComercial: datosEmpresa.data.empresa.nombreComercial,
+                    CIF: datosEmpresa.data.empresa.cif,
+                    telFijo: datosEmpresa.data.empresa.telefonoFijo,
+                    telMovil: datosEmpresa.data.empresa.telefonoMovil,
+                    Direccion: datosEmpresa.data.empresa.direccion,
+                    Poblacion: datosEmpresa.data.empresa.poblacion,
+                    Provincia: datosEmpresa.data.empresa.provincia,
+                    Pais: datosEmpresa.data.empresa.pais,
+                    email: datosEmpresa.data.empresa.email,
+                    cPostal: datosEmpresa.data.empresa.cPostal
                 })
+
+                //"../../../../../laravelbackend/storage/app/public/images/M3jRf9q9AHJcglVsh2J6NCCogf0mAiaDpD221r3v.jpg"
+                setFoto(datosEmpresa.data.logo)
             }else{
                 mostrarAlertaErronea("Error: algo raro ha pasado...", "Error inesperado algo no ha funcionado correctamente.", "7000");
             }
@@ -109,11 +113,23 @@ function DatosEmpresa(){
     <React.Fragment>
         <NavAdmin/>
         <section>
+            <pre>{JSON.stringify(foto,null,3)}</pre>
             <div className='TablaDatosUser'>
-                <div className='fotoUsuarioLogueado'>
-                     <h1>Foto {datos.nombreComercial}</h1>
-                    <img className='fotoMisDatosUsuario' src={datos.logotipo} alt="logotipo"/>
-                </div>
+                {foto ? (
+                    <div className='fotoUsuarioLogueado'>
+                        <h1>Foto {datos.nombreComercial}</h1>
+                        <img className='fotoMisDatosUsuario' src={foto} alt="logotipo"/> 
+                        <img className='fotoMisDatosUsuario' src={"../../../../../laravelbackend/storage/app/public/images/M3jRf9q9AHJcglVsh2J6NCCogf0mAiaDpD221r3v.jpg"} alt="logotipo"/> 
+                        <img className='fotoMisDatosUsuario' src={require("../../../img/logoClaro.png")} alt="logotipo"/> 
+                    </div>
+                    ) : (
+                        <div className='fotoUsuarioLogueado'>
+                            <h1>Foto {datos.nombreComercial}</h1>
+                            <h2>No has subido una foto aún.</h2>
+                        </div>
+                    )
+
+                }
                 <section className='sectionPequenyo sectionFormMarginBottom'>
                     <Table className='tablaAjustar' striped>
                         <thead>

@@ -15,17 +15,13 @@ function NavAdmin() {
           path:"/fichar"
       },
       {
-          titulo:"Mis Datos",
-          path:"/misDatos"
-      },
-      {
         titulo: "Gestion Empleados",
         path: "/accionesEmpleados",
       },
-      {
-        titulo: "Alta Empleados",
-        path: "/altaEmpleado",
-      },
+      // {
+      //   titulo: "Alta Empleados",
+      //   path: "/altaEmpleado",
+      // },
       {
         titulo: "Chat",
         path: "/chatAdmin",
@@ -53,10 +49,10 @@ function NavAdmin() {
         titulo: "Gestion Empleados",
         path: "/accionesEmpleados",
       },
-      {
-        titulo: "Alta Empleados",
-        path: "/altaEmpleado",
-      },
+      // {
+      //   titulo: "Alta Empleados",
+      //   path: "/altaEmpleado",
+      // },
       {
         titulo: "Chat",
         path: "/chatAdmin",

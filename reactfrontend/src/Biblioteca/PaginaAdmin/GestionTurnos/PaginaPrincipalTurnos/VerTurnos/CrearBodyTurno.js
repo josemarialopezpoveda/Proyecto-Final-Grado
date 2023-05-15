@@ -35,6 +35,7 @@ function CrearBodyTurno() {
 
     useEffect(() => {
         recoleccionDatos();
+        recoleccionDatosEmpleado();
     }, []);
 
     const verExistenHoras = (horaBuscar, texto) =>{
@@ -67,10 +68,32 @@ function CrearBodyTurno() {
         }
     }
 
+    const [empleado, setEmpleado] = useState({
+        nombre:"",
+    })
+
+  const recoleccionDatosEmpleado = async () => {
+    const header = {
+      headers: {
+        Accept: "application/json",
+        Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+      },
+    };
+    let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleado")}`, header);
+    console.log(datosEmpleado)
+    if (datosEmpleado.data.nombre !== undefined) {
+        var newEmpleado = {
+          nombre: datosEmpleado.data.nombre,
+        }
+      setEmpleado(newEmpleado);
+    }
+  };
+
     if(turno !== undefined && turno.dias !== undefined){
         return(
             <div>
-                <h1 className='text-center tituloH1'>Turno {turno.descripcion}</h1>
+                <h1 className='text-center tituloH1'>Turno de {empleado.nombre}</h1>
+                <h1 className='text-center tituloH1'>Descripcion: {turno.descripcion}</h1>
                 <div className='ContenedorFechasTurno'>   
                     <h5>Fecha de inicio del turno 🡺 {formatearFechaFormatoDiaDeMesDelAnyo(turno.FechaInicioTurno)}</h5>
                     <h5>Fecha de fin del turno 🡺 {formatearFechaFormatoDiaDeMesDelAnyo(turno.FechaFinTurno)}</h5>
@@ -136,7 +159,8 @@ function CrearBodyTurno() {
     }else{
         return(
             <div>
-                <h1 className='text-center tituloH1'>Turno {turno.descripcion}</h1>
+                <h1 className='text-center tituloH1'>Turno de {empleado.nombre}</h1>
+                <h1 className='text-center tituloH1'>Descripcion: {turno.descripcion}</h1>
                 <Table>
                     <tbody>
                         <tr>

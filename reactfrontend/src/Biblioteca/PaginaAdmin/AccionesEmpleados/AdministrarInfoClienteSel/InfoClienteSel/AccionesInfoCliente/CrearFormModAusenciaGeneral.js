@@ -165,7 +165,6 @@ function CrearFormModAusenciaGeneral(props) {
                     </div>
                     <div className='contenedorBotonAñadirAusenciaGeneral'>
                       <button type='button' className='linkSignInLogin' onClick={TodoCorrecto} id="signIn">Modificar {props.titulo}</button>
-                      <Link to="/pagInfoClienteSel" className="linkSignInLogin" id="signIn">Volver</Link>
                     </div>
                   </Form>
       </React.Fragment>

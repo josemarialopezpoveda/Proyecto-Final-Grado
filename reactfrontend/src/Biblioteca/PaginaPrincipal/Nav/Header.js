@@ -13,8 +13,12 @@ function Header() {
         path:"/verEmpresas"
     },
     {
-      titulo: "Login",
+      titulo: "Login Empresa",
       path: "/loginAdmin",
+    },
+    {
+      titulo: "Login Cliente",
+      path: "/loginCliente",
     },
   ];
 

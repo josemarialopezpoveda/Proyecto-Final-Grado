@@ -28,8 +28,10 @@ function AnyadirAusenciaGeneral(props) {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        let datosTipoAusencia = await peticionGetAuth(URL_API + "tipoAusencias/", header);
-        if (datosTipoAusencia.data !== 0) {
+        console.log(URL_API + "tipoAusencias")
+        let datosTipoAusencia = await peticionGetAuth(URL_API + "tipoAusencias", header);
+        console.log(datosTipoAusencia)
+        if (datosTipoAusencia.data.length !== 0) {
           var todosDatosAusencia = datosTipoAusencia.data.map((datosA) => {
             var newAusencia = {
               id: datosA.id,

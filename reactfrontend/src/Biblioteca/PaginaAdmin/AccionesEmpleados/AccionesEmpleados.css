@@ -61,6 +61,10 @@ table tbody tr td{
     margin: 25px 0;
 }
 
+.margin0-10{
+    margin: 0 10px;
+}
+
 .crearCorreoBoton{
     border-radius: 20px;
 	background-color: #FF4B2B;

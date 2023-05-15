@@ -14,6 +14,7 @@ import {
   mostrarAlertaErronea,
 } from "../../../FuncionesAuxiliares/Funciones";
 import { URL_API } from "../../../../services/http/const";
+import { Link } from "react-router-dom";
 
 function CrearFormularioAltaEmpleados() {
   //Variable para tener una referencia al input tipo password.
@@ -370,9 +371,12 @@ function CrearFormularioAltaEmpleados() {
           </div>
         </fieldset>
         {/*HACER VALIDACIÓN Y CONFIRMACIÓN AL USUARIO DE QUE LO QUIERE AÑADIR Y COMPROBAR QUE TODO ESTÉ CORRECTO */}
-        <button type="button" onClick={TodoCorrecto} className="anyadirUsuarioDatos">
-          AÑADIR
-        </button>
+        <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'> 
+          <Link to="/accionesEmpleados" className="anyadirUsuarioDatos">Volver</Link>        
+          <button type="button" onClick={TodoCorrecto} className="anyadirUsuarioDatos">
+            AÑADIR
+          </button>
+        </div>
       </Form>
     </React.Fragment>
   );

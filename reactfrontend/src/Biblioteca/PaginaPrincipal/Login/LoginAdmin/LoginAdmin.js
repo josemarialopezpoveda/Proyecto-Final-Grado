@@ -97,7 +97,7 @@ function LoginAdmin() {
                     Login
                   </button>
                   <Link type="button" className="linkSignInLogin" id="signIn" to="/registrarseAdmin">
-                    Registrarse
+                    Registro
                   </Link>
                 </div>
               </Form>
