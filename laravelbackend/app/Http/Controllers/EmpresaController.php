@@ -39,7 +39,13 @@ class EmpresaController extends Controller {
         if ($user instanceof Empresa) {
             if ($user->id == $empresaId) {
                 $empresa = Empresa::with('empleados')->find($empresaId);
-                return response()->json($empresa);
+                $imagePath = public_path('images/' . $empresa->logotipo);
+                $data = [
+                    'logo' => $imagePath,
+                    'empresa' => $empresa,
+                ];
+                return response()->json($data);
+                //return response()->json($empresa);
             } else {
                 $data = ['error' => 'No estás autorizado.'];
                 return response()->json($data, 401);
