@@ -285,9 +285,7 @@ function Fichar(){
 
      //Informa de si la fecha esta nula.
      const estaVaciaFecha = (fecha, texto) =>{
-      console.log(fecha)
       if(fecha !== "00:00:00"){
-        console.log("HAY HORA")
         return(<p>{texto}  {fecha}</p>)
       }else{
         return(null);
@@ -299,13 +297,11 @@ function Fichar(){
     const getEntradasYSalidasPredefinidas = () =>{
       if(horasEnSaPredefinidas.length !== 0){
         let hayRegistrosPlaneados = false;
-
         const elementos =(horasEnSaPredefinidas.map((dia)=>{
           if(convertirNumeroDiaSemana(dia.diaSemana) === obtenerDiaSemana()){
-            if(dia.horaInicioM !== "00:00:00" && dia.horaFinM !== "00:00:00" && 
-            dia.horaInicioT !== "00:00:00" && dia.horaFinT!== "00:00:00" && 
+            if(dia.horaInicioM !== "00:00:00" && dia.horaFinM !== "00:00:00" ||
+            dia.horaInicioT !== "00:00:00" && dia.horaFinT!== "00:00:00" ||
             dia.horaInicioN !== "00:00:00" && dia.horaFinN!== "00:00:00"){
-
               hayRegistrosPlaneados = true;
 
               return(
@@ -321,7 +317,6 @@ function Fichar(){
             }
           }
          }))
-
          if (!hayRegistrosPlaneados) {
           elementos.push(
             <div key={generarUUID()}>
@@ -350,7 +345,7 @@ function Fichar(){
     return(
     <React.Fragment>
       {anyadirBarraNav()}
-      {/* <pre>{JSON.stringify(horasEnSaPredefinidas, null, 3)}</pre> */}
+       {/* <pre>{JSON.stringify(horasEnSaPredefinidas, null, 3)}</pre>  */}
         <div className='contenedorSectionParaFichar'>
           <div className='contenedorBotonCrearCorreo divFlexFichar'>
             <Link to="/verResumenLaboral" className='crearCorreoBoton'>Resumen</Link>

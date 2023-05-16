@@ -29,13 +29,23 @@ function TiemposEmpleado() {
         console.log(datosEmpresa)
         if (datosEmpresa.data.length !== 0) {
         var tiemposEmpleado = datosEmpresa.data.tiempos.map((datosE) => {
-            var newTiempo = {
-                id: datosE.id,
-                fechaInicio: cogerFecha(datosE.inicio),
-                fechaFin: cogerFecha(datosE.fin),
-                horaInicio: cogerHora(datosE.inicio),
-                horaFin: cogerHora(datosE.fin)
-            };
+            if(datosE.fin !== null){
+                var newTiempo = {
+                    id: datosE.id,
+                    fechaInicio: cogerFecha(datosE.inicio),
+                    fechaFin: cogerFecha(datosE.fin),
+                    horaInicio: cogerHora(datosE.inicio),
+                    horaFin: cogerHora(datosE.fin)
+                };
+            }else{
+                var newTiempo = {
+                    id: datosE.id,
+                    fechaInicio: cogerFecha(datosE.inicio),
+                    fechaFin: cogerFecha(datosE.inicio),
+                    horaInicio: cogerHora(datosE.inicio),
+                    horaFin: "--:--:--"
+                };
+            }
             return newTiempo;
         });
         setTiemposEstaticos(tiemposEmpleado);

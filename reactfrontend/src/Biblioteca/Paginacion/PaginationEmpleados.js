@@ -173,7 +173,11 @@ const PaginationEmpleados = ({ data, perPage, setEstadoDinamico, setEstadoEstati
         </Table>
         <div className='botonesPaginacion'>
           {Array.from({ length: totalPages }, (_, i) => (
-              i === 0 || i === (totalPages-1) || i === (paginaSeleccionada-2) || i === (paginaSeleccionada-1) || i === (paginaSeleccionada)  ? 
+              i === 0 
+              || i === (totalPages-1) 
+              || i === (paginaSeleccionada-2) 
+              || i === (paginaSeleccionada-1) 
+              || i === (paginaSeleccionada)  ? 
               <button className='botonPaginacion' key={i} onClick={(e) => handleClick(i + 1,e)}>
                 {i + 1}
               </button>

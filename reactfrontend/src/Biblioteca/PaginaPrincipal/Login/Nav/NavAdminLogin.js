@@ -7,6 +7,14 @@ import ListarOpciones from "../../../FuncionesAuxiliares/ListarOpciones";
 function NavAdminLogin() {
   const opciones = [
     {
+        titulo:"Nuestros Clientes",
+        path:"/verEmpresas"
+    },
+    {
+      titulo: "Login Empresa",
+      path: "/loginAdmin",
+    },
+    {
       titulo: "Login Empleado",
       path: "/loginCliente",
     },

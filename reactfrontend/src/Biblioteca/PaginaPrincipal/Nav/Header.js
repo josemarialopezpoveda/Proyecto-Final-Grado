@@ -17,7 +17,7 @@ function Header() {
       path: "/loginAdmin",
     },
     {
-      titulo: "Login Cliente",
+      titulo: "Login Empleado",
       path: "/loginCliente",
     },
   ];

@@ -39,7 +39,7 @@ class EmpresaController extends Controller {
         if ($user instanceof Empresa) {
             if ($user->id == $empresaId) {
                 $empresa = Empresa::with('empleados')->find($empresaId);
-                $imagePath = public_path('images/' . $empresa->logotipo);
+                $imagePath = storage_path('app/public/' . $empresa->logotipo);
                 $data = [
                     'logo' => $imagePath,
                     'empresa' => $empresa,

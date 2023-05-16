@@ -45,7 +45,7 @@ function DatosEmpresa(){
                 })
 
                 //"../../../../../laravelbackend/storage/app/public/images/M3jRf9q9AHJcglVsh2J6NCCogf0mAiaDpD221r3v.jpg"
-                setFoto(datosEmpresa.data.logo)
+                setFoto(new URL(datosEmpresa.data.logo))
             }else{
                 mostrarAlertaErronea("Error: algo raro ha pasado...", "Error inesperado algo no ha funcionado correctamente.", "7000");
             }
@@ -118,9 +118,8 @@ function DatosEmpresa(){
                 {foto ? (
                     <div className='fotoUsuarioLogueado'>
                         <h1>Foto {datos.nombreComercial}</h1>
-                        <img className='fotoMisDatosUsuario' src={foto} alt="logotipo"/> 
-                        <img className='fotoMisDatosUsuario' src={"../../../../../laravelbackend/storage/app/public/images/M3jRf9q9AHJcglVsh2J6NCCogf0mAiaDpD221r3v.jpg"} alt="logotipo"/> 
-                        <img className='fotoMisDatosUsuario' src={require("../../../img/logoClaro.png")} alt="logotipo"/> 
+                        {foto && <img className='fotoMisDatosUsuario' src={foto} alt="logotipo"/> }
+                        {/* <img className='fotoMisDatosUsuario' src={foto} alt="logotipo"/>  */}
                     </div>
                     ) : (
                         <div className='fotoUsuarioLogueado'>

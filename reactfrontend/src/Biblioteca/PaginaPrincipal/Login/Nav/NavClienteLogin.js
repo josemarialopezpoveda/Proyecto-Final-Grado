@@ -7,10 +7,18 @@ import ListarOpciones from '../../../FuncionesAuxiliares/ListarOpciones';
 function NavClienteLogin(){
     const opciones = [
         {
-            titulo:"Login Empresa",
-            path:"/loginAdmin"
+            titulo:"Nuestros Clientes",
+            path:"/verEmpresas"
         },
-    ]
+        {
+          titulo: "Login Empresa",
+          path: "/loginAdmin",
+        },
+        {
+          titulo: "Login Empleado",
+          path: "/loginCliente",
+        },
+      ];
 
     return(
         <React.Fragment>
