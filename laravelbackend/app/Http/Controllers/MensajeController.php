@@ -97,6 +97,24 @@ class MensajeController extends Controller {
         }
     }
 
+    /**
+     * @param $mensaje
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getEmisorReceptor($mensaje): \Illuminate\Http\JsonResponse
+    {
+        $empleadoEmisor = Empleado::find($mensaje->emisor);
+        $empleadoReceptor = Empleado::find($mensaje->receptor);
+        $data = [
+            'idMensaje' => $mensaje->id,
+            'idEmisor' => $empleadoEmisor->id,
+            'Emisor' => $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
+            'idReceptor' => $empleadoReceptor->id,
+            'Receptor' => $empleadoReceptor->nombre . "  " . $empleadoReceptor->apellidos,
+        ];
+        return response()->json($data);
+    }
+
     public function show($casoId)
     {
         $user = Auth::user();
@@ -238,9 +256,12 @@ class MensajeController extends Controller {
             ];
         }
 
-        //if ($user->id == $request['empleado_id']) {
+        //Comprobar si existe el mensaje y si existe el caso.
         $caso = Caso::find($request['casos_id']);
-        $empleadoOK = $user->id == $caso->empleado_id;
+        $mensaje = Mensaje::find($request['casos_id'])->first();
+
+
+        $empleadoOK = $user->id == ($mensaje->emisor || $user->id == $mensaje->receptor);
 
         $empresaOK = $user->empresa_id == $request['empresa_id'];
         $emisorOK = $user->id == $request['emisor'];
@@ -248,6 +269,7 @@ class MensajeController extends Controller {
         if ($receptorOK) {
             $receptorOK = $user->empresa_id == $receptorOK->empresa_id;
         }
+
         // ¿discutir si solo se pueden enviar mensajes al admin?
         $esAdmin = $user->tipoEmpleado == "Administrador";
 
@@ -272,7 +294,6 @@ class MensajeController extends Controller {
         }
         return response()->json($data);
     }
-
 
     /**
      * Update the specified resource in storage.
@@ -365,24 +386,6 @@ class MensajeController extends Controller {
                 'message' => 'Mensaje no existe'
             ];
         }
-        return response()->json($data);
-    }
-
-    /**
-     * @param $mensaje
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getEmisorReceptor($mensaje): \Illuminate\Http\JsonResponse
-    {
-        $empleadoEmisor = Empleado::find($mensaje->emisor);
-        $empleadoReceptor = Empleado::find($mensaje->receptor);
-        $data = [
-            'idMensaje' => $mensaje->id,
-            'idEmisor' => $empleadoEmisor->id,
-            'Emisor' => $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
-            'idReceptor' => $empleadoReceptor->id,
-            'Receptor' => $empleadoReceptor->nombre . "  " . $empleadoReceptor->apellidos,
-        ];
         return response()->json($data);
     }
 }
