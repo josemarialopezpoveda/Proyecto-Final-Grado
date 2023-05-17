@@ -1,7 +1,7 @@
 .cabeceraVerMensaje{
     padding: 3%;
     display: grid;
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 100%;
     align-items: center;
     justify-content: center;
 }
