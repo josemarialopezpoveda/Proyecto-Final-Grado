@@ -188,12 +188,8 @@ function VerMensajesEmpresaAdmin() {
   return (
     <React.Fragment>
         <NavAdmin/>
-        <h1 className='text-center tituloH1'>{tituloCaso}</h1>
+        <h1 className='text-center tituloH1'>Asunto: {tituloCaso}</h1>
         <div className='cabeceraVerMensaje'>
-            <div className="genteMensaje">
-                <h1>Involucrado 1: {intervenientes.nombreCompletoInterveniente1}</h1>
-                <h1>Involucrado 2: {intervenientes.nombreCompletoInterveniente2}</h1>
-            </div>
             {verificarPuedeCrearMensaje()}
         </div>
         <div className="contenedorTexto">
@@ -210,8 +206,8 @@ function VerMensajesEmpresaAdmin() {
                             <div className="textoMensaje" key={generarUUID()}>
                                 <div className='emisorReceptor emisorReceptorUltimoMensaje'>
                                     <div>
-                                        <h1>Para: {option.receptor}</h1>
                                         <h1>De: {option.emisor}</h1>
+                                        <h1>Para: {option.receptor}</h1>
                                     </div>
                                     {verificarEmpleadoAdministrador(option)}
                                 </div>
@@ -223,8 +219,8 @@ function VerMensajesEmpresaAdmin() {
                         return(
                             <div className="textoMensaje" key={generarUUID()}>
                                 <div className='emisorReceptor'>
-                                    <h1>Para: {option.receptor}</h1>
                                     <h1>De: {option.emisor}</h1>
+                                    <h1>Para: {option.receptor}</h1>
                                 </div>
                                 <div className="textoMensaje">{option.mensaje}</div>
                                 <div className="fechaMensaje">{option.horaEnvio}</div>

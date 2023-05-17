@@ -228,11 +228,11 @@ function VerJornadaPorDia(){
                             </article>
                             <article className='horas'>
                                 <div className="horas2">
-                                    <h2>Entradas y salidas realizadas</h2>
+                                    <h2>Entradas y salidas</h2>
                                     {getEntradasYSalidas()}
                                 </div>
                                 <div className="horas2">
-                                    <h2>Entradas y salidas planeadas</h2>
+                                    <h2>Turno para hoy</h2>
                                     {getEntradasYSalidasPredefinidas()}
                                 </div>
                             </article>

@@ -359,23 +359,26 @@ function Fichar(){
                   </article>
                   <article className='horas'>
                       <div className='jornadaPrevista'>
-                          <h1>Jornada Prevista para {nombreEmpleado}</h1>
+                          <h1>Jornada Prevista</h1>
+                          <h1 className='margin-0'>{nombreEmpleado}</h1>
                           <p className="horasPrevistas">{datosJornada.jornadaLaboral}</p>
                       </div>
                   </article>
                   <article className='horas'>
                       <p>Estado Actual: <span ref={estadoTiempoEmpleado} className="mayus"></span></p>
-                      {horasQueLleva()}
-                      <p>Horas realizadas: {datosJornada.tiempoActivo}</p>
+                      <div className='flexHoras'> 
+                        <p>Horas realizadas: {datosJornada.tiempoActivo}</p>
+                        {horasQueLleva()}
+                      </div>
                       <article className='botonParaFichar'>
                         <Link onClick={fichar} ref={boton} className='botonGrandeFichar anyadirTurnoBoton'></Link>
                       </article>
                       <div className="horas2">
-                          <h2>Entradas y salidas realizadas</h2>
+                          <h2>Entradas y salidas</h2>
                           {getEntradasYSalidas()}
                       </div>
                       <div className="horas2">
-                        <h2>Entradas y salidas planeadas</h2>
+                        <h2>Turno para hoy</h2>
                           {getEntradasYSalidasPredefinidas()}
                       </div>
                   </article>

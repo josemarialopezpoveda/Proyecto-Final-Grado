@@ -120,7 +120,6 @@ function ListadoIncidenciasPresencia(){
                                     </Table>
                                 </div> */}
                                 <div className="horas2">
-                                    <h2>Faltas</h2>
                                     <Table className='sinMargen' striped>
                                         <thead>
                                             <tr>
