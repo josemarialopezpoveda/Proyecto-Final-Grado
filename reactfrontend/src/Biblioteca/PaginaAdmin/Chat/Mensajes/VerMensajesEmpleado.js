@@ -40,8 +40,8 @@ function VerMensajesEmpleado() {
         };
         let datosMensaje = await peticionGetAuth(URL_API + "mensajes/" + `${localStorage.getItem('idCaso')}`, header);
         let datosCaso = await peticionGetAuth(URL_API + "casos/" + `${localStorage.getItem('idCaso')}`, header);
-        console.log(datosMensaje)
-        console.log(datosCaso)
+        //console.log(datosMensaje)
+        //console.log(datosCaso)
          if (datosMensaje.data.mensajes !== undefined && datosMensaje.data.mensajes !== null && datosMensaje.data.mensajes.length !== 0) {
             var todosDatosCaso = datosMensaje.data.mensajes.map((datosM) => {
                 let empleados = {
@@ -80,6 +80,7 @@ function VerMensajesEmpleado() {
     //Creamos un useEffect que nada más cargar recoge los datos.
     useEffect(() => {
         recoleccionDatos();
+        recoleccionDatosEmpleado();
     }, []);
 
     const borrarMensaje = (e) =>{
@@ -126,8 +127,32 @@ function VerMensajesEmpleado() {
         Navigate("/modificarMensaje");
     }
 
+    const [empleado, setEmpleado] = useState({
+        nombre:"",
+    })
+
+    const recoleccionDatosEmpleado = async () => {
+        const header = {
+        headers: {
+            Accept: "application/json",
+            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+        },
+        };
+        let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("id")}`, header);
+        console.log(datosEmpleado)
+        if (datosEmpleado.data.nombre !== undefined) {
+            var newEmpleado = {
+                nombre: datosEmpleado.data.nombre + "  " + datosEmpleado.data.apellidos
+            }
+        setEmpleado(newEmpleado);
+        }
+    };
+
+
     const verificarEmpleadoAdministrador = (option) =>{
-        if(localStorage.getItem("tipoUsuario") !== undefined && localStorage.getItem("tipoUsuario") === "Administrador" || localStorage.getItem("tipoUsuario") === "Trabajador"){
+        console.log(empleado.nombre)
+        console.log(option.emisor)
+        if(localStorage.getItem("tipoUsuario") !== undefined && localStorage.getItem("tipoUsuario") === "Administrador"  && option.emisor === empleado.nombre){
             return(
                 <div>
                     <button type="button" className="sinBorde" onClick={modificarMensaje}>
@@ -166,7 +191,7 @@ function VerMensajesEmpleado() {
   return (
     <React.Fragment>
         <NavCliente/>
-        <h1 className='text-center tituloH1'>{form[0].tituloCaso}</h1>
+        <h1 className='text-center tituloH1'>{tituloCaso}</h1>
         <div className='cabeceraVerMensaje'>
             <div className="genteMensaje">
                 <h1>Involucrado 1: {intervenientes.nombreCompletoInterveniente1}</h1>
@@ -176,7 +201,7 @@ function VerMensajesEmpleado() {
         </div>
         <div className="contenedorTexto">
             {form.map((option, index) => {
-                console.log(option)
+                //console.log(option)
                 if(option.id === "" && option.emisor === "" && option.receptor === "" && option.mensaje === "" && option.horaEnvio === "" ){
                     return(
                         <div className="textoMensaje" key={generarUUID()}>

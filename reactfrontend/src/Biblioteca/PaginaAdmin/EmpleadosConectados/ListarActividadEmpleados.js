@@ -45,8 +45,8 @@ function ListarActividadEmpleados() {
         let datosEmpresa = await peticionGetAuth(URL_API + "empleadosOnline", header);
         console.log(datosEmpresa)
         if(datosEmpresa.data.message !== "No se encontraron empleados OnLine pertenecientes a la empresa autenticada."){
-            if (datosEmpresa.data.empresa.length !== 0) {
-                var todosDatosEmpresa = datosEmpresa.data.empresa.map((datosE) => {
+            if (datosEmpresa.data.length !== 0) {
+                var todosDatosEmpresa = datosEmpresa.data.map((datosE) => {
                     var newEmpresa = {
                         id: datosE.empleado_id,
                         nombre: datosE.nombre,
@@ -72,52 +72,11 @@ function ListarActividadEmpleados() {
         recoleccionDatos();
     }, []);
 
-    // //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
-    // const verJornada = (e) => {
-    //     console.log(e.target.id)
-    //     localStorage.setItem("idEmpleado", e.target.id);
-    //     Navigate("/verJornadaEmpleado");
-    // }
-
     if(empleadosEstaticos !== undefined && empleadosEstaticos[0].nombre !== ""){
         return(
         <div>
             <BuscadorEmpleadosConectados datosEstaticos={setEmpleadosEstaticos} datosDinamicos={empleadosDinamicos}/>
             <div className='TablaDatosUser'>
-                {/* <Table striped>
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th className='campoOpcional'>Correo</th>
-                            <th className='campoOpcional'>Teléfono</th>
-                            <th>Fecha Inicio</th>
-                            <th>Hora Inicio</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {empleadosEstaticos.map((option)=> {
-                        if(option.apellidos !== ""){
-                            return(<tr key={generarUUID()}>
-                                <td>{option.nombre} {option.apellidos}</td>
-                                <td className='campoOpcional'>{option.correo}</td>
-                                <td className='campoOpcional'>{option.telefono}</td>
-                                <td>{cogerFecha(option.fechaInicio)}</td>
-                                <td>{cogerHora(option.horaInicio)}</td>
-                                <td>
-                                    <button type="button"
-                                    title="Ver Jornada Del Empleado"
-                                    onClick={verJornada}
-                                    id={option.id}
-                                    className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
-                                    Ver Jornada
-                                    </button>
-                                </td>
-                            </tr>)
-                        }
-                    })}
-                    </tbody>
-                </Table> */}
                 <PaginationEmpleadosConectados data={empleadosEstaticos} perPage={5}/>
             </div>
         </div>)

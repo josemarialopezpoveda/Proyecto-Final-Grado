@@ -61,81 +61,12 @@ function ListarTurnos() {
         recoleccionDatos();
     }, []);
 
-    // const borrarTurno = (e) =>{
-    //     console.log(e.target.id);
-    //     SweetAlert.fire({
-    //         title: "¿Estás seguro que quieres eliminar este turno?",
-    //         text: "Los datos se eliminarán definitivamente",
-    //         icon: "warning",
-    //         showCancelButton: true,
-    //         confirmButtonText: "Sí, eliminar",
-    //         cancelButtonText: "Cancelar",
-    //       }).then(async (resultado) => {
-    //         if (resultado.value) {
-    //           try {
-    //             const header = {
-    //               headers: {
-    //                 Accept: "application/json",
-    //                 Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-    //               },
-    //             };
-    //             let url = URL_API + "turnos/";
-    //             console.log(url + `${e.target.id}`)
-    //             let peticion = await peticionDelete(`${url}${e.target.id}`, header);
-    //             console.log(peticion)
-    //             if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
-    //               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
-    //             } else {
-    //               if(peticion.data.message === "El turno no se puede borrar, está asignado a un empleado"){
-    //                 mostrarAlertaErronea(peticion.data.message, "Error de turno asignado a un empleado.", null);
-    //               }else{
-    //                 mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
-    //                 //Navigate("/paginaPrincipalTurnos");
-    //                 recoleccionDatos();
-    //               }
-    //             }
-    //           } catch (error) {
-    //             mostrarAlertaErronea(error.message, error.stack, null);
-    //           }
-    //         } else {
-    //         }
-    //       });
-    // }
-
-    // const modificarTurno = (e) => {
-    //     localStorage.setItem("idTurno", e.target.id);
-    //     Navigate("/verTurno");
-    //   };
-
-    // const getTurnos = () =>{
-    //   return turnoEstatico.map((option)=> {
-    //     return(<tr key={generarUUID()}>
-    //         <td className='contenedorTurnoTabla'>{option.descripcion}</td>
-    //         <td className='contenedorTurnoTabla contenedorBotonesTurnoTabla'>
-    //             <button type='button' id={option.id} onClick={modificarTurno} className="botonTurnos">Ver Turno</button>
-    //             <button type='button' id={option.id} onClick={borrarTurno} className="botonTurnos">Eliminar Turno</button>
-    //         </td>
-    //     </tr>)
-    //   });
-    // }
-
     if(turnoEstatico.id !== "" && turnoEstatico.descripcion !== ""){
       return(
         <div className='TablaDatosUser'>
           <BuscadorTurnos datosEstaticos={setTurnoEstatico} datosDinamicos={turnoDinamico}/>
           <PaginacionTurnos data={turnoEstatico} perPage={1} 
                 setEstadoEstatico={setTurnoEstatico} setEstadoDinamico={setTurnoDinamico}/>
-          {/* <Table striped>
-            <thead>
-              <tr>
-                  <th>Descripción</th>
-                  <th>Opciones</th>
-              </tr>
-            </thead> 
-            <tbody>
-                {getTurnos()}
-            </tbody>
-          </Table> */}
         </div>)
     }else{
         return(

@@ -345,7 +345,7 @@ function Fichar(){
     return(
     <React.Fragment>
       {anyadirBarraNav()}
-       {/* <pre>{JSON.stringify(horasEnSaPredefinidas, null, 3)}</pre>  */}
+       {/* <pre>{JSON.stringify(datosJornada, null, 3)}</pre>  */}
         <div className='contenedorSectionParaFichar'>
           <div className='contenedorBotonCrearCorreo divFlexFichar'>
             <Link to="/verResumenLaboral" className='crearCorreoBoton'>Resumen</Link>
@@ -368,7 +368,7 @@ function Fichar(){
                       {horasQueLleva()}
                       <p>Horas realizadas: {datosJornada.tiempoActivo}</p>
                       <article className='botonParaFichar'>
-                        <Link onClick={fichar} ref={boton} className='anyadirTurnoBoton'></Link>
+                        <Link onClick={fichar} ref={boton} className='botonGrandeFichar anyadirTurnoBoton'></Link>
                       </article>
                       <div className="horas2">
                           <h2>Entradas y salidas realizadas</h2>

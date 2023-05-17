@@ -48,6 +48,7 @@ function ListarEmpleados() {
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
+    console.log(URL_API + "empresa/" + localStorage.getItem("id"))
     let datosEmpresa = await peticionGetAuth(URL_API + "empresa/" + localStorage.getItem("id"), header);
     console.log(datosEmpresa)
     if (datosEmpresa.data.empresa.empleados.length !== 0) {
@@ -66,55 +67,12 @@ function ListarEmpleados() {
       setEmpleadosDinamicos(todosDatosEmpresa);
     }
   };
-  // //Función que guarda el ID del empleado a modificar en localStorage y te lleva a la ruta del formulario de modificar el empleado.
-  // const modificar = (e) => {
-  //   localStorage.setItem("idEmpleado", e.target.id);
-  //   Navigate("/modificarEmpleado");
-  // };
-  // //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
-  // const verInfo = (e) => {
-  //   localStorage.setItem("idEmpleado", e.target.id);
-  //   Navigate("/pagInfoClienteSel");
-  // };
+
   //Creamos un useEffect que nada más cargar recoge los datos de los empleados y los pinta.
   useEffect(() => {
     recoleccionDatos();
   }, []);
-  // //Función que borra el empleado e informa si todo ha ido bien o ha ocurrido algún error inesperado.
-  // const borrarEmpleado = async (e) => {
-  //   SweetAlert.fire({
-  //     title: "¿Estás seguro que quieres eliminar este empleado?",
-  //     text: "Los datos se eliminarán definitivamente",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Sí, eliminar",
-  //     cancelButtonText: "Cancelar",
-  //   }).then(async (resultado) => {
-  //     if (resultado.value) {
-  //       try {
-  //         const header = {
-  //           headers: {
-  //             Accept: "application/json",
-  //             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-  //           },
-  //         };
-  //         let url = URL_API + "empleados/";
-  //         let peticion = await peticionDelete(`${url}${e.target.id}`, header);
-  //         if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
-  //           mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
-  //         } else {
-  //           mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
-  //           Navigate("/accionesEmpleados");
-  //           recoleccionDatos();
-  //         }
-  //       } catch (error) {
-  //         mostrarAlertaErronea(error.message, error.stack, null);
-  //       }
-  //     } else {
-  //     }
-  //   });
-  // };
-
+  
   return(
   
   <div>
