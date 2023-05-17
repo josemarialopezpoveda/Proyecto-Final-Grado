@@ -34,6 +34,16 @@ function ModificarTiempo() {
     let datosTiempo = await peticionGetAuth(URL_API + "tiempo/" + `${localStorage.getItem('idTiempoSeleccionado')}`, header);
     console.log(datosTiempo)
     if (datosTiempo.data.tiempo !== undefined) {
+      if(datosTiempo.data.tiempo.fin === null){
+        let datos = {
+          fechaEntrada: recogerFechaAPartirFecha(datosTiempo.data.tiempo.inicio),
+          fechaSalida: recogerFechaAPartirFecha(datosTiempo.data.tiempo.inicio),
+          horaEntrada: recogerHoraAPartirFecha(datosTiempo.data.tiempo.inicio),
+          horaSalida: "00:00:00",
+          turno_id: datosTiempo.data.tiempo.turno_id
+        }
+        setHoras(datos);
+      }else{
         let datos = {
           fechaEntrada: recogerFechaAPartirFecha(datosTiempo.data.tiempo.inicio),
           fechaSalida: recogerFechaAPartirFecha(datosTiempo.data.tiempo.fin),
@@ -42,6 +52,7 @@ function ModificarTiempo() {
           turno_id: datosTiempo.data.tiempo.turno_id
         }
         setHoras(datos);
+      }
     }
 };
 
@@ -83,11 +94,35 @@ function ModificarTiempo() {
     }
   }
 
+  const [empleado, setEmpleado] = useState({
+    nombre:"",
+  })
+
+    useEffect(()=>{
+        recoleccionDatosEmpleado();
+    },[])
+
+    const recoleccionDatosEmpleado = async () => {
+      const header = {
+        headers: {
+          Accept: "application/json",
+          Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+        },
+      };
+      let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleado")}`, header);
+      console.log(datosEmpleado)
+      if (datosEmpleado.data.nombre !== undefined) {
+          var newEmpleado = {
+            nombre: datosEmpleado.data.nombre,
+          }
+        setEmpleado(newEmpleado);
+      }
+    };
+
   return (
     <React.Fragment>
     <NavAdmin/>
-      <pre>{JSON.stringify(horas, null, 3)}</pre>
-      <h1 className='text-center tituloH1'>Modificar Tiempo</h1>
+      <h1 className='text-center tituloH1'>Modificar Tiempo del empleado: {empleado.nombre}</h1>
       <div className='contenedorCrearTurnoForm divPequenyo '>
         <Form id="anyadir">
           <div className='contenedorDescripcionCrearTurno contenedorFormCrearTurno'>

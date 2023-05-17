@@ -79,6 +79,7 @@ function VerMensajesEmpresaAdmin() {
     //Creamos un useEffect que nada más cargar recoge los datos.
     useEffect(() => {
         recoleccionDatos();
+        recoleccionDatosEmpleado();
     }, []);
 
     const borrarMensaje = (e) =>{
@@ -124,8 +125,31 @@ function VerMensajesEmpresaAdmin() {
         Navigate("/modificarMensaje");
     }
 
+    const [empleado, setEmpleado] = useState({
+        nombre:"",
+    })
+
+    const recoleccionDatosEmpleado = async () => {
+        const header = {
+        headers: {
+            Accept: "application/json",
+            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+        },
+        };
+        let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+        console.log(datosEmpleado)
+        if (datosEmpleado.data.nombre !== undefined) {
+            var newEmpleado = {
+                nombre: datosEmpleado.data.nombre + "  " + datosEmpleado.data.apellidos
+            }
+        setEmpleado(newEmpleado);
+        }
+    };
+
     const verificarEmpleadoAdministrador = (option) =>{
-        if(localStorage.getItem("tipoUsuario") !== undefined && localStorage.getItem("tipoUsuario") === "Administrador"){
+        if(localStorage.getItem("tipoUsuario") !== undefined && localStorage.getItem("tipoUsuario") === "Administrador" && option.emisor === empleado.nombre){
+            console.log(option.emisor)
+            console.log(empleado.nombre)
             return(
                 <div>
                     <button type="button" className="sinBorde" onClick={modificarMensaje}>
@@ -164,9 +188,6 @@ function VerMensajesEmpresaAdmin() {
   return (
     <React.Fragment>
         <NavAdmin/>
-        <pre>{JSON.stringify(form, null, 3)}</pre>
-        <pre>{JSON.stringify(tituloCaso, null, 3)}</pre>
-        <pre>{JSON.stringify(intervenientes, null, 3)}</pre>
         <h1 className='text-center tituloH1'>{tituloCaso}</h1>
         <div className='cabeceraVerMensaje'>
             <div className="genteMensaje">

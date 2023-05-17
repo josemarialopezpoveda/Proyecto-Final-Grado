@@ -370,7 +370,6 @@ function CrearFormularioAltaEmpleados() {
             </Form.Group>
           </div>
         </fieldset>
-        {/*HACER VALIDACIÓN Y CONFIRMACIÓN AL USUARIO DE QUE LO QUIERE AÑADIR Y COMPROBAR QUE TODO ESTÉ CORRECTO */}
         <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'> 
           <Link to="/accionesEmpleados" className="anyadirUsuarioDatos">Volver</Link>        
           <button type="button" onClick={TodoCorrecto} className="anyadirUsuarioDatos">

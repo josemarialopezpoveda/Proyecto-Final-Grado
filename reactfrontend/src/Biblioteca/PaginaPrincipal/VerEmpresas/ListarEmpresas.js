@@ -60,27 +60,6 @@ function ListarEmpresas() {
             <BuscadorNuestrosClientes datosEstaticos={setEmpresasEstatico} datosDinamicos={empresasDinamico}/>
             <div className='TablaDatosUser'>
               <PaginacionNuestrosClientes data={empresasEstatico} perPage={4} />
-                {/* <Table id='tablaAccionesEmpleados' striped>
-                    <thead>
-                        <tr>
-                            <th>Nombre Comercial</th>
-                            <th>Población</th>
-                            <th className='campoOpcional'>País</th>
-                            <th className='campoOpcional'>Provincia</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {empresasEstatico.map((option) => {
-                      return (
-                        <tr className="EmpleadoTablaApartado" key={generarUUID()}>
-                          <td>{option.nombreComercial}</td>
-                          <td>{option.poblacion}</td>
-                          <td className="campoOpcional">{option.pais}</td>
-                          <td className="campoOpcional">{option.provincia}</td>
-                        </tr>
-                      )})}
-                    </tbody>
-                </Table> */}
             </div>
         </section>
   )

@@ -34,7 +34,6 @@ function VerTiemposEmpleado(){
     }
   };
 
-
     return(
     <React.Fragment>
         <NavAdmin/>

@@ -115,7 +115,7 @@ function CrearMensaje() {
                 }
             }
             if(raw !== undefined){
-                console.log(raw)
+                console.log(URL_API + "mensajes")
                 let peticion = await peticionPost(URL_API + "mensajes", raw, header)
                 console.log(peticion)
                 if(peticion.data.errores !== undefined && peticion.data.errores !== null){
@@ -123,7 +123,7 @@ function CrearMensaje() {
                 }else{
                     console.log(peticion.data.message)
                     if(peticion.data.message !== "Mensaje creado correctamente"){
-                        mostrarAlertaErronea(peticion.data.message, "", null);
+                        mostrarAlertaErronea(peticion.data.message, "Error no esperado", null);
                     }else{
                         mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
                         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){ 

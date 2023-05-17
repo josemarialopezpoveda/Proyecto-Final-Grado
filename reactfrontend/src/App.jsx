@@ -44,6 +44,7 @@ import VerJornadaPorDia from 'Biblioteca/PaginaCliente/VerJornadaPorDia/VerJorna
 import CalendarioGeneral from 'Biblioteca/PaginaCliente/CalendarioGeneral/CalendarioGeneral';
 import CrearTiempo from 'Biblioteca/PaginaAdmin/Tiempos/CrearTiempo';
 import ModificarTiempo from 'Biblioteca/PaginaAdmin/Tiempos/ModificarTiempo';
+import ListadoIncidenciasPresencia from 'Biblioteca/PaginaAdmin/AccionesEmpleados/ListadoIncidenciasPresencia/ListadoIncidenciasPresencia';
 
 function App() {
   return(
@@ -73,6 +74,9 @@ function App() {
                   <Route exact path="/altaEmpleado" element={<AltaEmpleados/>} />
                   <Route exact path="/modificarEmpleado" element={<Modificar/>} />
                   <Route exact path="/pagInfoClienteSel" element={<PagInfoClienteSel/>} />
+
+                  {/* Listado Incidencias y Presencia */}
+                  <Route exact path="/listadoIncidenciasPresencia" element={<ListadoIncidenciasPresencia/>} />
 
                   {/* Ver Resumen laboral empleado */}
                   <Route exact path="/verResumenLaboralEmpleado" element={<ResumenLaboralEmpleado/>} />

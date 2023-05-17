@@ -43,42 +43,71 @@ function CrearTiempo() {
 
   const crearTiempo = async() =>{
     if(obtenerMilisegundosDesdeHora(horas.horaEntrada) < obtenerMilisegundosDesdeHora(horas.horaSalida)){
-      var raw = {
-        "empleado_id": horas.empleado_id,
-        "inicio":unirFechaYHora(horas.fechaEntrada, horas.horaEntrada),
-        "fin":unirFechaYHora(horas.fechaSalida, horas.horaSalida),
-        "turno_id": idTurno
-      };
-      console.log(raw)
-      try {
-        const header = {
-          headers: {
-            Accept: "application/json",
-            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-          },
+      if(horas.fechaSalida === horas.fechaEntrada){
+        var raw = {
+          "empleado_id": horas.empleado_id,
+          "inicio":unirFechaYHora(horas.fechaEntrada, horas.horaEntrada),
+          "fin":unirFechaYHora(horas.fechaSalida, horas.horaSalida),
+          "turno_id": idTurno
         };
-        let peticion = await peticionPost(URL_API + "tiempos", raw, header);
-        console.log(peticion)
-        if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
-          mostrarAlertaErronea(peticion.data.message, peticion.data.errores, 5000);
-        } else {
-          mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-          Navigate("/verTiemposEmpleado");
+        console.log(raw)
+        try {
+          const header = {
+            headers: {
+              Accept: "application/json",
+              Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+            },
+          };
+          let peticion = await peticionPost(URL_API + "tiempos", raw, header);
+          console.log(peticion)
+          if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
+            mostrarAlertaErronea(peticion.data.message, peticion.data.errores, 5000);
+          } else {
+            mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
+            Navigate("/verTiemposEmpleado");
+          }
+        } catch (error) {
+          mostrarAlertaErronea(error.message, error.stack, 5000);
         }
-      } catch (error) {
-        mostrarAlertaErronea(error.message, error.stack, 5000);
+      }else{
+        mostrarAlertaErronea("ERROR a la hora de crear el tiempo", "Las fechas no son iguales", 5000);
       }
     }else{
       mostrarAlertaErronea("ERROR a la hora de crear el tiempo", "La hora de entrada no puede ser posterior a la hora de salida", 5000);
     }
   }
 
+  const [empleado, setEmpleado] = useState({
+    nombre:"",
+  })
+
+  useEffect(()=>{
+      recoleccionDatosEmpleado();
+  },[])
+
+  const recoleccionDatosEmpleado = async () => {
+    const header = {
+      headers: {
+        Accept: "application/json",
+        Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+      },
+    };
+    let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleado")}`, header);
+    console.log(datosEmpleado)
+    if (datosEmpleado.data.nombre !== undefined) {
+        var newEmpleado = {
+          nombre: datosEmpleado.data.nombre,
+        }
+      setEmpleado(newEmpleado);
+    }
+  };
+
   return (
     <React.Fragment>
     <NavAdmin/>
       <pre>{JSON.stringify(horas, null, 3)}</pre>
       <pre>{JSON.stringify(idTurno, null, 3)}</pre>
-      <h1 className='text-center tituloH1'>Crear Tiempo </h1>
+      <h1 className='text-center tituloH1'>Crear Tiempo del empleado: {empleado.nombre} </h1>
       <div className='contenedorCrearTurnoForm divPequenyo '>
         <Form id="anyadir">
           <div className='contenedorDescripcionCrearTurno contenedorFormCrearTurno'>

@@ -204,15 +204,38 @@ const PaginacionChatAdmin = ({ data, perPage, setEstadoDinamico, setEstadoEstati
         </Table>
     </div>
         <div className='botonesPaginacion'>
-          {Array.from({ length: totalPages }, (_, i) => (
-              i === 0 || i === (totalPages-1) || i === (paginaSeleccionada-2) || i === (paginaSeleccionada-1) || i === (paginaSeleccionada)  ? 
-              <button className='botonPaginacion' key={i} onClick={(e) => handleClick(i + 1,e)}>
-                {i + 1}
-              </button>
-              :
-              null
-              
-            ))}
+        {Array.from({ length: totalPages }, (_, i) => {
+                if (
+                  i === 0 ||
+                  i === totalPages - 1 ||
+                  i === paginaSeleccionada - 2 ||
+                  i === paginaSeleccionada - 1 ||
+                  i === paginaSeleccionada ||
+                  i === paginaSeleccionada + 1
+                ) {
+                  return (
+                    <button
+                      className="botonPaginacion"
+                      key={i}
+                      onClick={(e) => handleClick(i + 1, e)}
+                    >
+                      {i + 1}
+                    </button>
+                  );
+                } else if (
+                  (i === 1 && paginaSeleccionada !== 3) ||
+                  (i === totalPages - 2 && paginaSeleccionada !== totalPages - 2)
+                ) {
+                  return (
+                    <div key={i}>
+                      <button className="botonPaginacionPuntos" key={i}>
+                        ...
+                      </button>
+                    </div>
+                  );
+                }
+                return null;
+              })}
         </div>
     </React.Fragment>
   );

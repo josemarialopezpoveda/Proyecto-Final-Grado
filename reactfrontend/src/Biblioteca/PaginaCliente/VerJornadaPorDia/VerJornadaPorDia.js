@@ -157,8 +157,8 @@ function VerJornadaPorDia(){
   
           const elementos =(horasEnSaPredefinidas.map((dia)=>{
             if(convertirNumeroDiaSemana(dia.diaSemana) === recogerDiaSemanaFecha(fechasBuscador.diaSeleccionado)){
-              if(dia.horaInicioM !== "00:00:00" && dia.horaFinM !== "00:00:00" && 
-              dia.horaInicioT !== "00:00:00" && dia.horaFinT!== "00:00:00" && 
+              if(dia.horaInicioM !== "00:00:00" && dia.horaFinM !== "00:00:00" || 
+              dia.horaInicioT !== "00:00:00" && dia.horaFinT!== "00:00:00" || 
               dia.horaInicioN !== "00:00:00" && dia.horaFinN!== "00:00:00"){
   
                 hayRegistrosPlaneados = true;
@@ -195,6 +195,7 @@ function VerJornadaPorDia(){
     return(
     <React.Fragment>
         {anyadirBarraNav()}
+        {/* <pre>{JSON.stringify(horasEnSaPredefinidas,null,3)}</pre> */}
             <div className='contenedorSectionParaFichar'>
                 <div className='contenedorBotonCrearCorreo divFlexFichar'>   
                     <Link to="/fichar" className='crearCorreoBoton'>Fichar</Link>
