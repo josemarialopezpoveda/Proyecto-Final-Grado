@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Auxiliares;
 use App\Models\Dia;
-use App\Models\Empresa;
 use App\Models\Turno;
-use App\Models\Empleado;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -171,6 +168,24 @@ class TurnoController extends Controller {
     }
 
     /**
+     * @param Request $request
+     * @param int $i
+     * @param $dia
+     * @return mixed
+     */
+    public function getDia(Request $request, int $i, $dia)
+    {
+        $dia["diaSemana"] = $request->dias[$i]["diaSemana"];
+        $dia["horaInicioM"] = $request->dias[$i]["horaInicioM"];
+        $dia["horaFinM"] = $request->dias[$i]["horaFinM"];
+        $dia["horaInicioT"] = $request->dias[$i]["horaInicioT"];
+        $dia["horaFinT"] = $request->dias[$i]["horaFinT"];
+        $dia["horaInicioN"] = $request->dias[$i]["horaInicioN"];
+        $dia["horaFinN"] = $request->dias[$i]["horaFinN"];
+        return $dia;
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param Request $request
@@ -262,6 +277,17 @@ class TurnoController extends Controller {
     }
 
 
+    /*public function attach(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $turno = Turno::find($request->turno_id);
+        $turno->horarios()->attach($request->horario_id);
+        $data = [
+            'message'=>'Horario attached correctamente',
+            'turno' => $turno
+        ];
+        return response()->json($data);
+    }*/
+
     public function eliminarTurnoAEmpleado(Request $request): JsonResponse
     {
         // Comprobar que el usuario está autenticado y es Empresa o Empleado Administrador de la misma empresa autenticada.
@@ -310,7 +336,7 @@ class TurnoController extends Controller {
                                         ->where('fechaInicioTurno', $request->fechaInicioTurno)
                                         ->where('fechaFinTurno', $request->fechaFinTurno)
                                         ->first();
-                                    if ($turnoAEliminar != null ) {
+                                    if ($turnoAEliminar != null) {
                                         DB::table('empleados_turnos')
                                             ->where('id', $turnoAEliminar->id)
                                             ->delete();
@@ -326,7 +352,7 @@ class TurnoController extends Controller {
                                     }
                                 } else {
                                     $data = ['error' => 'No se puede eliminar el turno, hay tiempos registrados.',];
-                                    return response()->json($data, 409);
+                                    return response()->json($data);
                                 }
                             } else {
                                 $data = ['error' => 'No hay relación entre el turno y el empleado.',];
@@ -352,34 +378,5 @@ class TurnoController extends Controller {
             $data = ['error' => $empresaId['message'],];
             return response()->json($data, 403);
         }
-    }
-
-
-    /*public function attach(Request $request): \Illuminate\Http\JsonResponse
-    {
-        $turno = Turno::find($request->turno_id);
-        $turno->horarios()->attach($request->horario_id);
-        $data = [
-            'message'=>'Horario attached correctamente',
-            'turno' => $turno
-        ];
-        return response()->json($data);
-    }*/
-    /**
-     * @param Request $request
-     * @param int $i
-     * @param $dia
-     * @return mixed
-     */
-    public function getDia(Request $request, int $i, $dia)
-    {
-        $dia["diaSemana"] = $request->dias[$i]["diaSemana"];
-        $dia["horaInicioM"] = $request->dias[$i]["horaInicioM"];
-        $dia["horaFinM"] = $request->dias[$i]["horaFinM"];
-        $dia["horaInicioT"] = $request->dias[$i]["horaInicioT"];
-        $dia["horaFinT"] = $request->dias[$i]["horaFinT"];
-        $dia["horaInicioN"] = $request->dias[$i]["horaInicioN"];
-        $dia["horaFinN"] = $request->dias[$i]["horaFinN"];
-        return $dia;
     }
 }
