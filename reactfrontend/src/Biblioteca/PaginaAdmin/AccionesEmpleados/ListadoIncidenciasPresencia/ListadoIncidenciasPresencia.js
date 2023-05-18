@@ -8,6 +8,7 @@ import { URL_API } from 'services/http/const.js';
 import PiePagina from 'Biblioteca/PaginaPrincipal/Footer/PiePagina.js';
 import './ListadoIncidenciasPresencia.css';
 import { Table } from 'react-bootstrap';
+import { faListSquares } from '@fortawesome/free-solid-svg-icons';
 
 function ListadoIncidenciasPresencia(){
 
@@ -17,12 +18,6 @@ function ListadoIncidenciasPresencia(){
     });
 
     const [datosFaltas, setDatosFaltas] = useState([{}]);
-
-    const [usuariosPresentes, setUsuariosPresentes] = useState([]);
-
-    // const [usuariosFaltas, setUsuariosFaltas] = useState([]);
-
-    const [idUsuariosFaltas, setIdUsuariosFaltas] = useState([]);
 
     //Creamos un useEffect que nada más cargar recoge los datos.
     useEffect(() => {
@@ -42,54 +37,22 @@ function ListadoIncidenciasPresencia(){
         console.log(datosAusencias)
             let datos = datosAusencias.data.ausencias.map((ausencia)=>{
                 if(ausencia.fechaFin === null){
-                    setIdUsuariosFaltas(obtenerIdsUnicos(datosAusencias.data.ausencias));
-                    console.log(obtenerIdsUnicos(datosAusencias.data.ausencias))
                     return({
                         nombre: ausencia.nombre + " " + ausencia.apellidos,
-                        descripcion: ausencia.descripcion
+                        descripcion: ausencia.descripcion,
+                        tipo: ausencia.tipo
                     })
                 }else{   
                     if(fechaEntreRango(ausencia.fechaInicio,ausencia.fechaFin,fechasBuscador.diaSeleccionado)){
-                        console.log(obtenerIdsUnicos(datosAusencias.data.ausencias))
-                        setIdUsuariosFaltas(obtenerIdsUnicos(datosAusencias.data.ausencias));
                         return({
                             nombre: ausencia.nombre + " " + ausencia.apellidos,
-                            descripcion: ausencia.descripcion
+                            descripcion: ausencia.descripcion,
+                            tipo: ausencia.tipo
                         })
                     }
                 }
             })
             setDatosFaltas(datos);
-            recoleccionDatosEmpleadosPresentes();
-      };
-
-      //Recogemos los nombres de los usuarios presentes
-    const recoleccionDatosEmpleadosPresentes = async () => {
-        const header = {
-          headers: {
-            Accept: "application/json",
-            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-          },
-        };
-        console.log(URL_API + "empleados")
-        let datosEmpleados = await peticionGetAuth(URL_API + "empleados", header);
-        console.log(datosEmpleados)
-            let datos = datosEmpleados.data.map((empleado)=>{
-                if(!idUsuariosFaltas.includes(empleado.id)){
-                    return(empleado.nombre);
-                }
-            })
-            setUsuariosPresentes(datos);
-      };
-
-    const obtenerIdsUnicos = (datos) => {
-        const idsUnicos = new Set();
-      
-        datos.forEach((objeto) => {
-          idsUnicos.add(objeto.empleado_id);
-        });
-      
-        return Array.from(idsUnicos);
       };
 
     //Al pulsar al botón recoge los datos con las nuevas fechas.
@@ -101,7 +64,7 @@ function ListadoIncidenciasPresencia(){
     <React.Fragment>
         <NavAdmin/>
             <div className='contenedorSectionParaFichar'>
-            <h1 className='text-center tituloH1'>Listado de Incidencias y Presencia</h1>
+            <h1 className='text-center tituloH1'>Listado de Incidencias</h1>
                 <section className='sectionPequenyo sectionParaFichar sectionFormMarginBottomFichar pd10-0'>
                     <Form>
                         <div className="divContenedorCampo2 margin10-0">
@@ -127,32 +90,12 @@ function ListadoIncidenciasPresencia(){
                             </article>
                             <article className='horas'>
                                 <div className="horas2">
-                                    <h2>Presencias</h2>
-                                    <Table className='sinMargen' striped>
-                                        <thead>
-                                            <tr>
-                                                <th className='sinBorde'>Nombre</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {usuariosPresentes.map((falta)=>{
-                                                    if(falta !== null && falta !== undefined){
-                                                        return(
-                                                            <tr key={generarUUID()}>
-                                                                <td>{falta}</td>
-                                                            </tr>
-                                                        )
-                                                    }
-                                                })}
-                                        </tbody>
-                                    </Table>
-                                </div>
-                                <div className="horas2">
                                     <h2>Incidencias</h2>
                                     <Table className='sinMargen' striped>
                                         <thead>
                                             <tr>
                                                 <th className='sinBorde'>Nombre</th>
+                                                <th className='sinBorde'>Tipo</th>
                                                 <th className='sinBorde'>Ausencia</th>
                                             </tr>
                                         </thead>
@@ -162,6 +105,7 @@ function ListadoIncidenciasPresencia(){
                                                     return(
                                                         <tr key={generarUUID()}>
                                                             <td>{falta.nombre}</td>
+                                                            <td>{falta.tipo}</td>
                                                             <td>{falta.descripcion}</td>
                                                         </tr>
                                                     )
