@@ -115,11 +115,11 @@ function DatosEmpresa(){
         <section>
             <pre>{JSON.stringify(foto,null,3)}</pre>
             <div className='TablaDatosUser'>
-                {foto ? (
+                {/* {foto ? (
                     <div className='fotoUsuarioLogueado'>
                         <h1>Foto {datos.nombreComercial}</h1>
                         {foto && <img className='fotoMisDatosUsuario' src={foto} alt="logotipo"/> }
-                        {/* <img className='fotoMisDatosUsuario' src={foto} alt="logotipo"/>  */}
+                        {/* <img className='fotoMisDatosUsuario' src={foto} alt="logotipo"/>  }
                     </div>
                     ) : (
                         <div className='fotoUsuarioLogueado'>
@@ -128,7 +128,7 @@ function DatosEmpresa(){
                         </div>
                     )
 
-                }
+                } */}
                 <section className='sectionPequenyo sectionFormMarginBottom'>
                     <Table className='tablaAjustar' striped>
                         <thead>
