@@ -352,7 +352,7 @@ class TurnoController extends Controller {
                                     }
                                 } else {
                                     $data = ['error' => 'No se puede eliminar el turno, hay tiempos registrados.',];
-                                    return response()->json($data);
+                                    return response()->json($data, 409);
                                 }
                             } else {
                                 $data = ['error' => 'No hay relación entre el turno y el empleado.',];
