@@ -348,21 +348,8 @@ export const recogerIdEmpleadoLogueado = () =>{
   }
 }
 
-//Función que a partir de una fecha 2023-05-04 te da 04/05/2023.
+//Función que a partir de una fecha 2023/05/04 te da 04/05/2023.
 export const formatoFechaDDMMYYYY = (dateStr) =>{
-  // console.log(typeof(dateStr))
-  // // Convertir la cadena de fecha en un objeto de fecha
-  // const date = new Date(dateStr);
-  // console.log(date)
-  // // Obtener los componentes de la fecha (día, mes y año)
-  // const day = date.getDate();
-  // const month = date.getMonth() + 1;
-  // const year = date.getFullYear();
-  
-  // // Formatear la fecha en el formato deseado
-  // const formattedDate = `${day < 10 ? '0' + day : day}/${month < 10 ? '0' + month : month}/${year}`;
-  // console.log(formattedDate)
-  // return formattedDate;
   var partes = dateStr.split('/');
   var dia = partes[0];
   var mes = partes[1] - 1; // Restamos 1 al mes, ya que en JavaScript los meses van de 0 a 11.
@@ -370,6 +357,17 @@ export const formatoFechaDDMMYYYY = (dateStr) =>{
 
   return `${dia}/${mes}/${anio}`;
 }
+
+//Función que a partir de una fecha 2023-05-04 te da 04/05/2023.
+export const formatoFechaDDMMYYYYGuiones = (dateStr) =>{
+  var partes = dateStr.split('-');
+  var dia = partes[0];
+  var mes = partes[1] - 1; // Restamos 1 al mes, ya que en JavaScript los meses van de 0 a 11.
+  var anio = partes[2];
+
+  return `${dia}/${mes}/${anio}`;
+}
+
 
 //Función para restar dos horas en formato "HH:MM:SS" .
 export const restarHoras = (fecha2, fecha1) => {

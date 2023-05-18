@@ -1,4 +1,4 @@
-import { cogerFecha, cogerHora, formatoFechaDDMMYYYY, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { cogerFecha, cogerHora, formatoFechaDDMMYYYY, formatoFechaDDMMYYYYGuiones, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { URL_API } from 'services/http/const';
@@ -86,10 +86,11 @@ const PaginacionAusenciasEmpleado = ({ data, perPage, setEstadoDinamico, setEsta
     }
 
     const fechaNula = (fecha) =>{
+      console.log(fecha)
         if(fecha === null){
             return "Fecha no indicada";
         }else{
-            return formatoFechaDDMMYYYY(fecha);
+            return formatoFechaDDMMYYYYGuiones(fecha);
         }
     }
 
