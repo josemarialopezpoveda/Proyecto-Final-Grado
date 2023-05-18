@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ausencia extends Model
-{
+class Ausencia extends Model {
     use HasFactory;
 
     public function tipoausencias()
@@ -18,4 +17,12 @@ class Ausencia extends Model
     {
         return $this->belongsTo(Empleado::class);
     }
+
+    // En el modelo "Ausencia"
+//    public function empleado()
+//    {
+//        return $this->belongsTo(Empleado::class, 'empleado_id');
+//    }
+
+
 }

@@ -23,6 +23,17 @@ class AusenciaController extends Controller {
         if (is_numeric($empresaId)) {
             $empresa = Empresa::find($empresaId);
             $ausencias = $empresa->empleados()->with('ausencias')->get()->pluck('ausencias')->flatten();
+//            $ausencias = $empresa->empleados()
+//                ->with([
+//                    'ausencias',
+//                    'ausencias.empleado' => function ($query) {
+//                        $query->select('id', 'nombre', 'apellidos');
+//                    }
+//                ])
+//                ->get()
+//                ->pluck('ausencias')
+//                ->flatten();
+
             if (!$ausencias->isEmpty()) {
                 $data = ['ausencias' => $ausencias,];
                 return response()->json($data);
@@ -82,7 +93,8 @@ class AusenciaController extends Controller {
                         'ausencias.*',
                         'tipoausencias.descripcion as descripcionAusencia',
                         'tipoausencias.tipo as tipo',
-                        'empleados.nombre as nombreEmpleado'
+                        'empleados.nombre as nombre',
+                        'empleados.apellidos as apellidos',
                     )
                     ->get();
                 if (count($ausencias) > 0) {
@@ -168,6 +180,23 @@ class AusenciaController extends Controller {
         }
     }
 
+    /**
+     * @param Request $request
+     * @param $ausencia
+     * @return mixed
+     */
+    public function getAusencia(Request $request, $ausencia)
+    {
+        $ausencia->tipoausencias_id = $request->tipoausencias_id;
+        $ausencia->empleado_id = $request->empleado_id;
+        $ausencia->descripcion = $request->descripcion;
+        $ausencia->fechaInicio = $request->fechaInicio;
+        $ausencia->fechaFin = $request->fechaFin;
+        $ausencia->justificada = $request->justificada;
+        $ausencia->save();
+        $tipoAusencia = Tipoausencia::find($request->tipoausencias_id);
+        return $tipoAusencia;
+    }
 
     /**
      * Update the specified resource in storage.
@@ -185,16 +214,15 @@ class AusenciaController extends Controller {
                     if ($empleado && $empleado->empresa_id == $empresaId && $empleado->id == $request->empleado_id) {
                         $tipoAusencia = $this->getAusencia($request, $ausencia);
                         $data = [
-                            '$empresaId'=>$empresaId,
-                            '$tipoAusencia->empresa_id'=>$tipoAusencia->empresa_id,
-                            '$empleado->empresa_id'=>$empleado->empresa_id,
+                            '$empresaId' => $empresaId,
+                            '$tipoAusencia->empresa_id' => $tipoAusencia->empresa_id,
+                            '$empleado->empresa_id' => $empleado->empresa_id,
                             'message' => 'Ausencia modificada correctamente',
                             'tipo de ausencia' => $tipoAusencia["descripcion"],
                             'ausencia' => $ausencia
                         ];
                         return response()->json($data);
-                    }
-                    else {
+                    } else {
                         $data = ['message' => 'Empleado no existe'];
                         return response()->json($data, 404);
                     }
@@ -230,8 +258,7 @@ class AusenciaController extends Controller {
                         'tipo de ausencia' => $ausencia
                     ];
                     return response()->json($data);
-                }
-                else {
+                } else {
                     $data = ['message' => 'Empleado no existe'];
                     return response()->json($data, 404);
                 }
@@ -239,30 +266,10 @@ class AusenciaController extends Controller {
                 $data = ['message' => 'Ausencia no existe'];
                 return response()->json($data, 404);
             }
-
-        }
-        else {
+        } else {
             $data = ['message' => $empresaId['message'],];
             return response()->json($data, 401);
         }
-    }
-
-    /**
-     * @param Request $request
-     * @param $ausencia
-     * @return mixed
-     */
-    public function getAusencia(Request $request, $ausencia)
-    {
-        $ausencia->tipoausencias_id = $request->tipoausencias_id;
-        $ausencia->empleado_id = $request->empleado_id;
-        $ausencia->descripcion = $request->descripcion;
-        $ausencia->fechaInicio = $request->fechaInicio;
-        $ausencia->fechaFin = $request->fechaFin;
-        $ausencia->justificada = $request->justificada;
-        $ausencia->save();
-        $tipoAusencia = Tipoausencia::find($request->tipoausencias_id);
-        return $tipoAusencia;
     }
 }
 
