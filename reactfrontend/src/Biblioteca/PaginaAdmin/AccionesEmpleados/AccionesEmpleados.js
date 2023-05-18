@@ -15,7 +15,7 @@ function AccionesEmpleados(){
         <section className="contenedorEmpleadosAcciones">
             <h1 className='text-center tituloH1'>Gestion Empleados</h1>
             <div className='contenedorBotonCrearCorreo'>
-                <Link className='crearCorreoBoton margin0-10' to="/listadoIncidenciasPresencia">Listado Incidencias y Presencia</Link>
+                <Link className='crearCorreoBoton margin0-10' to="/listadoIncidenciasPresencia">Listado Incidencias</Link>
                 <Link className='crearCorreoBoton margin0-10' to="/totalEmpleados">Empleados Online</Link>
                 <Link className='crearCorreoBoton margin0-10' to="/altaEmpleado">Alta empleado</Link>
             </div>

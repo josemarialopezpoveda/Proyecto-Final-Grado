@@ -90,7 +90,7 @@ function ListadoIncidenciasPresencia(){
                             </article>
                             <article className='horas'>
                                 <div className="horas2">
-                                    <h2>Incidencias</h2>
+                                    <h2>Ausencias</h2>
                                     <Table className='sinMargen' striped>
                                         <thead>
                                             <tr>
