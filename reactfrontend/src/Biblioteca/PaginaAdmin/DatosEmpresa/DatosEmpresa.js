@@ -139,7 +139,7 @@ function DatosEmpresa(){
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Razón social</td>
+                                <td>Razón Social</td>
                                 <td>{datos.razonSocial}</td>
                             </tr>
                             <tr>
@@ -159,11 +159,11 @@ function DatosEmpresa(){
                                 <td>{datos.telMovil}</td>
                             </tr>
                             <tr>
-                                <td>Direccion</td>
+                                <td>Dirección</td>
                                 <td>{datos.Direccion}</td>
                             </tr>
                             <tr>
-                                <td>Poblacion</td>
+                                <td>Población</td>
                                 <td>{datos.Poblacion}</td>
                             </tr>
                             <tr>
@@ -175,7 +175,7 @@ function DatosEmpresa(){
                                 <td>{datos.Provincia}</td>
                             </tr>
                             <tr>
-                                <td>Pais</td>
+                                <td>País</td>
                                 <td>{datos.Pais}</td>
                             </tr>
                             <tr>
