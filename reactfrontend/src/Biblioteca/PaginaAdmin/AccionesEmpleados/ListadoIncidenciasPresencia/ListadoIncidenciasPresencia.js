@@ -18,6 +18,11 @@ function ListadoIncidenciasPresencia(){
 
     const [datosFaltas, setDatosFaltas] = useState([{}]);
 
+    const [usuariosPresentes, setUsuariosPresentes] = useState([]);
+
+    // const [usuariosFaltas, setUsuariosFaltas] = useState([]);
+
+    const [idUsuariosFaltas, setIdUsuariosFaltas] = useState([]);
 
     //Creamos un useEffect que nada más cargar recoge los datos.
     useEffect(() => {
@@ -33,50 +38,64 @@ function ListadoIncidenciasPresencia(){
           },
         };
         console.log(URL_API + "ausencias")
-        let datosAusencias = await peticionGetAuth(URL_API + "ausencias", header);
+        let datosAusencias = await peticionGetAuth(URL_API + "ausenciasEmpleados", header);
         console.log(datosAusencias)
             let datos = datosAusencias.data.ausencias.map((ausencia)=>{
                 if(ausencia.fechaFin === null){
+                    setIdUsuariosFaltas(obtenerIdsUnicos(datosAusencias.data.ausencias));
+                    console.log(obtenerIdsUnicos(datosAusencias.data.ausencias))
                     return({
-                        empleado_id: ausencia.empleado_id,
+                        nombre: ausencia.nombre + " " + ausencia.apellidos,
                         descripcion: ausencia.descripcion
                     })
                 }else{   
                     if(fechaEntreRango(ausencia.fechaInicio,ausencia.fechaFin,fechasBuscador.diaSeleccionado)){
+                        console.log(obtenerIdsUnicos(datosAusencias.data.ausencias))
+                        setIdUsuariosFaltas(obtenerIdsUnicos(datosAusencias.data.ausencias));
                         return({
-                            empleado_id: ausencia.empleado_id,
+                            nombre: ausencia.nombre + " " + ausencia.apellidos,
                             descripcion: ausencia.descripcion
                         })
                     }
                 }
             })
             setDatosFaltas(datos);
+            recoleccionDatosEmpleadosPresentes();
+      };
+
+      //Recogemos los nombres de los usuarios presentes
+    const recoleccionDatosEmpleadosPresentes = async () => {
+        const header = {
+          headers: {
+            Accept: "application/json",
+            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+          },
+        };
+        console.log(URL_API + "empleados")
+        let datosEmpleados = await peticionGetAuth(URL_API + "empleados", header);
+        console.log(datosEmpleados)
+            let datos = datosEmpleados.data.map((empleado)=>{
+                if(!idUsuariosFaltas.includes(empleado.id)){
+                    return(empleado.nombre);
+                }
+            })
+            setUsuariosPresentes(datos);
+      };
+
+    const obtenerIdsUnicos = (datos) => {
+        const idsUnicos = new Set();
+      
+        datos.forEach((objeto) => {
+          idsUnicos.add(objeto.empleado_id);
+        });
+      
+        return Array.from(idsUnicos);
       };
 
     //Al pulsar al botón recoge los datos con las nuevas fechas.
     const TodoCorrecto = () =>{
         recoleccionDatos();
     }
-
-    //Función para saber si la fecha es nula.
-    const esNula = (fecha) =>{
-        if(fecha !== null){
-          return(<p>Salida  ➜  {formatoFechaDDMMYYYY(cogerFecha(fecha)) + " " + cogerHora(fecha)}</p>)
-        }else{
-          return(null);
-        }
-    }
-
-    //Informa de si la fecha esta nula.
-    const estaVaciaFecha = (fecha, texto) =>{
-        console.log(fecha)
-        if(fecha !== "00:00:00"){
-          console.log("HAY HORA")
-          return(<p>{texto}  {fecha}</p>)
-        }else{
-          return(null);
-        }
-      }
   
     return(
     <React.Fragment>
@@ -107,19 +126,29 @@ function ListadoIncidenciasPresencia(){
                                 <p>{formatearFechaFormatoDiaDeMesDelAnyo(fechasBuscador.diaSeleccionado)}</p>
                             </article>
                             <article className='horas'>
-                                {/* <div className="">
+                                <div className="horas2">
                                     <h2>Asistencias</h2>
-                                    <Table className='sinMargen'>
+                                    <Table className='sinMargen' striped>
                                         <thead>
                                             <tr>
                                                 <th className='sinBorde'>Nombre</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            {usuariosPresentes.map((falta)=>{
+                                                    if(falta !== null && falta !== undefined){
+                                                        return(
+                                                            <tr key={generarUUID()}>
+                                                                <td>{falta}</td>
+                                                            </tr>
+                                                        )
+                                                    }
+                                                })}
                                         </tbody>
                                     </Table>
-                                </div> */}
+                                </div>
                                 <div className="horas2">
+                                    <h2>Faltas</h2>
                                     <Table className='sinMargen' striped>
                                         <thead>
                                             <tr>
@@ -132,7 +161,7 @@ function ListadoIncidenciasPresencia(){
                                                 if(falta !== null && falta !== undefined){
                                                     return(
                                                         <tr key={generarUUID()}>
-                                                            <td>{falta.empleado_id}</td>
+                                                            <td>{falta.nombre}</td>
                                                             <td>{falta.descripcion}</td>
                                                         </tr>
                                                     )
