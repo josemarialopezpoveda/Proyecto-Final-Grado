@@ -352,7 +352,7 @@ export const recogerIdEmpleadoLogueado = () =>{
 export const formatoFechaDDMMYYYY = (dateStr) =>{
   var partes = dateStr.split('/');
   var dia = partes[0];
-  var mes = partes[1] - 1; // Restamos 1 al mes, ya que en JavaScript los meses van de 0 a 11.
+  var mes = partes[1]; // Restamos 1 al mes, ya que en JavaScript los meses van de 0 a 11.
   var anio = partes[2];
 
   return `${dia}/${mes}/${anio}`;
@@ -515,7 +515,6 @@ export const formatearFechaFormatoDiaDeMesDelAnyo =(fecha) =>{
 export const recogerDiaSemanaFecha =(fecha) =>{
   const partesFecha = fecha.split('-');
   const dia = parseInt(partesFecha[2]);
-
   return dia;
 }
 

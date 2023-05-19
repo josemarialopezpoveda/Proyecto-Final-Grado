@@ -1,9 +1,16 @@
-import { generarUUID} from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { cogerFecha, cogerHora, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionDelete } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { URL_API } from 'services/http/const';
+import SweetAlert from "sweetalert2";
 import Table from 'react-bootstrap/Table';
 import './Paginacion.css';
+import { peticionGetAuth } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 
-const PaginacionNuestrosClientes = ({ data, perPage, setEstadoDinamico, setEstadoEstatico }) => {
+const PaginacionListadoIncidencias = ({ data, perPage }) => {
+    //Creamos la variable para el uso del useNavigate.
+    const Navigate = useNavigate();
+
     const [paginaSeleccionada, setPaginaSeleccionada] = useState(1)
 
     const seleccionarBotonArrancar = () =>{
@@ -14,8 +21,6 @@ const PaginacionNuestrosClientes = ({ data, perPage, setEstadoDinamico, setEstad
     useEffect(()=>{
       seleccionarBotonArrancar();
     },[])
-
-
 
 //   Cosas Paginación
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,39 +42,43 @@ const PaginacionNuestrosClientes = ({ data, perPage, setEstadoDinamico, setEstad
   const renderData = () => {
     const start = (currentPage - 1) * perPage;
     const end = start + perPage;
-    console.log(data)
     if(data.length !== 0){
-    return data.slice(start, end).map((option, index) => (     
-        <tr className="EmpleadoTablaApartado" key={generarUUID()}>
-            <td>{option.nombreComercial}</td>
-            <td>{option.poblacion}</td>
-            <td className="campoOpcional">{option.pais}</td>
-            <td className="campoOpcional">{option.provincia}</td>
-        </tr>         
-    ));
+        return (data.slice(start, end).map((falta)=>{
+            if(falta !== null && falta !== undefined){
+                return(
+                    <tr key={generarUUID()}>
+                        <td>{falta.nombre}</td>
+                        <td>{falta.tipo}</td>
+                        <td>{falta.descripcion}</td>
+                    </tr>
+                )
+            }
+        }))
     }else{
       return(
-        <tr><td colSpan={"4"}>No hay empresas que usan nuestra tecnologia..</td></tr>
+        <tr><td colSpan={"3"}>No hay empleados que falten ese dia.</td></tr>
       );
     }
   }
 
   return (
     <div>
-        <div className='TablaDatosUser'>
-            <Table id='tablaAccionesEmpleados' striped>
-                <thead>
-                    <tr>
-                        <th>Nombre Comercial</th>
-                        <th>Población</th>
-                        <th className='campoOpcional'>País</th>
-                        <th className='campoOpcional'>Provincia</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {renderData()}
-                </tbody>
-            </Table>
+        <div className="horas2">
+            <h2>Ausencias</h2>
+            <div className='TablaDatosUser'>
+                <Table className='sinMargen' striped>
+                    <thead>
+                        <tr>
+                            <th className='sinBorde'>Nombre</th>
+                            <th className='sinBorde'>Tipo</th>
+                            <th className='sinBorde'>Ausencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {renderData()}
+                    </tbody>
+                </Table>
+            </div>
         </div>
         <div className='botonesPaginacion'>
         {Array.from({ length: totalPages }, (_, i) => {
@@ -109,4 +118,4 @@ const PaginacionNuestrosClientes = ({ data, perPage, setEstadoDinamico, setEstad
   );
 }
 
-export default PaginacionNuestrosClientes;
+export default PaginacionListadoIncidencias;

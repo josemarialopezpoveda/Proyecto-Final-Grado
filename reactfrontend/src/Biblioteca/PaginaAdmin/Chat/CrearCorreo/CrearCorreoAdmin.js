@@ -189,6 +189,7 @@ function CrearCorreoAdmin() {
                             <Form.Control
                                 size="lg"
                                 type="text"
+                                as="textarea"
                                 defaultValue={mensajeCreado.mensaje}
                                 onChange={(e) => setMensajeCreado({ ...mensajeCreado, mensaje: e.target.value.trim() })}
                             />

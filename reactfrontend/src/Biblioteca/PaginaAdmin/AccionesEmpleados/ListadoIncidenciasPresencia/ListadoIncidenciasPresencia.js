@@ -9,6 +9,7 @@ import PiePagina from 'Biblioteca/PaginaPrincipal/Footer/PiePagina.js';
 import './ListadoIncidenciasPresencia.css';
 import { Table } from 'react-bootstrap';
 import { faListSquares } from '@fortawesome/free-solid-svg-icons';
+import PaginacionListadoIncidencias from 'Biblioteca/Paginacion/PaginacionListadoIncidencias.js';
 
 function ListadoIncidenciasPresencia(){
 
@@ -52,7 +53,8 @@ function ListadoIncidenciasPresencia(){
                     }
                 }
             })
-            setDatosFaltas(datos);
+            const DatosFiltrados = datos.filter(item => item !== null && item !== undefined);
+            setDatosFaltas(DatosFiltrados);
       };
 
     //Al pulsar al botón recoge los datos con las nuevas fechas.
@@ -89,9 +91,10 @@ function ListadoIncidenciasPresencia(){
                                 <p>{formatearFechaFormatoDiaDeMesDelAnyo(fechasBuscador.diaSeleccionado)}</p>
                             </article>
                             <article className='horas'>
-                                <div className="horas2">
-                                    <h2>Ausencias</h2>
-                                    <Table className='sinMargen' striped>
+                                {/* <div className="horas2">
+                                    <h2>Ausencias</h2> */}
+                                    <PaginacionListadoIncidencias data={datosFaltas} perPage={1}/>
+                                    {/* <Table className='sinMargen' striped>
                                         <thead>
                                             <tr>
                                                 <th className='sinBorde'>Nombre</th>
@@ -100,7 +103,7 @@ function ListadoIncidenciasPresencia(){
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {datosFaltas.map((falta)=>{
+                                            {/* {datosFaltas.map((falta)=>{
                                                 if(falta !== null && falta !== undefined){
                                                     return(
                                                         <tr key={generarUUID()}>
@@ -110,10 +113,10 @@ function ListadoIncidenciasPresencia(){
                                                         </tr>
                                                     )
                                                 }
-                                            })}
+                                            })} }
                                         </tbody>
-                                    </Table>
-                                </div>
+                                    </Table> */}
+                                {/* </div> */}
                             </article>
                         </div>
                     </section>

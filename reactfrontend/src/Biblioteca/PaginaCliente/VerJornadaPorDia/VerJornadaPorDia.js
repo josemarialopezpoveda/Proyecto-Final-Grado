@@ -6,7 +6,8 @@ import PiePagina from '../../PaginaPrincipal/Footer/PiePagina.js';
 import { URL_API } from 'services/http/const.js';
 import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 import Form from 'react-bootstrap/Form';
-import { generarUUID, formatoDateAFecha, peticionGetAuth, calculoFechaHoy, cogerFecha, formatoFechaDDMMYYYY, cogerHora, formatearFechaFormatoDiaDeMesDelAnyo, convertirNumeroDiaSemana, recogerDiaSemanaFecha } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
+import { generarUUID, formatoDateAFecha, peticionGetAuth, calculoFechaHoy, cogerFecha, formatoFechaDDMMYYYY, cogerHora, formatearFechaFormatoDiaDeMesDelAnyo, convertirNumeroDiaSemana, recogerDiaSemanaFecha, obtenerDiaSemana } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
+import { recogerFechaAPartirFecha } from 'Biblioteca/FuncionesAuxiliares/Funciones.js';
 
 function VerJornadaPorDia(){
     //Estados para los datos de la base de datos.
@@ -76,18 +77,33 @@ function VerJornadaPorDia(){
         console.log(datosEmpleado)
         if(datosEmpleado !== undefined){
             if (datosEmpleado.data.turnos.length !== 0) {
-            datosEmpleado.data.turnos.map((turno) => {
+            let todosTiempos = datosEmpleado.data.turnos.map((turno) => {
                 if(turno.fecha === fechasBuscador.diaSeleccionado){
                     const obj = {
                         horario: turno.registroHorario,
                       }
-                    console.log(obj)
-                    setDatosJornada(obj)
+                      return(obj)
+                }else{
+                  return null;
                 }
             });
+              recogerRegHorarioFecha(todosTiempos)
             }
         }
       };
+
+      const recogerRegHorarioFecha = (tiempo) =>{
+        let hayDatos = false;
+        tiempo.map((t)=>{
+          if(t !== null){
+            setDatosJornada(t)
+            hayDatos = true;
+          }
+          if(hayDatos !== true){
+            setDatosJornada("No hay registros para este dia")
+          }
+        })
+      }
 
     //Recogemos el nombre del usuario logueado.
     const recoleccionNombreUser = async () => {
@@ -115,7 +131,9 @@ function VerJornadaPorDia(){
 
     //Recoge las entradas y salidas del estado.
     const getEntradasYSalidas = () =>{
-        if(datosJornada.horario.length !== 0){
+      console.log(datosJornada.horario)
+        if(datosJornada !== "No hay registros para este dia" &&
+         datosJornada.horario !== undefined && datosJornada.horario.length !== 0){
           return(datosJornada.horario.map((horario)=>{
             return(
               <div key={generarUUID()}>
@@ -140,9 +158,7 @@ function VerJornadaPorDia(){
 
     //Informa de si la fecha esta nula.
     const estaVaciaFecha = (fecha, texto) =>{
-        console.log(fecha)
         if(fecha !== "00:00:00"){
-          console.log("HAY HORA")
           return(<p>{texto}  {fecha}</p>)
         }else{
           return(null);
@@ -156,11 +172,10 @@ function VerJornadaPorDia(){
           let hayRegistrosPlaneados = false;
   
           const elementos =(horasEnSaPredefinidas.map((dia)=>{
-            if(convertirNumeroDiaSemana(dia.diaSemana) === recogerDiaSemanaFecha(fechasBuscador.diaSeleccionado)){
+            if(convertirNumeroDiaSemana(dia.diaSemana) === obtenerDiaSemana(fechasBuscador.diaSeleccionado)){
               if(dia.horaInicioM !== "00:00:00" && dia.horaFinM !== "00:00:00" || 
               dia.horaInicioT !== "00:00:00" && dia.horaFinT!== "00:00:00" || 
               dia.horaInicioN !== "00:00:00" && dia.horaFinN!== "00:00:00"){
-  
                 hayRegistrosPlaneados = true;
   
                 return(

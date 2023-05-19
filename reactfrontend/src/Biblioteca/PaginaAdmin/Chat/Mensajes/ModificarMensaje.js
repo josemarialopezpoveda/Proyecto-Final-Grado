@@ -145,10 +145,6 @@ function ModificarMensaje() {
     return (
         <React.Fragment>
             {anyadirBarraNav()}
-                <pre>{JSON.stringify(mensajeCreado, null, 3)}</pre>
-                <pre>{JSON.stringify(datosEmisor, null, 3)}</pre>
-                <pre>{JSON.stringify(datosReceptor, null, 3)}</pre>
-
                     <div className=''>
                         <h1 className='text-center tituloH1'>Modificar Mensaje</h1>
                         <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
@@ -175,6 +171,7 @@ function ModificarMensaje() {
                                 <Form.Control
                                     size="lg"
                                     type="text"
+                                    as="textarea"
                                     defaultValue={mensajeCreado.mensaje}
                                     onChange={(e) => setMensajeCreado({ ...mensajeCreado, mensaje: e.target.value.trim() })}
                                 />

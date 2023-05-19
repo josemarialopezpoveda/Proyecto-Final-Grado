@@ -77,7 +77,7 @@ function MisDatos() {
     if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
         return(
           <div className='contenedorBotonCrearCorreo divFlexFichar'>
-            <Link to="/datosEmpresa" className='crearCorreoBoton'>Ver Datos Empresa</Link>
+            <Link to="/datosEmpresa" className='crearCorreoBoton'>Datos Empresa</Link>
           </div>
         );
     }
