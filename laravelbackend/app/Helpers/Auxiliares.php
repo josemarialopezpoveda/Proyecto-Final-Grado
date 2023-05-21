@@ -247,7 +247,7 @@ class Auxiliares {
         $turnoMasReciente = $empleado->turnos->sortByDesc('pivot.fechaFinTurno')->first();
         if (Auxiliares::compararFechas($request->fechaInicioTurno, $turnoMasReciente->pivot->fechaFinTurno)) {
             $data = ['error' => 'La fecha de inicio tiene que ser mayor que ' . $turnoMasReciente->pivot->fechaFinTurno];
-            return response()->json($data, 409);
+            return response()->json($data);
         } else {
             if ($turnoActivo) {
                 $turnoActivo->pivot->activo = 0;
