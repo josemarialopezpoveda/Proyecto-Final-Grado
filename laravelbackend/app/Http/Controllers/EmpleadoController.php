@@ -390,34 +390,15 @@ class EmpleadoController extends Controller {
                     if ($empleado) {
                         $empleado->turnos->where('pivot.activo', true)->first();
                         $turnoActivo = $empleado->turnos->where('pivot.activo', 1)->first();
-
                         if (!$turnoActivo || count($empleado->turnos) === 0) {
                             // El empleado tiene turno no activo o no tiene turno asignado.
                             if (count($empleado->turnos) === 0) {
                                 return Auxiliares::asignarTurno($request, $empleado);
                             } else {
-                                $turnoMasReciente = $empleado->turnos->sortByDesc('pivot.fechaFinTurno')->first();
-                                $fechaInicioTurno = strtotime($request->fechaInicioTurno);
-                                $fechaFinTurnoMasReciente = strtotime($turnoMasReciente->pivot->fechaFinTurno);
-                                if ($fechaInicioTurno <= $fechaFinTurnoMasReciente) {
-                                    $data = ['error' => 'La fecha de inicio tiene que ser mayor que ' . $turnoMasReciente->pivot->fechaFinTurno,];
-                                    return response()->json($data, 409);
-                                } else {
-                                    return Auxiliares::asignarTurno($request, $empleado);
-                                }
+                                return Auxiliares::validarFechaInicioYAsignarTurno($request, $empleado);
                             }
                         } else { // El empleado tiene turno asignado.
-                            $turnoMasReciente = $empleado->turnos->sortByDesc('pivot.fechaFinTurno')->first();
-                            $fechaInicioTurno = strtotime($request->fechaInicioTurno);
-                            $fechaFinTurnoMasReciente = strtotime($turnoMasReciente->pivot->fechaFinTurno);
-                            if ($fechaInicioTurno <= $fechaFinTurnoMasReciente) {
-                                $data = ['error' => 'La fecha de inicio tiene que ser mayor que ' . $turnoMasReciente->pivot->fechaFinTurno,];
-                                return response()->json($data, 409);
-                            } else {
-                                $turnoActivo->pivot->activo = 0;
-                                $turnoActivo->pivot->save();
-                                return Auxiliares::asignarTurno($request, $empleado);
-                            }
+                            return Auxiliares::validarFechaInicioYAsignarTurno($request, $empleado, $turnoActivo);
                         }
                     } else {
                         $data = ['error' => 'El empleado no existe.',];

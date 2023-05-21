@@ -242,6 +242,35 @@ class Auxiliares {
         return $resultado;
     }
 
+    public static function validarFechaInicioYAsignarTurno($request, $empleado, $turnoActivo = null)
+    {
+        $turnoMasReciente = $empleado->turnos->sortByDesc('pivot.fechaFinTurno')->first();
+        if (Auxiliares::compararFechas($request->fechaInicioTurno, $turnoMasReciente->pivot->fechaFinTurno)) {
+            $data = ['error' => 'La fecha de inicio tiene que ser mayor que ' . $turnoMasReciente->pivot->fechaFinTurno];
+            return response()->json($data, 409);
+        } else {
+            if ($turnoActivo) {
+                $turnoActivo->pivot->activo = 0;
+                $turnoActivo->pivot->save();
+            }
+            return Auxiliares::asignarTurno($request, $empleado);
+        }
+    }
+
+
+    public static function compararFechas($fechaInicio, $fechaFin)
+    {
+        $fechaInicioTurno = strtotime($fechaInicio);
+        $fechaFinTurno = strtotime($fechaFin);
+
+        if ($fechaInicioTurno <= $fechaFinTurno) {
+            return true; // La fecha de inicio es menor o igual que la fecha de fin
+        } else {
+            return false; // La fecha de inicio es mayor que la fecha de fin
+        }
+        //return strtotime($fechaInicio) > strtotime($fechaFin);
+    }
+
     public static function asignarTurno($request, $empleado)
     {
         $empleado->turnos()->attach(
@@ -264,5 +293,6 @@ class Auxiliares {
         ];
         return response()->json($data);
     }
+
 
 }
