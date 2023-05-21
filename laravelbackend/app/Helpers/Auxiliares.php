@@ -2,10 +2,9 @@
 
 namespace App\Helpers;
 
-use App\Models\Dia;
 use App\Models\Empleado;
 use App\Models\Empresa;
-use App\Models\Tiempo;
+use App\Models\Turno;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -203,4 +202,67 @@ class Auxiliares {
             return $empleado->tipoEmpleado === "Administrador" && $empleado->empresa_id === $turno->empresa_id;
         }
     }
+
+    public static function obtenerEmpleadosSinTurnoActivo($empresaId)
+    {
+        $resultado = Empleado::select('empresa_id', 'id', 'nombre', 'apellidos')
+            ->where('empresa_id', $empresaId)
+            ->where(function ($query) {
+                $query->whereNotIn('id', function ($subquery) {
+                    $subquery->select('empleado_id')
+                        ->from('empleados_turnos')
+                        ->where('activo', true);
+                })
+                    ->orWhereNotExists(function ($subquery) {
+                        $subquery->select('empleado_id')
+                            ->from('empleados_turnos')
+                            ->whereColumn('empleados_turnos.empleado_id', 'empleados.id');
+                    });
+            })
+            ->get();
+
+        return $resultado;
+    }
+
+    public static function obtenerEmpleadosTurnoCaducado($empresaId)
+    {
+        $resultado = Empleado::select(
+            'empleados.empresa_id',
+            'empleados.id',
+            'empleados.nombre',
+            'empleados.apellidos',
+            'empleados_turnos.fechaFinTurno'
+        )
+            ->join('empleados_turnos', 'empleados.id', '=', 'empleados_turnos.empleado_id')
+            ->where('empleados_turnos.activo', true)
+            ->where('empleados_turnos.fechaFinTurno', '<', Carbon::now())
+            ->where('empleados.empresa_id', $empresaId)
+            ->get();
+
+        return $resultado;
+    }
+
+    public static function asignarTurno($request, $empleado)
+    {
+        $empleado->turnos()->attach(
+            $request->turno_id,
+            [
+                'fechaInicioTurno' => $request->fechaInicioTurno,
+                'fechaFinTurno' => $request->fechaFinTurno,
+                'activo' => true
+            ]
+        );
+        // Obtener el turno recién asignado
+        $turnoAsignado = Turno::find($request->turno_id);
+        // Asignar el turno al empleado
+        //$empleado->turnos->push($turnoAsignado);
+        //return $turnoAsignado;
+        $data = [
+            'message' => 'Turno asignado correctamente',
+            'empleado' => $empleado,
+            'turnoAsignado' => $turnoAsignado,
+        ];
+        return response()->json($data);
+    }
+
 }

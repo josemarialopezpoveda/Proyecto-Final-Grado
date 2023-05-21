@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Helpers\Poblaciones;
+use App\Models\Empleado;
+use App\Models\Empresa;
 use Carbon\Carbon;
 use Faker\Factory as Faker;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -51,9 +53,12 @@ class EmpleadoFactory extends Factory {
             $emailApellido);
 
         $email = $emailNombre . $emailApellido . '@correo.com';
+        $empresaId = rand(1, 14);
+
+
         return [
             'nif' => $faker->unique()->dni,
-            'empresa_id' => rand(1, 14),
+            'empresa_id' => $empresaId,
             'nombre' => $nombre,
             'apellidos' => $apellido,
             'direccion' => mb_strtoupper($faker->streetAddress, 'UTF-8'),
@@ -73,7 +78,22 @@ class EmpleadoFactory extends Factory {
             'tipoEmpleado' => "Trabajador",
             'created_at' => Carbon::now('Europe/Madrid'),
             'updated_at' => Carbon::now('Europe/Madrid'),
-
         ];
     }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Empleado $empleado) {
+            $empresa = Empresa::with('empleados')->find($empleado->empresa_id);
+            $primerEmpleado = $empresa->empleados->first();
+            $primerEmpleado->tipoEmpleado = 'Administrador';
+            $primerEmpleado->save();
+        });
+    }
+
 }

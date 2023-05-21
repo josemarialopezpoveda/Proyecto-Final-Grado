@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Empleado;
 use Carbon\Carbon;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -16,6 +15,30 @@ class EmpleadosTableSeeder extends Seeder {
      */
     public function run()
     {
+        $empleado2 = new Empleado;
+        $empleado2->empresa_id = 1;
+        $empleado2->nif = "93930164G";
+        $empleado2->nombre = "VICTOR";
+        $empleado2->apellidos = "MONTOYA";
+        $empleado2->direccion = "VIEJA, 125";
+        $empleado2->cPostal = "03610";
+        $empleado2->poblacion = "PETRER";
+        $empleado2->provincia = "ALICANTE";
+        $empleado2->pais = "ESPAÑA";
+        $empleado2->telefono = 666777787;
+        $empleado2->fechaNacimiento = "1980-01-01";
+        $empleado2->email = "victor@gmail.com";
+        $empleado2->password = Hash::make('12345678');
+        $empleado2->numSegSoc = 512150137625;
+        $empleado2->ultimaConexion = Carbon::now('Europe/Madrid');
+        $empleado2->activo = 1;
+        $empleado2->fechaAlta = '2023-01-02';
+        $empleado2->tipoEmpleado = "Administrador";
+        $empleado2->created_at = '2023-01-01';
+        $empleado2->updated_at = Carbon::now('Europe/Madrid');
+        $empleado2->save();
+
+        
         $empleado1 = new Empleado;
         $empleado1->empresa_id = 1;
         $empleado1->nif = "46967988X";
@@ -39,29 +62,6 @@ class EmpleadosTableSeeder extends Seeder {
         $empleado1->updated_at = Carbon::now('Europe/Madrid');
         $empleado1->save();
 
-        $empleado2 = new Empleado;
-        $empleado2->empresa_id = 1;
-        $empleado2->nif = "93930164G";
-        $empleado2->nombre = "VICTOR";
-        $empleado2->apellidos = "MONTOYA";
-        $empleado2->direccion = "VIEJA, 125";
-        $empleado2->cPostal = "03610";
-        $empleado2->poblacion = "PETRER";
-        $empleado2->provincia = "ALICANTE";
-        $empleado2->pais = "ESPAÑA";
-        $empleado2->telefono = 666777787;
-        $empleado2->fechaNacimiento = "1980-01-01";
-        $empleado2->email = "victor@gmail.com";
-        $empleado2->password = Hash::make('12345678');
-        $empleado2->numSegSoc = 512150137625;
-        $empleado2->ultimaConexion = Carbon::now('Europe/Madrid');
-        $empleado2->activo = 1;
-        $empleado2->fechaAlta ='2023-01-02';
-        $empleado2->tipoEmpleado = "Administrador";
-        $empleado2->created_at = '2023-01-01';
-        $empleado2->updated_at = Carbon::now('Europe/Madrid');
-        $empleado2->save();
-
         $empleado3 = new Empleado;
         $empleado3->empresa_id = 2;
         $empleado3->nif = "58903889S";
@@ -84,6 +84,5 @@ class EmpleadosTableSeeder extends Seeder {
         $empleado3->created_at = '2023-01-01';
         $empleado3->updated_at = Carbon::now('Europe/Madrid');
         $empleado3->save();
-
     }
 }

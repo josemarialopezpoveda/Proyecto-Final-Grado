@@ -2,13 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Models\Empleado;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class EmpleadosTurnosTableSeeder extends Seeder
-{
+class EmpleadosTurnosTableSeeder extends Seeder {
     /**
      * Run the database seeds.
      */
@@ -33,12 +30,13 @@ class EmpleadosTurnosTableSeeder extends Seeder
                 default:
                     break;
             }
+            //$activo = ($empleado->id === 1) ? false : true; //Al empleado 1 le pone Activo a falso.
             DB::table('empleados_turnos')->insert([
                 'empleado_id' => $empleado->id,
                 'turno_id' => $turno_id,
                 'fechaInicioTurno' => "2023-01-01",
                 'fechaFinTurno' => "2023-12-31",
-                'activo' => 1
+                'activo' => true
             ]);
         }
     }

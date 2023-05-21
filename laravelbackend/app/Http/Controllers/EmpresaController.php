@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Helpers\Auxiliares;
 use App\Models\Empleado;
 use App\Models\Empresa;
 use Illuminate\Http\JsonResponse;
@@ -318,11 +319,15 @@ class EmpresaController extends Controller {
         if ($empresa) {
             if (Hash::check($request->password, $empresa->password)) {
                 $token = $empresa->createToken('auth_token')->plainTextToken;
+                $sinTurnoActivo = Auxiliares::obtenerEmpleadosSinTurnoActivo($empresa->id);
+                $turnoCaducado = Auxiliares::obtenerEmpleadosTurnoCaducado($empresa->id);
                 return response()->json([
                     "mensaje" => "Usuario logueado correctamente",
                     "token_type" => 'Bearer',
                     'token' => $token,
-                    'empresa' => $empresa->id
+                    'empresa' => $empresa->id,
+                    'empleadosSinTurnoActivo' => $sinTurnoActivo,
+                    'turnoCaducado' => $turnoCaducado,
                 ]);
             } else {
                 return response()->json([

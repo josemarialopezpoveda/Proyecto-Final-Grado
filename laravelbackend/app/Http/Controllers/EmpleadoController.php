@@ -317,6 +317,13 @@ class EmpleadoController extends Controller {
         $empleado = Empleado::where('email', $request->email)->first();
         if ($empleado) {
             if (Hash::check($request->password, $empleado->password)) {
+                if ($empleado->tipoEmpleado === 'Administrador') {
+                    $sinTurnoActivo = Auxiliares::obtenerEmpleadosSinTurnoActivo($empleado->empresa_id);
+                    $turnoCaducado = Auxiliares::obtenerEmpleadosTurnoCaducado($empleado->empresa_id);
+                } else {
+                    $sinTurnoActivo = [];
+                    $turnoCaducado = [];
+                }
                 $token = $empleado->createToken('auth_token')->plainTextToken;
                 return response()->json([
                     "mensaje" => "Usuario logueado correctamente",
@@ -325,6 +332,8 @@ class EmpleadoController extends Controller {
                     'empleado' => $empleado->id,
                     'empresa' => $empleado->empresa_id,
                     'tipo_empleado' => $empleado->tipoEmpleado,
+                    'empleadosSinTurnoActivo' => $sinTurnoActivo,
+                    'turnoCaducado' => $turnoCaducado,
                 ]);
             } else {
                 return response()->json([
@@ -369,18 +378,38 @@ class EmpleadoController extends Controller {
     }
 
 
-    public function attach(Request $request)
+    public function asignarTurnoAEmpleado(Request $request)
     {
-        $empleado = Empleado::find($request->empleado_id);
-        $empleado->turnos()->attach(
-            $request->turno_id,
-            ['fechaInicioTurno' => $request->fechaInicioTurno, 'fechaFinTurno' => $request->fechaFinTurno]
-        );
-        $data = [
-            'message' => 'Turno attach correctamente',
-            'empleado' => $empleado
-        ];
-        return response()->json($data);
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+        if (is_numeric($empresaId)) {
+            $nuevoTurno = Turno::find($request->turno_id);
+            if ($nuevoTurno && $nuevoTurno->empresa_id === $empresaId) {
+                $empleado = Empleado::find($request->empleado_id);
+                if ($empleado) {
+                    $empleado->turnos->where('pivot.activo', true)->first();
+                    $turnoActivo = $empleado->turnos->where('pivot.activo', 1)->first();
+
+                    if (!$turnoActivo || count($empleado->turnos) === 0) {
+                        // El empleado tiene turno no activo o no tiene turno asignado.
+                        return Auxiliares::asignarTurno($request, $empleado);
+                    } else { // El empleado tiene turno asignado.
+                        $turnoActivo->pivot->activo = 0;
+                        $turnoActivo->pivot->save();
+                        return Auxiliares::asignarTurno($request, $empleado);
+                    }
+                } else {
+                    $data = ['error' => 'El empleado no existe.',];
+                    return response()->json($data, 404);
+                }
+            } else {
+                $data = ['error' => 'Turno no existe.',];
+                return response()->json($data, 404);
+            }
+        } else {
+            $data = ['error' => $empresaId['message'],];
+            return response()->json($data, 403);
+        }
     }
 
     public function turnoActivoEmpleado($empleadoId): \Illuminate\Http\JsonResponse
@@ -429,8 +458,7 @@ class EmpleadoController extends Controller {
                 $data = ['error' => 'No se encontró el empleado con el ID proporcionado'];
                 return response()->json($data, 404);
             }
-        }
-        else {
+        } else {
             $data = ['error' => $loginOk['message'],];
             return response()->json($data, 403);
         }

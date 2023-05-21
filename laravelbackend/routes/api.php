@@ -48,9 +48,6 @@ Route::get('/error', [EmpresaController::class, 'paginaError']);
 Route::post('/loginEmpleado', 'App\Http\Controllers\EmpleadoController@login');
 
 
-// Empleado_Turno
-Route::post('/empleados/turno', [EmpleadoController::class, 'attach']);
-
 //Route::get('/turnosEmpleado', [EmpleadoController::class, 'turnosEmpleados']);
 
 
@@ -115,6 +112,8 @@ Route::middleware('auth:sanctum')->group(
         Route::delete('eliminarTurnoAEmpleado', [TurnoController::class, 'eliminarTurnoAEmpleado']);
         Route::delete('/turnos/{turnoId}', [TurnoController::class, 'destroy']);
 
+        // Empleado_Turno
+        Route::post('/asignarTurnoAEmpleado', [EmpleadoController::class, 'asignarTurnoAEmpleado']);
 
         //Ausencias
         Route::get('/ausencias', [AusenciaController::class, 'index']);
