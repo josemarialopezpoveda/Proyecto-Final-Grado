@@ -337,14 +337,23 @@ class TurnoController extends Controller {
                                         ->where('fechaFinTurno', $request->fechaFinTurno)
                                         ->first();
                                     if ($turnoAEliminar != null) {
+                                        // Comprobar si es el turno activo del empleado, si lo es avisar que el empleado no tiene turno activo.
                                         DB::table('empleados_turnos')
                                             ->where('id', $turnoAEliminar->id)
                                             ->delete();
-                                        $data = [
-                                            'mensaje' => 'Turno eliminado correctamente.',
-                                            'turnoEliminado' => $fechasTurnos,
-
-                                        ];
+                                        if ($turnoAEliminar->activo === 1) {
+                                            $data = [
+                                                'mensaje' => 'Turno eliminado correctamente. El empleado no tiene turno activo.',
+                                                'turnoEliminado' => $fechasTurnos,
+                                                '$turnoAEliminar' => $turnoAEliminar,
+                                            ];
+                                        } else {
+                                            $data = [
+                                                'mensaje' => 'Turno eliminado correctamente.',
+                                                'turnoEliminado' => $fechasTurnos,
+                                                '$turnoAEliminar' => $turnoAEliminar,
+                                            ];
+                                        }
                                         return response()->json($data);
                                     } else {
                                         $data = ['error' => 'No se pudo eliminar el turno.',];
