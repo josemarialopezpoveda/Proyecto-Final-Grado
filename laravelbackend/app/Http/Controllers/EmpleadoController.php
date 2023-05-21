@@ -383,27 +383,52 @@ class EmpleadoController extends Controller {
         $user = Auth::user();
         $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
         if (is_numeric($empresaId)) {
-            $nuevoTurno = Turno::find($request->turno_id);
-            if ($nuevoTurno && $nuevoTurno->empresa_id === $empresaId) {
-                $empleado = Empleado::find($request->empleado_id);
-                if ($empleado) {
-                    $empleado->turnos->where('pivot.activo', true)->first();
-                    $turnoActivo = $empleado->turnos->where('pivot.activo', 1)->first();
+            if ($request->fechaInicioTurno < $request->fechaFinTurno) {
+                $nuevoTurno = Turno::find($request->turno_id);
+                if ($nuevoTurno && $nuevoTurno->empresa_id === $empresaId) {
+                    $empleado = Empleado::find($request->empleado_id);
+                    if ($empleado) {
+                        $empleado->turnos->where('pivot.activo', true)->first();
+                        $turnoActivo = $empleado->turnos->where('pivot.activo', 1)->first();
 
-                    if (!$turnoActivo || count($empleado->turnos) === 0) {
-                        // El empleado tiene turno no activo o no tiene turno asignado.
-                        return Auxiliares::asignarTurno($request, $empleado);
-                    } else { // El empleado tiene turno asignado.
-                        $turnoActivo->pivot->activo = 0;
-                        $turnoActivo->pivot->save();
-                        return Auxiliares::asignarTurno($request, $empleado);
+                        if (!$turnoActivo || count($empleado->turnos) === 0) {
+                            // El empleado tiene turno no activo o no tiene turno asignado.
+                            if (count($empleado->turnos) === 0) {
+                                return Auxiliares::asignarTurno($request, $empleado);
+                            } else {
+                                $turnoMasReciente = $empleado->turnos->sortByDesc('pivot.fechaFinTurno')->first();
+                                $fechaInicioTurno = strtotime($request->fechaInicioTurno);
+                                $fechaFinTurnoMasReciente = strtotime($turnoMasReciente->pivot->fechaFinTurno);
+                                if ($fechaInicioTurno <= $fechaFinTurnoMasReciente) {
+                                    $data = ['error' => 'La fecha de inicio tiene que ser mayor que ' . $turnoMasReciente->pivot->fechaFinTurno,];
+                                    return response()->json($data, 409);
+                                } else {
+                                    return Auxiliares::asignarTurno($request, $empleado);
+                                }
+                            }
+                        } else { // El empleado tiene turno asignado.
+                            $turnoMasReciente = $empleado->turnos->sortByDesc('pivot.fechaFinTurno')->first();
+                            $fechaInicioTurno = strtotime($request->fechaInicioTurno);
+                            $fechaFinTurnoMasReciente = strtotime($turnoMasReciente->pivot->fechaFinTurno);
+                            if ($fechaInicioTurno <= $fechaFinTurnoMasReciente) {
+                                $data = ['error' => 'La fecha de inicio tiene que ser mayor que ' . $turnoMasReciente->pivot->fechaFinTurno,];
+                                return response()->json($data, 409);
+                            } else {
+                                $turnoActivo->pivot->activo = 0;
+                                $turnoActivo->pivot->save();
+                                return Auxiliares::asignarTurno($request, $empleado);
+                            }
+                        }
+                    } else {
+                        $data = ['error' => 'El empleado no existe.',];
+                        return response()->json($data, 404);
                     }
                 } else {
-                    $data = ['error' => 'El empleado no existe.',];
+                    $data = ['error' => 'Turno no existe.',];
                     return response()->json($data, 404);
                 }
             } else {
-                $data = ['error' => 'Turno no existe.',];
+                $data = ['error' => 'La fecha de fin de turno tiene que ser mayor que la fecha de inicio de turno',];
                 return response()->json($data, 404);
             }
         } else {
