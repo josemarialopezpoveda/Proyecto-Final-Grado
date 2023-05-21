@@ -15,19 +15,19 @@ function Footer(){
                     <h1>Únase a nosotros en las redes sociales</h1>
                     <h2>Nos encantaría saber de usted</h2>
                     <div className=' p-2 contenedorIconos social-media-icons-white d-flex jsutify-content-evently'>
-                        <a className='facebook' href='https://www.facebook.com/'>
+                        <a className='facebook' href='https://www.facebook.com/profile.php?id=100092667468398'>
                             <FontAwesomeIcon icon={faFacebook}/>
                         </a> 
-                        <a className='twitter' href='https://twitter.com/home?lang=es'>
+                        <a className='twitter' href='https://twitter.com/TimeManaApp'>
                             <FontAwesomeIcon icon={faTwitter}/>
                         </a>
-                        <a className='instagram' href='https://www.instagram.com'>
+                        <a className='instagram' href='https://www.instagram.com/timemana__official/'>
                             <div><FontAwesomeIcon icon={faInstagram}/></div>
                         </a> 
-                        <a className='linkedin' href='https://es.linkedin.com/'>
+                        <a className='linkedin' href='https://www.linkedin.com/search/results/all/?fetchDeterministicClustersOnly=true&heroEntityKey=urn%3Ali%3Afsd_profile%3AACoAAEOG0m8B4QeXIyGZYwZIEB1lcCO5NY7Xllw&keywords=timemana%20__official&origin=RICH_QUERY_SUGGESTION&position=0&searchId=80c8a2f7-4aff-4435-9977-0c7359dfed03&sid=!Sz'>
                             <FontAwesomeIcon icon={faLinkedin}/>
                         </a> 
-                        <a className='tiktok' href='https://www.tiktok.com'>
+                        <a className='tiktok' href='https://www.tiktok.com/@timemana__official'>
                             <FontAwesomeIcon icon={faTiktok}/>
                         </a> 
                     </div>

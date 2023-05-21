@@ -163,7 +163,6 @@ const PaginacionTiempos = ({ data, perPage, setEstadoDinamico, setEstadoEstatico
         </Table>
     </div>
         <div className='botonesPaginacion'>
-        <pre>{JSON.stringify(paginaSeleccionada)}</pre>
             {Array.from({ length: totalPages }, (_, i) => {
                 if (
                   i === 0 ||

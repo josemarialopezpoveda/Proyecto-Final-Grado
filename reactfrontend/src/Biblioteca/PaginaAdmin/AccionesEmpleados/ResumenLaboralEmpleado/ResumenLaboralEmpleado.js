@@ -16,8 +16,8 @@ function ResumenLaboralEmpleado(){
     });
 
     const [fechasBuscador, setFechasBuscador] = useState({
-        desde: formatoDateAFecha(new Date(new Date().getFullYear(), new Date().getMonth(), 1)),
-        hasta: formatoDateAFecha(new Date()),
+        // desde: formatoDateAFecha(new Date(new Date().getFullYear(), new Date().getMonth(), 1)),
+        // hasta: formatoDateAFecha(new Date()),
     });
 
     const [nombreEmpleado, setNombreEmpleado] = useState();
@@ -50,6 +50,7 @@ function ResumenLaboralEmpleado(){
           },
         };
         let datosEmpleado = undefined
+        console.log(URL_API + "registroHorario/" + `${localStorage.getItem("idEmpleado")}`)
         datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("idEmpleado")}`, header);
         console.log(datosEmpleado)
         if(datosEmpleado !== undefined){

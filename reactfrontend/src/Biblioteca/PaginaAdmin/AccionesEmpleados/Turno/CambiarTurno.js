@@ -3,14 +3,16 @@ import React, {useState, useEffect, useRef} from 'react';
 import PiePagina from '../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../Nav/NavAdmin';
 import './CambiarTurno.css';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
-import { convertirNumeroDiaSemana, generarUUID, peticionGetAuth, quitarSegundos } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { calculoFechaHoy, convertirNumeroDiaSemana, formatoDateAFecha, generarUUID, mostrarAlertaCorrecta, mostrarAlertaErronea, peticionGetAuth, peticionPost, peticionPut, quitarSegundos } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import { URL_API } from 'services/http/const';
 import Table from 'react-bootstrap/Table';
 
 
 function CambiarTurno() {
+  //Creamos la variable para poder usar el navigate.
+  const Navigate = useNavigate();
   const tipoBaja = useRef(null);
   const [datosTurnos,setDatosTurnos] = useState([{
     id: "",
@@ -25,7 +27,12 @@ function CambiarTurno() {
 
   const [empleado, setEmpleado] = useState({
     nombre:"",
-})
+  })
+
+  const [fechasBuscador, setFechasBuscador] = useState({
+    inicio: "",
+    fin: "",
+  });
 
   const recoleccionNombre = async () => {
     const header = {
@@ -35,7 +42,6 @@ function CambiarTurno() {
       },
     };
     let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleado")}`, header);
-    console.log(datosEmpleado)
     if (datosEmpleado.data.nombre !== undefined) {
         var newEmpleado = {
           nombre: datosEmpleado.data.nombre,
@@ -52,7 +58,6 @@ function CambiarTurno() {
       },
     };
     let datosTurnos = await peticionGetAuth(URL_API + "turnosEmpresa/" + `${localStorage.getItem("id")}`, header);
-    console.log(datosTurnos)
     if(datosTurnos.data.length !== 0){
       var todosLosTurnos = datosTurnos.data.turnos.map((turno)=>{
         var newTurno = {
@@ -198,10 +203,40 @@ const diasTurno = () =>{
   }
 }
 
-const TodoCorrecto = async() =>{
+const cambiarTurno = async() =>{
     let raw = {
-      "descripcion": turno.descripcion,
-      "idTurno": parseInt(tipoBaja.current.value.trim()),
+      "turno_id": parseInt(turno.id),
+      "empleado_id": parseInt(localStorage.getItem('idEmpleado')),
+      "fechaInicioTurno": fechasBuscador.inicio,
+      "fechaFinTurno": fechasBuscador.fin
+    }
+    console.log(raw)
+    if(turno.id === ""){
+      mostrarAlertaErronea("Error en el turno", "No has seleccionado ningún turno.", null);
+    }else if(fechasBuscador.inicio === "" && fechasBuscador.fin === ""){
+      mostrarAlertaErronea("Error en las fechas seleccionadas", "Alguna de las fechas no la has rellenado.", null);
+    }else if(fechasBuscador.inicio > fechasBuscador.fin){
+      mostrarAlertaErronea("Error en las fechas seleccionadas", "La fecha de inicio no puede ser posterior a la de fin.", null);
+    }else{
+      try {
+          const header = {
+              headers: {
+                  "Accept": "application/json",
+                  "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
+              }
+          }
+          console.log(URL_API + "asignarTurnoAEmpleado")
+        let peticion = await peticionPost(URL_API + "asignarTurnoAEmpleado", raw, header)
+        console.log(peticion)
+        if(peticion.data.error !== undefined && peticion.data.error !== null){
+            mostrarAlertaErronea("Error de turnos", peticion.data.error, null);
+        }else{
+            mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
+            Navigate("/verTurnoCliente")
+        }
+      } catch (error) {
+        mostrarAlertaErronea(error.message, error.stack, null);
+      }
     }
   }
 
@@ -223,12 +258,30 @@ const TodoCorrecto = async() =>{
                     {obtenerOptions()}
                   </Form.Select>
                 </div>
+                <div className="divContenedorCampo2 margin10-0">
+                    <div className="divContenedorCampo3">
+                        <p>Fecha Inicio:</p>
+                        <Form.Group className="mb-3">
+                                <Form.Control required size="lg" type="date"
+                                onInput={e=>{setFechasBuscador({ ...fechasBuscador, inicio: e.target.value.trim() })}}
+                                defaultValue={fechasBuscador.inicio}/>
+                        </Form.Group>
+                    </div>
+                    <div className="divContenedorCampo3">
+                        <p>Fecha Fin:</p>
+                        <Form.Group className="mb-3">
+                                <Form.Control required size="lg" type="date"
+                                onInput={e=>{setFechasBuscador({ ...fechasBuscador, fin: e.target.value.trim() })}}
+                                defaultValue={fechasBuscador.fin}/>
+                        </Form.Group>
+                    </div>
+                </div>
             </Form>
           </section>
           <div className='botonAnyadirTurnoDiv'>
-            <Link className="anyadirTurnoBoton margin0-10" to='/verTurnoCliente'>
+            <button type='button' className="anyadirTurnoBoton margin0-10" onClick={cambiarTurno}>
               Cambiar Turno
-            </Link>
+            </button>
             <Link to="/verTurnoCliente" className="anyadirTurnoBoton margin0-10">Volver</Link>
           </div>
           {mostrarTurnoSeleccionado()}
