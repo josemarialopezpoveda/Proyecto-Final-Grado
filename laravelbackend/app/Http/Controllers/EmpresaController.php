@@ -118,12 +118,12 @@ class EmpresaController extends Controller {
             if (count($empleados) > 0) {
                 return response()->json($empleados);
             } else {
-                $data = ['error' => 'La empresa no tiene empleados.'];
-                return response()->json($data, 404);
+                $data = ['message' => 'La empresa no tiene empleados.'];
+                return response()->json($data);
             }
         } else {
-            $data = ['error' => 'Empresa no existe.'];
-            return response()->json($data, 404);
+            $data = ['message' => 'Empresa no existe.'];
+            return response()->json($data);
         }
     }
 

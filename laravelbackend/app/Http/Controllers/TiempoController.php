@@ -533,11 +533,11 @@ class TiempoController extends Controller {
                 }
             } else {
                 $data = ['message' => 'El empleado no tiene turno activo',];
-                return response()->json($data, 400);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $loginOk['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -697,15 +697,15 @@ class TiempoController extends Controller {
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'El empleado no pertenece a la empresa'];
-                    return response()->json($data, 400);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'Tiempo no existe'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -726,15 +726,15 @@ class TiempoController extends Controller {
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'El empleado no pertenece a la empresa'];
-                    return response()->json($data, 400);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'Tiempo no existe'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 }

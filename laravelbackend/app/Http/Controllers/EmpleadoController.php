@@ -401,20 +401,20 @@ class EmpleadoController extends Controller {
                             return Auxiliares::validarFechaInicioYAsignarTurno($request, $empleado, $turnoActivo);
                         }
                     } else {
-                        $data = ['error' => 'El empleado no existe.',];
-                        return response()->json($data, 404);
+                        $data = ['message' => 'El empleado no existe.',];
+                        return response()->json($data);
                     }
                 } else {
-                    $data = ['error' => 'Turno no existe.',];
-                    return response()->json($data, 404);
+                    $data = ['message' => 'Turno no existe.',];
+                    return response()->json($data);
                 }
             } else {
-                $data = ['error' => 'La fecha de fin de turno tiene que ser mayor que la fecha de inicio de turno',];
-                return response()->json($data, 404);
+                $data = ['message' => 'La fecha de fin de turno tiene que ser mayor que la fecha de inicio de turno',];
+                return response()->json($data);
             }
         } else {
-            $data = ['error' => $empresaId['message'],];
-            return response()->json($data, 403);
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data);
         }
     }
 
@@ -427,18 +427,18 @@ class EmpleadoController extends Controller {
             if ($empleado) {
                 if ($user instanceof Empresa) {
                     if ($user->getKey() != $empleado->empresa_id) {
-                        $data = ['error' => 'El empleado con el ID proporcionado no pertenece a la empresa'];
-                        return response()->json($data, 404);
+                        $data = ['message' => 'El empleado con el ID proporcionado no pertenece a la empresa'];
+                        return response()->json($data);
                     }
                 } else {
                     if ($user instanceof Empleado) {
                         if ($user->empresa_id != $empleado->empresa_id) {
-                            $data = ['error' => 'La empresa del empleado proporcionado no coincide con la empresa del usuario autenticado.'];
-                            return response()->json($data, 401);
+                            $data = ['message' => 'La empresa del empleado proporcionado no coincide con la empresa del usuario autenticado.'];
+                            return response()->json($data);
                         }
                         if ($user->tipoEmpleado != "Administrador" && $user->getKey() != $empleadoId) {
-                            $data = ['error' => 'No estás autorizado.'];
-                            return response()->json($data, 401);
+                            $data = ['message' => 'No estás autorizado.'];
+                            return response()->json($data);
                         }
                     }
                 }
@@ -457,16 +457,16 @@ class EmpleadoController extends Controller {
                     ];
                     return response()->json($data);
                 } else {
-                    $data = ['error' => 'No se encontró turno activo para el empleado'];
-                    return response()->json($data, 404);
+                    $data = ['message' => 'No se encontró turno activo para el empleado'];
+                    return response()->json($data);
                 }
             } else {
-                $data = ['error' => 'No se encontró el empleado con el ID proporcionado'];
-                return response()->json($data, 404);
+                $data = ['message' => 'No se encontró el empleado con el ID proporcionado'];
+                return response()->json($data);
             }
         } else {
-            $data = ['error' => $loginOk['message'],];
-            return response()->json($data, 403);
+            $data = ['message' => $loginOk['message'],];
+            return response()->json($data);
         }
     }
 }
