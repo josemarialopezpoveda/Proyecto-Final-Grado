@@ -65,7 +65,7 @@ function ListarTurnos() {
       return(
         <div className='TablaDatosUser'>
           <BuscadorTurnos datosEstaticos={setTurnoEstatico} datosDinamicos={turnoDinamico}/>
-          <PaginacionTurnos data={turnoEstatico} perPage={1} 
+          <PaginacionTurnos data={turnoEstatico} perPage={4} 
                 setEstadoEstatico={setTurnoEstatico} setEstadoDinamico={setTurnoDinamico}/>
         </div>)
     }else{

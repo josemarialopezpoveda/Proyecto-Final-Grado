@@ -2,7 +2,7 @@
 import React, {useState, useEffect} from 'react';
 import { Link } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
-import { peticionGetAuth, cogerFecha, formatoFechaDDMMYYYY, cogerHora, formatearFechaFormatoDiaDeMesDelAnyo, formatoDateAFecha, fechaEntreRango, generarUUID } from "../../../FuncionesAuxiliares/Funciones.js";
+import { peticionGetAuth, cogerFecha, formatoFechaDDMMYYYY, cogerHora, formatearFechaFormatoDiaDeMesDelAnyo, formatoDateAFecha, fechaEntreRango, generarUUID, mostrarAlertaErronea } from "../../../FuncionesAuxiliares/Funciones.js";
 import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 import { URL_API } from 'services/http/const.js';
 import PiePagina from 'Biblioteca/PaginaPrincipal/Footer/PiePagina.js';
@@ -59,7 +59,21 @@ function ListadoIncidenciasPresencia(){
 
     //Al pulsar al botón recoge los datos con las nuevas fechas.
     const TodoCorrecto = () =>{
-        recoleccionDatos();
+        console.log(fechasBuscador.diaSeleccionado)
+        if(fechasBuscador.diaSeleccionado !== ""){    
+            recoleccionDatos();
+        }else{
+            mostrarAlertaErronea("Error en la fecha seleccionada", "La fecha que has seleccionado esta vacia", null)
+            //setFechasBuscador({...fechasBuscador, diaSeleccionado: formatoDateAFecha(new Date())})
+        }
+    }
+
+    const verificarDiaNoNulo = (dia) =>{
+        if(dia !== ""){
+            return(formatearFechaFormatoDiaDeMesDelAnyo(dia))
+        }else{
+            return("Fecha vacia seleccione una fecha válida")
+        }
     }
   
     return(
@@ -88,35 +102,14 @@ function ListadoIncidenciasPresencia(){
                 <section className='padding0 sectionPequenyo sectionParaFichar'>
                         <div>
                             <article className='Fecha'>
-                                <p>{formatearFechaFormatoDiaDeMesDelAnyo(fechasBuscador.diaSeleccionado)}</p>
+                                <p>{verificarDiaNoNulo(fechasBuscador.diaSeleccionado)}</p>
                             </article>
                             <article className='horas'>
-                                {/* <div className="horas2">
-                                    <h2>Ausencias</h2> */}
+                                {fechasBuscador.diaSeleccionado !== ""?
                                     <PaginacionListadoIncidencias data={datosFaltas} perPage={1}/>
-                                    {/* <Table className='sinMargen' striped>
-                                        <thead>
-                                            <tr>
-                                                <th className='sinBorde'>Nombre</th>
-                                                <th className='sinBorde'>Tipo</th>
-                                                <th className='sinBorde'>Ausencia</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {/* {datosFaltas.map((falta)=>{
-                                                if(falta !== null && falta !== undefined){
-                                                    return(
-                                                        <tr key={generarUUID()}>
-                                                            <td>{falta.nombre}</td>
-                                                            <td>{falta.tipo}</td>
-                                                            <td>{falta.descripcion}</td>
-                                                        </tr>
-                                                    )
-                                                }
-                                            })} }
-                                        </tbody>
-                                    </Table> */}
-                                {/* </div> */}
+                                :
+                                null
+                                }
                             </article>
                         </div>
                     </section>
