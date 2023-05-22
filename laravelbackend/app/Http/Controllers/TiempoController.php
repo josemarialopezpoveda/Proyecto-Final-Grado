@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 
+use App\Helpers\Auxiliares;
+use App\Helpers\DiasMeses;
 use App\Helpers\Holidays;
+use App\Helpers\Intervalo;
 use App\Models\Empleado;
 use App\Models\Empresa;
 use App\Models\Tiempo;
@@ -12,11 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Helpers\DiasMeses;
-use App\Helpers\Auxiliares;
-use App\Helpers\Intervalo;
-
-use function PHPUnit\Framework\isNull;
 
 class TiempoController extends Controller {
     /**
@@ -65,16 +63,37 @@ class TiempoController extends Controller {
                     ->where('fechaFinTurno', '>=', $fechaInicioRegistros)
                     ->first();
                 $diaSemanaNumero = Carbon::parse($fechaInicioRegistros)->format('N');
-                $dia = DB::table('dias')
-                    ->where('turno_id', $empleadoTurno->turno_id)
-                    ->where('diaSemana', $diaSemanaNumero)->first();
+                if ($empleadoTurno) {
+                    $dia = DB::table('dias')
+                        ->where('turno_id', $empleadoTurno->turno_id)
+                        ->where('diaSemana', $diaSemanaNumero)->first();
 
-                if ($dia) {
+                    if ($dia) {
+                        if (!Carbon::parse($fechaInicioRegistros)->isWeekend() && !Holidays::isHoliday(
+                                $fechaInicioRegistros
+                            )) {
+                            $totalTiempoATrabajar = Intervalo::sumaHorasIntervalos($dia);
+
+                            $turnos [] = [
+                                'empleado_id' => $empleado->id,
+                                'empleado' => $empleado->nombre . " " . $empleado->apellidos,
+                                'tipoEmpleado' => $empleado->tipoEmpleado,
+                                'empresa_id' => $empleado->empresa_id,
+                                'empresa' => $empresa->nombreComercial,
+                                'fecha' => Carbon::parse($fechaInicioRegistros)->format('Y-m-d'),
+                                'mes' => DiasMeses::getMonthName(date('n', strtotime($fechaInicioRegistros))),
+                                'dia' => DiasMeses::getDaysOfWeek($diaSemanaNumero),
+                                'turnoId' => $empleadoTurno->turno_id,
+                                'InicioTurno' => $empleadoTurno->fechaInicioTurno,
+                                'FinTurno' => $empleadoTurno->fechaFinTurno,
+                                'horasJornada' => $totalTiempoATrabajar,
+                            ];
+                        }
+                    }
+                } else {
                     if (!Carbon::parse($fechaInicioRegistros)->isWeekend() && !Holidays::isHoliday(
                             $fechaInicioRegistros
                         )) {
-                        $totalTiempoATrabajar = Intervalo::sumaHorasIntervalos($dia);
-
                         $turnos [] = [
                             'empleado_id' => $empleado->id,
                             'empleado' => $empleado->nombre . " " . $empleado->apellidos,
@@ -84,10 +103,10 @@ class TiempoController extends Controller {
                             'fecha' => Carbon::parse($fechaInicioRegistros)->format('Y-m-d'),
                             'mes' => DiasMeses::getMonthName(date('n', strtotime($fechaInicioRegistros))),
                             'dia' => DiasMeses::getDaysOfWeek($diaSemanaNumero),
-                            'turnoId' => $empleadoTurno->turno_id,
-                            'InicioTurno' => $empleadoTurno->fechaInicioTurno,
-                            'FinTurno' => $empleadoTurno->fechaFinTurno,
-                            'horasJornada' => $totalTiempoATrabajar,
+                            'turnoId' => "No hay turno para este dia",
+                            'InicioTurno' => "No hay turno para este dia",
+                            'FinTurno' => "No hay turno para este dia",
+                            'horasJornada' => "00:00:00",
                         ];
                     }
                 }
@@ -141,7 +160,7 @@ class TiempoController extends Controller {
 
         if ($loginOk) {
             $empleado = Empleado::find($empleadoId);
-            $tiempos = Tiempo::select('id','inicio', 'fin')
+            $tiempos = Tiempo::select('id', 'inicio', 'fin')
                 ->where('empleado_id', $empleadoId)
                 ->orderBy('inicio', 'asc')
                 ->get();
@@ -514,11 +533,11 @@ class TiempoController extends Controller {
                 }
             } else {
                 $data = ['message' => 'El empleado no tiene turno activo',];
-                return response()->json($data, 400);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $loginOk['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -543,21 +562,38 @@ class TiempoController extends Controller {
             return $this->extracted($request);
             // Si soy empresa o empleado administrador y quiero insertar un tiempo a otro empleado de la empresa.
         } elseif ($user instanceof Empresa || $user->tipoEmpleado === "Administrador") {
-
             //$empleado = DB::table('empleados')->where('id', $request->empleado_id)->first();
             //$empresa = DB::table('empresas')->where('id', )
             //if ($empleado->empresa_id === $user->empresa_id || ) {
-                return $this->extracted($request);
+            return $this->extracted($request);
             //} else {
-              //  $data = ['message' => 'El empleado no pertenece a la empresa.',];
-                //return response()->json($data);
-           // }
+            //  $data = ['message' => 'El empleado no pertenece a la empresa.',];
+            //return response()->json($data);
+            // }
         } else {
             $data = ['message' => 'No autorizado',];
             return response()->json($data);
         }
     }
 
+    /****
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function extracted(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $tiempo = new Tiempo();
+        $tiempo->empleado_id = $request->empleado_id;
+        $tiempo->inicio = $request->inicio;
+        $tiempo->fin = $request->fin;
+        $tiempo->turno_id = $request->turno_id;
+        $tiempo->save();
+        $data = [
+            'message' => 'Tiempo insertado correctamente',
+            'tiempo' => $tiempo
+        ];
+        return response()->json($data);
+    }
 
     /**
      * Update the specified resource in storage.
@@ -638,7 +674,6 @@ class TiempoController extends Controller {
         }
     }
 
-
     /**
      * Remove the specified resource from storage.
      * Puede eliminarlo una Empresa o un empleado Administrador.
@@ -662,15 +697,15 @@ class TiempoController extends Controller {
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'El empleado no pertenece a la empresa'];
-                    return response()->json($data, 400);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'Tiempo no existe'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -691,35 +726,15 @@ class TiempoController extends Controller {
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'El empleado no pertenece a la empresa'];
-                    return response()->json($data, 400);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'Tiempo no existe'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
-    }
-
-
-    /****
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function extracted(Request $request): \Illuminate\Http\JsonResponse
-    {
-        $tiempo = new Tiempo();
-        $tiempo->empleado_id = $request->empleado_id;
-        $tiempo->inicio = $request->inicio;
-        $tiempo->fin = $request->fin;
-        $tiempo->turno_id = $request->turno_id;
-        $tiempo->save();
-        $data = [
-            'message' => 'Tiempo insertado correctamente',
-            'tiempo' => $tiempo
-        ];
-        return response()->json($data);
     }
 }

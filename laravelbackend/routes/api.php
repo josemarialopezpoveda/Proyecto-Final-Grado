@@ -107,6 +107,7 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/turnos/{turnoId}', [TurnoController::class, 'show']);
         Route::get('/turnosEmpresa/{empresaId}', [TurnoController::class, 'turnosEmpresa']);
         Route::get('/turnoActivo/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
+        Route::get('/incidenciasTurnos', [TurnoController::class, 'incidenciasTurnos']);
         Route::post('/turnos', [TurnoController::class, 'store']);
         Route::put('/turnos/{turno}', [TurnoController::class, 'update']);
         Route::delete('eliminarTurnoAEmpleado', [TurnoController::class, 'eliminarTurnoAEmpleado']);

@@ -27,11 +27,11 @@ class TurnoController extends Controller {
                 return response()->json($turnos);
             } else {
                 $data = ['message' => 'No existen turnos para la empresa.'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -53,15 +53,15 @@ class TurnoController extends Controller {
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'No autorizado.'];
-                    return response()->json($data, 403);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'Turno no existe.'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -80,15 +80,15 @@ class TurnoController extends Controller {
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'No existen turnos para la empresa.'];
-                    return response()->json($data, 403);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'No autorizado.'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -154,16 +154,16 @@ class TurnoController extends Controller {
                     ];
                     return response()->json($data);
                 } else {
-                    $data = ['error' => 'La descripción del turno no puede estar vacía.',];
-                    return response()->json($data, 400);
+                    $data = ['message' => 'La descripción del turno no puede estar vacía.',];
+                    return response()->json($data);
                 }
             } else {
-                $data = ['error' => 'No autorizado.'];
-                return response()->json($data, 404);
+                $data = ['message' => 'No autorizado.'];
+                return response()->json($data);
             }
         } else {
-            $data = ['error' => $empresaId['message'],];
-            return response()->json($data, 403);
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data);
         }
     }
 
@@ -218,20 +218,20 @@ class TurnoController extends Controller {
                         ];
                         return response()->json($data);
                     } else {
-                        $data = ['error' => 'El turno no se puede modificar, está asignado a un empleado'];
-                        return response()->json($data, 400);
+                        $data = ['message' => 'El turno no se puede modificar, está asignado a un empleado'];
+                        return response()->json($data);
                     }
                 } else {
-                    $data = ['error' => 'Turno no existe'];
-                    return response()->json($data, 404);
+                    $data = ['message' => 'Turno no existe'];
+                    return response()->json($data);
                 }
             } else {
-                $data = ['error' => 'No autorizado.'];
-                return response()->json($data, 403);
+                $data = ['message' => 'No autorizado.'];
+                return response()->json($data);
             }
         } else {
-            $data = ['error' => $empresaId['message'],];
-            return response()->json($data, 403);
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data);
         }
     }
 
@@ -259,20 +259,20 @@ class TurnoController extends Controller {
                         ];
                         return response()->json($data);
                     } else {
-                        $data = ['error' => 'El turno no se puede borrar, está asignado a un empleado'];
-                        return response()->json($data, 400);
+                        $data = ['message' => 'El turno no se puede borrar, está asignado a un empleado'];
+                        return response()->json($data);
                     }
                 } else {
-                    $data = ['error' => 'No estás autorizado.'];
-                    return response()->json($data, 403);
+                    $data = ['message' => 'No estás autorizado.'];
+                    return response()->json($data);
                 }
             } else {
-                $data = ['error' => 'Turno no existe'];
-                return response()->json($data, 404);
+                $data = ['message' => 'Turno no existe'];
+                return response()->json($data);
             }
         } else {
-            $data = ['error' => $empresaId['message'],];
-            return response()->json($data, 403);
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data);
         }
     }
 
@@ -343,49 +343,69 @@ class TurnoController extends Controller {
                                             ->delete();
                                         if ($turnoAEliminar->activo === 1) {
                                             $data = [
-                                                'mensaje' => 'Turno eliminado correctamente. El empleado no tiene turno activo.',
+                                                'message' => 'Turno eliminado correctamente. El empleado no tiene turno activo.',
                                                 'turnoEliminado' => $fechasTurnos,
                                                 '$turnoAEliminar' => $turnoAEliminar,
                                             ];
                                         } else {
                                             $data = [
-                                                'mensaje' => 'Turno eliminado correctamente.',
+                                                'message' => 'Turno eliminado correctamente.',
                                                 'turnoEliminado' => $fechasTurnos,
                                                 '$turnoAEliminar' => $turnoAEliminar,
                                             ];
                                         }
                                         return response()->json($data);
                                     } else {
-                                        $data = ['error' => 'No se pudo eliminar el turno.',];
-                                        return response()->json($data, 400);
+                                        $data = ['message' => 'No se pudo eliminar el turno.',];
+                                        return response()->json($data);
                                     }
                                 } else {
-                                    $data = ['error' => 'No se puede eliminar el turno, hay tiempos registrados.',];
-                                    return response()->json($data, 409);
+                                    $data = ['message' => 'No se puede eliminar el turno, hay tiempos registrados.',];
+                                    return response()->json($data);
                                 }
                             } else {
-                                $data = ['error' => 'No hay relación entre el turno y el empleado.',];
-                                return response()->json($data, 404);
+                                $data = ['message' => 'No hay relación entre el turno y el empleado.',];
+                                return response()->json($data);
                             }
                         } else {
-                            $data = ['error' => 'El turno no pertenece a la empresa.',];
-                            return response()->json($data, 409);
+                            $data = ['message' => 'El turno no pertenece a la empresa.',];
+                            return response()->json($data);
                         }
                     } else {
-                        $data = ['error' => 'El turno no existe.',];
-                        return response()->json($data, 404);
+                        $data = ['message' => 'El turno no existe.',];
+                        return response()->json($data);
                     }
                 } else {
-                    $data = ['error' => 'El empleado no pertenece a la empresa.',];
-                    return response()->json($data, 409);
+                    $data = ['message' => 'El empleado no pertenece a la empresa.',];
+                    return response()->json($data);
                 }
             } else {
-                $data = ['error' => 'El empleado no existe.',];
-                return response()->json($data, 404);
+                $data = ['message' => 'El empleado no existe.',];
+                return response()->json($data);
             }
         } else {
-            $data = ['error' => $empresaId['message'],];
-            return response()->json($data, 403);
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data);
         }
     }
+
+    public function incidenciasTurnos(): JsonResponse
+    {
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+        if (is_numeric($empresaId)) {
+            $sinTurnoActivo = Auxiliares::obtenerEmpleadosSinTurnoActivo($empresaId);
+            $turnoCaducado = Auxiliares::obtenerEmpleadosTurnoCaducado($empresaId);
+            return response()->json([
+                "mensaje" => "Empleados con incidencias en los turnos.",
+                'empresa' => $empresaId,
+                'empleadosSinTurnoActivo' => $sinTurnoActivo,
+                'turnoCaducado' => $turnoCaducado,
+            ]);
+        } else {
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data);
+        }
+    }
+
 }

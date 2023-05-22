@@ -39,11 +39,11 @@ class AusenciaController extends Controller {
                 return response()->json($data);
             } else {
                 $data = ['message' => 'No existen ausencias'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -61,15 +61,15 @@ class AusenciaController extends Controller {
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'La ausencia no pertenece a la empresa'];
-                    return response()->json($data, 400);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'Ausencia no existe'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -102,11 +102,11 @@ class AusenciaController extends Controller {
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'La empresa no tiene ausencias'];
-                    return response()->json($data, 404);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'La empresa no tiene empleados'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
@@ -138,11 +138,11 @@ class AusenciaController extends Controller {
                 return response()->json($data);
             } else {
                 $data = ['message' => 'El empleado no tiene ausencias'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $loginOk['message'],];
-            return response()->json($data, 401);
+            return response()->json($data);
         }
     }
 
@@ -168,15 +168,15 @@ class AusenciaController extends Controller {
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'Empleado no existe'];
-                    return response()->json($data, 404);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'Tipo de ausencia no existe'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 401);
+            return response()->json($data);
         }
     }
 
@@ -224,19 +224,19 @@ class AusenciaController extends Controller {
                         return response()->json($data);
                     } else {
                         $data = ['message' => 'Empleado no existe'];
-                        return response()->json($data, 404);
+                        return response()->json($data);
                     }
                 } else {
                     $data = ['message' => 'Tipo de ausencia no existe'];
-                    return response()->json($data, 404);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'Ausencia no existe'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 401);
+            return response()->json($data);
         }
     }
 
@@ -260,15 +260,15 @@ class AusenciaController extends Controller {
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'Empleado no existe'];
-                    return response()->json($data, 404);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'Ausencia no existe'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 401);
+            return response()->json($data);
         }
     }
 }

@@ -23,11 +23,11 @@ class TipoausenciaController extends Controller {
                 return response()->json($tiposAusencia);
             } else {
                 $data = ['message' => 'No existe tipos de ausencia para la empresa.'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -44,11 +44,11 @@ class TipoausenciaController extends Controller {
                 return response()->json($tipoAusencia);
             } else {
                 $data = ['message' => 'Tipo de ausencia no existe.'];
-                return response()->json($data, 404);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -73,11 +73,11 @@ class TipoausenciaController extends Controller {
                 return response()->json($data);
             } else {
                 $data = ['message' => 'No autorizado.'];
-                return response()->json($data, 401);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -106,21 +106,21 @@ class TipoausenciaController extends Controller {
                         $data = [
                             'message' => 'No se puede modificar, tiene ausencias asociadas'
                         ];
-                        return response()->json($data, 403);
+                        return response()->json($data);
                     }
                 } else {
                     $data = [
                         'message' => 'Tipo de ausencia no existe'
                     ];
-                    return response()->json($data, 404);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'No autorizado.'];
-                return response()->json($data, 401);
+                return response()->json($data);
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 
@@ -145,11 +145,11 @@ class TipoausenciaController extends Controller {
                         return response()->json($data);
                     } else {
                         $data = ['message' => 'No se puede eliminar, tiene ausencias asociadas'];
-                        return response()->json($data, 403);
+                        return response()->json($data);
                     }
                 } else {
                     $data = ['message' => 'No autorizado.'];
-                    return response()->json($data, 401);
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'Tipo de ausencia no existe'];
@@ -157,7 +157,7 @@ class TipoausenciaController extends Controller {
             }
         } else {
             $data = ['message' => $empresaId['message'],];
-            return response()->json($data, 403);
+            return response()->json($data);
         }
     }
 }
