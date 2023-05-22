@@ -95,7 +95,6 @@ function ModificarCorreo() {
   return (
     <React.Fragment>
         {anyadirBarraNav()}
-            <pre>{JSON.stringify(form, null, 3)}</pre>
             <div>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
                     <h1 className='tituloh1noMarBot'>Modificar Caso</h1>

@@ -132,18 +132,18 @@ function ModificarTurno() {
         <NavAdmin/>
             <section>
                 <h4 className='tituloH1 text-center'>Horario: {turno.descripcion}</h4>
-                <div className='TablaDatosUser'>
-                <p className='desc-Titulo'>Descripcion del turno</p>
-                <div className="divContenedorCampo">
-                  <Form.Group className="mb-3 width500">
-                    <Form.Control
-                      size="lg"
-                      type="text"
-                      defaultValue={turno.descripcion}
-                      onChange={(e) => setTurno({ ...turno, descripcion: e.target.value.trim() })}
-                    />
-                  </Form.Group>
-                </div>
+                <div className='tablaMediaQuery tablaMargin TablaDatosUser'>
+                  <p className='desc-Titulo'>Descripcion del turno</p>
+                  <div className="divContenedorCampo">
+                    <Form.Group className="mb-3 width500">
+                      <Form.Control
+                        size="lg"
+                        type="text"
+                        defaultValue={turno.descripcion}
+                        onChange={(e) => setTurno({ ...turno, descripcion: e.target.value.trim() })}
+                      />
+                    </Form.Group>
+                  </div>
 
                     {/*PENDIENTE BUSCADOR TURNOS*/ }
                     <Table striped>

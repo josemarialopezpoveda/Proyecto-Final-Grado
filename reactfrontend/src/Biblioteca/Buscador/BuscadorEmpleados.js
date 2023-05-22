@@ -13,7 +13,7 @@ const handleChange=e=>{
 const filtrar=(terminoBusqueda)=>{
   var resultadosBusqueda=props.datosDinamicos.filter((elemento)=>{
     if(elemento.apellidos.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-    elemento.dni.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+    elemento.poblacion.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
     elemento.correo.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
     elemento.telefono.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())){
       return elemento;

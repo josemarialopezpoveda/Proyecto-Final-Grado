@@ -1,26 +1,24 @@
 //Importamos los estilos CSS del pie de página.
 import React from 'react';
-import Table from 'react-bootstrap/Table';
-import NavAdmin from '../Nav/NavAdmin';
-import './AccionesEmpleados.css';
-import PiePagina from '../../PaginaPrincipal/Footer/PiePagina';
-import ListarEmpleados from './ListarEmpleados';
 import {Link} from 'react-router-dom';
+import ListarEmpleadosConProblemas from './ListarEmpleadosConProblemas';
+import PiePagina from 'Biblioteca/PaginaPrincipal/Footer/PiePagina';
+import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin';
 
 
-function AccionesEmpleados(){  
+function EmpleadosProblemasTurnos(){  
     return(
     <React.Fragment>
         <NavAdmin/>
         <section className="contenedorEmpleadosAcciones">
-            <h1 className='text-center tituloH1'>Gestión Empleados</h1>
+            <h1 className='text-center tituloH1'>Listar empleados con problemas en los turnos</h1>
             <div className='contenedorBotonCrearCorreo'>
-                <Link className='crearCorreoBoton margin0-10' to="/empleadosProblemasTurnos">Empleados sin turno</Link>
+                <Link className='crearCorreoBoton margin0-10' to="/accionesEmpleados">Gestion Empleados</Link>
                 <Link className='crearCorreoBoton margin0-10' to="/listadoIncidenciasPresencia">Listado Incidencias</Link>
                 <Link className='crearCorreoBoton margin0-10' to="/totalEmpleados">Empleados Online</Link>
                 <Link className='crearCorreoBoton margin0-10' to="/altaEmpleado">Alta empleado</Link>
             </div>
-            <ListarEmpleados/>
+            <ListarEmpleadosConProblemas/>
         </section>
         <PiePagina/>
     </React.Fragment>
@@ -28,4 +26,4 @@ function AccionesEmpleados(){
     );
 }
 
-export default AccionesEmpleados;
+export default EmpleadosProblemasTurnos;

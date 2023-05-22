@@ -39,7 +39,7 @@ function VerTurno() {
         <NavAdmin/>
         <section>
             <div>
-                <div className='tablaMediaQuery TablaDatosUser'>
+                <div className='tablaMediaQuery tablaMargin TablaDatosUser'>
                     {/*PENDIENTE BUSCADOR TURNOS*/ }
                     <CrearBodyVerTurno/>
                 </div>

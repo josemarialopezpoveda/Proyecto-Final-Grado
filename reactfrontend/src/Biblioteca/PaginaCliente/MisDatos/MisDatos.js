@@ -91,11 +91,8 @@ function MisDatos() {
       {botonDatosEmpresa()}
       <section>
         <div className="TablaDatosUser">
-          {/* <div className="fotoUsuarioLogueado">
-            <h1>Foto {datos.nombre}</h1>
-            {/* <img className='fotoMisDatosUsuario' src={require('./fotoprueba.jpg')} alt="foto usuario"/> }
-          </div> */}
-          <section className="sectionPequenyo sectionFormMarginBottom">
+          <h1 className='text-center tituloH1'>Datos empresa {datos.nombre}</h1>
+          <section className="min-height sectionPequenyo">
             <Table className="tablaAjustar" striped>
               <thead>
                 <tr>

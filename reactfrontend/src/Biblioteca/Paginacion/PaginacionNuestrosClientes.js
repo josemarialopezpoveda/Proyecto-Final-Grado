@@ -43,8 +43,8 @@ const PaginacionNuestrosClientes = ({ data, perPage, setEstadoDinamico, setEstad
         <tr className="EmpleadoTablaApartado" key={generarUUID()}>
             <td>{option.nombreComercial}</td>
             <td>{option.poblacion}</td>
-            <td className="campoOpcional">{option.pais}</td>
             <td className="campoOpcional">{option.provincia}</td>
+            <td className="campoOpcional">{option.pais}</td>
         </tr>         
     ));
     }else{
@@ -62,8 +62,8 @@ const PaginacionNuestrosClientes = ({ data, perPage, setEstadoDinamico, setEstad
                     <tr>
                         <th>Nombre Comercial</th>
                         <th>Población</th>
-                        <th className='campoOpcional'>País</th>
                         <th className='campoOpcional'>Provincia</th>
+                        <th className='campoOpcional'>País</th>
                     </tr>
                 </thead>
                 <tbody>

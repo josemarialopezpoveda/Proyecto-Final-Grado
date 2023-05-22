@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./Calendar.css";
-import Form from "react-bootstrap/Form";
 import { URL_API } from "services/http/const";
 import { convertirFechaISO, peticionGetAuth } from "Biblioteca/FuncionesAuxiliares/Funciones";
 
@@ -35,16 +34,16 @@ const Calendario = () => {
     };
     let datosAusencia = undefined;
       if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
-          datosAusencia = await peticionGetAuth(URL_API + "ausenciasEmpleados/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+          datosAusencia = await peticionGetAuth(URL_API + "ausenciasEmpleado/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
       }else{
-        datosAusencia = await peticionGetAuth(URL_API + "ausenciasEmpleados/" + `${localStorage.getItem("id")}`, header);
+        console.log(URL_API + "ausenciasEmpleados/" + `${localStorage.getItem("id")}`)
+        datosAusencia = await peticionGetAuth(URL_API + "ausenciasEmpleado/" + `${localStorage.getItem("id")}`, header);
       }
     console.log(datosAusencia)
     if(datosAusencia !== undefined){
       if (datosAusencia.data.ausencias !== 0 && datosAusencia.data.message !== "El empleado no tiene ausencias") {
           var todosDatosAusencia = datosAusencia.data.ausencias.map((dia)=>{
             var newTurno = {
-              //id: dia.id,
               'title': dia.descripcionAusencia,
               'descripcion': dia.descripcion,
               'tipoAusencia': dia.tipo,

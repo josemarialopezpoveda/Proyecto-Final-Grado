@@ -37,7 +37,7 @@ const PaginationEmpleados = ({ data, perPage, setEstadoDinamico, setEstadoEstati
           id: datosE.id,
           nombre: datosE.nombre,
           apellidos: datosE.apellidos,
-          dni: datosE.nif,
+          poblacion: datosE.poblacion,
           correo: datosE.email,
           telefono: datosE.telefono,
         };
@@ -115,7 +115,7 @@ const PaginationEmpleados = ({ data, perPage, setEstadoDinamico, setEstadoEstati
         <tr className="EmpleadoTablaApartado" key={generarUUID()}>
           <td>{option.nombre}</td>
           <td className="campoOpcional">{option.apellidos}</td>
-          <td className="campoOpcional">{option.dni}</td>
+          <td className="campoOpcional">{option.poblacion}</td>
           <td className="campoOpcional">{option.correo}</td>
           <td className="campoOpcional">{option.telefono}</td>
           <td>
@@ -161,7 +161,7 @@ const PaginationEmpleados = ({ data, perPage, setEstadoDinamico, setEstadoEstati
                 <tr>
                     <th>Nombre</th>
                     <th className='campoOpcional'>Apellidos</th>
-                    <th className='campoOpcional'>DNI</th>
+                    <th className='campoOpcional'>Población</th>
                     <th className='campoOpcional'>Correo</th>
                     <th className='campoOpcional'>Teléfono</th>
                     <th>Acciones</th>

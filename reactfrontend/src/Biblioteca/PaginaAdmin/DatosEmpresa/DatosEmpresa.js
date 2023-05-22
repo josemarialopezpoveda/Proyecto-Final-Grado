@@ -113,23 +113,9 @@ function DatosEmpresa(){
     <React.Fragment>
         <NavAdmin/>
         <section>
-            <pre>{JSON.stringify(foto,null,3)}</pre>
             <div className='TablaDatosUser'>
-                {/* {foto ? (
-                    <div className='fotoUsuarioLogueado'>
-                        <h1>Foto {datos.nombreComercial}</h1>
-                        {foto && <img className='fotoMisDatosUsuario' src={foto} alt="logotipo"/> }
-                        {/* <img className='fotoMisDatosUsuario' src={foto} alt="logotipo"/>  }
-                    </div>
-                    ) : (
-                        <div className='fotoUsuarioLogueado'>
-                            <h1>Foto {datos.nombreComercial}</h1>
-                            <h2>No has subido una foto aún.</h2>
-                        </div>
-                    )
-
-                } */}
-                <section className='sectionPequenyo sectionFormMarginBottom'>
+                <h1 className='text-center tituloH1'>Datos empresa {datos.nombreComercial}</h1>
+                <section className='min-height sectionPequenyo'>
                     <Table className='tablaAjustar' striped>
                         <thead>
                             <tr>

@@ -176,7 +176,7 @@ const PaginacionChatAdmin = ({ data, perPage, setEstadoDinamico, setEstadoEstati
             <td>{option.creadoPor}</td>
             <td>{option.asunto}</td>
             {estaActivo(option.activo)}
-            <td>{option.fCreacion}</td>
+            <td className='campoOpcional'>{option.fCreacion}</td>
             {comprobarEmpleadoAdmin(option)}
         </tr>                 
       ));

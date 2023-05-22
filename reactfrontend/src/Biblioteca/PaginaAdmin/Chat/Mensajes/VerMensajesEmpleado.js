@@ -193,10 +193,6 @@ function VerMensajesEmpleado() {
         <NavCliente/>
         <h1 className='text-center tituloH1'>{tituloCaso}</h1>
         <div className='cabeceraVerMensaje'>
-            <div className="genteMensaje">
-                <h1>Involucrado 1: {intervenientes.nombreCompletoInterveniente1}</h1>
-                <h1>Involucrado 2: {intervenientes.nombreCompletoInterveniente2}</h1>
-            </div>
             {verificarPuedeCrearMensaje()}
         </div>
         <div className="contenedorTexto">

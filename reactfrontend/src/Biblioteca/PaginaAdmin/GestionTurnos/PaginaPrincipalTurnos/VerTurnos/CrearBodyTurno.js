@@ -91,7 +91,7 @@ function CrearBodyTurno() {
 
     if(turno !== undefined && turno.dias !== undefined){
         return(
-            <div>
+            <div className='tablaMediaQuery tablaMargin'>
                 <h1 className='text-center tituloH1'>Turno de {empleado.nombre}</h1>
                 <h1 className='text-center tituloH1'>Descripcion: {turno.descripcion}</h1>
                 <div className='ContenedorFechasTurno'>   

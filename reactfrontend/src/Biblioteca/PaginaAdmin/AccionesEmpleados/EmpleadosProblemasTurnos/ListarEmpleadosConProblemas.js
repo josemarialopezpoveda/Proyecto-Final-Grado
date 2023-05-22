@@ -7,15 +7,15 @@ import {
   peticionGetAuth,
   mostrarAlertaCorrecta,
   mostrarAlertaErronea,
-} from "../../FuncionesAuxiliares/Funciones";
+} from "../../../FuncionesAuxiliares/Funciones";
 import { useNavigate } from "react-router-dom";
 import SweetAlert from "sweetalert2";
 import { Link } from "react-router-dom";
-import { URL_API } from "../../../services/http/const";
 import BuscadorEmpleados from "Biblioteca/Buscador/BuscadorEmpleados";
 import PaginationEmpleados from "Biblioteca/Paginacion/PaginationEmpleados";
+import { URL_API } from "services/http/const";
 
-function ListarEmpleados() {
+function ListarEmpleadosConProblemas() {
   //Creamos la variable para el uso del useNavigate.
   const Navigate = useNavigate();
   //Creamos la variable para el contenido de los empleados estaticos.
@@ -24,7 +24,7 @@ function ListarEmpleados() {
       id: "",
       nombre: "",
       apellidos: "",
-      poblacion: "",
+      dni: "",
       correo: "",
       telefono: "",
     },
@@ -35,7 +35,7 @@ function ListarEmpleados() {
       id: "",
       nombre: "",
       apellidos: "",
-      poblacion: "",
+      dni: "",
       correo: "",
       telefono: "",
     },
@@ -57,7 +57,7 @@ function ListarEmpleados() {
           id: datosE.id,
           nombre: datosE.nombre,
           apellidos: datosE.apellidos,
-          poblacion: datosE.poblacion,
+          dni: datosE.nif,
           correo: datosE.email,
           telefono: datosE.telefono,
         };
@@ -84,4 +84,4 @@ function ListarEmpleados() {
   </div>)
 }
 
-export default ListarEmpleados;
+export default ListarEmpleadosConProblemas;

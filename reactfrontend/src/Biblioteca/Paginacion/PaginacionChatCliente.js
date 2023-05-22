@@ -141,7 +141,7 @@ const PaginacionChatCliente = ({ data, perPage, setEstadoDinamico, setEstadoEsta
         <td>{option.creadoPor}</td>
         <td>{option.asunto}</td>
         {estaActivo(option.activo)}
-        <td>{option.fCreacion}</td>
+        <td className='campoOpcional'>{option.fCreacion}</td>
         <td>
           <button type="button" className="sinBorde" to="/modificarEmpleado" 
           onClick={modificarCaso}

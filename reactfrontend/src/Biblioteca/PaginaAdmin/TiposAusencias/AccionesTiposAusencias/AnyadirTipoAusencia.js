@@ -50,7 +50,6 @@ function AnyadirTipoAusencia() {
   return (
     <React.Fragment>
         <NavAdmin/>
-        <pre>{JSON.stringify(form,null,3)}</pre>
             <div>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
                     <h1 className='tituloh1noMarBot'>Añadir Tipo Ausencia</h1>

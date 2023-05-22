@@ -10,7 +10,7 @@ function ModificarDatosEmpresa() {
       <NavAdmin/>
       <div className='contenedorSectionFormAccionesUsuario'>
         <h1 className='text-center tituloH1'>Modificar Datos de la empresa</h1>
-        <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottom'>
+        <section className='sectionPequenyo sectionFormAccionesUsuario'>
           <CrearFormModificarDatosEmpresa/>
         </section>
       </div>

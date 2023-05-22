@@ -10,6 +10,10 @@
     margin: 15px;
 }
 
+.tablaMargin{
+    margin: 0 20px 0 0 !important;
+}
+
 @media (max-width:900px) {
     .tablaMediaQuery{
         overflow: scroll;

@@ -65,7 +65,7 @@ function CrearBodyVerTurno() {
 
     if(turno !== undefined && turno.dias !== undefined){
         return(
-            <div>
+            <div className='tablaMargin'>
                 <h1 className='text-center tituloH1'>Turno {turno.descripcion}</h1>
                 <Table striped>
                     <thead>

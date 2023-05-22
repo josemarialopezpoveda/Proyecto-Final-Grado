@@ -158,7 +158,6 @@ function CrearMensaje() {
   return (
     <React.Fragment>
         {anyadirBarraNav()}
-            <pre>{JSON.stringify(mensajeCreado, null, 3)}</pre>
                 <div className=''>
                     <h1 className='text-center tituloH1'>Crear Mensaje</h1>
                     <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>

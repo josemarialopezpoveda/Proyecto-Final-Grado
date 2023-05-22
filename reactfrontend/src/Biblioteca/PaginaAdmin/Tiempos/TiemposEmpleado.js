@@ -61,7 +61,7 @@ function TiemposEmpleado() {
 
     if(tiemposEstaticos !== undefined){
         return(
-            <div>
+            <div className='tablaMediaQuery tablaMargin'>
                 <BuscadorTiempos datosEstaticos={setTiemposEstaticos} datosDinamicos={tiemposDinamicos}/>
                 <PaginacionTiempos data={tiemposEstaticos} perPage={5} 
                 setEstadoEstatico={setTiemposEstaticos} setEstadoDinamico={setTiemposDinamicos}/>
