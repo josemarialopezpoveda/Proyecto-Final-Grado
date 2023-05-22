@@ -22,35 +22,33 @@ class CasoController extends Controller {
         $empresa = $this->getEmpresa($user);
         $caso = Caso::find($casoId);
         if (!$caso) {
-            return response()->json(['error' => 'Caso no encontrado'], 404);
+            return response()->json(['message' => 'Caso no encontrado']);
         }
         if ($user->cif || $user->tipoEmpleado === 'Administrador') {
             $empleado = Empleado::find($caso->empleado_id);
             if ($empleado->empresa_id !== $empresa->id) {
-                return response()->json(['error' => 'El caso no pertenece a la empresa especificada'], 403);
+                return response()->json(['error' => 'El caso no pertenece a la empresa especificada']);
             }
             $mensajes = Mensaje::where('casos_id', $casoId)->get();
             if (count($mensajes) != 0) {
                 $primerMensaje = $mensajes->first();
                 $empleadoEmisor = Empleado::find($primerMensaje->emisor);
                 $empleadoReceptor = Empleado::find($primerMensaje->receptor);
-                $response=[
-                    'idEmisor'=>$empleadoEmisor->id,
-                    'Emisor'=> $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
-                    'idReceptor'=>$empleadoReceptor->id,
-                    'Receptor'=> $empleadoReceptor->nombre . "  " . $empleadoReceptor->apellidos,
+                $response = [
+                    'idEmisor' => $empleadoEmisor->id,
+                    'Emisor' => $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
+                    'idReceptor' => $empleadoReceptor->id,
+                    'Receptor' => $empleadoReceptor->nombre . "  " . $empleadoReceptor->apellidos,
                 ];
                 return response()->json(['caso' => $caso, 'Intervinientes' => $response, 'mensajes' => $mensajes]);
-            } else{
+            } else {
                 $empleadoEmisor = Empleado::find($caso->empleado_id);
-                $response=[
-                    'idEmisor'=>$empleadoEmisor->id,
-                    'Emisor'=> $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
-                    ];
+                $response = [
+                    'idEmisor' => $empleadoEmisor->id,
+                    'Emisor' => $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
+                ];
                 return response()->json(['caso' => $caso, 'Intervinientes' => $response, 'mensajes' => $mensajes]);
             }
-
-
         } else {
             $mensajes = Mensaje::where('casos_id', $casoId)->get();
             $existeUser = false;
@@ -64,17 +62,27 @@ class CasoController extends Controller {
                 $primerMensaje = $mensajes->first();
                 $empleadoEmisor = Empleado::find($primerMensaje->emisor);
                 $empleadoReceptor = Empleado::find($primerMensaje->receptor);
-                $response=[
-                    'idEmisor'=>$empleadoEmisor->id,
-                    'Emisor'=> $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
-                    'idReceptor'=>$empleadoReceptor->id,
-                    'Receptor'=> $empleadoReceptor->nombre . "  " . $empleadoReceptor->apellidos,
+                $response = [
+                    'idEmisor' => $empleadoEmisor->id,
+                    'Emisor' => $empleadoEmisor->nombre . "  " . $empleadoEmisor->apellidos,
+                    'idReceptor' => $empleadoReceptor->id,
+                    'Receptor' => $empleadoReceptor->nombre . "  " . $empleadoReceptor->apellidos,
                 ];
                 return response()->json(['caso' => $caso, 'Intervinientes' => $response, 'mensajes' => $mensajes]);
             } else {
-                return response()->json(['error' => 'no estás autorizado']);
+                return response()->json(['message' => 'no estás autorizado']);
             }
         }
+    }
+
+    public function getEmpresa($user): Empresa
+    {
+        if ($user->cif) {
+            $empresa = Empresa::find($user->id);
+        } else {
+            $empresa = Empresa::find($user->empresa_id);
+        }
+        return $empresa;
     }
 
     /**
@@ -109,6 +117,31 @@ class CasoController extends Controller {
             $data = $this->getArr($casos, $empresa);
         }
         return response()->json($data);
+    }
+
+    /**
+     * @param $casos
+     * @param $empresa
+     * @return array|string[]
+     */
+    public function getArr($casos, $empresa): array
+    {
+        $casos->each(function ($caso) use ($empresa) {
+            $caso->empresa_id = $empresa->id;
+            $caso->nombre_empresa = $empresa->nombreComercial;
+        });
+
+        if (count($casos) != 0) {
+            $data = [
+                'message' => 'Casos de la empresa ' . $empresa->id,
+                'casos' => $casos,
+            ];
+        } else {
+            $data = [
+                'message' => 'La empresa no tiene casos ',
+            ];
+        }
+        return $data;
     }
 
     /**
@@ -155,14 +188,14 @@ class CasoController extends Controller {
                 $data = [
                     'message' => 'Caso creado correctamente',
                     'caso' => $caso,
-                    'empresa_id'=> $empleado->empresa_id,
+                    'empresa_id' => $empleado->empresa_id,
                 ];
             } else {
                 $data = [
                     'message' => 'El ID del empleado no coincide con el usuario autenticado.',
                 ];
             }
-        }else {
+        } else {
             $data = [
                 'message' => 'Un caso solo puede crearlo un Empleado.',
             ];
@@ -170,7 +203,6 @@ class CasoController extends Controller {
 
         return response()->json($data);
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -186,40 +218,44 @@ class CasoController extends Controller {
     public function update(Request $request, $casoId)
     {
         $user = Auth::user();
-        if (!($user instanceof Empresa)){
+        if (!($user instanceof Empresa)) {
+            $caso = Caso::find($casoId);
 
-        $caso = Caso::find($casoId);
+            if ($caso) {
+                $validator = Validator::make($request->all(), [
+                    'asunto' => 'required|string',
+                    'activo' => 'required|boolean'
+                ]);
 
-        if ($caso) {
-            $validator = Validator::make($request->all(), [
-                'asunto' => 'required|string',
-                'activo' => 'required|boolean'
-            ]);
-
-            if ($validator->fails()) {
-                return [
-                    'message' => 'Error, hay campos con errores de validación',
-                    'errores' => $validator->errors()->all()
-                ];
-            }
-            /*
-             * Un caso puede modificarlo el empleado que lo creo ($caso->empleado_id) o un administrador de la empresa.
-             * Hay que comprobar que el usuario logueado sea de tipo empleado.
-             */
-            if ($user->nif) {
-                $esPropietario = $user->id == $caso->empleado->id;
-                $esAdmin = $user->tipoEmpleado == "Administrador" && $user->empresa_id == $caso->empleado->empresa_id;
-
-                if ($esPropietario || $esAdmin) {
-                    $caso->asunto = $request['asunto'];
-                    $caso->activo = $request['activo'];
-                    $caso->save();
-                    $data = [
-                        'message' => 'Caso actualizado correctamente',
-                        'id empleado que actualiza' => $user->id,
-                        'tipo empleado que actualiza' => $user->tipoEmpleado,
-                        'caso' => $caso,
+                if ($validator->fails()) {
+                    return [
+                        'message' => 'Error, hay campos con errores de validación',
+                        'errores' => $validator->errors()->all()
                     ];
+                }
+                /*
+                 * Un caso puede modificarlo el empleado que lo creo ($caso->empleado_id) o un administrador de la empresa.
+                 * Hay que comprobar que el usuario logueado sea de tipo empleado.
+                 */
+                if ($user->nif) {
+                    $esPropietario = $user->id == $caso->empleado->id;
+                    $esAdmin = $user->tipoEmpleado == "Administrador" && $user->empresa_id == $caso->empleado->empresa_id;
+
+                    if ($esPropietario || $esAdmin) {
+                        $caso->asunto = $request['asunto'];
+                        $caso->activo = $request['activo'];
+                        $caso->save();
+                        $data = [
+                            'message' => 'Caso actualizado correctamente',
+                            'id empleado que actualiza' => $user->id,
+                            'tipo empleado que actualiza' => $user->tipoEmpleado,
+                            'caso' => $caso,
+                        ];
+                    } else {
+                        $data = [
+                            'message' => 'No estás autorizado.',
+                        ];
+                    }
                 } else {
                     $data = [
                         'message' => 'No estás autorizado.',
@@ -227,21 +263,14 @@ class CasoController extends Controller {
                 }
             } else {
                 $data = [
-                    'message' => 'No estás autorizado.',
+                    'message' => 'Caso no existe'
                 ];
             }
         } else {
             $data = [
-                'message' => 'Caso no existe'
+                'message' => 'No estás autorizo. Los casos son los pueden modificar los Empleados'
             ];
         }
-
-    }
-    else {
-        $data = [
-            'message' => 'No estás autorizo. Los casos son los pueden modificar los Empleados'
-        ];
-    }
         return response()->json($data);
     }
 
@@ -285,46 +314,11 @@ class CasoController extends Controller {
                     'message' => 'Caso no existe'
                 ];
             }
-        }else {
+        } else {
             $data = [
                 'message' => 'Un caso solo puede eliminarlo un Empleado.'
             ];
         }
         return response()->json($data);
-    }
-
-    /**
-     * @param $casos
-     * @param $empresa
-     * @return array|string[]
-     */
-    public function getArr($casos, $empresa): array
-    {
-        $casos->each(function ($caso) use ($empresa) {
-            $caso->empresa_id = $empresa->id;
-            $caso->nombre_empresa = $empresa->nombreComercial;
-        });
-
-        if (count($casos) != 0) {
-            $data = [
-                'message' => 'Casos de la empresa ' . $empresa->id,
-                'casos' => $casos,
-            ];
-        } else {
-            $data = [
-                'message' => 'La empresa no tiene casos ',
-            ];
-        }
-        return $data;
-    }
-
-    public function getEmpresa($user): Empresa
-    {
-        if ($user->cif) {
-            $empresa = Empresa::find($user->id);
-        } else {
-            $empresa = Empresa::find($user->empresa_id);
-        }
-        return $empresa;
     }
 }

@@ -388,4 +388,24 @@ class TurnoController extends Controller {
             return response()->json($data);
         }
     }
+
+    public function incidenciasTurnos(): JsonResponse
+    {
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+        if (is_numeric($empresaId)) {
+            $sinTurnoActivo = Auxiliares::obtenerEmpleadosSinTurnoActivo($empresaId);
+            $turnoCaducado = Auxiliares::obtenerEmpleadosTurnoCaducado($empresaId);
+            return response()->json([
+                "mensaje" => "Empleados con incidencias en los turnos.",
+                'empresa' => $empresaId,
+                'empleadosSinTurnoActivo' => $sinTurnoActivo,
+                'turnoCaducado' => $turnoCaducado,
+            ]);
+        } else {
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data);
+        }
+    }
+
 }
