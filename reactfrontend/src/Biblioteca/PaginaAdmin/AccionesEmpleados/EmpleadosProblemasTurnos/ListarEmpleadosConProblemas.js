@@ -1,70 +1,53 @@
 //Importamos todos los .js que necesitamos para esta práctica.
 import React, { useState, useEffect } from "react";
 import Table from 'react-bootstrap/Table';
-import {
-  generarUUID,
-  peticionDelete,
-  peticionGetAuth,
-  mostrarAlertaCorrecta,
-  mostrarAlertaErronea,
-} from "../../../FuncionesAuxiliares/Funciones";
+import {peticionGetAuth} from "../../../FuncionesAuxiliares/Funciones";
 import { useNavigate } from "react-router-dom";
-import SweetAlert from "sweetalert2";
-import { Link } from "react-router-dom";
-import BuscadorEmpleados from "Biblioteca/Buscador/BuscadorEmpleados";
-import PaginationEmpleados from "Biblioteca/Paginacion/PaginationEmpleados";
 import { URL_API } from "services/http/const";
+import PaginationEmpleadosProblemas from "Biblioteca/Paginacion/PaginationEmpleadosProblemas";
+import BuscadorEmpleadosProblemas from "Biblioteca/Buscador/BuscadorEmpleadosProblemas";
 
 function ListarEmpleadosConProblemas() {
   //Creamos la variable para el uso del useNavigate.
   const Navigate = useNavigate();
   //Creamos la variable para el contenido de los empleados estaticos.
-  const [empleadosDinamicos, setEmpleadosDinamicos] = useState([
-    {
-      id: "",
-      nombre: "",
-      apellidos: "",
-      dni: "",
-      correo: "",
-      telefono: "",
-    },
-  ]);
+  const [empleadosDinamicos, setEmpleadosDinamicos] = useState([]);
   //Creamos la variable para el contenido de los empleados dinamicos.
-  const [empleadosEstaticos, setEmpleadosEstaticos] = useState([
-    {
-      id: "",
-      nombre: "",
-      apellidos: "",
-      dni: "",
-      correo: "",
-      telefono: "",
-    },
-  ]);
+  const [empleadosEstaticos, setEmpleadosEstaticos] = useState([]);
+
   //Función para recoger todos los empleados y los guarda en el estado.
   const recoleccionDatos = async () => {
+    setEmpleadosEstaticos([]);
+    setEmpleadosDinamicos([]);
     const header = {
       headers: {
         Accept: "application/json",
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
-    console.log(URL_API + "empresa/" + localStorage.getItem("id"))
-    let datosEmpresa = await peticionGetAuth(URL_API + "empresa/" + localStorage.getItem("id"), header);
-    console.log(datosEmpresa)
-    if (datosEmpresa.data.empresa.empleados.length !== 0) {
-      var todosDatosEmpresa = datosEmpresa.data.empresa.empleados.map((datosE) => {
-        var newEmpresa = {
-          id: datosE.id,
-          nombre: datosE.nombre,
-          apellidos: datosE.apellidos,
-          dni: datosE.nif,
-          correo: datosE.email,
-          telefono: datosE.telefono,
-        };
-        return newEmpresa;
-      });
-      setEmpleadosEstaticos(todosDatosEmpresa);
-      setEmpleadosDinamicos(todosDatosEmpresa);
+    let datosEmpleados = await peticionGetAuth(URL_API + "incidenciasTurnos", header);
+    console.log(datosEmpleados)
+    let datosTotales = [];
+    if(datosEmpleados.data.empleadosSinTurnoActivo !== undefined && datosEmpleados.data.empleadosSinTurnoActivo.length !== 0){
+      datosEmpleados.data.empleadosSinTurnoActivo.map((datos)=>{
+        datosTotales.push({
+            nombre: datos.nombre,
+            apellidos: datos.apellidos,
+            problema: "Este empleado no tiene ningún turno activo"
+        })
+      })
+    }else if(datosEmpleados.data.turnoCaducado !== undefined && datosEmpleados.data.turnoCaducado.length !== 0){
+      datosEmpleados.data.turnoCaducado.map((datos)=>{
+        datosTotales.push({
+          nombre: datos.nombre,
+          apellidos: datos.apellidos,
+          problema: "Este empleado no tiene ningún turno activo"
+        })
+      })
+    }
+    if(datosTotales !== undefined){
+      setEmpleadosDinamicos(datosTotales);
+      setEmpleadosEstaticos(datosTotales);
     }
   };
 
@@ -76,9 +59,9 @@ function ListarEmpleadosConProblemas() {
   return(
   
   <div>
-  <BuscadorEmpleados datosEstaticos={setEmpleadosEstaticos} datosDinamicos={empleadosDinamicos}/>
+  <BuscadorEmpleadosProblemas datosEstaticos={setEmpleadosEstaticos} datosDinamicos={empleadosDinamicos}/>
     <div className='TablaDatosUser'>
-      <PaginationEmpleados data={empleadosEstaticos} perPage={5}
+      <PaginationEmpleadosProblemas data={empleadosEstaticos} perPage={5}
             setEstadoEstatico={setEmpleadosEstaticos} setEstadoDinamico={setEmpleadosDinamicos}/>
     </div>
   </div>)

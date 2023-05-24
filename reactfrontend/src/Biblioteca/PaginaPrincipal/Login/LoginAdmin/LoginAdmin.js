@@ -47,8 +47,6 @@ function LoginAdmin() {
       } else {
         localStorage.clear();
         mostrarAlertaCorrecta("¡Bienvenidos a TimeMana!", "Todo correcto y funcionando perfectamenteComo empresa comprometida con la productividad y el éxito, te damos la bienvenida a nuestra plataforma. Aquí encontrarás todas las herramientas necesarias para optimizar la gestión del tiempo de tu equipo, maximizar la eficiencia y alcanzar tus metas corporativas. ", "7000");
-
-        mostrarAlertaCorrecta("Empleados sin turbo Activo","Nombre Y Apellidos", "7000");
         localStorage.setItem("token", peticion.data.token);
         localStorage.setItem("tipoToken", peticion.data.token_type);
         localStorage.setItem("id", peticion.data.empresa);

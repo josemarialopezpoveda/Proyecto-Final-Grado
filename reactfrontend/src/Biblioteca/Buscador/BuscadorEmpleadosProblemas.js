@@ -2,7 +2,7 @@ import {useState} from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./Buscador.css"
 
-function BuscadorEmpleados(props) {
+function BuscadorEmpleadosProblemas(props) {
   const [busqueda, setBusqueda]= useState(""); // Texto a buscar
 
 const handleChange=e=>{
@@ -13,10 +13,8 @@ const handleChange=e=>{
 const filtrar=(terminoBusqueda)=>{
   var resultadosBusqueda=props.datosDinamicos.filter((elemento)=>{
     if(elemento.apellidos.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-    elemento.poblacion.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
     elemento.nombre.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-    elemento.correo.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-    elemento.telefono.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())){
+    elemento.problema.toString().toLowerCase().includes(terminoBusqueda.toLowerCase())){
       return elemento;
     }
   });
@@ -37,4 +35,4 @@ const filtrar=(terminoBusqueda)=>{
   );
 }
 
-export default BuscadorEmpleados;
+export default BuscadorEmpleadosProblemas;
