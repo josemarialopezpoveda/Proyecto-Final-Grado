@@ -33,15 +33,18 @@ function ListarEmpleadosConProblemas() {
         datosTotales.push({
             nombre: datos.nombre,
             apellidos: datos.apellidos,
-            problema: "Este empleado no tiene ningún turno activo"
+            problema: "Este empleado no tiene ningún turno activo",
+            id_empleado: datos.id
         })
       })
-    }else if(datosEmpleados.data.turnoCaducado !== undefined && datosEmpleados.data.turnoCaducado.length !== 0){
+    }
+    if(datosEmpleados.data.turnoCaducado !== undefined && datosEmpleados.data.turnoCaducado.length !== 0){
       datosEmpleados.data.turnoCaducado.map((datos)=>{
         datosTotales.push({
           nombre: datos.nombre,
           apellidos: datos.apellidos,
-          problema: "Este empleado no tiene ningún turno activo"
+          problema: "Este empleado tiene el turno caducado",
+          id_empleado: datos.id
         })
       })
     }
@@ -59,9 +62,9 @@ function ListarEmpleadosConProblemas() {
   return(
   
   <div>
-  <BuscadorEmpleadosProblemas datosEstaticos={setEmpleadosEstaticos} datosDinamicos={empleadosDinamicos}/>
+    <BuscadorEmpleadosProblemas datosEstaticos={setEmpleadosEstaticos} datosDinamicos={empleadosDinamicos}/>
     <div className='TablaDatosUser'>
-      <PaginationEmpleadosProblemas data={empleadosEstaticos} perPage={5}
+      <PaginationEmpleadosProblemas data={empleadosEstaticos} perPage={8}
             setEstadoEstatico={setEmpleadosEstaticos} setEstadoDinamico={setEmpleadosDinamicos}/>
     </div>
   </div>)

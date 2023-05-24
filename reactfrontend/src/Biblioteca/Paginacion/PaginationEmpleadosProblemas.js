@@ -21,33 +21,6 @@ const PaginationEmpleadosProblemas = ({ data, perPage, setEstadoDinamico, setEst
     Navigate("/pagInfoClienteSel");
   };
 
-  //Función para recoger todos los empleados y los guarda en el estado.
-  const recoleccionDatos = async () => {
-    const header = {
-      headers: {
-        Accept: "application/json",
-        Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-      },
-    };
-    let datosEmpresa = await peticionGetAuth(URL_API + "empresa/" + localStorage.getItem("id"), header);
-    console.log(datosEmpresa)
-    // if (datosEmpresa.data.empleados.length !== 0) {
-    //   var todosDatosEmpresa = datosEmpresa.data.empleados.map((datosE) => {
-    //     var newEmpresa = {
-    //       id: datosE.id,
-    //       nombre: datosE.nombre,
-    //       apellidos: datosE.apellidos,
-    //       poblacion: datosE.poblacion,
-    //       correo: datosE.email,
-    //       telefono: datosE.telefono,
-    //     };
-    //     return newEmpresa;
-    //   });
-    //   setEstadoDinamico(todosDatosEmpresa);
-    //   setEstadoEstatico(todosDatosEmpresa);
-    // }
-  };
-
   const seleccionarBotonArrancar = () =>{
     let botonesPaginacion = document.getElementsByClassName("botonPaginacion");
     if(botonesPaginacion.length !== 0){      
@@ -58,40 +31,6 @@ const PaginationEmpleadosProblemas = ({ data, perPage, setEstadoDinamico, setEst
   useEffect(()=>{
     seleccionarBotonArrancar();
   },[])
-
-  //Función que borra el empleado e informa si todo ha ido bien o ha ocurrido algún error inesperado.
-  const borrarEmpleado = async (e) => {
-    SweetAlert.fire({
-      title: "¿Estás seguro que quieres eliminar este empleado?",
-      text: "Los datos se eliminarán definitivamente",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
-    }).then(async (resultado) => {
-      if (resultado.value) {
-        try {
-          const header = {
-            headers: {
-              Accept: "application/json",
-              Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-            },
-          };
-          let url = URL_API + "empleados/";
-          let peticion = await peticionDelete(`${url}${e.target.id}`, header);
-          if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
-            mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
-          } else {
-            mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
-            Navigate("/accionesEmpleados");
-            recoleccionDatos();            
-          }
-        } catch (error) {
-          mostrarAlertaErronea(error.message, error.stack, null);
-        }
-      }
-    });
-  };
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -123,7 +62,7 @@ const PaginationEmpleadosProblemas = ({ data, perPage, setEstadoDinamico, setEst
             <button type="button"
               title="Ver Información Del Empleado"
               onClick={verInfo}
-              id={option.id}
+              id={option.id_empleado}
               className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
               Ver Info.
             </button>
