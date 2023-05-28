@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\Auxiliares;
 use App\Models\Caso;
 use App\Models\Empleado;
 use App\Models\Empresa;
@@ -142,6 +143,49 @@ class CasoController extends Controller {
             ];
         }
         return $data;
+    }
+
+    public function casosDeUnEmpleado($empleadoId)
+    {
+        $user = Auth::user();
+        $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
+
+        if ($loginOk) {
+            $casos = Caso::whereIn('id', function ($query) use ($empleadoId) {
+                $query->select('casos_id')
+                    ->from('mensajes')
+                    ->where(function ($query) use ($empleadoId) {
+                        $query->where('emisor', $empleadoId)
+                            ->orWhere('receptor', $empleadoId);
+                    });
+            })
+                ->orWhere(function ($query) use ($empleadoId) {
+                    $query->whereNotExists(function ($query) use ($empleadoId) {
+                        $query->select('casos_id')
+                            ->from('mensajes')
+                            ->where('casos.id', '=', 'mensajes.casos_id')
+                            ->where(function ($query) use ($empleadoId) {
+                                $query->where('emisor', $empleadoId)
+                                    ->orWhere('receptor', $empleadoId);
+                            });
+                    });
+                    $query->where('empleado_id', $empleadoId);
+                })
+                ->get();
+            if (count($casos) > 0) {
+                $data = [
+                    'message' => 'Todos los casos en los que participa el empleado ' . $empleadoId,
+                    '$casos' => $casos,
+                ];
+                return response()->json($data);
+            } else {
+                $data = ['message' => 'El empleado ' . $empleadoId . ' no tiene casos.',];
+                return response()->json($data);
+            }
+        } else {
+            $data = ['message' => $loginOk['message'],];
+            return response()->json($data);
+        }
     }
 
     /**

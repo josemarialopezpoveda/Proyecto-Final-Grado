@@ -3007,6 +3007,55 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "CASOS GET TODO LOS CASOS por IDEMPLEADO",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "24|Dg5qCkdaRXGdKoeEoOCGX1eth2xShMPIPBATuRRD",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/casosDeUnEmpleado/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"casosDeUnEmpleado",
+						"2"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

@@ -90,6 +90,7 @@ Route::middleware('auth:sanctum')->group(
         //Casos
         Route::get('/casos/{casoId}', [CasoController::class, 'show']);
         Route::get('/casos', [CasoController::class, 'index']);
+        Route::get('/casosDeUnEmpleado/{empleadoId}', [CasoController::class, 'casosDeUnEmpleado']);
         Route::post('/casos', [CasoController::class, 'store']);
         Route::put('/casos/{casoId}', [CasoController::class, 'update']);
         Route::delete('/casos/{casoId}', [CasoController::class, 'destroy']);

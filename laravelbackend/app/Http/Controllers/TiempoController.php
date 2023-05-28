@@ -455,7 +455,7 @@ class TiempoController extends Controller {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
-        if ($loginOk === true) {
+        if ($loginOk) {
             $hoy = Carbon::now();
             $horario = [];
             $empleado = DB::table('empleados')
