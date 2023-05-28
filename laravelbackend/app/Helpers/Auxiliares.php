@@ -203,34 +203,62 @@ class Auxiliares {
         }
     }
 
+//    public static function obtenerEmpleadosSinTurnoActivo($empresaId)
+//    {
+//        $resultado = Empleado::select('empleados.empresa_id', 'empleados.id', 'empleados.nombre', 'empleados.apellidos')
+//            ->where('empresa_id', $empresaId)
+//            ->where(function ($query) {
+//                $query->whereNotIn('id', function ($subquery) {
+//                    $subquery->select('empleado_id')
+//                        ->from('empleados_turnos')
+//                        ->where('activo', true);
+//                })
+//                    ->orWhereNotExists(function ($subquery) {
+//                        $subquery->select('empleado_id')
+//                            ->from('empleados_turnos')
+//                            ->whereColumn('empleados_turnos.empleado_id', 'empleados.id');
+//                    });
+//            })
+//            ->get();
+//
+//        return $resultado;
+//    }
+
     public static function obtenerEmpleadosSinTurnoActivo($empresaId)
     {
-        $resultado = Empleado::select('empresa_id', 'id', 'nombre', 'apellidos')
-            ->where('empresa_id', $empresaId)
-            ->where(function ($query) {
-                $query->whereNotIn('id', function ($subquery) {
-                    $subquery->select('empleado_id')
-                        ->from('empleados_turnos')
-                        ->where('activo', true);
-                })
-                    ->orWhereNotExists(function ($subquery) {
-                        $subquery->select('empleado_id')
-                            ->from('empleados_turnos')
-                            ->whereColumn('empleados_turnos.empleado_id', 'empleados.id');
-                    });
+        $resultado = Empleado::select(
+            'empleados.empresa_id',
+            'empleados.id as empleado_id',
+            'empleados.nombre',
+            'empleados.apellidos',
+            DB::raw(
+                '(SELECT empleados_turnos.id FROM empleados_turnos WHERE empleados_turnos.empleado_id = empleados.id AND empleados_turnos.activo = 0 ORDER BY empleados_turnos.fechaFinTurno DESC LIMIT 1) as empleados_turnos_id'
+            ),
+            DB::raw(
+                '(SELECT empleados_turnos.fechaFinTurno FROM empleados_turnos WHERE empleados_turnos.empleado_id = empleados.id AND empleados_turnos.activo = 0 ORDER BY empleados_turnos.fechaFinTurno DESC LIMIT 1) as fechaFinTurno'
+            )
+        )
+            ->where('empleados.empresa_id', $empresaId)
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('empleados_turnos')
+                    ->whereColumn('empleados_turnos.empleado_id', 'empleados.id')
+                    ->where('empleados_turnos.activo', 1);
             })
             ->get();
 
         return $resultado;
     }
 
+
     public static function obtenerEmpleadosTurnoCaducado($empresaId)
     {
         $resultado = Empleado::select(
             'empleados.empresa_id',
-            'empleados.id',
+            'empleados.id as empleado_id',
             'empleados.nombre',
             'empleados.apellidos',
+            'empleados_turnos.id as empleados_turnos_id',
             'empleados_turnos.fechaFinTurno'
         )
             ->join('empleados_turnos', 'empleados.id', '=', 'empleados_turnos.empleado_id')
@@ -283,9 +311,6 @@ class Auxiliares {
         );
         // Obtener el turno recién asignado
         $turnoAsignado = Turno::find($request->turno_id);
-        // Asignar el turno al empleado
-        //$empleado->turnos->push($turnoAsignado);
-        //return $turnoAsignado;
         $data = [
             'message' => 'Turno asignado correctamente',
             'empleado' => $empleado,

@@ -9,6 +9,7 @@ use App\Models\Turno;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -377,6 +378,43 @@ class EmpleadoController extends Controller {
         }
     }
 
+    public function modificarTurnoAEmpleado(Request $request, $empleadoId)
+    {
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+        if (is_numeric($empresaId)) {
+            $empleado = Empleado::find($empleadoId);
+            if ($empleado && $empleado->empresa_id === $empresaId) {
+                $turno = $empleado->turnos->where('pivot.activo', true)->first();
+                if ($request->turno_id === $turno["id"] &&
+                    $request->empleados_turnos_id === $turno["pivot"]["id"] &&
+                    $request->fechaInicioTurno === $turno["pivot"]["fechaInicioTurno"] &&
+                    $request->fechaFinTurno >= date("Y-m-d")) {
+                    $empleado->turnos()->updateExistingPivot($request->turno_id, [
+                        'fechaInicioTurno' => $request->fechaInicioTurno,
+                        'fechaFinTurno' => $request->fechaFinTurno,
+                        'activo' => true
+                    ]);
+                    // Obtener el turno modificado
+                    $turnoModificado = $empleado->turnos->where('pivot.activo', true)->first();
+                    $data = [
+                        'message' => 'Turno actualizado correctamente.',
+                        '$turnoModificado' => $turnoModificado,
+                    ];
+                    return response()->json($data);
+                } else {
+                    $data = ['message' => 'Errores de validación.',];
+                    return response()->json($data);
+                }
+            } else {
+                $data = ['message' => 'El empleado no existe.',];
+                return response()->json($data);
+            }
+        } else {
+            $data = ['message' => $empresaId['message'],];
+            return response()->json($data);
+        }
+    }
 
     public function asignarTurnoAEmpleado(Request $request)
     {
@@ -442,7 +480,6 @@ class EmpleadoController extends Controller {
                         }
                     }
                 }
-
                 $turnoActivo = $empleado->turnos->where('pivot.activo', true)->first();
                 if ($turnoActivo) {
                     $turnos = Turno::with('dias')->find($turnoActivo->id);
@@ -466,6 +503,107 @@ class EmpleadoController extends Controller {
             }
         } else {
             $data = ['message' => $loginOk['message'],];
+            return response()->json($data);
+        }
+    }
+
+    public function todosLosTurnos($empleadoId): \Illuminate\Http\JsonResponse
+    {
+        $user = Auth::user();
+        $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
+        if ($loginOk) {
+            $empleado = Empleado::find($empleadoId);
+            if ($empleado) {
+                if ($user instanceof Empresa) {
+                    if ($user->getKey() != $empleado->empresa_id) {
+                        $data = ['message' => 'El empleado con el ID proporcionado no pertenece a la empresa'];
+                        return response()->json($data);
+                    }
+                } else {
+                    if ($user instanceof Empleado) {
+                        if ($user->empresa_id != $empleado->empresa_id) {
+                            $data = ['message' => 'La empresa del empleado proporcionado no coincide con la empresa del usuario autenticado.'];
+                            return response()->json($data);
+                        }
+                        if ($user->tipoEmpleado != "Administrador" && $user->getKey() != $empleadoId) {
+                            $data = ['message' => 'No estás autorizado.'];
+                            return response()->json($data);
+                        }
+                    }
+                }
+
+                $turnoEmpleado = DB::table('empleados_turnos')
+                    ->join('empleados', 'empleados_turnos.empleado_id', '=', 'empleados.id')
+                    ->select('empleados_turnos.*', 'empleados.nombre', 'empleados.apellidos')
+                    ->where('empleados_turnos.empleado_id', $empleadoId)
+                    ->get();
+                $turnoEmpleado = collect($turnoEmpleado)->map(function ($item) {
+                    return collect($item)->only(
+                        [
+                            'id',
+                            'empleado_id',
+                            'turno_id',
+                            'fechaInicioTurno',
+                            'fechaFinTurno',
+                            'activo',
+                            'nombre',
+                            'apellidos'
+                        ]
+                    );
+                })->all();
+                $turnoEmpleado = collect($turnoEmpleado)->map(function ($item) {
+                    $item['empleados_turnos_id'] = $item['id'];
+                    unset($item['id']);
+                    return $item;
+                })->all();
+
+
+                if ($turnoEmpleado) {
+                    $data = [
+                        'message' => 'Todo los turnos del empleado',
+                        'turnoSEmpleado' => $turnoEmpleado,
+                    ];
+                    return response()->json($data);
+                } else {
+                    $data = ['message' => 'No se encontró turno activo para el empleado'];
+                    return response()->json($data);
+                }
+            } else {
+                $data = ['message' => 'No se encontró el empleado con el ID proporcionado'];
+                return response()->json($data);
+            }
+        } else {
+            $data = ['message' => $loginOk['message'],];
+            return response()->json($data);
+        }
+    }
+
+    public function turnoEmpleado($turnoEmpleadoId)
+    {
+        $user = Auth::user();
+        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+        if (is_numeric($empresaId)) {
+            $empleado = Empleado::join('empleados_turnos', 'empleados.id', '=', 'empleados_turnos.empleado_id')
+                ->where('empleados_turnos.id', $turnoEmpleadoId)
+                ->select('empleados.*')
+                ->first();
+
+            if ($empleado && $empleado->empresa_id === $empresaId) {
+                $turnoEmpleado = DB::table('empleados_turnos')
+                    ->join('empleados', 'empleados_turnos.empleado_id', '=', 'empleados.id')
+                    ->select('empleados_turnos.*', 'empleados.nombre', 'empleados.apellidos')
+                    ->where('empleados_turnos.id', $turnoEmpleadoId)
+                    ->where('empleados.empresa_id', $empresaId)
+                    ->first();
+                $turnoEmpleado = collect($turnoEmpleado)->except(['created_at', 'updated_at']);
+                $data = ['turnoEmpleado' => $turnoEmpleado,];
+                return response()->json($data);
+            } else {
+                $data = ['message' => 'El turno no corresponde a la empresa.',];
+                return response()->json($data);
+            }
+        } else {
+            $data = ['message' => $empresaId['message'],];
             return response()->json($data);
         }
     }

@@ -12,8 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  *
  */
-class Empleado extends Model
-{
+class Empleado extends Model {
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
@@ -61,7 +60,7 @@ class Empleado extends Model
     public function turnos(): BelongsToMany
     {
         return $this->belongsToMany(Turno::class, 'empleados_turnos', 'empleado_id', 'turno_id')
-            ->withPivot('fechaInicioTurno', 'fechaFinTurno', 'activo'); // Agrega los campos de la tabla pivot
+            ->withPivot('id', 'fechaInicioTurno', 'fechaFinTurno', 'activo'); // Agrega los campos de la tabla pivot
     }
 
     public function tiempos(): \Illuminate\Database\Eloquent\Relations\HasMany

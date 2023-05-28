@@ -67,6 +67,7 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/empleados', [EmpleadoController::class, 'index']);
         Route::get('/empleado/{empleadoId}', [EmpleadoController::class, 'show']);
         Route::get('/turnosEmpleado/{empleadoId}', [EmpleadoController::class, 'turnoActivoEmpleado']);
+        Route::get('/todosLosTurnos/{empleadoId}', [EmpleadoController::class, 'todosLosTurnos']);
         Route::post('/empleados', [EmpleadoController::class, 'store']);
         Route::put('/empleados/{empleados}', [EmpleadoController::class, 'update']);
         Route::delete('/empleados/{empleadoId}', [EmpleadoController::class, 'destroy']);
@@ -110,11 +111,13 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/incidenciasTurnos', [TurnoController::class, 'incidenciasTurnos']);
         Route::post('/turnos', [TurnoController::class, 'store']);
         Route::put('/turnos/{turno}', [TurnoController::class, 'update']);
-        Route::delete('eliminarTurnoAEmpleado', [TurnoController::class, 'eliminarTurnoAEmpleado']);
+        Route::delete('eliminarTurnoAEmpleado/{turnoEmpleadoId}', [TurnoController::class, 'eliminarTurnoAEmpleado']);
         Route::delete('/turnos/{turnoId}', [TurnoController::class, 'destroy']);
 
         // Empleado_Turno
+        Route::get('/turnoEmpleado/{turnoEmpleadoId}', [EmpleadoController::class, 'turnoEmpleado']);
         Route::post('/asignarTurnoAEmpleado', [EmpleadoController::class, 'asignarTurnoAEmpleado']);
+        Route::put('/modificarTurnoAEmpleado/{empleadoId}', [EmpleadoController::class, 'modificarTurnoAEmpleado']);
 
         //Ausencias
         Route::get('/ausencias', [AusenciaController::class, 'index']);

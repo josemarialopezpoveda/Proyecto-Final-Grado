@@ -387,7 +387,7 @@ class TiempoController extends Controller {
                 foreach ($empleados as $empleado) {
                     $turnoActivo = DB::table('empleados_turnos')
                         ->where('empleado_id', $empleado->empleado_id)
-                        ->where('activo', true)
+                        //->where('activo', true)
                         ->first();
                     $diaSemanaNumero = Carbon::parse($empleado->inicio)->format('N');
                     $dia = DB::table('dias')
@@ -553,23 +553,23 @@ class TiempoController extends Controller {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $user = Auth::user();
         $primaryKey = $user->getKey();
         // Soy un empleado y mi id coincide con el id del empleado de la request.
         if ($user instanceof Empleado && $primaryKey == $request->empleado_id) {
-            return $this->extracted($request);
+            return $this->insertarTiempo($request);
             // Si soy empresa o empleado administrador y quiero insertar un tiempo a otro empleado de la empresa.
         } elseif ($user instanceof Empresa || $user->tipoEmpleado === "Administrador") {
-            //$empleado = DB::table('empleados')->where('id', $request->empleado_id)->first();
-            //$empresa = DB::table('empresas')->where('id', )
-            //if ($empleado->empresa_id === $user->empresa_id || ) {
-            return $this->extracted($request);
-            //} else {
-            //  $data = ['message' => 'El empleado no pertenece a la empresa.',];
-            //return response()->json($data);
-            // }
+            $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+            $empleado = DB::table('empleados')->where('id', $request->empleado_id)->first();
+            if ($empleado && $empleado->empresa_id === $empresaId) {
+                return $this->insertarTiempo($request);
+            } else {
+                $data = ['message' => 'El empleado no pertenece a la empresa.',];
+                return response()->json($data);
+            }
         } else {
             $data = ['message' => 'No autorizado',];
             return response()->json($data);
@@ -580,7 +580,7 @@ class TiempoController extends Controller {
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function extracted(Request $request): \Illuminate\Http\JsonResponse
+    public function insertarTiempo(Request $request): \Illuminate\Http\JsonResponse
     {
         $tiempo = new Tiempo();
         $tiempo->empleado_id = $request->empleado_id;
@@ -610,45 +610,20 @@ class TiempoController extends Controller {
         if ($tiempo) {
             // Comprobar que el tiempo corresponda con el empleado
             if ($request->empleado_id === $tiempo->empleado_id) {
-                if ($user instanceof Empresa) {
-                    $empresa = DB::table('empresas')->where('id', $primaryKey)->first();
-                    $empleado = Empleado::where('id', $request->empleado_id)
-                        ->where('empresa_id', $empresa->id)
-                        ->first();
-                    if ($empleado) {
-                        //if (Auxiliares::esElMismoDia($request->inicio, $tiempo->inicio)){
-                        $tiempo->inicio = $request->inicio;
-                        $tiempo->fin = $request->fin;
-                        $tiempo->save();
-                        $data = [
-                            'message' => 'Tiempo actualizado correctamente',
-                            'tiempo' => $tiempo
-                        ];
-                        return response()->json($data);
-                    } else {
-                        $data = ['message' => 'Error, el empleado no pertenece a la empresa',];
-                        return response()->json($data);
-                    }
-                } else {
-                    if ($user instanceof Empleado) {
+                if ($tiempo->inicio < $request->fin) {
+                    if ($user instanceof Empresa) {
+                        $empresa = DB::table('empresas')->where('id', $primaryKey)->first();
                         $empleado = Empleado::where('id', $request->empleado_id)
-                            ->where('empresa_id', $user->empresa_id)
+                            ->where('empresa_id', $empresa->id)
                             ->first();
-                        if ($empleado && $empleado->tipoEmpleado === "Administrador") {
+                        if ($empleado) {
+                            //if (Auxiliares::esElMismoDia($request->inicio, $tiempo->inicio)){
                             $tiempo->inicio = $request->inicio;
                             $tiempo->fin = $request->fin;
                             $tiempo->save();
                             $data = [
                                 'message' => 'Tiempo actualizado correctamente',
-                                'tiempo' => $tiempo,
-                            ];
-                            return response()->json($data);
-                        } elseif ($empleado && $empleado->tipoEmpleado === "Trabajador") {
-                            $tiempo->fin = $request->fin;
-                            $tiempo->save();
-                            $data = [
-                                'message' => 'Tiempo actualizado correctamente',
-                                'tiempo' => $tiempo,
+                                'tiempo' => $tiempo
                             ];
                             return response()->json($data);
                         } else {
@@ -656,11 +631,41 @@ class TiempoController extends Controller {
                             return response()->json($data);
                         }
                     } else {
-                        $data = [
-                            'message' => 'Error no controlado',
-                        ];
-                        return response()->json($data);
+                        if ($user instanceof Empleado) {
+                            $empleado = Empleado::where('id', $request->empleado_id)
+                                ->where('empresa_id', $user->empresa_id)
+                                ->first();
+                            if ($empleado && $empleado->tipoEmpleado === "Administrador") {
+                                $tiempo->inicio = $request->inicio;
+                                $tiempo->fin = $request->fin;
+                                $tiempo->save();
+                                $data = [
+                                    'message' => 'Tiempo actualizado correctamente',
+                                    'tiempo' => $tiempo,
+                                ];
+                                return response()->json($data);
+                            } elseif ($empleado && $empleado->tipoEmpleado === "Trabajador") {
+                                $tiempo->fin = $request->fin;
+                                $tiempo->save();
+                                $data = [
+                                    'message' => 'Tiempo actualizado correctamente',
+                                    'tiempo' => $tiempo,
+                                ];
+                                return response()->json($data);
+                            } else {
+                                $data = ['message' => 'Error, el empleado no pertenece a la empresa',];
+                                return response()->json($data);
+                            }
+                        } else {
+                            $data = [
+                                'message' => 'Error no controlado',
+                            ];
+                            return response()->json($data);
+                        }
                     }
+                } else {
+                    $data = ['message' => 'Error el tiempo de salida no puede ser menor que el tiempo de entrada.',];
+                    return response()->json($data);
                 }
             } else {
                 $data = ['message' => 'Error el tiempo no corresponde con el empleado',];
@@ -720,9 +725,7 @@ class TiempoController extends Controller {
                 $empleado = DB::table('empleados')->where('id', $tiempo->empleado_id)->first();
                 // Comprobar que el empleado pertenezca a la empresa del usuario logueado.
                 if ($empleado->empresa_id === $empresaId) {
-                    $data = [
-                        'tiempo' => $tiempo,
-                    ];
+                    $data = ['tiempo' => $tiempo,];
                     return response()->json($data);
                 } else {
                     $data = ['message' => 'El empleado no pertenece a la empresa'];

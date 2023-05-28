@@ -288,99 +288,49 @@ class TurnoController extends Controller {
         return response()->json($data);
     }*/
 
-    public function eliminarTurnoAEmpleado(Request $request): JsonResponse
+
+    public function eliminarTurnoAEmpleado($turnoEmpleadoId): JsonResponse
     {
         // Comprobar que el usuario está autenticado y es Empresa o Empleado Administrador de la misma empresa autenticada.
         $user = Auth::user();
         $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
         if (is_numeric($empresaId)) {
-            // Busco el empleado
-            $empleado = DB::table('empleados')
-                ->where('id', $request->empleado_id)
+            $registroTurno = DB::table('empleados_turnos')
+                ->where('id', $turnoEmpleadoId)
                 ->first();
-            if (!is_null($empleado)) { // El empleado existe
-                if ($empleado->empresa_id == $empresaId) { // El empleado pertenece a la empresa.
-                    // Busco el turno
-                    $turno = DB::table('turnos')
-                        ->where('id', $request->turno_id)
-                        ->first();
-                    if (!is_null($turno)) {// El turno existe
-                        if ($turno->empresa_id == $empresaId) { //El turno pertenece a la empresa.
-                            // Obtener la fecha de inicio y finalización del turno del empleado.
-                            $fechasTurnos = DB::table('empleados_turnos')
-                                ->where('empleado_Id', $empleado->id)
-                                ->where('turno_id', $turno->id)
-                                ->where('fechaInicioTurno', $request->fechaInicioTurno)
-                                ->where('fechaFinTurno', $request->fechaFinTurno)
-//                            ->select('fechaInicioTurno', 'fechaFinTurno')
-                                ->get();
-                            if (count($fechasTurnos) > 0) { // Hay relación en la tabla empleados_turnos.
-                                // Crear una matriz con todas las fechas de inicio y finalización de los turnos
-                                $fechas = array();
-                                foreach ($fechasTurnos as $turno) {
-                                    $fechas[] = $turno->fechaInicioTurno;
-                                    $fechas[] = $turno->fechaFinTurno;
-                                }
-
-                                // Obtener los registros de tiempo que se encuentran dentro del intervalo de fechas de los turnos del empleado
-                                $registrosTiempos = DB::table('tiempos')
-                                    ->where('empleado_Id', '=', $request->empleado_id)
-                                    ->where('turno_id', '=', $request->turno_id)
-                                    //->whereBetween('inicio', [$fechas[0], end($fechas)])
-                                    //->orWhereBetween('fin', [$fechas[0], end($fechas)])
-                                    ->get();
-                                if (count($registrosTiempos) == 0) { //No hay tiempos registrados en el turno.
-                                    $turnoAEliminar = DB::table('empleados_turnos')
-                                        ->where('empleado_Id', $request->empleado_id)
-                                        ->where('turno_id', $request->turno_id)
-                                        ->where('fechaInicioTurno', $request->fechaInicioTurno)
-                                        ->where('fechaFinTurno', $request->fechaFinTurno)
-                                        ->first();
-                                    if ($turnoAEliminar != null) {
-                                        // Comprobar si es el turno activo del empleado, si lo es avisar que el empleado no tiene turno activo.
-                                        DB::table('empleados_turnos')
-                                            ->where('id', $turnoAEliminar->id)
-                                            ->delete();
-                                        if ($turnoAEliminar->activo === 1) {
-                                            $data = [
-                                                'message' => 'Turno eliminado correctamente. El empleado no tiene turno activo.',
-                                                'turnoEliminado' => $fechasTurnos,
-                                                '$turnoAEliminar' => $turnoAEliminar,
-                                            ];
-                                        } else {
-                                            $data = [
-                                                'message' => 'Turno eliminado correctamente.',
-                                                'turnoEliminado' => $fechasTurnos,
-                                                '$turnoAEliminar' => $turnoAEliminar,
-                                            ];
-                                        }
-                                        return response()->json($data);
-                                    } else {
-                                        $data = ['message' => 'No se pudo eliminar el turno.',];
-                                        return response()->json($data);
-                                    }
-                                } else {
-                                    $data = ['message' => 'No se puede eliminar el turno, hay tiempos registrados.',];
-                                    return response()->json($data);
-                                }
-                            } else {
-                                $data = ['message' => 'No hay relación entre el turno y el empleado.',];
-                                return response()->json($data);
-                            }
-                        } else {
-                            $data = ['message' => 'El turno no pertenece a la empresa.',];
+            if ($registroTurno) {
+                $empleado = DB::table('empleados')
+                    ->where('id', $registroTurno->empleado_id)
+                    ->first();
+                if ($empleado && $empleado->empresa_id === $empresaId) {
+                    $registrosTiempos = DB::table('tiempos')
+                        ->where('turno_id', $registroTurno->id)
+                        ->whereBetween('inicio', [$registroTurno->fechaInicioTurno, $registroTurno->fechaFinTurno])
+                        ->orWhereBetween('fin', [$registroTurno->fechaInicioTurno, $registroTurno->fechaFinTurno])
+                        ->exists();
+                    if (!$registrosTiempos) {
+                        $registroTurno = DB::table('empleados_turnos')
+                            ->where('id', $turnoEmpleadoId)
+                            ->delete();
+                        if ($registroTurno) {
+                            // Eliminación exitosa
+                            $data = ['message' => 'Registro eliminado correctamente'];
                             return response()->json($data);
+                        } else {
+                            // No se pudo eliminar el registro
+                            $data = ['message' => 'No se pudo eliminar el registro'];
+                            return response()->json($data, 500);
                         }
                     } else {
-                        $data = ['message' => 'El turno no existe.',];
+                        $data = ['message' => 'Existen registros en la tabla tiempos para el turno y período especificado'];
                         return response()->json($data);
                     }
                 } else {
-                    $data = ['message' => 'El empleado no pertenece a la empresa.',];
+                    $data = ['message' => "Error empleado no pertenece a la empresa.",];
                     return response()->json($data);
                 }
             } else {
-                $data = ['message' => 'El empleado no existe.',];
+                $data = ['message' => "Error turnoEmpleadoId no existe.",];
                 return response()->json($data);
             }
         } else {
@@ -388,6 +338,107 @@ class TurnoController extends Controller {
             return response()->json($data);
         }
     }
+
+//    public function eliminarTurnoAEmpleado(Request $request): JsonResponse
+//    {
+//        // Comprobar que el usuario está autenticado y es Empresa o Empleado Administrador de la misma empresa autenticada.
+//        $user = Auth::user();
+//        $empresaId = Auxiliares::verificarAutorizacionEmpresa($user);
+//        if (is_numeric($empresaId)) {
+//            // Busco el empleado
+//            $empleado = DB::table('empleados')
+//                ->where('id', $request->empleado_id)
+//                ->first();
+//            if (!is_null($empleado)) { // El empleado existe
+//                if ($empleado->empresa_id == $empresaId) { // El empleado pertenece a la empresa.
+//                    // Busco el turno
+//                    $turno = DB::table('turnos')
+//                        ->where('id', $request->turno_id)
+//                        ->first();
+//                    if (!is_null($turno)) {// El turno existe
+//                        if ($turno->empresa_id == $empresaId) { //El turno pertenece a la empresa.
+//                            // Obtener la fecha de inicio y finalización del turno del empleado.
+//                            $fechasTurnos = DB::table('empleados_turnos')
+//                                ->where('empleado_Id', $empleado->id)
+//                                ->where('turno_id', $turno->id)
+//                                ->where('fechaInicioTurno', $request->fechaInicioTurno)
+//                                ->where('fechaFinTurno', $request->fechaFinTurno)
+////                            ->select('fechaInicioTurno', 'fechaFinTurno')
+//                                ->get();
+//                            if (count($fechasTurnos) > 0) { // Hay relación en la tabla empleados_turnos.
+//                                // Crear una matriz con todas las fechas de inicio y finalización de los turnos
+//                                $fechas = array();
+//                                foreach ($fechasTurnos as $turno) {
+//                                    $fechas[] = $turno->fechaInicioTurno;
+//                                    $fechas[] = $turno->fechaFinTurno;
+//                                }
+//
+//                                // Obtener los registros de tiempo que se encuentran dentro del intervalo de fechas de los turnos del empleado
+//                                $registrosTiempos = DB::table('tiempos')
+//                                    ->where('empleado_Id', '=', $request->empleado_id)
+//                                    ->where('turno_id', '=', $request->turno_id)
+//                                    //->whereBetween('inicio', [$fechas[0], end($fechas)])
+//                                    //->orWhereBetween('fin', [$fechas[0], end($fechas)])
+//                                    ->get();
+//                                if (count($registrosTiempos) == 0) { //No hay tiempos registrados en el turno.
+//                                    $turnoAEliminar = DB::table('empleados_turnos')
+//                                        ->where('empleado_Id', $request->empleado_id)
+//                                        ->where('turno_id', $request->turno_id)
+//                                        ->where('fechaInicioTurno', $request->fechaInicioTurno)
+//                                        ->where('fechaFinTurno', $request->fechaFinTurno)
+//                                        ->first();
+//                                    if ($turnoAEliminar != null) {
+//                                        // Comprobar si es el turno activo del empleado, si lo es avisar que el empleado no tiene turno activo.
+//                                        DB::table('empleados_turnos')
+//                                            ->where('id', $turnoAEliminar->id)
+//                                            ->delete();
+//                                        if ($turnoAEliminar->activo === 1) {
+//                                            $data = [
+//                                                'message' => 'Turno eliminado correctamente. El empleado no tiene turno activo.',
+//                                                'turnoEliminado' => $fechasTurnos,
+//                                                '$turnoAEliminar' => $turnoAEliminar,
+//                                            ];
+//                                        } else {
+//                                            $data = [
+//                                                'message' => 'Turno eliminado correctamente.',
+//                                                'turnoEliminado' => $fechasTurnos,
+//                                                '$turnoAEliminar' => $turnoAEliminar,
+//                                            ];
+//                                        }
+//                                        return response()->json($data);
+//                                    } else {
+//                                        $data = ['message' => 'No se pudo eliminar el turno.',];
+//                                        return response()->json($data);
+//                                    }
+//                                } else {
+//                                    $data = ['message' => 'No se puede eliminar el turno, hay tiempos registrados.',];
+//                                    return response()->json($data);
+//                                }
+//                            } else {
+//                                $data = ['message' => 'No hay relación entre el turno y el empleado.',];
+//                                return response()->json($data);
+//                            }
+//                        } else {
+//                            $data = ['message' => 'El turno no pertenece a la empresa.',];
+//                            return response()->json($data);
+//                        }
+//                    } else {
+//                        $data = ['message' => 'El turno no existe.',];
+//                        return response()->json($data);
+//                    }
+//                } else {
+//                    $data = ['message' => 'El empleado no pertenece a la empresa.',];
+//                    return response()->json($data);
+//                }
+//            } else {
+//                $data = ['message' => 'El empleado no existe.',];
+//                return response()->json($data);
+//            }
+//        } else {
+//            $data = ['message' => $empresaId['message'],];
+//            return response()->json($data);
+//        }
+//    }
 
     public function incidenciasTurnos(): JsonResponse
     {
