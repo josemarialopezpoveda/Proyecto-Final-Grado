@@ -151,9 +151,9 @@ function CrearCorreoAdmin() {
     
     }
 
-    const crearMensaje = async(idMensaje, idEmpresa) =>{
+    const crearMensaje = async(idCaso, idEmpresa) =>{
         let raw = {
-            "casos_id": idMensaje,
+            "casos_id": idCaso,
             "empresa_id": idEmpresa,
             "emisor": recogerIdEmpleadoLogueado(),
             "receptor": mensajeCreado.receptor,
@@ -167,6 +167,8 @@ function CrearCorreoAdmin() {
                     "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
                 }
             }
+            console.log(header)
+            console.log(URL_API + "mensajes")
           let peticion = await peticionPost(URL_API + "mensajes", raw, header)
           console.log(peticion)
           if(peticion.data.errores !== undefined && peticion.data.errores !== null){

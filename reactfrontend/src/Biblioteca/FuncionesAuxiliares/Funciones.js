@@ -325,15 +325,18 @@ export const booleanoANumber = (actividad) => {
 
 //funcion en javascript que a partir de esto 2023-04-19 06:55:51 me de 2023-04-19
 export const cogerFecha = (fecha) =>{
+  console.log(fecha)
   fecha = new Date(fecha);
+  console.log("FECHA")
+  console.log(fecha)
   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
   const fechaFormateada = fecha.toLocaleDateString('es-ES', options);
+  console.log(fechaFormateada)
   return fechaFormateada;
 }
 
 //funcion en javascript que a partir de esto 2023-04-19 06:55:51 me de 06:55:51
 export const cogerHora = (hora) =>{
-  console.log(hora)
   if(hora !== null){
     hora = new Date(hora);
     const opciones = { hour: '2-digit', minute: '2-digit', second: '2-digit' };

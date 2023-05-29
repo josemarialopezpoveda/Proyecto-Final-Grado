@@ -23,7 +23,9 @@ function VerTurnoCliente() {
       },
     };
       let datosTurno = undefined;
+      console.log(URL_API + "todosLosTurnos/" + `${localStorage.getItem("idEmpleado")}`)
       datosTurno = await peticionGetAuth(URL_API + "todosLosTurnos/" + `${localStorage.getItem("idEmpleado")}`, header);
+      console.log(datosTurno)
       if(datosTurno !== undefined){
           if(datosTurno.data.turnoSEmpleado !== undefined){
               if (datosTurno.data.turnoSEmpleado.length !== 0) {
