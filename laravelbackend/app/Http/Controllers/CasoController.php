@@ -175,7 +175,7 @@ class CasoController extends Controller {
             if (count($casos) > 0) {
                 $data = [
                     'message' => 'Todos los casos en los que participa el empleado ' . $empleadoId,
-                    '$casos' => $casos,
+                    'casos' => $casos,
                 ];
                 return response()->json($data);
             } else {
