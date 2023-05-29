@@ -256,24 +256,12 @@ class MensajeController extends Controller {
             ];
         }
 
+
         //Comprobar si existe el mensaje y si existe el caso.
         $caso = Caso::find($request['casos_id']);
-        $mensaje = Mensaje::find($request['casos_id'])->first();
+        $mensaje = Mensaje::find($request['casos_id']);
 
-
-        $empleadoOK = $user->id == ($mensaje->emisor || $user->id == $mensaje->receptor);
-
-        $empresaOK = $user->empresa_id == $request['empresa_id'];
-        $emisorOK = $user->id == $request['emisor'];
-        $receptorOK = Empleado::find($request['receptor']);
-        if ($receptorOK) {
-            $receptorOK = $user->empresa_id == $receptorOK->empresa_id;
-        }
-
-        // ¿discutir si solo se pueden enviar mensajes al admin?
-        $esAdmin = $user->tipoEmpleado == "Administrador";
-
-        if ($empleadoOK && $empresaOK && $emisorOK && $receptorOK) {
+        if (is_null($mensaje)) {
             $mensaje = new Mensaje();
             $mensaje->empresa_id = $request['empresa_id'];
             $mensaje->casos_id = $request['casos_id'];
@@ -288,11 +276,41 @@ class MensajeController extends Controller {
                 'mensaje' => $mensaje,
             ];
         } else {
-            $data = [
-                'message' => 'No estás autorizado.',
-            ];
+            $empleadoOK = $user->id == ($mensaje->emisor || $user->id == $mensaje->receptor);
+            $empresaOK = $user->empresa_id == $request['empresa_id'];
+            $emisorOK = $user->id == $request['emisor'];
+            $receptorOK = Empleado::find($request['receptor']);
+            if ($receptorOK) {
+                $receptorOK = $user->empresa_id == $receptorOK->empresa_id;
+            }
+
+            // ¿discutir si solo se pueden enviar mensajes al admin?
+            $esAdmin = $user->tipoEmpleado == "Administrador";
+
+            if ($empleadoOK && $empresaOK && $emisorOK && $receptorOK) {
+                $mensaje = new Mensaje();
+                $mensaje->empresa_id = $request['empresa_id'];
+                $mensaje->casos_id = $request['casos_id'];
+                $mensaje->emisor = $request['emisor'];
+                $mensaje->receptor = $request['receptor'];
+                $mensaje->mensaje = $request['mensaje'];
+                $mensaje->horaEnvio = Carbon::now();
+                $mensaje->save();
+
+                $data = [
+                    'message' => 'Mensaje creado correctamente',
+                    'mensaje' => $mensaje,
+                ];
+            } else {
+                $data = [
+                    'message' => 'No estás autorizado.',
+                ];
+            }
         }
-        return response()->json($data);
+
+        {
+            return response()->json($data);
+        }
     }
 
     /**
