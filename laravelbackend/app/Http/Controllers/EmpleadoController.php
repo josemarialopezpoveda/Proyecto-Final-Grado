@@ -534,30 +534,24 @@ class EmpleadoController extends Controller {
 
                 $turnoEmpleado = DB::table('empleados_turnos')
                     ->join('empleados', 'empleados_turnos.empleado_id', '=', 'empleados.id')
-                    ->select('empleados_turnos.*', 'empleados.nombre', 'empleados.apellidos')
+                    ->join('turnos', 'empleados_turnos.turno_id', '=', 'turnos.id')
+                    ->select('empleados_turnos.*', 'empleados.nombre', 'empleados.apellidos', 'turnos.descripcion')
                     ->where('empleados_turnos.empleado_id', $empleadoId)
                     ->get();
-                $turnoEmpleado = collect($turnoEmpleado)->map(function ($item) {
-                    return collect($item)->only(
-                        [
-                            'id',
-                            'empleado_id',
-                            'turno_id',
-                            'fechaInicioTurno',
-                            'fechaFinTurno',
-                            'activo',
-                            'nombre',
-                            'apellidos'
-                        ]
-                    );
-                })->all();
-                $turnoEmpleado = collect($turnoEmpleado)->map(function ($item) {
-                    $item['empleados_turnos_id'] = $item['id'];
-                    unset($item['id']);
-                    return $item;
-                })->all();
 
-
+                $turnoEmpleado = collect($turnoEmpleado)->map(function ($item) {
+                    return collect($item)->only([
+                        'id',
+                        'empleado_id',
+                        'turno_id',
+                        'fechaInicioTurno',
+                        'fechaFinTurno',
+                        'activo',
+                        'nombre',
+                        'apellidos',
+                        'descripcion'
+                    ]);
+                })->all();
                 if ($turnoEmpleado) {
                     $data = [
                         'message' => 'Todo los turnos del empleado',
