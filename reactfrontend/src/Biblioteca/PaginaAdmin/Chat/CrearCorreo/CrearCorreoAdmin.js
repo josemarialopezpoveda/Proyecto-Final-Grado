@@ -17,6 +17,9 @@ function CrearCorreoAdmin() {
         asunto: ""
     });
 
+    //Estado para almacenar el nombre del empleado.
+    const [empleado, setEmpleado] = useState("");
+
     const [mensajeCreado, setMensajeCreado] = useState({
         casos_id: "",
         empresa_id: "",
@@ -56,17 +59,33 @@ function CrearCorreoAdmin() {
 
 
             if(`${localStorage.getItem('tipoUsuario')}` === "Administrador" && datosEmpleado.id.toString() !== `${localStorage.getItem("idEmpleadoAdmin")}`){
-                var newEmpleado = {
-                    id: datosEmpleado.id,
-                    nombreCompleto: datosEmpleado.empleado,
-                };
-                return newEmpleado;
+                if(datosEmpleado.empleado != empleado.nombre){ 
+                    var newEmpleado = {
+                        id: datosEmpleado.id,
+                        nombreCompleto: datosEmpleado.empleado,
+                    };
+                    return newEmpleado;
+                }else{
+                    var newEmpleado = {
+                        id: "",
+                        nombreCompleto: "",
+                    };
+                    return newEmpleado;
+                }
             }else if(`${localStorage.getItem('tipoUsuario')}` === "Trabajador" && datosEmpleado.id.toString() !== `${localStorage.getItem("id")}`){
-                var newEmpleado = {
-                    id: datosEmpleado.id,
-                    nombreCompleto: datosEmpleado.empleado,
-                };
-                return newEmpleado;
+                if(datosEmpleado.empleado != empleado.nombre){ 
+                    var newEmpleado = {
+                        id: datosEmpleado.id,
+                        nombreCompleto: datosEmpleado.empleado,
+                    };
+                    return newEmpleado;
+                }else{
+                    var newEmpleado = {
+                        id: "",
+                        nombreCompleto: "",
+                    };
+                    return newEmpleado;
+                }
             }
           });
           console.log(nombreCompletoEmpleado)
@@ -76,11 +95,29 @@ function CrearCorreoAdmin() {
 
     useEffect(() => {
         recoleccionDatos();
+        recoleccionDatosNombre();
     }, []);
+
+    const recoleccionDatosNombre = async () => {
+        const header = {
+          headers: {
+            Accept: "application/json",
+            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+          },
+        };
+        let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
+        console.log(datosEmpleado)
+        if (datosEmpleado.data.nombre !== undefined) {
+            var newEmpleado = {
+              nombre: datosEmpleado.data.nombre + " " + datosEmpleado.data.apellidos,
+            }
+          setEmpleado(newEmpleado);
+        }
+      };
 
     const obtenerOptions = () =>{
         return(nombresUsuarios.map((empleado, index)=>{
-            if(empleado !== undefined){    
+            if(empleado !== undefined && empleado.id !== "" && empleado.nombreCompleto != ""){
                 return(<option key={index} value={String(empleado.id)}>{empleado.nombreCompleto}</option>)
             }
         }))
@@ -115,7 +152,6 @@ function CrearCorreoAdmin() {
     }
 
     const crearMensaje = async(idMensaje, idEmpresa) =>{
-        console.log("ARRIBA ESPAÑA")
         let raw = {
             "casos_id": idMensaje,
             "empresa_id": idEmpresa,
@@ -197,7 +233,7 @@ function CrearCorreoAdmin() {
                         </div>
                         <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
                             <Link to="/chatAdmin" className="anyadirUsuarioDatos">Volver</Link>
-                            <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Enviar Correo</button>
+                            <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Crear Caso</button>
                         </div>
                     </Form>
                     </section>

@@ -87,14 +87,14 @@ function CrearFormModificarDatosEmpresa() {
             return testPattern;
             }
       }
-      //Función que válida que si la foto esta vacía devuelve true, pero si contiene algo valide el pattern.
-      const validarFoto = (testPattern) => {
-            if (comprobarCampo === true && datos.logotipo !== "" && datos.logotipo !== null) {
-                return testPattern;
-            }else{
-                  return true;
-            }
-      }
+      // //Función que válida que si la foto esta vacía devuelve true, pero si contiene algo valide el pattern.
+      // const validarFoto = (testPattern) => {
+      //       if (comprobarCampo === true && datos.logotipo !== "" && datos.logotipo !== null) {
+      //           return testPattern;
+      //       }else{
+      //             return true;
+      //       }
+      // }
       //Válido que todo este correcto creo el objeto, lo mando con la petición put y luego según el resultado aviso al usuario diciéndole si ha ido bien o algo ha fallado.
       const TodoCorrecto = async() =>{
             setComprobarCampo(true);

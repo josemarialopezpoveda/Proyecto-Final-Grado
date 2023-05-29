@@ -130,13 +130,13 @@ function CrearFormRegistroAdmin() {
                             />
                         </Form.Group>
                     </div>
-                    <Form.Group controlId="contextoReg.formFileLg" className="mb-3">
+                    {/* <Form.Group controlId="contextoReg.formFileLg" className="mb-3">
                         <Form.Label>Logotipo</Form.Label>
                         <Form.Control type="file"
                                         isValid={contextoReg.validarFoto(/.+\.(png|jpg|jpeg)$/.test(contextoReg.form.logotipo))}
                                         isInvalid={contextoReg.validarFoto(!/.+\.(png|jpg|jpeg)$/.test(contextoReg.form.logotipo))}
                                         onChange={e => contextoReg.setForm({...contextoReg.form,logotipo: e.target.value.trim()})}/>
-                    </Form.Group>
+                    </Form.Group> */}
                 </fieldset>
                 <fieldset className='fieldset'>
                     <legend>Localización</legend>

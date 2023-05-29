@@ -15,8 +15,6 @@ function DatosEmpresa(){
     const Navigate = useNavigate();
     //Variable para el almacenamiento de los datos de la empresa.
     const [datos, setDatos] = useState({});
-    //Variable para el almacenamiento de los datos de la empresa.
-    const [foto, setFoto] = useState();
     //Función que recoge los datos de la empresa y los almacena y en caso de que algo no funcione correctamente se avisa al usuario.
     const recoleccionDatos = async() =>{
         const header = {
@@ -43,9 +41,6 @@ function DatosEmpresa(){
                     email: datosEmpresa.data.empresa.email,
                     cPostal: datosEmpresa.data.empresa.cPostal
                 })
-
-                //"../../../../../laravelbackend/storage/app/public/images/M3jRf9q9AHJcglVsh2J6NCCogf0mAiaDpD221r3v.jpg"
-                setFoto(new URL(datosEmpresa.data.logo))
             }else{
                 mostrarAlertaErronea("Error: algo raro ha pasado...", "Error inesperado algo no ha funcionado correctamente.", "7000");
             }

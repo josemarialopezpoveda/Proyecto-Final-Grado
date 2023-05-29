@@ -25,7 +25,7 @@ function CrearFormModificar() {
     fnac: "",
     numSegSoc: "",
     telefono: "",
-    fotografia: "Foto base",
+    // fotografia: "Foto base",
     fechaAlta: "",
     tipoUsuario: "",
     poblacion: "",
@@ -88,12 +88,12 @@ function CrearFormModificar() {
   };
   const Navigate = useNavigate();
 
-  //Función que valida el formato de la foto si no es nula.
-  const validarFoto = (testPattern) => {
-    if (comprobarCampo === true && form.fotografia !== "" && form.fotografia !== null) {
-      return testPattern;
-    }
-  };
+  // //Función que valida el formato de la foto si no es nula.
+  // const validarFoto = (testPattern) => {
+  //   if (comprobarCampo === true && form.fotografia !== "" && form.fotografia !== null) {
+  //     return testPattern;
+  //   }
+  // };
 
   //Función que valida los datos del formulario, los recoge y almacena en un objeto y hace la petición put y dependiendo del resultado informa al usuario.
   const TodoCorrecto = async () => {
@@ -135,7 +135,7 @@ function CrearFormModificar() {
           email: form.email,
           password: form.contrasenya,
           numSegSoc: form.numSegSoc,
-          fotografia: form.fotografia,
+          // fotografia: form.fotografia,
           ultimaConexion: formatearFechaHora(),
           activo: form.activo,
           fechaAlta: form.fechaAlta,
@@ -264,7 +264,7 @@ function CrearFormModificar() {
               />
             </Form.Group>
           </div>
-          <div className="divContenedorCampo">
+          {/* <div className="divContenedorCampo">
             <p>Fotografía</p>
             <Form.Group controlId="formFileLg" className="mb-3 width500">
               <Form.Control
@@ -273,7 +273,7 @@ function CrearFormModificar() {
                 onChange={(e) => setForm({ ...form, fotografia: e.target.value.trim() })}
               />
             </Form.Group>
-          </div>
+          </div> */}
           <div className="divContenedorCampo2">
             <div className="divContenedorCampo">
               <p className="m-0">Teléfono</p>

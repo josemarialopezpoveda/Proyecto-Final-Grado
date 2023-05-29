@@ -75,7 +75,7 @@ const PaginacionTurnos = ({ data, perPage, setEstadoDinamico, setEstadoEstatico 
                   mostrarAlertaErronea(peticion.data.message, "Error de turno asignado a un empleado.", null);
                 }else{
                   mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
-                  //Navigate("/paginaPrincipalTurnos");
+                  Navigate("/paginaPrincipalTurnos");
                   recoleccionDatos();
                 }
               }

@@ -333,10 +333,15 @@ export const cogerFecha = (fecha) =>{
 
 //funcion en javascript que a partir de esto 2023-04-19 06:55:51 me de 06:55:51
 export const cogerHora = (hora) =>{
-  hora = new Date(hora);
-  const opciones = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-  const horaFormateada = hora.toLocaleTimeString('es-ES', opciones);
-  return horaFormateada;
+  console.log(hora)
+  if(hora !== null){
+    hora = new Date(hora);
+    const opciones = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const horaFormateada = hora.toLocaleTimeString('es-ES', opciones);
+    return horaFormateada;
+  }else{
+    return "--:--:--"
+  }
 }
 
 //Función para recoger el id de los trabajadores de localStorage.

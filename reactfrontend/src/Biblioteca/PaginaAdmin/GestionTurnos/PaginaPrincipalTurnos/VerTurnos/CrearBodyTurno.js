@@ -18,16 +18,18 @@ function CrearBodyTurno() {
             console.log("pasa por aqui")
             datosTurno = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem("idEmpleado")}`, header);
         console.log(datosTurno)
-        if(datosTurno !== undefined){
-            if(datosTurno.data.turno === undefined){
-                if (datosTurno.data.dias.length !== 0) {
-                        var newTurno = {
-                            descripcion: datosTurno.data.descripcion,
-                            dias: datosTurno.data.dias,
-                            FechaInicioTurno: datosTurno.data.FechaInicioTurno,
-                            FechaFinTurno: datosTurno.data.FechaFinTurno
-                        };
-                        setTurno(newTurno);
+        if(datosTurno.data.message !== "No se encontró turno activo para el empleado"){
+            if(datosTurno !== undefined){
+                if(datosTurno.data.turno === undefined){
+                    if (datosTurno.data.dias.length !== 0) {
+                            var newTurno = {
+                                descripcion: datosTurno.data.descripcion,
+                                dias: datosTurno.data.dias,
+                                FechaInicioTurno: datosTurno.data.FechaInicioTurno,
+                                FechaFinTurno: datosTurno.data.FechaFinTurno
+                            };
+                            setTurno(newTurno);
+                    }
                 }
             }
         }
@@ -164,7 +166,7 @@ function CrearBodyTurno() {
                 <Table>
                     <tbody>
                         <tr>
-                            <td>No hay datos sobre el turno.</td>
+                            <td>No se encontró turno activo para el empleado.</td>
                         </tr>
                     </tbody>
                 </Table>

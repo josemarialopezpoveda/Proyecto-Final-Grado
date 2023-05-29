@@ -81,18 +81,18 @@ const contexto = createContext();
             }
         }
 
-        const validarFoto = (testPattern) => {
-            if (comprobarCampo === true && form.logotipo !== "" && form.logotipo !== null) {
-                return testPattern;
-            }
-        }
+        // const validarFoto = (testPattern) => {
+        //     if (comprobarCampo === true && form.logotipo !== "" && form.logotipo !== null) {
+        //         return testPattern;
+        //     }
+        // }
 
         const datos =  {
             contrasenya,contraseyaConfirmada,verContrasenya,verContrasenyaConfirmada,
             form,
             passwordInput,passwordInputConfirmar,comprobarCampo,
 
-            validarCampos,validarFoto,
+            validarCampos,
             ocultar,ocultarConfirmar,
             setComprobarCampo,
             setContrasenya,setContrasenyaConfirmada,setVerContraseñaConfirmada,setVerContraseña,validarContrasenyas,

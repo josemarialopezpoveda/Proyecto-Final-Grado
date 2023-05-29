@@ -43,7 +43,7 @@ function CrearFormularioAltaEmpleados() {
     fnac: "",
     numSegSoc: "",
     telefono: "",
-    fotografia: "",
+    // fotografia: "",
     fechaAlta: "",
     tipoUsuario: "Trabajador",
     poblacion: "",
@@ -53,12 +53,12 @@ function CrearFormularioAltaEmpleados() {
     codPostal: "",
     contrasenya: "",
   });
-  //Función que valida el formato de la foto si no es nula.
-  const validarFoto = (testPattern) => {
-    if (comprobarCampo === true && form.fotografia !== "" && form.fotografia !== null) {
-      return testPattern;
-    }
-  };
+  // //Función que valida el formato de la foto si no es nula.
+  // const validarFoto = (testPattern) => {
+  //   if (comprobarCampo === true && form.fotografia !== "" && form.fotografia !== null) {
+  //     return testPattern;
+  //   }
+  // };
   //Esta función crea un objeto con los datos del formulario validado y se lo mandamos a servidor y dependiendo de la respuesta informamos al usuario de que ha ido bien o mal.
   const TodoCorrecto = async () => {
     console.log("paso?")
@@ -239,7 +239,7 @@ function CrearFormularioAltaEmpleados() {
               />
             </Form.Group>
           </div>
-          <div className="divContenedorCampo">
+          {/* <div className="divContenedorCampo">
             <p>Fotografía</p>
             <Form.Group controlId="formFileLg" className="mb-3 width500">
               <Form.Control
@@ -250,7 +250,7 @@ function CrearFormularioAltaEmpleados() {
                 onChange={(e) => setForm({ ...form, fotografia: e.target.value.trim() })}
               />
             </Form.Group>
-          </div>
+          </div> */}
           <div className="divContenedorCampo2">
             <div className="divContenedorCampo">
               <p className="m-0">Teléfono</p>

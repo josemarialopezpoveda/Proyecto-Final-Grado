@@ -34,7 +34,7 @@ function ListarEmpleadosConProblemas() {
             nombre: datos.nombre,
             apellidos: datos.apellidos,
             problema: "Este empleado no tiene ningún turno activo",
-            id_empleado: datos.id
+            id_empleado: datos.empleado_id
         })
       })
     }
@@ -44,7 +44,7 @@ function ListarEmpleadosConProblemas() {
           nombre: datos.nombre,
           apellidos: datos.apellidos,
           problema: "Este empleado tiene el turno caducado",
-          id_empleado: datos.id
+          id_empleado: datos.empleado_id
         })
       })
     }
@@ -60,7 +60,6 @@ function ListarEmpleadosConProblemas() {
   }, []);
   
   return(
-  
   <div>
     <BuscadorEmpleadosProblemas datosEstaticos={setEmpleadosEstaticos} datosDinamicos={empleadosDinamicos}/>
     <div className='TablaDatosUser'>

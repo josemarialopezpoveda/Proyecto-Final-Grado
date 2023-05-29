@@ -56,7 +56,7 @@ const PaginacionTipoAusencias = ({ data, perPage, setEstadoDinamico, setEstadoEs
             };
             let url = URL_API + "tipoAusencias/";
             console.log(url + `${e.target.id}`)
-            let peticion = await peticionDelete(`${url}${e.target.id}`);
+            let peticion = await peticionDelete(`${url}${e.target.id}`, header);
             console.log(peticion)
             if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");

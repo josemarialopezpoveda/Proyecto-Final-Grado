@@ -23,6 +23,9 @@ function CrearCorreoCliente() {
         receptor:"",
         mensaje: ""
     });
+    
+    //Estado para almacenar el nombre del empleado.
+    const [empleado, setEmpleado] = useState("");
 
     //Estado que almacena el nombre de los empleados.
     const [nombresUsuarios, setNombresUsuarios] = useState({
@@ -43,11 +46,21 @@ function CrearCorreoCliente() {
         //console.log(datosEmpresaLogueada.data.empresa.empleados)
         if (datosEmpresaLogueada.data.length !== 0) {
           var nombreCompletoEmpleado = datosEmpresaLogueada.data.map((datosEmpleado) => {
-            var newEmpleado = {
-              id: datosEmpleado.id,
-              nombreCompleto: datosEmpleado.empleado,
-            };
-            return newEmpleado;
+            if(datosEmpleado.empleado != empleado.nombre){ 
+                var newEmpleado = {
+                    id: datosEmpleado.id,
+                    nombreCompleto: datosEmpleado.empleado,
+                };
+                return newEmpleado;
+            }else{
+                console.log(datosEmpleado.empleado)
+                console.log(empleado.nombre)
+                var newEmpleado = {
+                    id: "",
+                    nombreCompleto: "",
+                };
+                return newEmpleado;
+            }
           });
           setNombresUsuarios(nombreCompletoEmpleado);
         }
@@ -56,15 +69,20 @@ function CrearCorreoCliente() {
     //useEffect para que recolecte los datos al cargar la página
     useEffect(() => {
         recoleccionDatos();
+        recoleccionDatosNombre();
     }, []);
 
     //Función que a partir del estado devuelve options con el nombre y el id de todos los empleados.
     const obtenerOptions = () =>{
-        if(nombresUsuarios.id !== "" && typeof(nombresUsuarios) === 'object'){
-            return(nombresUsuarios.map((empleado, index)=>{
-                return(<option key={index} value={String(empleado.id)}>{empleado.nombreCompleto}</option>)
-            }))
-        }
+            if(nombresUsuarios.id !== "" && typeof(nombresUsuarios) === 'object'){
+                return(nombresUsuarios.map((Empleado, index)=>{
+                    if(Empleado.nombreCompleto != empleado.nombre){ 
+                        if(Empleado !== undefined && Empleado.id !== "" && Empleado.nombreCompleto != ""){
+                            return(<option key={index} value={String(Empleado.id)}>{Empleado.nombreCompleto}</option>)
+                        }
+                    }
+                }))
+            }
     }
 
     //Función que crea el caso si todo ha funcionado correctamente y si no avisa al usuario.
@@ -129,6 +147,23 @@ function CrearCorreoCliente() {
       
     }
 
+  const recoleccionDatosNombre = async () => {
+    const header = {
+      headers: {
+        Accept: "application/json",
+        Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+      },
+    };
+    let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("id")}`, header);
+    console.log(datosEmpleado)
+    if (datosEmpleado.data.nombre !== undefined) {
+        var newEmpleado = {
+          nombre: datosEmpleado.data.nombre + " " + datosEmpleado.data.apellidos,
+        }
+      setEmpleado(newEmpleado);
+    }
+  };
+
   return (
     <React.Fragment>
         <NavCliente/>
@@ -150,13 +185,9 @@ function CrearCorreoCliente() {
                         <div className='divContenedorCampo'>
                             <p>De:</p>
                             <Form.Group className="w-50 mb-3">
-                                <Form.Select 
-                                    value={mensajeCreado.emisor}
-                                    onInput={(e) => setMensajeCreado({ ...mensajeCreado, emisor: e.target.value.trim() })}
-                                    className='selectpequenyo selectCrearCorreoAdmin'>
-                                    <option value="0"> - </option>
-                                    {obtenerOptions()}
-                                </Form.Select>
+                                <Form.Control disabled
+                                    defaultValue={empleado.nombre}>
+                                </Form.Control>
                             </Form.Group>
                         </div>
                         <div className="divContenedorCampo divMensajeCorreo">
@@ -185,7 +216,7 @@ function CrearCorreoCliente() {
                         </div>
                         <div className='contenedorBotonVolver contenedorBotonVolverAnyadirTipoAusencia disFlex500px'>
                             <Link to="/chatCliente" className="anyadirUsuarioDatos">Volver</Link>
-                            <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Enviar Correo</button>
+                            <button type='button' className='anyadirUsuarioDatos' onClick={TodoCorrecto}>Crear Caso</button>
                         </div>
                     </Form>
                     </section>

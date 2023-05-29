@@ -1,6 +1,5 @@
 //Importamos los estilos CSS del pie de página.
 import React from 'react';
-import Table from 'react-bootstrap/Table';
 import NavAdmin from '../Nav/NavAdmin';
 import './Empleados.css';
 import PiePagina from '../../PaginaPrincipal/Footer/PiePagina';

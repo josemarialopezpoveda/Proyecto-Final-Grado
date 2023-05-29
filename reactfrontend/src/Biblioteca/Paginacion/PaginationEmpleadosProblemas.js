@@ -10,15 +10,10 @@ const PaginationEmpleadosProblemas = ({ data, perPage, setEstadoDinamico, setEst
   const [paginaSeleccionada, setPaginaSeleccionada] = useState(1)
   //Creamos la variable para el uso del useNavigate.
   const Navigate = useNavigate();
-  //Función que guarda el ID del empleado a modificar en localStorage y te lleva a la ruta del formulario de modificar el empleado.
-  const modificar = (e) => {
-    localStorage.setItem("idEmpleado", e.target.id);
-    Navigate("/modificarEmpleado");
-  };
   //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
   const verInfo = (e) => {
     localStorage.setItem("idEmpleado", e.target.id);
-    Navigate("/pagInfoClienteSel");
+    Navigate("/verTurnoCliente");
   };
 
   const seleccionarBotonArrancar = () =>{

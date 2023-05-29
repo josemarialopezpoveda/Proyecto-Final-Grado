@@ -62,12 +62,13 @@ const PaginacionTiempos = ({ data, perPage, setEstadoDinamico, setEstadoEstatico
                 };
                 let url = URL_API + "tiempos/";
                 let peticion = await peticionDelete(`${url}${e.target.id}`, header);
+                console.log(peticion)
                 if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
                   mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
                 } else {
                   mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
-                  Navigate("/verTiemposEmpleado");
                   recoleccionDatos();
+                  Navigate("/verTiemposEmpleado");
                 }
             } catch (error) {
             mostrarAlertaErronea(error.message, error.stack, null);
