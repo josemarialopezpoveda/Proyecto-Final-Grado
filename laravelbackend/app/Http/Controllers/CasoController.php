@@ -151,6 +151,7 @@ class CasoController extends Controller {
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
         if ($loginOk) {
+            $empleado = Empleado::find($empleadoId);
             $casos = Caso::whereIn('id', function ($query) use ($empleadoId) {
                 $query->select('casos_id')
                     ->from('mensajes')
@@ -176,6 +177,8 @@ class CasoController extends Controller {
                 $data = [
                     'message' => 'Todos los casos en los que participa el empleado ' . $empleadoId,
                     'casos' => $casos,
+                    'nombre'=> $empleado->nombre,
+                    'apellidos'=> $empleado->apellidos,
                 ];
                 return response()->json($data);
             } else {
