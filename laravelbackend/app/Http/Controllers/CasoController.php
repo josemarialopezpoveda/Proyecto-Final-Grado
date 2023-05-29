@@ -151,8 +151,7 @@ class CasoController extends Controller {
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
         if ($loginOk) {
-            $empleado = Empleado::find($empleadoId);
-            $casos = Caso::whereIn('id', function ($query) use ($empleadoId) {
+            $casos = Caso::whereIn('casos.id', function ($query) use ($empleadoId) {
                 $query->select('casos_id')
                     ->from('mensajes')
                     ->where(function ($query) use ($empleadoId) {
@@ -164,21 +163,48 @@ class CasoController extends Controller {
                     $query->whereNotExists(function ($query) use ($empleadoId) {
                         $query->select('casos_id')
                             ->from('mensajes')
-                            ->where('casos.id', '=', 'mensajes.casos_id')
+                            ->whereColumn('casos.id', '=', 'mensajes.casos_id')
                             ->where(function ($query) use ($empleadoId) {
                                 $query->where('emisor', $empleadoId)
                                     ->orWhere('receptor', $empleadoId);
                             });
                     });
-                    $query->where('empleado_id', $empleadoId);
+                    $query->where('casos.empleado_id', $empleadoId);
                 })
+                ->join('empleados', 'casos.empleado_id', '=', 'empleados.id')
+                ->select('casos.*', 'empleados.nombre', 'empleados.apellidos')
                 ->get();
+//            $empleado = Empleado::find($empleadoId);
+//            $casos = Caso::whereIn('id', function ($query) use ($empleadoId) {
+//                $query->select('casos_id')
+//                    ->from('mensajes')
+//                    ->where(function ($query) use ($empleadoId) {
+//                        $query->where('emisor', $empleadoId)
+//                            ->orWhere('receptor', $empleadoId);
+//                    });
+//            })
+//                ->orWhere(function ($query) use ($empleadoId) {
+//                    $query->whereNotExists(function ($query) use ($empleadoId) {
+//                        $query->select('casos_id')
+//                            ->from('mensajes')
+//                            ->where('casos.id', '=', 'mensajes.casos_id')
+//                            ->where(function ($query) use ($empleadoId) {
+//                                $query->where('emisor', $empleadoId)
+//                                    ->orWhere('receptor', $empleadoId);
+//                            });
+//                    });
+//                    $query->where('empleado_id', $empleadoId);
+//                })
+//                ->get();
+//
+//            foreach ($casos as $caso) {
+//                $caso->nombre = $empleado->nombre;
+//                $caso->apellidos = $empleado->apellidos;
+//            }
             if (count($casos) > 0) {
                 $data = [
                     'message' => 'Todos los casos en los que participa el empleado ' . $empleadoId,
                     'casos' => $casos,
-                    'nombre'=> $empleado->nombre,
-                    'apellidos'=> $empleado->apellidos,
                 ];
                 return response()->json($data);
             } else {
