@@ -45,7 +45,7 @@ function ChatCliente() {
           asunto: datosE.asunto,
           activo: mirarActividad(datosE.activo),
           fCreacion: datosE.fechaCreacion,
-          creadoPor: datosE.empleado.nombre + " " + datosE.empleado.apellidos
+          creadoPor: datosE.nombre + " " + datosE.apellidos
         };
         return newEmpresa;
       });

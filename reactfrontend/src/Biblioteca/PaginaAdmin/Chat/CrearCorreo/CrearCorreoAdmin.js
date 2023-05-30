@@ -167,7 +167,6 @@ function CrearCorreoAdmin() {
                     "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
                 }
             }
-            console.log(header)
             console.log(URL_API + "mensajes")
           let peticion = await peticionPost(URL_API + "mensajes", raw, header)
           console.log(peticion)

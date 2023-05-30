@@ -46,6 +46,8 @@ import CrearTiempo from 'Biblioteca/PaginaAdmin/Tiempos/CrearTiempo';
 import ModificarTiempo from 'Biblioteca/PaginaAdmin/Tiempos/ModificarTiempo';
 import ListadoIncidenciasPresencia from 'Biblioteca/PaginaAdmin/AccionesEmpleados/ListadoIncidenciasPresencia/ListadoIncidenciasPresencia';
 import EmpleadosProblemasTurnos from 'Biblioteca/PaginaAdmin/AccionesEmpleados/EmpleadosProblemasTurnos/EmpleadosProblemasTurnos';
+import VerTurnoIncidencia from 'Biblioteca/PaginaAdmin/AccionesEmpleados/ListadoIncidenciasPresencia/VerTurnoIncidencia';
+import ModificarTurnoIncidencia from 'Biblioteca/PaginaAdmin/AccionesEmpleados/ListadoIncidenciasPresencia/ModificarTurnoIncidencia';
 
 function App() {
   return(
@@ -75,10 +77,14 @@ function App() {
                   <Route exact path="/altaEmpleado" element={<AltaEmpleados/>} />
                   <Route exact path="/modificarEmpleado" element={<Modificar/>} />
                   <Route exact path="/pagInfoClienteSel" element={<PagInfoClienteSel/>} />
-                  <Route exact path="/empleadosProblemasTurnos" element={<EmpleadosProblemasTurnos/>} />
 
                   {/* Listado Incidencias y Presencia */}
                   <Route exact path="/listadoIncidenciasPresencia" element={<ListadoIncidenciasPresencia/>} />
+
+                  {/* Empleados con problemas en los turnos*/}
+                  <Route exact path="/empleadosProblemasTurnos" element={<EmpleadosProblemasTurnos/>} />
+                  <Route exact path="/verTurnoIncidencia" element={<VerTurnoIncidencia/>} />
+                  <Route exact path="/modificarTurnoIncidencia" element={<ModificarTurnoIncidencia/>} />
 
                   {/* Ver Resumen laboral empleado */}
                   <Route exact path="/verResumenLaboralEmpleado" element={<ResumenLaboralEmpleado/>} />

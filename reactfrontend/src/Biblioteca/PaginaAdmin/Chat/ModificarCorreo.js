@@ -103,7 +103,7 @@ function ModificarCorreo() {
                         <Form.Group className="mb-3">
                                 <Form.Control required size="lg" type="text"
                                 onChange={e=>setForm({...form,asunto:e.target.value.trim()})}
-                                placeholder={form.asunto}/>
+                                defaultValue={form.asunto}/>
                         </Form.Group>
                         <div className="divContenedorCampo">
                             <p>Activo</p>

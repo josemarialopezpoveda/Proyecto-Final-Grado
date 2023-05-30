@@ -34,7 +34,8 @@ function ListarEmpleadosConProblemas() {
             nombre: datos.nombre,
             apellidos: datos.apellidos,
             problema: "Este empleado no tiene ningún turno activo",
-            id_empleado: datos.empleado_id
+            id_empleado: datos.empleado_id,
+            empleados_turnos_id: datos.empleados_turnos_id
         })
       })
     }
@@ -44,7 +45,8 @@ function ListarEmpleadosConProblemas() {
           nombre: datos.nombre,
           apellidos: datos.apellidos,
           problema: "Este empleado tiene el turno caducado",
-          id_empleado: datos.empleado_id
+          id_empleado: datos.empleado_id,
+          empleados_turnos_id: datos.empleados_turnos_id
         })
       })
     }

@@ -12,8 +12,8 @@ const PaginationEmpleadosProblemas = ({ data, perPage, setEstadoDinamico, setEst
   const Navigate = useNavigate();
   //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
   const verInfo = (e) => {
-    localStorage.setItem("idEmpleado", e.target.id);
-    Navigate("/verTurnoCliente");
+    localStorage.setItem("empleados_turnos_id", e.target.id);
+    Navigate("/verTurnoIncidencia");
   };
 
   const seleccionarBotonArrancar = () =>{
@@ -57,7 +57,7 @@ const PaginationEmpleadosProblemas = ({ data, perPage, setEstadoDinamico, setEst
             <button type="button"
               title="Ver Información Del Empleado"
               onClick={verInfo}
-              id={option.id_empleado}
+              id={option.empleados_turnos_id}
               className="botonPadPequeño botonInfoCliente anyadirTurnoBoton">
               Ver Info.
             </button>

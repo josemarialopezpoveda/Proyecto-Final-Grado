@@ -2,13 +2,11 @@
 import React, {useState, useEffect} from 'react';
 import { Link } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
-import { peticionGetAuth, cogerFecha, formatoFechaDDMMYYYY, cogerHora, formatearFechaFormatoDiaDeMesDelAnyo, formatoDateAFecha, fechaEntreRango, generarUUID, mostrarAlertaErronea } from "../../../FuncionesAuxiliares/Funciones.js";
+import { peticionGetAuth, formatearFechaFormatoDiaDeMesDelAnyo, formatoDateAFecha, fechaEntreRango, mostrarAlertaErronea } from "../../../FuncionesAuxiliares/Funciones.js";
 import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin.js';
 import { URL_API } from 'services/http/const.js';
 import PiePagina from 'Biblioteca/PaginaPrincipal/Footer/PiePagina.js';
 import './ListadoIncidenciasPresencia.css';
-import { Table } from 'react-bootstrap';
-import { faListSquares } from '@fortawesome/free-solid-svg-icons';
 import PaginacionListadoIncidencias from 'Biblioteca/Paginacion/PaginacionListadoIncidencias.js';
 
 function ListadoIncidenciasPresencia(){
