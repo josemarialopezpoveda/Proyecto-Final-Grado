@@ -27,8 +27,8 @@ form#anyadir {
 
 .anyadirUsuarioDatos {
 	border-radius: 20px;
-	border: 1px solid #FF4B2B;
-	background-color: #FF4B2B;
+	border: 1px solid #00b1ff;
+	background-color: #00b1ff;
 	color: #000000;
 	font-size: 12px;
 	font-weight: bold;
@@ -41,8 +41,8 @@ form#anyadir {
 
 .anyadirUsuarioDatos:hover{
 	cursor: pointer;
-	color: #FF4B2B!important;
-	background-color: black;
+    color: #51CEF4;
+    background-color: white;
 }
 
 .foto-Tick{

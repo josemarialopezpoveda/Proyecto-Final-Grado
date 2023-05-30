@@ -3,14 +3,12 @@ import PiePagina from '../../../PaginaPrincipal/Footer/PiePagina';
 import NavAdmin from '../../Nav/NavAdmin';
 import Form from 'react-bootstrap/Form';
 import {Link, useNavigate} from 'react-router-dom';
-import { mostrarAlertaErronea, mostrarAlertaCorrecta, recogerFechaAPartirFecha, peticionGetAuth, peticionPut } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { mostrarAlertaErronea, mostrarAlertaCorrecta, recogerFechaAPartirFecha, peticionGetAuth, peticionPut, convertirFechaYYYY_MM_DD, booleanoANumber } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import { URL_API } from 'services/http/const';
 
 function ModificarTurnoIncidencia() {
 
     const [form, setForm] = useState({
-        fFin: recogerFechaAPartirFecha(new Date()),
-        fInicio: recogerFechaAPartirFecha(new Date()),
         activo: 1,
     });
 
@@ -20,16 +18,13 @@ function ModificarTurnoIncidencia() {
     const TodoCorrecto = async() =>{
         let correcto = form.descripcion !== "";
         if(correcto){
-            if(form.tipo !== "-"){
-                var raw = {
-                    "turno_id": form.turno_id,
-                    "empleados_turnos_id": localStorage.getItem('empleados_turnos_id'),
-                    "fechaInicioTurno": form.fInicio,
-                    "fechaFinTurno": form.fFin
-                }
-            }else{
-                mostrarAlertaErronea("Tipo Erróneo","El campo tipo no ha sido correcto.", null);
+            var raw = {
+                "turno_id": form.turno_id,
+                "empleados_turnos_id": parseInt(localStorage.getItem('empleados_turnos_id')),
+                "fechaInicioTurno": form.fInicio,
+                "fechaFinTurno": form.fFin
             }
+            console.log(raw)
             try {
                 const header = {
                     headers: {
@@ -42,7 +37,7 @@ function ModificarTurnoIncidencia() {
                   mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
               }else{
                   mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-                  Navigate("/empleadosProblemasTurnos")
+                  //Navigate("/empleadosProblemasTurnos")
               }
             } catch (error) {
               mostrarAlertaErronea(error.message, error.stack, null);
@@ -57,17 +52,18 @@ function ModificarTurnoIncidencia() {
                   "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
               }
           }
-      let datosTurno = await peticionGetAuth(URL_API + "empleadoTurno/" + `${localStorage.getItem('empleados_turnos_id')}`, header);
+      let datosTurno = await peticionGetAuth(URL_API + "turnoEmpleado/" + `${localStorage.getItem('empleados_turnos_id')}`, header);
       console.log(datosTurno)
         if(datosTurno.data !== undefined){
-            if(datosTurno.data.id == localStorage.getItem('idTipoAusencia')) {
-                setForm({
-                    fInicio: datosTurno.data.fechaInicioTurno,
-                    fFin: datosTurno.data.fechaFinTurno,
-                    id_empleado: datosTurno.data.empleado_id,
-                    turno_id: datosTurno.data.turno_id
-                })
+            console.log(datosTurno.data.turnoEmpleado.fechaFinTurno)
+            let turnoCreado = {
+                fInicio: convertirFechaYYYY_MM_DD(datosTurno.data.turnoEmpleado.fechaInicioTurno),
+                fFin: convertirFechaYYYY_MM_DD(datosTurno.data.turnoEmpleado.fechaFinTurno),
+                id_empleado: datosTurno.data.turnoEmpleado.empleado_id,
+                turno_id: datosTurno.data.turnoEmpleado.turno_id,
+                activo: datosTurno.data.turnoEmpleado.activo
             }
+            setForm(turnoCreado)
         }else{
               mostrarAlertaErronea("Ruta de la petición incorrecta", "Error de red", null);
         }
@@ -81,7 +77,6 @@ function ModificarTurnoIncidencia() {
   return (
     <React.Fragment>
         <NavAdmin/>
-            <pre>{JSON.stringify(form,null,3)}</pre>
             <div>
                 <h1 className='tituloh1noMarBot'>Modificar Turno Incidencia</h1>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
@@ -116,7 +111,7 @@ function ModificarTurnoIncidencia() {
                             <Form.Check
                             type="switch"
                             placeholder="Activo"
-                            onChange={(e) => setForm({ ...form, activo: e.target.checked })}
+                            onChange={(e) => setForm({ ...form, activo: booleanoANumber(e.target.checked) })}
                             checked={form.activo}
                             />
                         </div>

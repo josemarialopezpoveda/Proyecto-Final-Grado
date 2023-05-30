@@ -14,8 +14,8 @@ function RegistrarseAdmin() {
                 <img className='fotoFondoLogin' alt="foto de fondo del login"
                      src={require("../../../../img/imagenFondoLogin2.jpg")}/>
                 <div className="imagenDeFondoLogin contenedorCrearCuentaForm2 contenedorCrearCuentaForm"
-                     id='imagenDeFondoLogin'>
-                    <div className="container contenedorRegistrarse" id="container">
+                    id='imagenDeFondoLogin'>
+                    <div className="container " id="container">
                         <div className='formularioCrearCuenta'>
                             <ContextoRegistroAdmin>
                                 <CrearFormRegistroAdmin/>

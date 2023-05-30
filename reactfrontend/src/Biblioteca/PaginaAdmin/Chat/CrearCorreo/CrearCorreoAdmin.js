@@ -141,7 +141,6 @@ function CrearCorreoAdmin() {
         if(peticion.data.errores !== undefined && peticion.data.errores !== null){
             mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
         }else{
-            mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
             setMensajeCreado({...mensajeCreado, casos_id: peticion.data.caso.id});
             crearMensaje(peticion.data.caso.id, peticion.data.empresa_id);
         }

@@ -23,7 +23,7 @@
 }
 
 .contenedorIconos a{
-    border: 3px solid #FF4B2B;
+    border: 3px solid #00b1ff;
     border-radius: 190px;
     padding: 5px;
     width: 70px;
@@ -31,7 +31,7 @@
 }
 
 .social-media-icons-white a{
-    color: #FF4B2B;
+    color: #00b1ff;
     font-size: 2rem;
 }
 

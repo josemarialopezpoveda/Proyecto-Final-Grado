@@ -105,8 +105,6 @@ function CrearTiempo() {
   return (
     <React.Fragment>
     <NavAdmin/>
-      <pre>{JSON.stringify(horas, null, 3)}</pre>
-      <pre>{JSON.stringify(idTurno, null, 3)}</pre>
       <h1 className='text-center tituloH1'>Crear Tiempo del empleado: {empleado.nombre} </h1>
       <div className='contenedorCrearTurnoForm divPequenyo '>
         <Form id="anyadir">

@@ -149,7 +149,7 @@ function CrearFormModificar() {
         if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
           mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
         } else {
-          mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "3000");
+          mostrarAlertaCorrecta(peticion.data.message, "Todo correcto y funcionando perfectamente", "5000");
           Navigate("/accionesEmpleados");
         }
       } catch (error) {

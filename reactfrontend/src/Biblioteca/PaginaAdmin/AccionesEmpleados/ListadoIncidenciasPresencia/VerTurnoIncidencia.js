@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import PaginacionTodosLosTurnos from 'Biblioteca/Paginacion/PaginacionTodosLosTurnos';
 import NavAdmin from 'Biblioteca/PaginaAdmin/Nav/NavAdmin';
 import PiePagina from 'Biblioteca/PaginaPrincipal/Footer/PiePagina';
+import { formatoFechaDDMMYYYYGuiones } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { formatoFechaDDMMYYYY } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 
 function VerTurnoIncidencia() {
   //Creamos la variable para el uso del useNavigate.
@@ -21,26 +23,21 @@ function VerTurnoIncidencia() {
       },
     };
       let datosTurno = undefined;
-      console.log(URL_API + "empleadoTurno/" + `${localStorage.getItem("idEmpleado")}`)
-      datosTurno = await peticionGetAuth(URL_API + "empleadoTurno/" + `${localStorage.getItem("empleados_turnos_id")}`, header);
+      console.log(URL_API + "turnoEmpleado/" + `${localStorage.getItem("empleados_turnos_id")}`)
+      datosTurno = await peticionGetAuth(URL_API + "turnoEmpleado/" + `${localStorage.getItem("empleados_turnos_id")}`, header);
       console.log(datosTurno)
-      // if(datosTurno !== undefined){
-      //     if(datosTurno.data.turnoSEmpleado !== undefined){
-      //         if (datosTurno.data.turnoSEmpleado.length !== 0) {
-      //           let todosLosTurnos = datosTurno.data.turnoSEmpleado.map((turno)=>{
-      //               var newTurno = {
-      //                 descripcion: turno.descripcion,
-      //                 activo: estaActivo(turno.activo),
-      //                 FechaInicioTurno: turno.fechaInicioTurno,
-      //                 FechaFinTurno: turno.fechaFinTurno,
-      //                 id_turno: turno.turno_id
-      //             };
-      //             return newTurno;
-      //           })
-      //           setTurno(todosLosTurnos);
-      //         }
-      //     }
-      // }
+      if(datosTurno !== undefined){
+          if(datosTurno.data.turnoEmpleado !== undefined){
+            var newTurno = {
+                descripcion: datosTurno.data.turnoEmpleado.descripcion,
+                activo: estaActivo(datosTurno.data.turnoEmpleado.activo),
+                FechaInicioTurno: datosTurno.data.turnoEmpleado.fechaInicioTurno,
+                FechaFinTurno: datosTurno.data.turnoEmpleado.fechaFinTurno,
+                id_turno: datosTurno.data.turnoEmpleado.turno_id
+            };
+            setTurno(newTurno);
+          }
+      }
   };
 
   const estaActivo = (activo) =>{
@@ -81,8 +78,8 @@ function VerTurnoIncidencia() {
                   <tbody>
                       <tr>
                         <td>{turno.descripcion}</td>
-                        <td className='campoOpcional'>{turno.fechaInicioTurno}</td>
-                        <td className='campoOpcional'>{turno.FechaFinTurno}</td>
+                        <td className='campoOpcional'>{formatoFechaDDMMYYYYGuiones(turno.FechaInicioTurno)}</td>
+                        <td className='campoOpcional'>{formatoFechaDDMMYYYYGuiones(turno.FechaFinTurno)}</td>
                         <td>{turno.activo}</td>
                         <td>
                           <button type="button" className="sinBorde" to="/modificarEmpleado" onClick={modificar}>

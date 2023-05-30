@@ -4,6 +4,7 @@ import { generarUUID, peticionGetAuth, mostrarAlertaCorrecta, mostrarAlertaErron
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { URL_API } from "../../services/http/const";
+import './ListarOpciones.css'
 
 const ListarOpciones = (props) => {
   //Variable para el uso del useNavigate.
@@ -43,14 +44,14 @@ const ListarOpciones = (props) => {
     if (option.titulo === "Cerrar Sesión" && option.path === "/") {
       return (
         <Link key={generarUUID()} onClick={cerrarSesion} className="nav-link">
-          {option.titulo}
+          {option.titulo} <span className="spanMod">|</span>
         </Link>
       );
     } 
     else {
       return (
         <Link key={generarUUID()} className="nav-link" to={option.path}>
-          {option.titulo}
+          {option.titulo} <span className="spanMod">|</span>
         </Link>
       );
     }
