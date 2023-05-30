@@ -35,21 +35,13 @@ Route::middleware('auth:sanctum')->get(
 
 //Empresa
 
-//Route::post('/empresas', 'App\Http\Controllers\EmpresaController@store');
-//Route::post('/login', 'App\Http\Controllers\EmpresaController@login');
-
 Route::get('/empresas', [EmpresaController::class, 'index']);
 Route::post('/login', [EmpresaController::class, 'login']);
 Route::post('/empresas', [EmpresaController::class, 'store']);
 Route::get('/error', [EmpresaController::class, 'paginaError']);
 
-
 //Empleado
 Route::post('/loginEmpleado', 'App\Http\Controllers\EmpleadoController@login');
-
-
-//Route::get('/turnosEmpleado', [EmpleadoController::class, 'turnosEmpleados']);
-
 
 Route::middleware('auth:sanctum')->group(
 /**
