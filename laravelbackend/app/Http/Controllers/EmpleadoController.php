@@ -6,6 +6,7 @@ use App\Helpers\Auxiliares;
 use App\Models\Empleado;
 use App\Models\Empresa;
 use App\Models\Turno;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -590,6 +591,8 @@ class EmpleadoController extends Controller {
                     ->where('empleados_turnos.id', $turnoEmpleadoId)
                     ->where('empleados.empresa_id', $empresaId)
                     ->first();
+                $turnoEmpleado->fechaInicioTurno = Carbon::parse($turnoEmpleado->fechaInicioTurno)->format('d-m-Y');
+                $turnoEmpleado->fechaFinTurno = Carbon::parse($turnoEmpleado->fechaFinTurno)->format('d-m-Y');
                 $turnoEmpleado = collect($turnoEmpleado)->except(['created_at', 'updated_at']);
                 $data = ['turnoEmpleado' => $turnoEmpleado];
                 return response()->json($data);
