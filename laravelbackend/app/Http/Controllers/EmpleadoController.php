@@ -585,12 +585,13 @@ class EmpleadoController extends Controller {
             if ($empleado && $empleado->empresa_id === $empresaId) {
                 $turnoEmpleado = DB::table('empleados_turnos')
                     ->join('empleados', 'empleados_turnos.empleado_id', '=', 'empleados.id')
-                    ->select('empleados_turnos.*', 'empleados.nombre', 'empleados.apellidos')
+                    ->join('turnos', 'empleados_turnos.turno_id', '=', 'turnos.id')
+                    ->select('empleados_turnos.*', 'empleados.nombre', 'empleados.apellidos', 'turnos.descripcion')
                     ->where('empleados_turnos.id', $turnoEmpleadoId)
                     ->where('empleados.empresa_id', $empresaId)
                     ->first();
                 $turnoEmpleado = collect($turnoEmpleado)->except(['created_at', 'updated_at']);
-                $data = ['turnoEmpleado' => $turnoEmpleado,];
+                $data = ['turnoEmpleado' => $turnoEmpleado];
                 return response()->json($data);
             } else {
                 $data = ['message' => 'El turno no corresponde a la empresa.',];
