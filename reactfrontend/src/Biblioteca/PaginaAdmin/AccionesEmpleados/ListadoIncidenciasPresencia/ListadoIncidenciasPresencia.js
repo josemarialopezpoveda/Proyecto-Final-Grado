@@ -104,7 +104,7 @@ function ListadoIncidenciasPresencia(){
                             </article>
                             <article className='horas'>
                                 {fechasBuscador.diaSeleccionado !== ""?
-                                    <PaginacionListadoIncidencias data={datosFaltas} perPage={1}/>
+                                    <PaginacionListadoIncidencias data={datosFaltas} perPage={3}/>
                                 :
                                 null
                                 }

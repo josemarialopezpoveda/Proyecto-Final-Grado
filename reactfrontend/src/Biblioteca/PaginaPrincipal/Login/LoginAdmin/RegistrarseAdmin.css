@@ -9,10 +9,10 @@
 	right: 35px;
 	font-size: 1.2rem;
 } 
-
+/* 
 #container{
     margin-top: 22%;
-}
+} */
 
 .fieldset legend{
     font-size: 15px;
@@ -40,6 +40,13 @@
 
 .contenedorRegistrarse{
     margin-top: 40%!important;
+}
+
+.imagenDeFondoLogin.contenedorCrearCuentaForm2.contenedorCrearCuentaForm{
+	position: absolute;
+	top: 70%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 @media (max-width: 600px){

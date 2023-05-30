@@ -368,12 +368,13 @@ export const formatoFechaDDMMYYYY = (dateStr) =>{
 
 //Función que a partir de una fecha 2023-05-04 te da 04/05/2023.
 export const formatoFechaDDMMYYYYGuiones = (dateStr) =>{
-  var partes = dateStr.split('-');
-  var dia = partes[0];
-  var mes = partes[1] - 1; // Restamos 1 al mes, ya que en JavaScript los meses van de 0 a 11.
-  var anio = partes[2];
-
-  return `${dia}/${mes}/${anio}`;
+  if(dateStr !== undefined){
+    var partes = dateStr.split('-');
+    var dia = partes[0];
+    var mes = partes[1]; // Restamos 1 al mes, ya que en JavaScript los meses van de 0 a 11.
+    var anio = partes[2];
+    return `${dia}/${mes}/${anio}`;
+  }
 }
 
 
@@ -551,6 +552,7 @@ export const unirFechaYHora = (fechaStr, horaStr) =>{
 
 //Una función que a partir de "2023-02-02 15:17:22" recoge la fecha y la devuelve en formato "yyyy-MM-dd".
 export const recogerFechaAPartirFecha = (stringFecha) =>{
+  console.log(stringFecha)
   const fecha = new Date(stringFecha);
   const anio = fecha.getFullYear().toString();
   const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
@@ -572,3 +574,18 @@ export const recogerHoraAPartirFecha = (stringFecha) =>{
   }
   return `${horas}:${minutos}`;
 }
+
+export const convertirFechaYYYY_MM_DD =(fecha) =>{
+  // Dividir la fecha en día, mes y año
+  const partesFecha = fecha.split('-');
+  const dia = partesFecha[0];
+  const mes = partesFecha[1];
+  const anio = partesFecha[2];
+
+  // Crear una nueva fecha en formato ISO (YYYY-MM-DD)
+  const nuevaFecha = `${anio}-${mes}-${dia}`;
+
+  // Devolver la nueva fecha
+  return nuevaFecha;
+}
+
