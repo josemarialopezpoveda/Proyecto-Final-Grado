@@ -9,7 +9,12 @@ function ModificarAusenciaGeneral(props) {
     <React.Fragment>
         <NavAdmin/>
         <div className='contenedorSectionFormAccionesUsuario'>
-            <h1 className='tituloh1'>Modificar {props.titulo}</h1>
+        <div className='FlexBoton'>
+                    <h1 className='text-center tituloH1'>Modificar {props.titulo}</h1>
+                    <div className='contenedorBotonCrearCorreo'>
+                        <Link className='crearCorreoBoton margin0-10 heightDefinido' to={props.link}>Volver</Link>
+                    </div>
+                </div>
             <section className='sectionFormAccionesUsuario sectionPequenyo '>
               <CrearFormModAusenciaGeneral titulo={props.titulo} link={props.link}/>
             </section>

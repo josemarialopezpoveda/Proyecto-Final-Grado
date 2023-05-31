@@ -28,7 +28,7 @@ const filtrar=(terminoBusqueda)=>{
           className="form-control inputBuscar"
           id="Buscador"
           value={busqueda}
-          placeholder="Búscador de empresas que trabajan con nosotros..."
+          placeholder="Búscador de casos..."
           onChange={handleChange}
         />
       </div>

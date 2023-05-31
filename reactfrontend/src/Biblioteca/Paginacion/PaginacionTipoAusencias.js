@@ -22,7 +22,6 @@ const PaginacionTipoAusencias = ({ data, perPage, setEstadoDinamico, setEstadoEs
         },
       };
       let datosEmpresa = await peticionGetAuth(URL_API + "tipoAusencias", header);
-      console.log(datosEmpresa)
       if (datosEmpresa.data !== 0) {
         var todosDatosEmpresa = datosEmpresa.data.map((datosE) => {
           var newEmpresa = {
@@ -55,9 +54,7 @@ const PaginacionTipoAusencias = ({ data, perPage, setEstadoDinamico, setEstadoEs
               },
             };
             let url = URL_API + "tipoAusencias/";
-            console.log(url + `${e.target.id}`)
             let peticion = await peticionDelete(`${url}${e.target.id}`, header);
-            console.log(peticion)
             if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
             } else {

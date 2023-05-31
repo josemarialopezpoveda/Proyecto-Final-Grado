@@ -95,7 +95,6 @@ function ModificarTurno() {
                 }
             }
           let peticion = await peticionPut(URL_API + "turnos/" + `${localStorage.getItem('idTurno')}`, raw, header)
-          console.log(peticion)
           if(peticion.response.data.error !== undefined){
             mostrarAlertaErronea(peticion.response.data.error, "", null);
           }else{
@@ -131,7 +130,12 @@ function ModificarTurno() {
     <React.Fragment>
         <NavAdmin/>
             <section>
-                <h4 className='tituloH1 text-center'>Horario: {turno.descripcion}</h4>
+              <div className='FlexBoton'>
+                    <h4 className='text-center tituloH1'>Horario: {turno.descripcion}</h4>
+                    <div className='contenedorBotonCrearCorreo'>
+                        <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/verMensajes">Volver</Link>
+                    </div>
+                </div>
                 <div className='tablaMediaQuery tablaMargin TablaDatosUser'>
                   <p className='desc-Titulo'>Descripcion del turno</p>
                   <div className="divContenedorCampo">

@@ -52,7 +52,6 @@ function VerJornadaPorDia(){
         }else{
             datosHoras = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("id")}`, header);
         }
-        console.log(datosHoras)
         if(datosHoras !== undefined){
           if(datosHoras.data.dias !== undefined){
             setHorasEnSaPredefinidas(datosHoras.data.dias)
@@ -74,7 +73,6 @@ function VerJornadaPorDia(){
         }else{
             datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("id")}`, header);
         }
-        console.log(datosEmpleado)
         if(datosEmpleado !== undefined){
             if (datosEmpleado.data.turnos.length !== 0) {
             let todosTiempos = datosEmpleado.data.turnos.map((turno) => {
@@ -131,7 +129,6 @@ function VerJornadaPorDia(){
 
     //Recoge las entradas y salidas del estado.
     const getEntradasYSalidas = () =>{
-      console.log(datosJornada.horario)
         if(datosJornada !== "No hay registros para este dia" &&
          datosJornada.horario !== undefined && datosJornada.horario.length !== 0){
           return(datosJornada.horario.map((horario)=>{

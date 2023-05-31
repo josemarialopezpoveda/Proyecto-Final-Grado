@@ -12,7 +12,6 @@ const handleChange=e=>{
 
 const filtrar=(terminoBusqueda)=>{
   var resultadosBusqueda=props.datosDinamicos.filter((elemento)=>{
-    console.log(elemento)
     if(elemento.apellidos.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) || 
       elemento.correo.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
       elemento.fechaInicio.toString().toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
@@ -30,7 +29,7 @@ const filtrar=(terminoBusqueda)=>{
           className="form-control inputBuscar"
           id="Buscador"
           value={busqueda}
-          placeholder="Búscador de empresas que trabajan con nosotros..."
+          placeholder="Búscador de empleados conectados..."
           onChange={handleChange}
         />
       </div>

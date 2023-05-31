@@ -6,13 +6,20 @@ import './CrearTurno.css';
 import TurnosDelDia from './ComponentesAuxTurno/TurnosDelDia.js';
 import ChecksDiasSemana from './ComponentesAuxTurno/ChecksDiasSemana.js';
 import ContextoTurno from 'Biblioteca/Contextos/ContextoTurnos/ContextoTurnos.js';
+import {Link} from 'react-router-dom';
+
 
 function CrearTurno() {
   return (
     <React.Fragment>
         <NavAdmin/>
         <ContextoTurno>
-          <h1 className='tituloCambiarTurno'>Crear Turno</h1>
+          <div className='FlexBoton'>
+              <h1 className='text-center tituloH1'>Crear Turno</h1>
+              <div className='contenedorBotonCrearCorreo'>
+                  <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/paginaPrincipalTurnos">Volver</Link>
+              </div>
+          </div>
           <div className='contenedorCrearTurnoForm divPequenyo '>
             <h1 className='subtitulo2'>Dias de la semana</h1>
             <div className='todosLosDiasDeLaSemanaTurno'>

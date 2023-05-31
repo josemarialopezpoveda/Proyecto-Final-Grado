@@ -61,7 +61,6 @@ function CrearFormularioAltaEmpleados() {
   // };
   //Esta función crea un objeto con los datos del formulario validado y se lo mandamos a servidor y dependiendo de la respuesta informamos al usuario de que ha ido bien o mal.
   const TodoCorrecto = async () => {
-    console.log("paso?")
     setComprobarCampo(true);
     let correcto =
       /^(?!\s*$).+/.test(form.nombre) &&

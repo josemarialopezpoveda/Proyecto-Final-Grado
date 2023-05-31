@@ -38,26 +38,6 @@ function CrearFormModificarDatosEmpresa() {
               }
             let datosEmpresa = await peticionGetAuth(URL_API+"empresa/"+ localStorage.getItem('id'), header);
             if(datosEmpresa.data !== undefined){
-                  // console.log(datosEmpresa.data)
-                  // datosEmpresa.data.map(datosE => {
-                  //       if(datosE.id == localStorage.getItem('id')){
-                  //             return (setDatos({
-                  //                   id:datosE.id,
-                  //                   razonSocial: datosE.razonSocial,
-                  //                   nombreComercial: datosE.nombreComercial,
-                  //                   cif: datosE.cif,
-                  //                   telFijo: datosE.telefonoFijo,
-                  //                   telMovil: datosE.telefonoMovil,
-                  //                   logotipo: datosE.logotipo,
-                  //                   direccion: datosE.direccion,
-                  //                   poblacion: datosE.poblacion,
-                  //                   provincia: datosE.provincia,
-                  //                   codPostal: datosE.cPostal,
-                  //                   pais: datosE.pais,
-                  //                   email: datosE.email
-                  //             }))
-                  //       }
-                  // });
                   setDatos({
                         id:datosEmpresa.data.id,
                         razonSocial: datosEmpresa.data.razonSocial,
@@ -98,8 +78,6 @@ function CrearFormModificarDatosEmpresa() {
       //Válido que todo este correcto creo el objeto, lo mando con la petición put y luego según el resultado aviso al usuario diciéndole si ha ido bien o algo ha fallado.
       const TodoCorrecto = async() =>{
             setComprobarCampo(true);
-            console.log(isValidCif(datos.cif))
-            console.log(datos.cif)
             let correcto = (
                   /^\d{9}$/.test(datos.telMovil) &&
                   /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/.test(datos.email)&&
@@ -112,9 +90,7 @@ function CrearFormModificarDatosEmpresa() {
                   /^(?!\s*$).+/.test(datos.razonSocial) &&
                   /^(?!\s*$).+/.test(datos.nombreComercial)
             );
-            console.log(correcto)
             if(correcto){
-                console.log(datos.poblacion);
                   const raw = {
                         "cif": datos.cif,
                         "razonSocial": datos.razonSocial,
@@ -140,9 +116,7 @@ function CrearFormModificarDatosEmpresa() {
                   }
                     try {
                         let url = URL_API + "empresa/" + localStorage.getItem('id');
-                        console.log(url)
                         let peticion = await peticionPut(`${url}`, raw, header);
-                        console.log(peticion)
                         if(peticion.data !== undefined){
                               if(peticion.data.errores !== undefined && peticion.data.errores !== null){
                                     mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
@@ -153,8 +127,6 @@ function CrearFormModificarDatosEmpresa() {
                         }
 
                     } catch (error) {
-                        console.log("ERROR");
-                        console.log(error)
                         mostrarAlertaErronea()
                     }
             }else{

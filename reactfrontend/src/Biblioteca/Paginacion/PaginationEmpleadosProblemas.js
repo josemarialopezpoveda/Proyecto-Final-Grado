@@ -47,7 +47,6 @@ const PaginationEmpleadosProblemas = ({ data, perPage, setEstadoDinamico, setEst
 
     
     if(data.length !== 0){
-        console.log(data)
       return data.slice(start, end).map((option, index) => (
         <tr className="EmpleadoTablaApartado" key={generarUUID()}>
           <td>{option.nombre}</td>

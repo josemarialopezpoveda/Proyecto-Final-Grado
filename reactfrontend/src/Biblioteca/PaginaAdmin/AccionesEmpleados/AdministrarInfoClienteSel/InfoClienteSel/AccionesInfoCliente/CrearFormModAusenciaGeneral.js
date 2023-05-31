@@ -46,9 +46,7 @@ function CrearFormModAusenciaGeneral(props) {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        console.log(URL_API + "ausencia/" + `${localStorage.getItem("idAusencia")}`)
         let datosAusencia = await peticionGetAuth(URL_API + "ausencia/" + `${localStorage.getItem("idAusencia")}`, header);
-        console.log(datosAusencia)
         if (datosAusencia.data.ausencia !== undefined) {
             var newAusencia = {
               descripcion: datosAusencia.data.ausencia.descripcion,
@@ -75,7 +73,6 @@ function CrearFormModAusenciaGeneral(props) {
     }
   
   const TodoCorrecto = async() =>{
-      console.log(tipoBaja)
       let raw = {
         "descripcion": form.descripcion,
         "tipoausencias_id": parseInt(tipoBaja.current.value.trim()),
@@ -84,7 +81,6 @@ function CrearFormModAusenciaGeneral(props) {
         "fechaFin": form.fechaFin,
         "justificada": parseInt(form.justificada)
       }
-      console.log(raw)
       try {
         const header = {
             headers: {

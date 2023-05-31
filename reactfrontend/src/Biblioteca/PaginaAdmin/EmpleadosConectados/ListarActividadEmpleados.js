@@ -41,9 +41,7 @@ function ListarActividadEmpleados() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
         },
         };
-        console.log(URL_API + "empleadosOnline")
         let datosEmpresa = await peticionGetAuth(URL_API + "empleadosOnline", header);
-        console.log(datosEmpresa)
         if(datosEmpresa.data.message !== "No se encontraron empleados OnLine pertenecientes a la empresa autenticada."){
             if (datosEmpresa.data.length !== 0) {
                 var todosDatosEmpresa = datosEmpresa.data.map((datosE) => {

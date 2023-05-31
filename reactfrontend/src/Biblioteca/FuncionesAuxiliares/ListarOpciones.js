@@ -25,7 +25,6 @@ const ListarOpciones = (props) => {
       }else{
         peticion = await peticionGetAuth(URL_API + "logout", header);
       }
-      console.log(peticion)
       if(peticion !== undefined){
         if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
           mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
@@ -44,10 +43,17 @@ const ListarOpciones = (props) => {
     if (option.titulo === "Cerrar Sesión" && option.path === "/") {
       return (
         <Link key={generarUUID()} onClick={cerrarSesion} className="nav-link">
-          {option.titulo} <span className="spanMod">|</span>
+          {option.titulo}
         </Link>
       );
-    } 
+    }
+    else if(option.titulo === "Login Empleado"){
+      return (
+        <Link key={generarUUID()} className="nav-link" to={option.path}>
+          {option.titulo}
+        </Link>
+      );
+    }
     else {
       return (
         <Link key={generarUUID()} className="nav-link" to={option.path}>

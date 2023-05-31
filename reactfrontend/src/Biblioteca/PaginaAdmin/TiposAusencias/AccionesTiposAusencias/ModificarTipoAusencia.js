@@ -54,9 +54,7 @@ function ModificarTipoAusencia() {
                   "Authorization": `${localStorage.getItem('tipoToken')} ${localStorage.getItem('token')}`
               }
           }
-          console.log(URL_API + "tipoAusencias/" + `${localStorage.getItem('idTipoAusencia')}`)
       let datosAusencia = await peticionGetAuth(URL_API + "tipoAusencias/" + `${localStorage.getItem('idTipoAusencia')}`, header);
-      console.log(datosAusencia)
         if(datosAusencia.data !== undefined){
             if(datosAusencia.data.id == localStorage.getItem('idTipoAusencia')) {
                 setForm({
@@ -78,7 +76,12 @@ function ModificarTipoAusencia() {
     <React.Fragment>
         <NavAdmin/>
             <div>
-                <h1 className='tituloh1noMarBot'>Modificar Tipo Ausencia</h1>
+                <div className='FlexBoton'>
+                    <h1 className='text-center tituloH1'>Modificar Tipo Ausencia</h1>
+                    <div className='contenedorBotonCrearCorreo'>
+                        <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/verTipoAusencias">Volver</Link>
+                    </div>
+                </div>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
                     <Form id="anyadir" className='formAnyadirTipoAusencia'>
                             <p>Tipo Ausencia</p>

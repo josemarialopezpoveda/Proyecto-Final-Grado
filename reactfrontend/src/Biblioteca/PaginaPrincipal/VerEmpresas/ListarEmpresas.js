@@ -28,7 +28,6 @@ function ListarEmpresas() {
   //Esta función hace una petición y almacena los datos de la empresa y si falla avisamos al usuario
   const recoleccionDatos = async () => {
     let datosEmpresa = await peticionGet(URL_API + "empresas");
-    console.log(datosEmpresa)
     if (datosEmpresa !== undefined) {
       var todosDatosEmpresa = datosEmpresa.data.map((datosE) => {
         var newEmpresa = {

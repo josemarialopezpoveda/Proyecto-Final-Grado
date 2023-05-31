@@ -31,10 +31,8 @@ function ModificarMensaje() {
         };
         let url = undefined;
         url = URL_API + "casos/" + `${localStorage.getItem('idCaso')}`;
-        console.log(url)
         if(url !== undefined){
             let datosCaso = await peticionGetAuth(url, header);
-            console.log(datosCaso)
             let obj = {
                 emisor: datosCaso.data.Intervinientes.Emisor,
                 receptor: datosCaso.data.Intervinientes.Receptor,
@@ -103,7 +101,6 @@ function ModificarMensaje() {
             "receptor": datosReceptor.id,
             "mensaje": mensajeCreado.mensaje,
           }
-          console.log(raw)
           try {
             const header = {
                 headers: {
@@ -112,7 +109,6 @@ function ModificarMensaje() {
                 }
             }
           let peticion = await peticionPut(URL_API + "mensajes/" +  `${localStorage.getItem('idMensaje')}`, raw, header)
-          console.log(peticion)
           if(peticion.data.errores !== undefined && peticion.data.errores !== null){
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
           }else{
@@ -125,7 +121,6 @@ function ModificarMensaje() {
     }
 
     const botonVolver = () =>{
-        console.log(`${localStorage.getItem('tipoUsuario')}`)
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
             return(<Link to="/verMensajes" className="anyadirUsuarioDatos">Volver</Link>)
         }else{
@@ -146,7 +141,12 @@ function ModificarMensaje() {
         <React.Fragment>
             {anyadirBarraNav()}
                     <div className=''>
-                        <h1 className='text-center tituloH1'>Modificar Mensaje</h1>
+                        <div className='FlexBoton'>
+                            <h1 className='text-center tituloH1'>Modificar Mensaje</h1>
+                            <div className='contenedorBotonCrearCorreo'>
+                                <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/verMensajes">Volver</Link>
+                            </div>
+                        </div>
                         <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
                         <Form id="anyadir">
                             <div className='divContenedorCampo'>

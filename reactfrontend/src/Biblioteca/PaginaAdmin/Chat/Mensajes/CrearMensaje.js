@@ -14,7 +14,7 @@ function CrearMensaje() {
 
     const [mensajeCreado, setMensajeCreado] = useState({
         casos_id: `${localStorage.getItem('idCaso')}`,
-        empresa_id: `${localStorage.getItem("id")}`,
+        empresa_id: `${localStorage.getItem("idEmpresa")}`,
         mensaje: ""
     });
 
@@ -31,10 +31,8 @@ function CrearMensaje() {
         };
         let url = undefined;
         url = URL_API + "casos/" + `${localStorage.getItem('idCaso')}`;
-        console.log(url)
         if(url !== undefined){
             let datosCaso = await peticionGetAuth(url, header);
-            console.log(datosCaso)
             let obj = {
                 emisor: datosCaso.data.Intervinientes.Emisor,
                 receptor: datosCaso.data.Intervinientes.Receptor,
@@ -101,11 +99,21 @@ function CrearMensaje() {
     const TodoCorrecto = async() =>{
         
         let raw = {
-            "casos_id": mensajeCreado.casos_id,
-            "empresa_id": mensajeCreado.empresa_id,
-            "emisor": datosEmisor.id,
-            "receptor": datosReceptor.id,
+            "casos_id": parseInt(mensajeCreado.casos_id),
+            "empresa_id": parseInt(`${localStorage.getItem("idEmpresa")}`),
+            "emisor": datosEmisor.id.toString(),
+            "receptor": datosReceptor.id.toString(),
             "mensaje": mensajeCreado.mensaje,
+            }
+
+            if(`${localStorage.getItem("tipoUsuario")}` === "Administrador"){
+                raw = {
+                    "casos_id": parseInt(mensajeCreado.casos_id),
+                    "empresa_id": parseInt(`${localStorage.getItem("id")}`),
+                    "emisor": datosEmisor.id.toString(),
+                    "receptor": datosReceptor.id.toString(),
+                    "mensaje": mensajeCreado.mensaje,
+                    }
             }
           try {
             const header = {
@@ -115,13 +123,10 @@ function CrearMensaje() {
                 }
             }
             if(raw !== undefined){
-                console.log(URL_API + "mensajes")
                 let peticion = await peticionPost(URL_API + "mensajes", raw, header)
-                console.log(peticion)
                 if(peticion.data.errores !== undefined && peticion.data.errores !== null){
                     mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
                 }else{
-                    console.log(peticion.data.message)
                     if(peticion.data.message !== "Mensaje creado correctamente"){
                         mostrarAlertaErronea(peticion.data.message, "Error no esperado", null);
                     }else{
@@ -159,7 +164,12 @@ function CrearMensaje() {
     <React.Fragment>
         {anyadirBarraNav()}
                 <div className=''>
+                <div className='FlexBoton'>
                     <h1 className='text-center tituloH1'>Crear Mensaje</h1>
+                    <div className='contenedorBotonCrearCorreo'>
+                        <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/verMensajes">Volver</Link>
+                    </div>
+                </div>
                     <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
                     <Form id="anyadir">
                         <div className='divContenedorCampo'>

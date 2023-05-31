@@ -48,9 +48,7 @@ function ListarEmpleados() {
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
-    console.log(URL_API + "empresa/" + localStorage.getItem("id"))
     let datosEmpresa = await peticionGetAuth(URL_API + "empresa/" + localStorage.getItem("id"), header);
-    console.log(datosEmpresa)
     if (datosEmpresa.data.empresa.empleados.length !== 0) {
       var todosDatosEmpresa = datosEmpresa.data.empresa.empleados.map((datosE) => {
         var newEmpresa = {

@@ -31,9 +31,7 @@ function ListadoIncidenciasPresencia(){
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        console.log(URL_API + "ausencias")
         let datosAusencias = await peticionGetAuth(URL_API + "ausenciasEmpleados", header);
-        console.log(datosAusencias)
             let datos = datosAusencias.data.ausencias.map((ausencia)=>{
                 if(ausencia.fechaFin === null){
                     return({
@@ -57,7 +55,6 @@ function ListadoIncidenciasPresencia(){
 
     //Al pulsar al botón recoge los datos con las nuevas fechas.
     const TodoCorrecto = () =>{
-        console.log(fechasBuscador.diaSeleccionado)
         if(fechasBuscador.diaSeleccionado !== ""){    
             recoleccionDatos();
         }else{

@@ -35,7 +35,6 @@ function CrearTiempo() {
     },
     };
     let datosTiempo = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem('idEmpleado')}`, header);
-    console.log(datosTiempo)
     if (datosTiempo.data !== undefined) {
         setIdTurno(datosTiempo.data.turnoId);
     }
@@ -50,7 +49,6 @@ function CrearTiempo() {
           "fin":unirFechaYHora(horas.fechaSalida, horas.horaSalida),
           "turno_id": idTurno
         };
-        console.log(raw)
         try {
           const header = {
             headers: {
@@ -59,7 +57,6 @@ function CrearTiempo() {
             },
           };
           let peticion = await peticionPost(URL_API + "tiempos", raw, header);
-          console.log(peticion)
           if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
             mostrarAlertaErronea(peticion.data.message, peticion.data.errores, 5000);
           } else {
@@ -93,7 +90,6 @@ function CrearTiempo() {
       },
     };
     let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleado")}`, header);
-    console.log(datosEmpleado)
     if (datosEmpleado.data.nombre !== undefined) {
         var newEmpleado = {
           nombre: datosEmpleado.data.nombre,
@@ -105,7 +101,12 @@ function CrearTiempo() {
   return (
     <React.Fragment>
     <NavAdmin/>
-      <h1 className='text-center tituloH1'>Crear Tiempo del empleado: {empleado.nombre} </h1>
+      <div className='FlexBoton'>
+        <h1 className='text-center tituloH1'>Crear Tiempo del empleado: {empleado.nombre} </h1>
+          <div className='contenedorBotonCrearCorreo'>
+              <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/verTiemposEmpleado">Volver</Link>
+          </div>
+        </div>
       <div className='contenedorCrearTurnoForm divPequenyo '>
         <Form id="anyadir">
           <div className='contenedorDescripcionCrearTurno contenedorFormCrearTurno'>

@@ -26,7 +26,6 @@ function TiemposEmpleado() {
         },
         };
         let datosEmpresa = await peticionGetAuth(URL_API + "tiempos/" + `${localStorage.getItem("idEmpleado")}`, header);
-        console.log(datosEmpresa)
         if (datosEmpresa.data.length !== 0) {
         var tiemposEmpleado = datosEmpresa.data.tiempos.map((datosE) => {
             if(datosE.fin !== null){

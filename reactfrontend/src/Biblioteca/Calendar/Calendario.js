@@ -36,10 +36,8 @@ const Calendario = () => {
       if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
           datosAusencia = await peticionGetAuth(URL_API + "ausenciasEmpleado/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
       }else{
-        console.log(URL_API + "ausenciasEmpleados/" + `${localStorage.getItem("id")}`)
         datosAusencia = await peticionGetAuth(URL_API + "ausenciasEmpleado/" + `${localStorage.getItem("id")}`, header);
       }
-    console.log(datosAusencia)
     if(datosAusencia !== undefined){
       if (datosAusencia.data.ausencias !== 0 && datosAusencia.data.message !== "El empleado no tiene ausencias") {
           var todosDatosAusencia = datosAusencia.data.ausencias.map((dia)=>{

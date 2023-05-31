@@ -19,14 +19,12 @@ function AnyadirTipoAusencia() {
 
     const TodoCorrecto = async() =>{
         let correcto = form.tipoAusencia !== "";
-        console.log(correcto)
         if(correcto){
             var raw = {
                 "empresa_id": localStorage.getItem('id'),
                 "descripcion": form.tipoAusencia,
                 "tipo": form.tipo
             }
-            console.log(raw)
             try {
                 const header = {
                     headers: {
@@ -51,8 +49,13 @@ function AnyadirTipoAusencia() {
     <React.Fragment>
         <NavAdmin/>
             <div>
+            <div className='FlexBoton'>
+                    <h1 className='text-center tituloH1'>Añadir Tipo Ausencia</h1>
+                    <div className='contenedorBotonCrearCorreo'>
+                        <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/verTipoAusencias">Volver</Link>
+                    </div>
+                </div>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
-                    <h1 className='tituloh1noMarBot'>Añadir Tipo Ausencia</h1>
                     <Form id="anyadir" className='formAnyadirTipoAusencia'>
                                 <p>Descripción</p>
                                 <Form.Group className="mb-3">

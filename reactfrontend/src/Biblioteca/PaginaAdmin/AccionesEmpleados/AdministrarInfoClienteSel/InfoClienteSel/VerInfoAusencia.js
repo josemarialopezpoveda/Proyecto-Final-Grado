@@ -22,7 +22,6 @@ function VerInfoAusencia(props) {
           },
         };
         let datosAusencia = await peticionGetAuth(URL_API + "ausenciasEmpleado/" + `${localStorage.getItem("idEmpleado")}`, header);
-        console.log(datosAusencia)
         if (datosAusencia.data.ausencias !== 0 && datosAusencia.data.message !== "El empleado no tiene ausencias") {
             var todosDatosAusencia = datosAusencia.data.ausencias.map((dia)=>{
               var newTurno = {

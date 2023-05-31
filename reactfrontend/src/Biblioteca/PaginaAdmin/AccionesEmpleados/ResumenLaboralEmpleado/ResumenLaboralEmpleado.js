@@ -50,9 +50,7 @@ function ResumenLaboralEmpleado(){
           },
         };
         let datosEmpleado = undefined
-        console.log(URL_API + "registroHorario/" + `${localStorage.getItem("idEmpleado")}`)
         datosEmpleado = await peticionGetAuth(URL_API + "registroHorario/" + `${localStorage.getItem("idEmpleado")}`, header);
-        console.log(datosEmpleado)
         if(datosEmpleado !== undefined){
             if(datosEmpleado.data.turnos.length !== 0){
                 let contadores = {

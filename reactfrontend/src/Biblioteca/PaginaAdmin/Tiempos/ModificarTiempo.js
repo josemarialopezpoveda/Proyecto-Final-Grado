@@ -32,7 +32,6 @@ function ModificarTiempo() {
     },
     };
     let datosTiempo = await peticionGetAuth(URL_API + "tiempo/" + `${localStorage.getItem('idTiempoSeleccionado')}`, header);
-    console.log(datosTiempo)
     if (datosTiempo.data.tiempo !== undefined) {
       if(datosTiempo.data.tiempo.fin === null){
         let datos = {
@@ -66,7 +65,6 @@ function ModificarTiempo() {
             "fin":unirFechaYHora(horas.fechaSalida, horas.horaSalida),
             "turno_id":horas.turno_id
           };
-          console.log(raw)
           try {
             const header = {
               headers: {
@@ -75,7 +73,6 @@ function ModificarTiempo() {
               },
             };
             let peticion = await peticionPut(URL_API + "tiempos/" + `${localStorage.getItem("idTiempoSeleccionado")}`, raw, header);
-            console.log(peticion)
             if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
             } else {
@@ -110,7 +107,6 @@ function ModificarTiempo() {
         },
       };
       let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleado")}`, header);
-      console.log(datosEmpleado)
       if (datosEmpleado.data.nombre !== undefined) {
           var newEmpleado = {
             nombre: datosEmpleado.data.nombre,
@@ -122,7 +118,12 @@ function ModificarTiempo() {
   return (
     <React.Fragment>
     <NavAdmin/>
-      <h1 className='text-center tituloH1'>Modificar Tiempo del empleado: {empleado.nombre}</h1>
+      <div className='FlexBoton'>
+        <h1 className='text-center tituloH1'>Modificar Tiempo del empleado {empleado.nombre}</h1>
+        <div className='contenedorBotonCrearCorreo'>
+            <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/verTiemposEmpleado">Volver</Link>
+        </div>
+      </div>
       <div className='contenedorCrearTurnoForm divPequenyo '>
         <Form id="anyadir">
           <div className='contenedorDescripcionCrearTurno contenedorFormCrearTurno'>

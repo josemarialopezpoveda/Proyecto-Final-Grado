@@ -5,6 +5,7 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { generarUUID } from "../../FuncionesAuxiliares/Funciones";
+import ListarOpciones from "Biblioteca/FuncionesAuxiliares/ListarOpciones";
 
 function Header() {
   const opciones = [
@@ -22,14 +23,6 @@ function Header() {
     },
   ];
 
-  const listarOpciones = () => {
-    return opciones.map((option) => (
-      <Link key={generarUUID()} className="nav-link" to={option.path}>
-        {option.titulo}
-      </Link>
-    ));
-  };
-
   return (
     <React.Fragment>
       <Navbar id="barraNavegacion" collapseOnSelect expand="md" variant="dark">
@@ -41,7 +34,7 @@ function Header() {
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse>
-            <Nav>{listarOpciones()}</Nav>
+            <Nav><ListarOpciones listadoOpciones={opciones}/></Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>

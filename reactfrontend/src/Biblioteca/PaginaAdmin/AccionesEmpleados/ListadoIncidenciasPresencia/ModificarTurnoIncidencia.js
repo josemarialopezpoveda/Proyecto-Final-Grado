@@ -24,7 +24,6 @@ function ModificarTurnoIncidencia() {
                 "fechaInicioTurno": form.fInicio,
                 "fechaFinTurno": form.fFin
             }
-            console.log(raw)
             try {
                 const header = {
                     headers: {
@@ -78,7 +77,12 @@ function ModificarTurnoIncidencia() {
     <React.Fragment>
         <NavAdmin/>
             <div>
-                <h1 className='tituloh1noMarBot'>Modificar Turno Incidencia</h1>
+                <div className='FlexBoton'>
+                    <h1 className='text-center tituloH1 tituloh1noMarBot'>Modificar Turno Incidencia</h1>
+                    <div className='contenedorBotonCrearCorreo'>
+                        <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/verTurnoIncidencia">Volver</Link>
+                    </div>
+                </div>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
                     <Form id="anyadir" className='formAnyadirTipoAusencia'>
                     <div className="divContenedorCampo2">

@@ -18,8 +18,8 @@ function CrearCorreoCliente() {
     //Estado para almacenar los datos del mensaje creado.
     const [mensajeCreado, setMensajeCreado] = useState({
         casos_id: "",
-        empresa_id: `${localStorage.getItem("id")}`,
-        emisor: "",
+        empresa_id: `${localStorage.getItem("idEmpresa")}`,
+        emisor: `${localStorage.getItem("id")}`,
         receptor:"",
         mensaje: ""
     });
@@ -42,8 +42,6 @@ function CrearCorreoCliente() {
           },
         };
         let datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresaEmpleados/" + `${localStorage.getItem("idEmpresa")}`, header);
-        console.log(datosEmpresaLogueada)
-        //console.log(datosEmpresaLogueada.data.empresa.empleados)
         if (datosEmpresaLogueada.data.length !== 0) {
           var nombreCompletoEmpleado = datosEmpresaLogueada.data.map((datosEmpleado) => {
             if(datosEmpleado.empleado != empleado.nombre){ 
@@ -53,8 +51,6 @@ function CrearCorreoCliente() {
                 };
                 return newEmpleado;
             }else{
-                console.log(datosEmpleado.empleado)
-                console.log(empleado.nombre)
                 var newEmpleado = {
                     id: "",
                     nombreCompleto: "",
@@ -91,7 +87,6 @@ function CrearCorreoCliente() {
           "empleado_id": casoCreado.empleado_id,
           "asunto": casoCreado.asunto,
         }
-        console.log(raw)
         try {
           const header = {
               headers: {
@@ -100,14 +95,10 @@ function CrearCorreoCliente() {
               }
           }
         let peticion = await peticionPost(URL_API + "casos", raw, header)
-        console.log(peticion)
         if(peticion.data.errores !== undefined && peticion.data.errores !== null){
             mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
         }else{
-            mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-            setMensajeCreado({...mensajeCreado, casos_id: peticion.data.caso.id});
-            crearMensaje();
-            Navigate("/chatCliente")
+            crearMensaje(peticion.data.caso.id, peticion.data.empresa_id);
         }
       } catch (error) {
           mostrarAlertaErronea(error.message, error.stack, null);
@@ -116,16 +107,14 @@ function CrearCorreoCliente() {
     }
 
     //Función que una vez creas el caso crea el primer mensaje y si falla avisa al usuario.
-    const crearMensaje = async() =>{
-        console.log(mensajeCreado.casos_id,)
+    const crearMensaje = async(idCaso, idEmpresa) =>{
         let raw = {
-            "casos_id": mensajeCreado.casos_id,
-            "empresa_id": mensajeCreado.empresa_id,
+            "casos_id": idCaso,
+            "empresa_id": idEmpresa,
             "emisor": mensajeCreado.emisor,
             "receptor": mensajeCreado.receptor,
             "mensaje": mensajeCreado.mensaje,
           }
-          console.log(raw)
           try {
             const header = {
                 headers: {
@@ -134,12 +123,11 @@ function CrearCorreoCliente() {
                 }
             }
           let peticion = await peticionPost(URL_API + "mensajes", raw, header)
-          console.log(peticion)
           if(peticion.data.errores !== undefined && peticion.data.errores !== null){
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
           }else{
               mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-              Navigate("/chatAdmin")
+              Navigate("/chatCliente")
           }
         } catch (error) {
             mostrarAlertaErronea(error.message, error.stack, null);
@@ -155,7 +143,6 @@ function CrearCorreoCliente() {
       },
     };
     let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("id")}`, header);
-    console.log(datosEmpleado)
     if (datosEmpleado.data.nombre !== undefined) {
         var newEmpleado = {
           nombre: datosEmpleado.data.nombre + " " + datosEmpleado.data.apellidos,
@@ -168,7 +155,12 @@ function CrearCorreoCliente() {
     <React.Fragment>
         <NavCliente/>
                 <div className=''>
-                    <h1 className='text-center tituloH1'>Crear Caso</h1>
+                    <div className='FlexBoton'>
+                        <h1 className='text-center tituloH1'>Crear Caso</h1>
+                        <div className='contenedorBotonCrearCorreo'>
+                            <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/chatCliente">Volver</Link>
+                        </div>
+                    </div>
                     <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
                     <Form id="anyadir">
                         <div className="divContenedorCampo divMensajeCorreo">
