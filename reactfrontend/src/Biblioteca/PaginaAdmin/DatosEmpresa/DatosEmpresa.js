@@ -63,7 +63,7 @@ function DatosEmpresa(){
                         }
                     }
                     try{
-                        let url = URL_API + "empresa/" + `${localStorage.getItem('id')}`;
+                        let url = URL_API + "empresa";
                         let peticion = await peticionDelete(`${url}`, header);
                         if(peticion.data.errores !== undefined && peticion.data.errores !== null){
                             mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
