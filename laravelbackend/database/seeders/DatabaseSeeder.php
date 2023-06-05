@@ -40,7 +40,8 @@ class DatabaseSeeder extends Seeder {
             EmpleadosTurnosTableSeeder::class,
             TiemposTableSeeder::class,
             AusenciasSeeder::class,
-            DeleteEmployeeTimesSeeder::class,
+            //DeleteEmployeeTimesSeeder::class,
+            EliminarTiemposSeeder::class,
             MensajeSeeder::class,
         ]);
     }
