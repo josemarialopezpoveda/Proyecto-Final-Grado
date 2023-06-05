@@ -249,7 +249,7 @@ class TurnoController extends Controller {
             $turno = DB::table('turnos')->where('id', $turnoId)->first();
             if (!is_null($turno)) {
                 $loginOk = Auxiliares::verificarTurnoEmpresa($turno, $user);
-                if ($loginOk) {
+                if ($loginOk === true) {
                     $turnoAsignado = DB::table('empleados_turnos')->where('turno_id', $turnoId)->first();
                     if (is_null($turnoAsignado)) {
                         DB::table('turnos')->where('id', $turnoId)->delete();

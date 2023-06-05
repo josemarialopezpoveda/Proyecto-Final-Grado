@@ -150,7 +150,7 @@ class CasoController extends Controller {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
-        if ($loginOk) {
+        if ($loginOk === true) {
             $casos = Caso::whereIn('casos.id', function ($query) use ($empleadoId) {
                 $query->select('casos_id')
                     ->from('mensajes')

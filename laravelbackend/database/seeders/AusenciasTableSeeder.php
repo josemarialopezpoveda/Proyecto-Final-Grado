@@ -2,20 +2,18 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class AusenciasTableSeeder extends Seeder
-{
+class AusenciasTableSeeder extends Seeder {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
         DB::table('ausencias')->insert([
-            'tipoausencias_id' => 1,
+            'tipoausencias_id' => 13,
             'empleado_id' => 3,
             'descripcion' => "COVID-19. DURACIÓN BAJA 10 DÍAS",
             'fechaInicio' => "2023-02-25",
@@ -26,7 +24,7 @@ class AusenciasTableSeeder extends Seeder
         ]);
 
         DB::table('ausencias')->insert([
-            'tipoausencias_id' => 2,
+            'tipoausencias_id' => 12,
             'empleado_id' => 3,
             'descripcion' => "ESGUINCE DE TOBILLO. DURACIÓN BAJA 30 DÍAS",
             'fechaInicio' => Carbon::now(),
@@ -45,7 +43,7 @@ class AusenciasTableSeeder extends Seeder
             'updated_at' => Carbon::now()
         ]);
         DB::table('ausencias')->insert([
-            'tipoausencias_id' => 10,
+            'tipoausencias_id' => 21,
             'empleado_id' => 3,
             'descripcion' => "VACACIONES MARZO",
             'fechaInicio' => '2023-03-20',

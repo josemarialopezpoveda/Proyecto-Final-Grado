@@ -117,6 +117,7 @@
       <excludeFolder url="file://$MODULE_DIR$/laravelbackend/vendor/symfony/http-foundation" />
       <excludeFolder url="file://$MODULE_DIR$/laravelbackend/vendor/intervention/image" />
       <excludeFolder url="file://$MODULE_DIR$/laravelbackend/vendor/league/csv" />
+      <excludeFolder url="file://$MODULE_DIR$/laravelbackend/vendor/badcow/lorem-ipsum" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
