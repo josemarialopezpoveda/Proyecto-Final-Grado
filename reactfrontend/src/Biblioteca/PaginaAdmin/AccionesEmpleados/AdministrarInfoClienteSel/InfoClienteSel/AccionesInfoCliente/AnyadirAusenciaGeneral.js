@@ -28,9 +28,7 @@ function AnyadirAusenciaGeneral(props) {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        console.log(URL_API + "tipoAusencias")
         let datosTipoAusencia = await peticionGetAuth(URL_API + "tipoAusencias", header);
-        console.log(datosTipoAusencia)
         if (datosTipoAusencia.data.length !== 0) {
           var todosDatosAusencia = datosTipoAusencia.data.map((datosA) => {
             var newAusencia = {
@@ -56,7 +54,6 @@ function AnyadirAusenciaGeneral(props) {
     }
   
   const TodoCorrecto = async() =>{
-    console.log(tipoBaja)
     let raw = {
       "descripcion": form.descripcion,
       "tipoausencias_id": parseInt(tipoBaja.current.value.trim()),
@@ -65,7 +62,6 @@ function AnyadirAusenciaGeneral(props) {
       "fechaFin": form.fechaFin,
       "justificada": parseInt(form.justificada)
     }
-    console.log(raw)
     try {
       const header = {
           headers: {
@@ -89,7 +85,12 @@ function AnyadirAusenciaGeneral(props) {
     <React.Fragment>
         <NavAdmin/>
           <div className='sectionAnyadirAusenciaGeneral'>
-            <h1>Añadir {props.titulo}</h1>
+              <div className='FlexBoton'>
+                  <h1 className='text-center tituloH1'>Añadir {props.titulo}</h1>
+                  <div className='contenedorBotonCrearCorreo'>
+                      <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/verAusencias">Volver</Link>
+                  </div>
+              </div>
               <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottom'>
                 <Form id="anyadir">
                   <div className='divContenedorCampo'>

@@ -21,7 +21,6 @@ function VerTurno() {
           },
         };
         let datosTurno = await peticionGetAuth(URL_API + "turnos/" + `${localStorage.getItem("idTurno")}`, header);
-        console.log(datosTurno)
         if (datosTurno.data !== undefined) {
             var newTurno = {
               descripcion: datosTurno.data.turno.descripcion,

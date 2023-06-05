@@ -36,9 +36,7 @@ const PaginacionTodosLosTurnos = ({ data, perPage, setEstado }) => {
           },
         };
           let datosTurno = undefined;
-          console.log(URL_API + "todosLosTurnos/" + `${localStorage.getItem("idEmpleado")}`)
           datosTurno = await peticionGetAuth(URL_API + "todosLosTurnos/" + `${localStorage.getItem("idEmpleado")}`, header);
-          console.log(datosTurno)
           if(datosTurno !== undefined){
               if(datosTurno.data.turnoSEmpleado !== undefined){
                   if (datosTurno.data.turnoSEmpleado.length !== 0) {
@@ -65,7 +63,6 @@ const PaginacionTodosLosTurnos = ({ data, perPage, setEstado }) => {
   };
 
   const borrar = (e) =>{
-    console.log(e.target.id);
       SweetAlert.fire({
           title: "¿Estás seguro que quieres eliminar este turno?",
           text: "Los datos se eliminarán definitivamente",
@@ -83,9 +80,7 @@ const PaginacionTodosLosTurnos = ({ data, perPage, setEstado }) => {
                 },
               };
               let url = URL_API + "turnos/";
-              console.log(url + `${e.target.id}`)
               let peticion = await peticionDelete(`${url}${e.target.id}`, header);
-              console.log(peticion)
               if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
                 mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
               } else {
@@ -127,7 +122,6 @@ const PaginacionTodosLosTurnos = ({ data, perPage, setEstado }) => {
   const renderData = () => {
     const start = (currentPage - 1) * perPage;
     const end = start + perPage;
-    console.log(data)
     if(data.length !== 0){
     return data.slice(start, end).map((option, index) => (     
         <tr key={generarUUID()}>

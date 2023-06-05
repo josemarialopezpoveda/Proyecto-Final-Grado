@@ -15,9 +15,7 @@ function CrearBodyTurno() {
           },
         };
         let datosTurno = undefined;
-            console.log("pasa por aqui")
             datosTurno = await peticionGetAuth(URL_API + "turnosEmpleado/" + `${localStorage.getItem("idEmpleado")}`, header);
-        console.log(datosTurno)
         if(datosTurno.data.message !== "No se encontró turno activo para el empleado"){
             if(datosTurno !== undefined){
                 if(datosTurno.data.turno === undefined){
@@ -82,7 +80,6 @@ function CrearBodyTurno() {
       },
     };
     let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleado")}`, header);
-    console.log(datosEmpleado)
     if (datosEmpleado.data.nombre !== undefined) {
         var newEmpleado = {
           nombre: datosEmpleado.data.nombre,

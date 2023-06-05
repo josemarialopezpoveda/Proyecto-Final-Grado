@@ -37,8 +37,8 @@
 
 .botonInfoCliente {
     border-radius: 20px;
-    border: 1px solid #00b1ff;
-    background-color: #00b1ff;
+    border: 1px solid #B8E7F6;
+    background-color: #B8E7F6;
     color: #484242;
     font-size: 12px;
     font-weight: bold;
@@ -52,6 +52,7 @@
 .botonInfoCliente:hover {
     cursor: pointer;
     color: #51CEF4;
+    border: 1px solid #51CEF4;
     background-color: white;
 }
 

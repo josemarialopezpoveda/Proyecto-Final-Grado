@@ -21,9 +21,7 @@ const PaginacionTurnos = ({ data, perPage, setEstadoDinamico, setEstadoEstatico 
           Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
         },
       };
-      console.log(URL_API + "turnosEmpresa/" + `${localStorage.getItem("id")}`)
       let datosTurno = await peticionGetAuth(URL_API + "turnosEmpresa/" + `${localStorage.getItem("id")}`, header);
-      console.log(datosTurno)
       if (datosTurno.data !== 0) {
         if(datosTurno.data.turnos !== undefined){
           var todosDatosEmpresa = datosTurno.data.turnos.map((datosE) => {
@@ -47,7 +45,6 @@ const PaginacionTurnos = ({ data, perPage, setEstadoDinamico, setEstadoEstatico 
     };
 
     const borrarTurno = (e) =>{
-      console.log(e.target.id);
       SweetAlert.fire({
           title: "¿Estás seguro que quieres eliminar este turno?",
           text: "Los datos se eliminarán definitivamente",
@@ -65,9 +62,7 @@ const PaginacionTurnos = ({ data, perPage, setEstadoDinamico, setEstadoEstatico 
                 },
               };
               let url = URL_API + "turnos/";
-              console.log(url + `${e.target.id}`)
               let peticion = await peticionDelete(`${url}${e.target.id}`, header);
-              console.log(peticion)
               if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
                 mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
               } else {
@@ -123,7 +118,6 @@ const PaginacionTurnos = ({ data, perPage, setEstadoDinamico, setEstadoEstatico 
     const start = (currentPage - 1) * perPage;
     const end = start + perPage;
     if(data.length !== 0){
-      console.log(data)
       return data.slice(start, end).map((option, index) => (     
         <tr key={generarUUID()}>
             <td className='contenedorTurnoTabla'>{option.descripcion}</td>

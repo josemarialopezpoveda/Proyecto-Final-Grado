@@ -19,13 +19,11 @@ function ModificarCorreo() {
 
     const TodoCorrecto = async() =>{
         let correcto = form.asunto !== "";
-        console.log(correcto)
         if(correcto){
             var raw = {
                 "asunto": form.asunto,
                 "activo": booleanoANumber(form.activo)
             }
-            console.log(raw)
             try {
                 const header = {
                     headers: {
@@ -34,7 +32,6 @@ function ModificarCorreo() {
                     }
                 }
               let peticion = await peticionPut(URL_API + "casos/" + `${localStorage.getItem('idCaso')}`, raw, header)
-              console.log(peticion)
               if(peticion.data.errores !== undefined && peticion.data.errores !== null){
                   mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
               }else{
@@ -60,7 +57,6 @@ function ModificarCorreo() {
         },
         };
         let datosCasos = await peticionGetAuth(URL_API + "casos/" + `${localStorage.getItem('idCaso')}`, header);
-        console.log(datosCasos)
         if (datosCasos.data.caso.asunto !== undefined && datosCasos.data.caso.asunto !== null) {
             let datos = {
                 asunto: datosCasos.data.caso.asunto,
@@ -77,11 +73,18 @@ function ModificarCorreo() {
 
 
     const botonVolver = () =>{
-        console.log(`${localStorage.getItem('tipoUsuario')}`)
         if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
             return(<Link to="/chatAdmin" className="anyadirUsuarioDatos">Volver</Link>);
         }else{
             return(<Link to="/chatCliente" className="anyadirUsuarioDatos">Volver</Link>);
+        }
+    }
+
+    const botonVolver2 = () =>{
+        if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+            return(<Link className='crearCorreoBoton margin0-10 heightDefinido' to="/chatAdmin">Volver</Link>)
+        }else{
+            return(<Link className='crearCorreoBoton margin0-10 heightDefinido' to="/chatCliente">Volver</Link>)
         }
     }
 
@@ -96,8 +99,13 @@ function ModificarCorreo() {
     <React.Fragment>
         {anyadirBarraNav()}
             <div>
+                <div className='FlexBoton'>
+                    <h1 className='text-center tituloH1'>Modificar Caso</h1>
+                    <div className='contenedorBotonCrearCorreo'>
+                        {botonVolver2()}
+                    </div>
+                </div>
                 <section className='estiloFormularios sectionPequenyo sectionFormMarginBottomTipoAusencia'>
-                    <h1 className='tituloh1noMarBot'>Modificar Caso</h1>
                     <Form id="anyadir" className='formAnyadirTipoAusencia'>
                         <p>Asunto</p>
                         <Form.Group className="mb-3">

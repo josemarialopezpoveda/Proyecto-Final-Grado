@@ -41,7 +41,6 @@ function LoginAdmin() {
     };
     try {
       let peticion = await peticionPost(URL_API + "login", raw);
-      console.log(peticion)
       if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
         mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
       } else {

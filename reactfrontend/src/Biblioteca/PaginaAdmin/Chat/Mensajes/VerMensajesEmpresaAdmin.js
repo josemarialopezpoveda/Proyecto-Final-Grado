@@ -40,8 +40,7 @@ function VerMensajesEmpresaAdmin() {
         };
         let datosMensaje = await peticionGetAuth(URL_API + "mensajes/" + `${localStorage.getItem('idCaso')}`, header);
         let datosCaso = await peticionGetAuth(URL_API + "casos/" + `${localStorage.getItem('idCaso')}`, header);
-        console.log(datosMensaje)
-        console.log(datosCaso)
+        
          if (datosMensaje.data.mensajes !== undefined && datosMensaje.data.mensajes !== null && datosMensaje.data.mensajes.length !== 0) {
             var todosDatosCaso = datosMensaje.data.mensajes.map((datosM) => {
                 let empleados = {
@@ -137,7 +136,6 @@ function VerMensajesEmpresaAdmin() {
         },
         };
         let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
-        console.log(datosEmpleado)
         if (datosEmpleado.data.nombre !== undefined) {
             var newEmpleado = {
                 nombre: datosEmpleado.data.nombre + "  " + datosEmpleado.data.apellidos
@@ -148,8 +146,6 @@ function VerMensajesEmpresaAdmin() {
 
     const verificarEmpleadoAdministrador = (option) =>{
         if(localStorage.getItem("tipoUsuario") !== undefined && localStorage.getItem("tipoUsuario") === "Administrador" && option.emisor === empleado.nombre){
-            console.log(option.emisor)
-            console.log(empleado.nombre)
             return(
                 <div>
                     <button type="button" className="sinBorde" onClick={modificarMensaje}>

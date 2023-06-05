@@ -42,7 +42,6 @@ function Fichar(){
       }else{
           datosHoras = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("id")}`, header);
       }
-      console.log(datosHoras)
       if(datosHoras !== undefined){
         if(datosHoras.data.dias !== undefined){
           setHorasEnSaPredefinidas(datosHoras.data.dias)
@@ -142,8 +141,6 @@ function Fichar(){
             datosEmpleado = await peticionGetAuth(URL_API + "empleadoOnline/" + `${localStorage.getItem("id")}`, header);
             datosTurnoEmpleado = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("id")}`, header);
         }
-        console.log(datosEmpleado)
-        console.log(datosTurnoEmpleado)
         if(datosEmpleado !== undefined && datosTurnoEmpleado !== undefined){
           if (datosEmpleado.data.length !== 0) {
                   const obj = {
@@ -152,9 +149,7 @@ function Fichar(){
                       fin: formatearFechaHora(),
                       turno_id:datosTurnoEmpleado.data.turnoId
                   }
-                  console.log(obj)
                   let datosTiempoPost = await peticionPut(URL_API + "tiempos/" + datosEmpleado.data[0].id, obj, header);
-                  console.log(datosTiempoPost)
                   mostrarAlertaCorrecta("Salida realizada correctamente", "¡Buen trabajo hoy! Esperamos verte mañana con energía y listo para otra jornada productiva 👋 ", "5000");
                   recoleccionRegistroHorario();
           }
@@ -176,7 +171,6 @@ function Fichar(){
         }else{
             datosTurnoEmpleado = await peticionGetAuth(URL_API + "turnoActivo/" + `${localStorage.getItem("id")}`, header);
         }
-        console.log(datosTurnoEmpleado)
         let obj = undefined;
           if(localStorage.getItem("tipoUsuario") === "Administrador"){
              obj = {
@@ -195,7 +189,6 @@ function Fichar(){
           }
           if(obj !== undefined){
             let datosEmpleado = await peticionPost(URL_API + "tiempos", obj, header);
-            console.log(datosEmpleado)
             recoleccionRegistroHorario();
             mostrarAlertaCorrecta("Entrada realizada correctamente", "Buenos días, esperamos que tenga un excelente día lleno de productividad y logros. Recuerden que su trabajo es valioso y apreciado, y que su dedicación es clave para el éxito de nuestra empresa. ¡A darle con todo! 😊 ", "5000");
             return datosEmpleado.data.id;
@@ -336,10 +329,18 @@ function Fichar(){
     const horasQueLleva = () =>{
       const num = parseFloat(datosJornada.tiempoRestante);
       if (num < 0) {
-        return(<p>Horas extras: {datosJornada.tiempoRestante}</p>)
+        console.log("Positivo")
       } else {
-        return(<p>Horas restantes: {datosJornada.tiempoRestante}</p>)
+        console.log("Negativo")
       }
+      // if(datosJornada.tiempoRestante !== undefined){
+      //   console.log(datosJornada.tiempoRestante.chatAt(0))
+      // }
+      // if (num === -0) {
+      //   return(<p>Horas extras: {datosJornada.tiempoRestante.substring(1)}</p>)
+      // } else {
+      //   return(<p>Horas restantes: {datosJornada.tiempoRestante}</p>)
+      // }
     }
 
     return(

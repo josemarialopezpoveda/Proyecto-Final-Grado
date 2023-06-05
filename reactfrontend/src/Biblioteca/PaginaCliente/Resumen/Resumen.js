@@ -90,7 +90,6 @@ function Resumen(){
                     }
 
                 });
-                console.log(convertirHoraANumero(contadores.contadorBalanceHorario))
                 usoCanvas(convertirHoraANumero(contadores.contadorBalanceHorario));
 
                 contadores = {

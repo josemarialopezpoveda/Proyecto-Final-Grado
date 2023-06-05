@@ -26,7 +26,6 @@ function ListarEmpleadosConProblemas() {
       },
     };
     let datosEmpleados = await peticionGetAuth(URL_API + "incidenciasTurnos", header);
-    console.log(datosEmpleados)
     let datosTotales = [];
     if(datosEmpleados.data.empleadosSinTurnoActivo !== undefined && datosEmpleados.data.empleadosSinTurnoActivo.length !== 0){
       datosEmpleados.data.empleadosSinTurnoActivo.map((datos)=>{

@@ -33,7 +33,6 @@ function VerAusenciasGenerales(props) {
       },
     };
     let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleado")}`, header);
-    console.log(datosEmpleado)
     if (datosEmpleado.data.nombre !== undefined) {
         var newEmpleado = {
           nombre: datosEmpleado.data.nombre,

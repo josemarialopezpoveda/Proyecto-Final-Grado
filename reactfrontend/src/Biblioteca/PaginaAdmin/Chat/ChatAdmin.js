@@ -38,7 +38,6 @@ function ChatAdmin() {
     };
      let datosCasos = await peticionGetAuth(URL_API + "casos", header);
     //let datosCasos = await peticionGetAuth(URL_API + "casosDeUnEmpleado/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
-    console.log(datosCasos)
     if (datosCasos.data.casos.length !== 0) {
       var todosDatosEmpresa = datosCasos.data.casos.map((datosE) => {
         var newEmpresa = {

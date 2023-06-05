@@ -37,7 +37,6 @@ const PaginacionNuestrosClientes = ({ data, perPage, setEstadoDinamico, setEstad
   const renderData = () => {
     const start = (currentPage - 1) * perPage;
     const end = start + perPage;
-    console.log(data)
     if(data.length !== 0){
     return data.slice(start, end).map((option, index) => (     
         <tr className="EmpleadoTablaApartado" key={generarUUID()}>

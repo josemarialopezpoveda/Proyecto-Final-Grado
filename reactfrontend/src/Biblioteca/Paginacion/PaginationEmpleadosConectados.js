@@ -11,7 +11,6 @@ const PaginationEmpleadosConectados = ({ data, perPage }) => {
   
     //Función que guarda el ID del empleado a ver la información en localStorage y te lleva a la ruta para vel la información del empleado.
     const verJornada = (e) => {
-        console.log(e.target.id)
         localStorage.setItem("idEmpleado", e.target.id);
         Navigate("/verJornadaEmpleado");
     }

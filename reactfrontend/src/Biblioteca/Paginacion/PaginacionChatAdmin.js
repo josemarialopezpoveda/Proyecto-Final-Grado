@@ -133,7 +133,6 @@ const PaginacionChatAdmin = ({ data, perPage, setEstadoDinamico, setEstadoEstati
           if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
             mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
           } else {
-            console.log(peticion.data.message)
             if(peticion.data.message == "Error, no se puede borrar, el caso tiene mensajes."){
               mostrarAlertaErronea(peticion.data.message, "Error mensaje con errores.", "3000")
             }else{

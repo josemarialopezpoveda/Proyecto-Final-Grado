@@ -325,13 +325,9 @@ export const booleanoANumber = (actividad) => {
 
 //funcion en javascript que a partir de esto 2023-04-19 06:55:51 me de 2023-04-19
 export const cogerFecha = (fecha) =>{
-  console.log(fecha)
   fecha = new Date(fecha);
-  console.log("FECHA")
-  console.log(fecha)
   const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
   const fechaFormateada = fecha.toLocaleDateString('es-ES', options);
-  console.log(fechaFormateada)
   return fechaFormateada;
 }
 
@@ -472,7 +468,6 @@ export const convertirHorasFormatoExplicativo = (tiempo) =>{
 
 //Convierte una hora en un número.
 export const convertirHoraANumero = (hora)=>{
-  console.log(hora)
   const [horas, minutos, segundos] = hora.split(':').map(Number);
   const horaEnNumero = horas + minutos / 60 + segundos / 3600;
   return parseFloat(horaEnNumero.toFixed(2));
@@ -552,7 +547,6 @@ export const unirFechaYHora = (fechaStr, horaStr) =>{
 
 //Una función que a partir de "2023-02-02 15:17:22" recoge la fecha y la devuelve en formato "yyyy-MM-dd".
 export const recogerFechaAPartirFecha = (stringFecha) =>{
-  console.log(stringFecha)
   const fecha = new Date(stringFecha);
   const anio = fecha.getFullYear().toString();
   const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');

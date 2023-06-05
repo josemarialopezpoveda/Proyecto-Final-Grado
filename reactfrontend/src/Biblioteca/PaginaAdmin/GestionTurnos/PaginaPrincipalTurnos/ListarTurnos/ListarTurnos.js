@@ -32,9 +32,7 @@ function ListarTurnos() {
             Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
           },
         };
-        console.log(URL_API + "turnosEmpresa/" + `${localStorage.getItem("id")}`)
         let datosTurno = await peticionGetAuth(URL_API + "turnosEmpresa/" + `${localStorage.getItem("id")}`, header);
-        console.log(datosTurno)
         if (datosTurno.data !== 0) {
           if(datosTurno.data.turnos !== undefined){
             var todosDatosEmpresa = datosTurno.data.turnos.map((datosE) => {

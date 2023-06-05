@@ -47,7 +47,6 @@ function CrearCorreoAdmin() {
         }else{
             datosEmpresaLogueada = await peticionGetAuth(URL_API + "empresaEmpleados/" + `${localStorage.getItem("idEmpresa")}`, header);
         }
-        console.log(datosEmpresaLogueada)
         if (datosEmpresaLogueada.data.length !== 0) {
           var nombreCompletoEmpleado = datosEmpresaLogueada.data.map((datosEmpleado) => {
             if(`${localStorage.getItem('tipoUsuario')}` === "Trabajador" && datosEmpleado.id.toString() === `${localStorage.getItem("id")}`){
@@ -88,7 +87,6 @@ function CrearCorreoAdmin() {
                 }
             }
           });
-          console.log(nombreCompletoEmpleado)
           setNombresUsuarios(nombreCompletoEmpleado);
         }
       };
@@ -106,7 +104,6 @@ function CrearCorreoAdmin() {
           },
         };
         let datosEmpleado = await peticionGetAuth(URL_API + "empleado/" + `${localStorage.getItem("idEmpleadoAdmin")}`, header);
-        console.log(datosEmpleado)
         if (datosEmpleado.data.nombre !== undefined) {
             var newEmpleado = {
               nombre: datosEmpleado.data.nombre + " " + datosEmpleado.data.apellidos,
@@ -128,7 +125,6 @@ function CrearCorreoAdmin() {
           "empleado_id": casoCreado.empleado_id,
           "asunto": casoCreado.asunto,
         }
-        console.log(raw)
         try {
           const header = {
               headers: {
@@ -137,7 +133,6 @@ function CrearCorreoAdmin() {
               }
           }
         let peticion = await peticionPost(URL_API + "casos", raw, header)
-        console.log(peticion)
         if(peticion.data.errores !== undefined && peticion.data.errores !== null){
             mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
         }else{
@@ -185,7 +180,12 @@ function CrearCorreoAdmin() {
     <React.Fragment>
         <NavAdmin/>
                 <div className=''>
-                    <h1 className='text-center tituloH1'>Crear Caso</h1>
+                    <div className='FlexBoton'>  
+                        <h1 className='text-center tituloH1'>Crear Caso</h1>
+                        <div className='contenedorBotonCrearCorreo'>
+                            <Link className='crearCorreoBoton margin0-10 heightDefinido' to="/chatAdmin">Volver</Link>
+                        </div>
+                    </div>
                     <section className='sectionPequenyo sectionFormAccionesUsuario sectionFormMarginBottomTipoAusencia'>
                     <Form id="anyadir">
                         <div className="divContenedorCampo divMensajeCorreo">

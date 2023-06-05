@@ -23,9 +23,7 @@ function VerTurnoIncidencia() {
       },
     };
       let datosTurno = undefined;
-      console.log(URL_API + "turnoEmpleado/" + `${localStorage.getItem("empleados_turnos_id")}`)
       datosTurno = await peticionGetAuth(URL_API + "turnoEmpleado/" + `${localStorage.getItem("empleados_turnos_id")}`, header);
-      console.log(datosTurno)
       if(datosTurno !== undefined){
           if(datosTurno.data.turnoEmpleado !== undefined){
             var newTurno = {

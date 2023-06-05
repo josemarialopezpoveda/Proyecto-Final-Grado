@@ -27,7 +27,6 @@ const PaginacionTiempos = ({ data, perPage, setEstadoDinamico, setEstadoEstatico
         },
         };
         let datosEmpresa = await peticionGetAuth(URL_API + "tiempos/" + `${localStorage.getItem("idEmpleado")}`, header);
-        console.log(datosEmpresa)
         if (datosEmpresa.data.length !== 0) {
         var tiemposEmpleado = datosEmpresa.data.tiempos.map((datosE) => {
             if(datosE.fin !== null){
@@ -73,7 +72,6 @@ const PaginacionTiempos = ({ data, perPage, setEstadoDinamico, setEstadoEstatico
                 };
                 let url = URL_API + "tiempos/";
                 let peticion = await peticionDelete(`${url}${e.target.id}`, header);
-                console.log(peticion)
                 if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
                   mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
                 } else {
@@ -110,13 +108,11 @@ const PaginacionTiempos = ({ data, perPage, setEstadoDinamico, setEstadoEstatico
     setPaginaSeleccionada(page)
     
     let botonesSeleccionados = document.getElementsByClassName("botonSeleccionado");
-    console.log(botonesSeleccionados)
     if(botonesSeleccionados.length !== 0){
       botonesSeleccionados[0].classList.remove("botonSeleccionado");
     }
     e.target.classList.add("botonSeleccionado");
     botonesSeleccionados = document.getElementsByClassName("botonSeleccionado");
-    console.log(botonesSeleccionados)
   }
 
   const renderData = () => {

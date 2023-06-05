@@ -66,7 +66,6 @@ const PaginacionChatCliente = ({ data, perPage, setEstadoDinamico, setEstadoEsta
           if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
             mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
           } else {
-            console.log(peticion.data.message)
             if(peticion.data.message == "Error, no se puede borrar, el caso tiene mensajes."){
               mostrarAlertaErronea(peticion.data.message, "", "3000")
             }else{

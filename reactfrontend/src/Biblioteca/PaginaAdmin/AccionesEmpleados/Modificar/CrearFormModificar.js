@@ -52,7 +52,6 @@ function CrearFormModificar() {
     };
     let url = URL_API + "empleado/" + localStorage.getItem("idEmpleado");
     let datosEmpleado = await peticionGetAuth(`${url}`, header);
-    console.log(datosEmpleado)
           setForm({
             id: datosEmpleado.data.id,
             nombre: datosEmpleado.data.nombre,
@@ -142,8 +141,6 @@ function CrearFormModificar() {
           fechaBaja: formatearFechaHora(),
           tipoEmpleado: form.tipoEmpleado,
         };
-        
-        console.log(raw)
         let url = URL_API + "empleados/";
         let peticion = await peticionPut(`${url}${localStorage.getItem("idEmpleado")}`, raw, header);
         if (peticion.data.errores !== undefined && peticion.data.errores !== null) {

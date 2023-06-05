@@ -31,6 +31,9 @@ function TurnosDelDia() {
             obtenerMilisegundosDesdeHora(horas.horaInicioT) > obtenerMilisegundosDesdeHora(horas.horaFinT) ||
             obtenerMilisegundosDesdeHora(horas.horaInicioN) > obtenerMilisegundosDesdeHora(horas.horaFinN) ){
       mostrarAlertaErronea("Error a la hora de crear el turno","La hora de fin no puede ser inferior a la hora de inicio.",5000);
+    }else if(horas.horaFinM === "" || horas.horaFinN === "" || horas.horaFinT === "" ||horas.horaInicioM === "" ||
+    horas.horaInicioN === "" ||horas.horaInicioT === ""){
+      mostrarAlertaErronea("Error a la hora de crear el turno","Hay alguna fecha con formato incorrecto.",5000);
     }else{
       let dias = [];
       contextoTurno.dias.map((dia)=>{
@@ -62,9 +65,7 @@ function TurnosDelDia() {
           Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
         },
       };
-      console.log(raw)
       let peticion = await peticionPost(URL_API + "turnos", raw, header);
-      console.log(peticion)
       if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
         mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
       } else {

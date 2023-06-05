@@ -24,9 +24,7 @@ function DatosEmpresa(){
             }
         }
         let url = URL_API + "empresa/" + `${localStorage.getItem('id')}`;
-        console.log(url)
         let datosEmpresa = await peticionGetAuth(`${url}`, header);
-        console.log(datosEmpresa)
             if(datosEmpresa !== undefined && datosEmpresa.data.empresa !== undefined){
                 setDatos({
                     razonSocial: datosEmpresa.data.empresa.razonSocial,

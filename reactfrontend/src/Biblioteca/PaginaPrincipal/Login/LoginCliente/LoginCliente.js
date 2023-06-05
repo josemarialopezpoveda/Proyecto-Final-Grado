@@ -39,7 +39,6 @@ function LoginCliente() {
     };
     try {
       let peticion = await peticionPost(URL_API + "loginEmpleado", raw);
-      console.log(peticion)
       if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
         mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
       } else {

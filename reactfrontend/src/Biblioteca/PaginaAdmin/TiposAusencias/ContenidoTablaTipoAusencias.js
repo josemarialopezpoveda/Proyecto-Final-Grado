@@ -37,9 +37,7 @@ function ContenidoTablaTipoAusencias() {
         Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
       },
     };
-    console.log(URL_API + "tipoAusencias")
     let datosEmpresa = await peticionGetAuth(URL_API + "tipoAusencias", header);
-    console.log(datosEmpresa)
     if (datosEmpresa.data.length !== 0) {
       let valores = Object.values(datosEmpresa.data);
       var todosDatosEmpresa = valores.map((datosE) => {
