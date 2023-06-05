@@ -106,7 +106,9 @@ class Auxiliares {
         $empresa = Empresa::find($empleado->empresa_id);
         if (!$empresa) {
             // Si no se encuentra la empresa del empleado, retorna un mensaje de error
-            return ['message' => 'Empresa del empleado no existe.'];
+            return [
+                'message' => 'Empresa del empleado no existe.',
+            ];
         }
 
         // Si el usuario que solicita la información es de tipo Empresa y tiene el mismo id que la empresa del empleado, tiene autorización
@@ -123,10 +125,10 @@ class Auxiliares {
                 // Si el usuario no es Administrador ni es el mismo empleado, no tiene autorización
                 return ['message' => 'No estás autorizado.'];
             }
+        } else {
+            // Si el usuario no pertenece a la misma empresa del empleado, no tiene autorización
+            return ['message' => 'El empleado no pertenece a la empresa del usuario autenticado.'];
         }
-
-        // Si el usuario no pertenece a la misma empresa del empleado, no tiene autorización
-        return ['message' => 'El empleado no pertenece a la empresa del usuario autenticado.'];
     }
 
 

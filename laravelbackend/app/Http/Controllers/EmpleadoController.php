@@ -386,25 +386,31 @@ class EmpleadoController extends Controller {
         if (is_numeric($empresaId)) {
             $empleado = Empleado::find($empleadoId);
             if ($empleado && $empleado->empresa_id === $empresaId) {
-                $turno = $empleado->turnos->where('pivot.activo', true)->first();
-                if ($request->turno_id === $turno["id"] &&
-                    $request->empleados_turnos_id === $turno["pivot"]["id"] &&
-                    $request->fechaInicioTurno === $turno["pivot"]["fechaInicioTurno"] &&
-                    $request->fechaFinTurno >= date("Y-m-d")) {
-                    $empleado->turnos()->updateExistingPivot($request->turno_id, [
-                        'fechaInicioTurno' => $request->fechaInicioTurno,
-                        'fechaFinTurno' => $request->fechaFinTurno,
-                        'activo' => true
-                    ]);
-                    // Obtener el turno modificado
-                    $turnoModificado = $empleado->turnos->where('pivot.activo', true)->first();
-                    $data = [
-                        'message' => 'Turno actualizado correctamente.',
-                        '$turnoModificado' => $turnoModificado,
-                    ];
-                    return response()->json($data);
+                $turno = DB::table('empleados_turnos')
+                    ->where('id', $request->empleados_turnos_id)
+                    ->first();
+                if ($turno->empleado_id === $empleado->id) {
+                    if ($request->turno_id === $turno->turno_id &&
+                        $request->fechaInicioTurno === $turno->fechaInicioTurno &&
+                        $request->fechaFinTurno >= date("Y-m-d")) {
+                        $empleado->turnos()->updateExistingPivot($request->turno_id, [
+                            'fechaInicioTurno' => $request->fechaInicioTurno,
+                            'fechaFinTurno' => $request->fechaFinTurno,
+                            'activo' => true
+                        ]);
+                        // Obtener el turno modificado
+                        $turnoModificado = $empleado->turnos->where('pivot.id', $request->empleados_turnos_id)->first();
+                        $data = [
+                            'message' => 'Turno actualizado correctamente.',
+                            'turnoModificado' => $turnoModificado,
+                        ];
+                        return response()->json($data);
+                    } else {
+                        $data = ['message' => 'Errores de validación.',];
+                        return response()->json($data);
+                    }
                 } else {
-                    $data = ['message' => 'Errores de validación.',];
+                    $data = ['message' => 'Error. Turno no corresponde al empleado',];
                     return response()->json($data);
                 }
             } else {
@@ -461,7 +467,7 @@ class EmpleadoController extends Controller {
     {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
-        if ($loginOk) {
+        if ($loginOk === true) {
             $empleado = Empleado::find($empleadoId);
             if ($empleado) {
                 if ($user instanceof Empresa) {
@@ -512,7 +518,7 @@ class EmpleadoController extends Controller {
     {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
-        if ($loginOk) {
+        if ($loginOk === true) {
             $empleado = Empleado::find($empleadoId);
             if ($empleado) {
                 if ($user instanceof Empresa) {

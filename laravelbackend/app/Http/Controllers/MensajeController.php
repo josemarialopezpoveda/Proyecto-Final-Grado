@@ -303,7 +303,7 @@ class MensajeController extends Controller {
                 ];
             } else {
                 $data = [
-                    'message' => 'No estás autorizado.',
+                    'message' => 'No estás autorizadooooo.',
                 ];
             }
         }

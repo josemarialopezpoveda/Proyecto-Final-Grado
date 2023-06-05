@@ -7,6 +7,7 @@ use App\Helpers\Auxiliares;
 use App\Helpers\DiasMeses;
 use App\Helpers\Holidays;
 use App\Helpers\Intervalo;
+use App\Models\Ausencia;
 use App\Models\Empleado;
 use App\Models\Empresa;
 use App\Models\Tiempo;
@@ -44,7 +45,7 @@ class TiempoController extends Controller {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
-        if ($loginOk) {
+        if ($loginOk === true) {
             $empleado = Empleado::find($empleadoId);
             $tiempos = Tiempo::select('inicio', 'fin')
                 ->where('empleado_id', $empleadoId)
@@ -53,6 +54,7 @@ class TiempoController extends Controller {
             $empresa = Empresa::find($empleado->empresa_id);
             //Empiezo a buscar turnos a partir del primer registro que tenga el empleado en la tabla tiempos.
             $primerRegistroTiempos = $tiempos->first();
+
             $fechaInicioRegistros = Carbon::parse($primerRegistroTiempos->inicio)->format('Y-m-d');
             $fechaHoy = Carbon::today()->format('Y-m-d');
             $turnos = [];
@@ -69,31 +71,12 @@ class TiempoController extends Controller {
                         ->where('diaSemana', $diaSemanaNumero)->first();
 
                     if ($dia) {
-                        if (!Carbon::parse($fechaInicioRegistros)->isWeekend() && !Holidays::isHoliday(
-                                $fechaInicioRegistros
-                            )) {
+                        $esFestivo = Holidays::isHoliday(Carbon::parse($fechaInicioRegistros)->format('Y-m-d'));
+                        if ($esFestivo) {
+                            $totalTiempoATrabajar = '00:00:00';
+                        } else {
                             $totalTiempoATrabajar = Intervalo::sumaHorasIntervalos($dia);
-
-                            $turnos [] = [
-                                'empleado_id' => $empleado->id,
-                                'empleado' => $empleado->nombre . " " . $empleado->apellidos,
-                                'tipoEmpleado' => $empleado->tipoEmpleado,
-                                'empresa_id' => $empleado->empresa_id,
-                                'empresa' => $empresa->nombreComercial,
-                                'fecha' => Carbon::parse($fechaInicioRegistros)->format('Y-m-d'),
-                                'mes' => DiasMeses::getMonthName(date('n', strtotime($fechaInicioRegistros))),
-                                'dia' => DiasMeses::getDaysOfWeek($diaSemanaNumero),
-                                'turnoId' => $empleadoTurno->turno_id,
-                                'InicioTurno' => $empleadoTurno->fechaInicioTurno,
-                                'FinTurno' => $empleadoTurno->fechaFinTurno,
-                                'horasJornada' => $totalTiempoATrabajar,
-                            ];
                         }
-                    }
-                } else {
-                    if (!Carbon::parse($fechaInicioRegistros)->isWeekend() && !Holidays::isHoliday(
-                            $fechaInicioRegistros
-                        )) {
                         $turnos [] = [
                             'empleado_id' => $empleado->id,
                             'empleado' => $empleado->nombre . " " . $empleado->apellidos,
@@ -103,13 +86,14 @@ class TiempoController extends Controller {
                             'fecha' => Carbon::parse($fechaInicioRegistros)->format('Y-m-d'),
                             'mes' => DiasMeses::getMonthName(date('n', strtotime($fechaInicioRegistros))),
                             'dia' => DiasMeses::getDaysOfWeek($diaSemanaNumero),
-                            'turnoId' => "No hay turno para este dia",
-                            'InicioTurno' => "No hay turno para este dia",
-                            'FinTurno' => "No hay turno para este dia",
-                            'horasJornada' => "00:00:00",
+                            'turnoId' => $empleadoTurno->turno_id,
+                            'InicioTurno' => $empleadoTurno->fechaInicioTurno,
+                            'FinTurno' => $empleadoTurno->fechaFinTurno,
+                            'horasJornada' => $totalTiempoATrabajar,
                         ];
                     }
                 }
+
                 $fechaInicioRegistros = Carbon::parse($fechaInicioRegistros);
                 $fechaInicioRegistros->addDay();
             }
@@ -122,8 +106,6 @@ class TiempoController extends Controller {
                     ->where('empleado_id', $turno['empleado_id'])
                     ->whereDate('inicio', $turno['fecha'])
                     ->get();
-
-
                 if ($tiempos) {
                     $tiemposRegistrados = Tiempo::select('inicio', 'fin')
                         ->where('empleado_id', $turno['empleado_id'])
@@ -141,6 +123,46 @@ class TiempoController extends Controller {
                 $turnos_con_segundos[] = $turno_con_segundos;
             }
 
+            $ausencias = Ausencia::where('empleado_id', $empleado->id)->get();
+            $fechasAusencia = [];
+
+            foreach ($ausencias as $ausencia) {
+                $fechaInicio = Carbon::parse($ausencia->fechaInicio)->startOfDay();
+                $fechaFin = Carbon::parse($ausencia->fechaFin)->endOfDay();
+                $justificada = $ausencia->justificada;
+
+                // Agregar los datos al array $fechasAusencia
+                $fechasAusencia[] = [
+                    "fechaInicio" => $fechaInicio->format('Y-m-d'),
+                    "fechaFin" => $fechaFin->format('Y-m-d'),
+                    "justificada" => $justificada
+                ];
+            }
+            foreach ($turnos_con_segundos as &$turno) {
+                $fecha = $turno['fecha'];
+                $tieneAusencia = false;
+                $justificada = false;
+
+                foreach ($fechasAusencia as $ausencia) {
+                    $fechaInicioAusencia = Carbon::parse($ausencia['fechaInicio'])->startOfDay();
+                    $fechaFinAusencia = Carbon::parse($ausencia['fechaFin'])->endOfDay();
+
+                    if (Carbon::parse($fecha)->between($fechaInicioAusencia, $fechaFinAusencia)) {
+                        $tieneAusencia = true;
+                        if ($ausencia['justificada'] == 1) {
+                            $justificada = true;
+                        }
+                        if ($tieneAusencia && $justificada) {
+                            $turno['horasJornada'] = '00:00:00';
+                            $turno['horasFaltantes'] = '00:00:00';
+                            $turno['horasExtras'] = '00:00:00';
+                        }
+                        break;
+                    }
+                }
+                $turno['tiene_ausencia'] = $tieneAusencia;
+                $turno['justificada'] = $justificada;
+            }
             $data = ['turnos' => $turnos_con_segundos,];
         } else {
             $data = ['message' => $loginOk['message'],];
@@ -158,7 +180,7 @@ class TiempoController extends Controller {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
-        if ($loginOk) {
+        if ($loginOk === true) {
             $empleado = Empleado::find($empleadoId);
             $tiempos = Tiempo::select('id', 'inicio', 'fin')
                 ->where('empleado_id', $empleadoId)
@@ -346,7 +368,7 @@ class TiempoController extends Controller {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
-        if ($loginOk) {
+        if ($loginOk === true) {
             $tiempo = Tiempo::where('empleado_id', $empleadoId)->where('fin', null)->get();
 //            if ($tiempo->count() > 0) {
             return response()->json($tiempo);
@@ -455,7 +477,7 @@ class TiempoController extends Controller {
         $user = Auth::user();
         $loginOk = Auxiliares::verificarAutorizacionEmpleado($empleadoId, $user);
 
-        if ($loginOk) {
+        if ($loginOk === true) {
             $hoy = Carbon::now();
             $horario = [];
             $empleado = DB::table('empleados')
