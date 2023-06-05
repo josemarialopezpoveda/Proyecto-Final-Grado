@@ -121,6 +121,7 @@
       <path value="$PROJECT_DIR$/laravelbackend/vendor/symfony/http-foundation" />
       <path value="$PROJECT_DIR$/laravelbackend/vendor/intervention/image" />
       <path value="$PROJECT_DIR$/laravelbackend/vendor/league/csv" />
+      <path value="$PROJECT_DIR$/laravelbackend/vendor/badcow/lorem-ipsum" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

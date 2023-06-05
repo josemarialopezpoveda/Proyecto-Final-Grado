@@ -16,9 +16,9 @@ return new class extends Migration {
             $table->engine = 'InnoDB';
             $table->id();
             $table->unsignedBigInteger('empleado_id');
-            $table->foreign('empleado_id')->references('id')->on('empleados');
+            $table->foreign('empleado_id')->references('id')->on('empleados')->onDelete('cascade');
             $table->unsignedBigInteger('turno_id');
-            $table->foreign('turno_id')->references('id')->on('turnos');
+            $table->foreign('turno_id')->references('id')->on('turnos')->onDelete('cascade');
             $table->date('fechaInicioTurno');
             $table->date('fechaFinTurno');
             $table->boolean('activo');
