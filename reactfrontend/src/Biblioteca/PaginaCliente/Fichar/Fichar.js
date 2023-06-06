@@ -327,20 +327,13 @@ function Fichar(){
 
     //Funcion que di es positivo devuelve horas restantes y si es negativo horas extras.
     const horasQueLleva = () =>{
-      const num = parseFloat(datosJornada.tiempoRestante);
-      if (num < 0) {
-        console.log("Positivo")
-      } else {
-        console.log("Negativo")
+      if(datosJornada.tiempoRestante !== undefined){
+        if (datosJornada.tiempoRestante.startsWith("-")) {
+          return(<p>Horas extras: {datosJornada.tiempoRestante.substring(1)}</p>)
+        } else {
+          return(<p>Horas restantes: {datosJornada.tiempoRestante}</p>)
+        }
       }
-      // if(datosJornada.tiempoRestante !== undefined){
-      //   console.log(datosJornada.tiempoRestante.chatAt(0))
-      // }
-      // if (num === -0) {
-      //   return(<p>Horas extras: {datosJornada.tiempoRestante.substring(1)}</p>)
-      // } else {
-      //   return(<p>Horas restantes: {datosJornada.tiempoRestante}</p>)
-      // }
     }
 
     return(

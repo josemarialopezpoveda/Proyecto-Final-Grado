@@ -89,6 +89,11 @@ function ModificarMensaje() {
                     setDatosReceptor(emisor);
                 }
             }
+            datosCaso.data.mensajes.map((mensaje)=>{
+                if(mensaje.id == `${localStorage.getItem('idMensaje')}`){
+                    setMensajeCreado({...mensajeCreado, mensaje: mensaje.mensaje})
+                }
+            })
         }
       };
 
@@ -113,7 +118,12 @@ function ModificarMensaje() {
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
           }else{
               mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-              Navigate("/verMensajes")
+
+                if(`${localStorage.getItem('tipoUsuario')}` === "Administrador"){
+                    Navigate("/verMensajes")
+                }else{
+                    Navigate("/verMensajesEmpleado")
+                }
           }
         } catch (error) {
             mostrarAlertaErronea(error.message, error.stack, null);
@@ -139,6 +149,7 @@ function ModificarMensaje() {
 
     return (
         <React.Fragment>
+            <pre>{JSON.stringify(mensajeCreado, null, 3)}</pre>
             {anyadirBarraNav()}
                     <div className=''>
                         <div className='FlexBoton'>

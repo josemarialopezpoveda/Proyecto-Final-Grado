@@ -40,7 +40,6 @@ function VerMensajesEmpleado() {
         };
         let datosMensaje = await peticionGetAuth(URL_API + "mensajes/" + `${localStorage.getItem('idCaso')}`, header);
         let datosCaso = await peticionGetAuth(URL_API + "casos/" + `${localStorage.getItem('idCaso')}`, header);
-        
          if (datosMensaje.data.mensajes !== undefined && datosMensaje.data.mensajes !== null && datosMensaje.data.mensajes.length !== 0) {
             var todosDatosCaso = datosMensaje.data.mensajes.map((datosM) => {
                 let empleados = {
@@ -147,7 +146,8 @@ function VerMensajesEmpleado() {
 
 
     const verificarEmpleadoAdministrador = (option) =>{
-        if(localStorage.getItem("tipoUsuario") !== undefined && localStorage.getItem("tipoUsuario") === "Administrador"  && option.emisor === empleado.nombre){
+        if(localStorage.getItem("tipoUsuario") !== undefined && localStorage.getItem("tipoUsuario") === "Trabajador"  
+        && option.emisor === empleado.nombre){
             return(
                 <div>
                     <button type="button" className="sinBorde" onClick={modificarMensaje}>
@@ -204,9 +204,9 @@ function VerMensajesEmpleado() {
                         return(
                             <div className="textoMensaje" key={generarUUID()}>
                                 <div className='emisorReceptor emisorReceptorUltimoMensaje'>
-                                    <div>
-                                        <h1>Para: {option.receptor}</h1>
+                                    <div>   
                                         <h1>De: {option.emisor}</h1>
+                                        <h1>Para: {option.receptor}</h1>
                                     </div>
                                     {verificarEmpleadoAdministrador(option)}
                                 </div>
@@ -217,9 +217,9 @@ function VerMensajesEmpleado() {
                     }else{
                         return(
                             <div className="textoMensaje" key={generarUUID()}>
-                                <div className='emisorReceptor'>
-                                    <h1>Para: {option.receptor}</h1>
+                                <div className='emisorReceptor'>  
                                     <h1>De: {option.emisor}</h1>
+                                    <h1>Para: {option.receptor}</h1>
                                 </div>
                                 <div className="textoMensaje">{option.mensaje}</div>
                                 <div className="fechaMensaje">{option.horaEnvio}</div>

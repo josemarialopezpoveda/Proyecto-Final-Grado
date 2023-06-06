@@ -85,7 +85,6 @@ const PaginacionAusenciasEmpleado = ({ data, perPage, setEstadoDinamico, setEsta
     }
 
     const fechaNula = (fecha) =>{
-      console.log(fecha)
         if(fecha === null){
             return "Fecha no indicada";
         }else{
