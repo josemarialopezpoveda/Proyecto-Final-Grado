@@ -37,21 +37,22 @@ function CrearFormModificarDatosEmpresa() {
                   }
               }
             let datosEmpresa = await peticionGetAuth(URL_API+"empresa/"+ localStorage.getItem('id'), header);
-            if(datosEmpresa.data !== undefined){
+            console.log(datosEmpresa)
+            if(datosEmpresa.data.empresa !== undefined){
                   setDatos({
-                        id:datosEmpresa.data.id,
-                        razonSocial: datosEmpresa.data.razonSocial,
-                        nombreComercial: datosEmpresa.data.nombreComercial,
-                        cif: datosEmpresa.data.cif,
-                        telFijo: datosEmpresa.data.telefonoFijo,
-                        telMovil: datosEmpresa.data.telefonoMovil,
-                        logotipo: datosEmpresa.data.logotipo,
-                        direccion: datosEmpresa.data.direccion,
-                        poblacion: datosEmpresa.data.poblacion,
-                        provincia: datosEmpresa.data.provincia,
-                        codPostal: datosEmpresa.data.cPostal,
-                        pais: datosEmpresa.data.pais,
-                        email: datosEmpresa.data.email
+                        id:datosEmpresa.data.empresa.id,
+                        razonSocial: datosEmpresa.data.empresa.razonSocial,
+                        nombreComercial: datosEmpresa.data.empresa.nombreComercial,
+                        cif: datosEmpresa.data.empresa.cif,
+                        telFijo: datosEmpresa.data.empresa.telefonoFijo,
+                        telMovil: datosEmpresa.data.empresa.telefonoMovil,
+                        logotipo: datosEmpresa.data.empresa.logotipo,
+                        direccion: datosEmpresa.data.empresa.direccion,
+                        poblacion: datosEmpresa.data.empresa.poblacion,
+                        provincia: datosEmpresa.data.empresa.provincia,
+                        codPostal: datosEmpresa.data.empresa.cPostal,
+                        pais: datosEmpresa.data.empresa.pais,
+                        email: datosEmpresa.data.empresa.email
                   })
             }else{
                   mostrarAlertaErronea("Ruta de la petición incorrecta", "Error de red", null);
