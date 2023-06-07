@@ -539,6 +539,9 @@ export const obtenerMilisegundosDesdeHora = (hora) =>{
 
 //Función que a partir de "2023-05-08" y "19:02" las une con el formato "2023-05-07 09:34:37".
 export const unirFechaYHora = (fechaStr, horaStr) =>{
+  if(horaStr === "00:00:00"){
+    horaStr = "00:00"
+  }
   const fechaHora = new Date(`${fechaStr}T${horaStr}:00`);
   const fechaFormateada = fechaHora.toISOString().slice(0, 10);
   const horaFormateada = fechaHora.toTimeString().slice(0, 5);

@@ -56,8 +56,9 @@ function ModificarTiempo() {
 };
 
   const modificarTiempo = async() =>{
-    if(horas.horaEntrada !== "" && horas.horaSalida !== "" && horas.fechaEntrada !== "" && horas.fechaSalida !== ""){
-      if(obtenerMilisegundosDesdeHora(horas.horaEntrada) < obtenerMilisegundosDesdeHora(horas.horaSalida)){
+    if(horas.horaEntrada !== "" && horas.fechaEntrada !== "" && horas.fechaSalida !== ""){
+      if(horas.horaSalida === "00:00:00" ||
+        obtenerMilisegundosDesdeHora(horas.horaEntrada) < obtenerMilisegundosDesdeHora(horas.horaSalida)){
         if(horas.fechaSalida === horas.fechaEntrada){
           var raw = {
             "empleado_id": parseInt(localStorage.getItem("idEmpleado")),
