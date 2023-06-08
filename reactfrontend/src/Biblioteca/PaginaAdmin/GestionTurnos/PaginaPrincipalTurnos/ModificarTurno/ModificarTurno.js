@@ -76,6 +76,10 @@ function ModificarTurno() {
         recoleccionDatos();
     }, []);
 
+    const goBack = () => {
+      window.history.go(-1); // Retrocede una página en el historial
+    };
+
     const modificarTurno = async() =>{
       let raw = {
         "descripcion" : turno.descripcion,
@@ -103,7 +107,7 @@ function ModificarTurno() {
                 mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
             }else{
                 mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-                Navigate("/verTurno")
+                goBack();
             }
           }
         } catch (error) {
@@ -161,7 +165,7 @@ function ModificarTurno() {
                 <div className='divFlexBotones'>
                     <div className='contenedorBotonModificarTurno'>
                         <button type='button' onClick={modificarTurno} className="linkSignInLogin" id="signIn">Modificar Turno</button>
-                        <Link to="/verTurno" className="linkSignInLogin" id="signIn">Volver</Link>
+                        <button onClick={goBack} className="linkSignInLogin" id="signIn">Volver</button>
                     </div>
                 </div>
             </section>

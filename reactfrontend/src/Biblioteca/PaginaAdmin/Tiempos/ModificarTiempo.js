@@ -1,7 +1,7 @@
 import React, {useEffect,useState} from 'react';
 import Form from 'react-bootstrap/Form';
 import {Link, useNavigate} from 'react-router-dom';
-import { mostrarAlertaCorrecta, mostrarAlertaErronea, obtenerMilisegundosDesdeHora, peticionGetAuth, peticionPut, recogerFechaAPartirFecha, recogerHoraAPartirFecha, unirFechaYHora } from 'Biblioteca/FuncionesAuxiliares/Funciones';
+import { mostrarAlertaCorrecta, mostrarAlertaErronea, obtenerMilisegundosDesdeHora, peticionGetAuth, peticionPut, recogerFechaAPartirFecha, recogerHoraAPartirFecha, unirFechaYHora, unirFechaYHoraNula } from 'Biblioteca/FuncionesAuxiliares/Funciones';
 import './CrearTiempo.css';
 import { URL_API } from 'services/http/const';
 import NavAdmin from '../Nav/NavAdmin';
@@ -38,7 +38,7 @@ function ModificarTiempo() {
           fechaEntrada: recogerFechaAPartirFecha(datosTiempo.data.tiempo.inicio),
           fechaSalida: recogerFechaAPartirFecha(datosTiempo.data.tiempo.inicio),
           horaEntrada: recogerHoraAPartirFecha(datosTiempo.data.tiempo.inicio),
-          horaSalida: "00:00:00",
+          horaSalida: null,
           turno_id: datosTiempo.data.tiempo.turno_id
         }
         setHoras(datos);
@@ -60,13 +60,27 @@ function ModificarTiempo() {
       if(horas.horaSalida === "00:00:00" ||
         obtenerMilisegundosDesdeHora(horas.horaEntrada) < obtenerMilisegundosDesdeHora(horas.horaSalida)){
         if(horas.fechaSalida === horas.fechaEntrada){
+          if(horas.horaSalida === null){
+            raw = {
+              "empleado_id": parseInt(localStorage.getItem("idEmpleado")),
+              "inicio":unirFechaYHoraNula(horas.fechaEntrada, horas.horaEntrada),
+              "fin":unirFechaYHora(horas.fechaSalida, horas.horaSalida),
+              "turno_id":horas.turno_id
+            };
+          }else{
+            raw = {
+              "empleado_id": parseInt(localStorage.getItem("idEmpleado")),
+              "inicio":unirFechaYHora(horas.fechaEntrada, horas.horaEntrada),
+              "fin":unirFechaYHora(horas.fechaSalida, horas.horaSalida),
+              "turno_id":horas.turno_id
+            };
+          }
           var raw = {
             "empleado_id": parseInt(localStorage.getItem("idEmpleado")),
             "inicio":unirFechaYHora(horas.fechaEntrada, horas.horaEntrada),
             "fin":unirFechaYHora(horas.fechaSalida, horas.horaSalida),
             "turno_id":horas.turno_id
           };
-          console.log(raw)
           try {
             const header = {
               headers: {
@@ -75,7 +89,6 @@ function ModificarTiempo() {
               },
             };
             let peticion = await peticionPut(URL_API + "tiempos/" + `${localStorage.getItem("idTiempoSeleccionado")}`, raw, header);
-            console.log(peticion)
             if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
             } else {
