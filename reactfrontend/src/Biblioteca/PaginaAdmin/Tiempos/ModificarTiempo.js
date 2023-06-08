@@ -66,6 +66,7 @@ function ModificarTiempo() {
             "fin":unirFechaYHora(horas.fechaSalida, horas.horaSalida),
             "turno_id":horas.turno_id
           };
+          console.log(raw)
           try {
             const header = {
               headers: {
@@ -74,11 +75,12 @@ function ModificarTiempo() {
               },
             };
             let peticion = await peticionPut(URL_API + "tiempos/" + `${localStorage.getItem("idTiempoSeleccionado")}`, raw, header);
+            console.log(peticion)
             if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
             } else {
               mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-              Navigate("/verTiemposEmpleado");
+              //Navigate("/verTiemposEmpleado");
             }
           } catch (error) {
             mostrarAlertaErronea(error.message, error.stack, null);

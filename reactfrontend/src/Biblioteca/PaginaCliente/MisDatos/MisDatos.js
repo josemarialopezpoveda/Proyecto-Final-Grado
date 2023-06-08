@@ -91,7 +91,7 @@ function MisDatos() {
       {botonDatosEmpresa()}
       <section>
         <div className="TablaDatosUser">
-          <h1 className='text-center tituloH1'>Datos empresa {datos.nombre}</h1>
+          <h1 className='text-center tituloH1'>Datos de {datos.nombre}</h1>
           <section className="min-height sectionPequenyo">
             <Table className="tablaAjustar" striped>
               <thead>
