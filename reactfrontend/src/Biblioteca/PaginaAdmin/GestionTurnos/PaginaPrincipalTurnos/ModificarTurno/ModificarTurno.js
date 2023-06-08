@@ -95,10 +95,11 @@ function ModificarTurno() {
                 }
             }
           let peticion = await peticionPut(URL_API + "turnos/" + `${localStorage.getItem('idTurno')}`, raw, header)
-          if(peticion.response.data.error !== undefined){
-            mostrarAlertaErronea(peticion.response.data.error, "", null);
+          console.log(peticion)
+          if(peticion.data.error !== undefined){
+            mostrarAlertaErronea(peticion.data.error, "", null);
           }else{
-            if(peticion.data.errores !== undefined && peticion.data.errores !== null){
+            if(peticion.data.message !== undefined && peticion.data.message !== null){
                 mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
             }else{
                 mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
