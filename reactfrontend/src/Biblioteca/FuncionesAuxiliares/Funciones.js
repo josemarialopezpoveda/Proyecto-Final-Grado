@@ -546,8 +546,9 @@ export const unirFechaYHora = (fechaStr, horaStr) =>{
     horaStr = "00:00"
   }
   const fechaHora = new Date(`${fechaStr}T${horaStr}:00`);
+  console.log(fechaHora)
   const fechaFormateada = fechaHora.toISOString().slice(0, 10);
-  const horaFormateada = fechaHora.toTimeString().slice(0, 5);
+  const horaFormateada = fechaHora.toTimeString().slice(0, 8);
   return `${fechaFormateada} ${horaFormateada}`;
 }
 

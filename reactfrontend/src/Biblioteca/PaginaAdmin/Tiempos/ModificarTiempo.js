@@ -38,7 +38,7 @@ function ModificarTiempo() {
           fechaEntrada: recogerFechaAPartirFecha(datosTiempo.data.tiempo.inicio),
           fechaSalida: recogerFechaAPartirFecha(datosTiempo.data.tiempo.inicio),
           horaEntrada: recogerHoraAPartirFecha(datosTiempo.data.tiempo.inicio),
-          horaSalida: null,
+          horaSalida: "00:00:00",
           turno_id: datosTiempo.data.tiempo.turno_id
         }
         setHoras(datos);
@@ -82,6 +82,7 @@ function ModificarTiempo() {
             "turno_id":horas.turno_id
           };
           try {
+            console.log(raw)
             const header = {
               headers: {
                 Accept: "application/json",
@@ -89,6 +90,7 @@ function ModificarTiempo() {
               },
             };
             let peticion = await peticionPut(URL_API + "tiempos/" + `${localStorage.getItem("idTiempoSeleccionado")}`, raw, header);
+            console.log(peticion)
             if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
             } else {
@@ -99,10 +101,10 @@ function ModificarTiempo() {
             mostrarAlertaErronea(error.message, error.stack, null);
           }
         }else{
-          mostrarAlertaErronea("Error al modificar el turno", "Las fechas no son iguales", 5000)
+          mostrarAlertaErronea("Error al modificar el tiempo", "Las fechas no son iguales", 5000)
         }
       }else{
-        mostrarAlertaErronea("Error al modificar el turno", "La hora de entrada no puede ser posterior a la hora de salida", 5000)
+        mostrarAlertaErronea("Error al modificar el tiempo", "La hora de entrada no puede ser posterior a la hora de salida", 5000)
       }
     }
   }
