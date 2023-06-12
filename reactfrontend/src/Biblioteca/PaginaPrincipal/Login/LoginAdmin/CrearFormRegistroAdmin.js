@@ -34,9 +34,19 @@ function CrearFormRegistroAdmin() {
             /^(?!\s*$).+/.test(contextoReg.form.razonSocial) &&
             /^(?!\s*$).+/.test(contextoReg.form.nombreComercial)
         );
-        if(contextoReg.validarContrasenyas("valido") === false){
-            mostrarAlertaErronea("Error en la contraseña", "La contraseña debe tener mayúsculas, minúsculas y números (y debe tener al menos 7 caracteres).")
+        console.log(/^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(contextoReg.form.contrasenya))
+        console.log(/^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(contextoReg.form.contraseyaConfirmada))
+        console.log(/^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(contextoReg.form.password))
+        console.log(/^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(contextoReg.form.contrasenya) &&
+        /^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(contextoReg.form.contraseyaConfirmada) &&
+        /^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(contextoReg.form.password) )
+        if(
+            /^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(contextoReg.form.contrasenya) === false &&
+            /^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(contextoReg.form.contraseyaConfirmada) === false &&
+            /^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(contextoReg.form.password) === false){
+            mostrarAlertaErronea("Error en la contraseña", "La contraseña debe tener mayúsculas, minúsculas y números (y debe tener al menos 7 caracteres).");
         }else{
+            console.log("HOLA")
             if (correcto) {
                 var raw = {
                     "cif": contextoReg.form.cif,
