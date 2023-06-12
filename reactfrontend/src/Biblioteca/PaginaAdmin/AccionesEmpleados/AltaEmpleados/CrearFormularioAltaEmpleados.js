@@ -78,49 +78,54 @@ function CrearFormularioAltaEmpleados() {
       /^(?!\s*$).+/.test(form.pais) &&
       /^\d{5}$/.test(form.codPostal) &&
       /^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(form.contrasenya);
-    if (correcto) {
-      var raw = {
-        empresa_id: localStorage.getItem("id"),
-        nif: form.dni,
-        nombre: form.nombre,
-        apellidos: form.apellidos,
-        direccion: form.direccion,
-        cPostal: form.codPostal,
-        poblacion: form.poblacion,
-        provincia: form.provincia,
-        pais: form.pais,
-        telefono: form.telefono,
-        fechaNacimiento: form.fnac,
-        email: form.email,
-        password: form.contrasenya,
-        password_confirmation: form.contrasenya,
-        numSegSoc: form.numSegSoc,
-        //fotografia: form.fotografia,
-        ultimaConexion: formatearFechaHora(),
-        activo: true,
-        fechaAlta: form.fechaAlta,
-        fechaBaja: formatearFechaHora(),
-        tipoEmpleado: form.tipoUsuario,
-      };
-      try {
-        const header = {
-          headers: {
-            Accept: "application/json",
-            Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
-          },
-        };
-        let peticion = await peticionPost(URL_API + "empleados", raw, header);
-        if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
-          mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
-        } else {
-          mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-          Navigate("/accionesEmpleados");
-        }
-      } catch (error) {
-        mostrarAlertaErronea(error.message, error.stack, null);
+      if(/^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(form.contrasenya) === false){
+        console.log("HOLA")
+        mostrarAlertaErronea("Error en la contraseña", "La contraseña debe tener mayúsculas, minúsculas y números.")
+      }else{
+        if (correcto) {
+          var raw = {
+            empresa_id: localStorage.getItem("id"),
+            nif: form.dni,
+            nombre: form.nombre,
+            apellidos: form.apellidos,
+            direccion: form.direccion,
+            cPostal: form.codPostal,
+            poblacion: form.poblacion,
+            provincia: form.provincia,
+            pais: form.pais,
+            telefono: form.telefono,
+            fechaNacimiento: form.fnac,
+            email: form.email,
+            password: form.contrasenya,
+            password_confirmation: form.contrasenya,
+            numSegSoc: form.numSegSoc,
+            //fotografia: form.fotografia,
+            ultimaConexion: formatearFechaHora(),
+            activo: true,
+            fechaAlta: form.fechaAlta,
+            fechaBaja: formatearFechaHora(),
+            tipoEmpleado: form.tipoUsuario,
+          };
+          try {
+            const header = {
+              headers: {
+                Accept: "application/json",
+                Authorization: `${localStorage.getItem("tipoToken")} ${localStorage.getItem("token")}`,
+              },
+            };
+            let peticion = await peticionPost(URL_API + "empleados", raw, header);
+            if (peticion.data.errores !== undefined && peticion.data.errores !== null) {
+              mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
+            } else {
+              mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
+              Navigate("/accionesEmpleados");
+            }
+          } catch (error) {
+            mostrarAlertaErronea(error.message, error.stack, null);
+          }
+      }else{
+        mostrarAlertaErronea("Error campos incorrectos.", "Algunos de los campos rellenados no tienen un formato correcto o están vacios.", null);
       }
-    }else{
-      mostrarAlertaErronea("Error campos incorrectos.", "Algunos de los campos rellenados no tienen un formato correcto o están vacios.", null);
     }
   };
   //Función que oculta y muestra el icono del "ojo" partiendo de la contraseña.
