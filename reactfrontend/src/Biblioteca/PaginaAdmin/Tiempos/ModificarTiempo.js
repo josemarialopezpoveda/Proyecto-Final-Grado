@@ -95,7 +95,7 @@ function ModificarTiempo() {
               mostrarAlertaErronea(peticion.data.message, peticion.data.errores, null);
             } else {
               mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-              //Navigate("/verTiemposEmpleado");
+              Navigate("/verTiemposEmpleado");
             }
           } catch (error) {
             mostrarAlertaErronea(error.message, error.stack, null);
@@ -136,6 +136,7 @@ function ModificarTiempo() {
   return (
     <React.Fragment>
     <NavAdmin/>
+    <pre>{JSON.stringify(horas,null,3)}</pre>
       <div className='FlexBoton'>
         <h1 className='text-center tituloH1'>Modificar Tiempo del empleado {empleado.nombre}</h1>
         <div className='contenedorBotonCrearCorreo'>

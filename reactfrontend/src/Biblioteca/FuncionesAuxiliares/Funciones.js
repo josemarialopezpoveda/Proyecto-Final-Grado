@@ -542,14 +542,14 @@ export const obtenerMilisegundosDesdeHora = (hora) =>{
 
 //Función que a partir de "2023-05-08" y "19:02" las une con el formato "2023-05-07 09:34:37".
 export const unirFechaYHora = (fechaStr, horaStr) =>{
-  if(horaStr === "00:00:00"){
-    horaStr = "00:00"
-  }
-  const fechaHora = new Date(`${fechaStr}T${horaStr}:00`);
-  console.log(fechaHora)
-  const fechaFormateada = fechaHora.toISOString().slice(0, 10);
-  const horaFormateada = fechaHora.toTimeString().slice(0, 8);
-  return `${fechaFormateada} ${horaFormateada}`;
+  const [anno, mes, dia] = fechaStr.split('-');
+  // Separar la hora en horas y minutos
+  const [horas, minutos] = horaStr.split(':');
+  
+  // Obtener la fecha y hora combinadas en formato deseado
+  const fechaHora = `${anno}-${mes}-${dia} ${horas.padStart(2, '0')}:${minutos.padStart(2, '0')}:00`;
+  
+  return fechaHora;
 }
 
 //Función que a partir de "2023-05-08" y "19:02" las une con el formato "2023-05-07 09:34:37".
