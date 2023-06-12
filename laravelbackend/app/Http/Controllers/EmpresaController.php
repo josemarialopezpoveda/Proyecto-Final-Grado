@@ -149,7 +149,7 @@ class EmpresaController extends Controller {
             'telefonoMovil' => 'required|integer|digits:9|unique:empresas',
             'email' => 'required|string|email|max:255|unique:empresas',
             'password' => 'required|string|confirmed|min:8',
-            'logotipo' => 'string',
+            //'logotipo' => 'string',
             //'logotipo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // añadido logotipo
             'ultimaConexion' => 'required|date_format:Y-m-d H:i:s',
             'activo' => 'required|boolean',
@@ -177,7 +177,7 @@ class EmpresaController extends Controller {
         $empresa->email = $request['email'];
         $empresa->password = Hash::make($request['password']);
         //$empresa->logotipo = Storage::disk('public')->putFile('images', $request['logotipo']);
-        $empresa->logotipo = $request['logotipo'];
+        //$empresa->logotipo = $request['logotipo'];
         $empresa->ultimaConexion = $request['ultimaConexion'];
         $empresa->activo = $request['activo'];
         $empresa->fechaAlta = $request['fechaAlta'];
@@ -242,7 +242,7 @@ class EmpresaController extends Controller {
                 Rule::unique('empresas')->ignore($empresa->id),
             ],
             //'logotipo' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048', // añadido logotipo
-            'logotipo' => 'string',
+            //'logotipo' => 'string',
             'ultimaConexion' => 'required|date_format:Y-m-d H:i:s',
             'activo' => 'required|boolean',
             'fechaAlta' => 'required|date',
@@ -267,7 +267,7 @@ class EmpresaController extends Controller {
         $empresa->telefonoFijo = $request['telefonoFijo'];
         $empresa->telefonoMovil = $request['telefonoMovil'];
         $empresa->email = $request['email'];
-        $empresa->logotipo = $request['logotipo'];
+        //$empresa->logotipo = $request['logotipo'];
         $empresa->ultimaConexion = $request['ultimaConexion'];
         $empresa->activo = $request['activo'];
         $empresa->fechaAlta = $request['fechaAlta'];
