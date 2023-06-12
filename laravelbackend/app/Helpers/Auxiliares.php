@@ -192,6 +192,14 @@ class Auxiliares {
         return $carbonFecha1->isSameDay($carbonFecha2);
     }
 
+    public static function esMediaNoche($hora): bool
+    {
+        $horaFin = Carbon::createFromFormat('Y-m-d H:i:s', $hora);
+        $horaComparacion = Carbon::createFromTime(0, 0, 0);
+
+        return $horaFin === $horaComparacion;
+    }
+
     public static function verificarTurnoEmpresa($turno, $user)
     {
         $primaryKey = $user->getKey();
