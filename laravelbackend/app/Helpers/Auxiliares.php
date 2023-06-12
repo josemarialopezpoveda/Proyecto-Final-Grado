@@ -197,7 +197,7 @@ class Auxiliares {
         $horaFin = Carbon::createFromFormat('Y-m-d H:i:s', $hora);
         $horaComparacion = Carbon::createFromTime(0, 0, 0);
 
-        return $horaFin === $horaComparacion;
+        return $horaFin->equalTo($horaComparacion);
     }
 
     public static function verificarTurnoEmpresa($turno, $user)

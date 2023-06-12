@@ -633,6 +633,7 @@ class TiempoController extends Controller {
             // Comprobar que el tiempo corresponda con el empleado
             if ($request->empleado_id === $tiempo->empleado_id) {
 //                if ($tiempo->inicio < $request->fin) {
+//                    
                 if ($user instanceof Empresa) {
                     $empresa = DB::table('empresas')->where('id', $primaryKey)->first();
                     $empleado = Empleado::where('id', $request->empleado_id)
@@ -651,6 +652,7 @@ class TiempoController extends Controller {
                         $tiempo->save();
                         $data = [
                             'message' => 'Tiempo actualizado correctamente',
+                            '$request->fin' => $request->fin,
                             'tiempo' => $tiempo
                         ];
                         return response()->json($data);
@@ -676,6 +678,8 @@ class TiempoController extends Controller {
                             $tiempo->save();
                             $data = [
                                 'message' => 'Tiempo actualizado correctamente',
+                                '$request2->fin' => $request->fin,
+                                'mediaNoche' => Auxiliares::esMediaNoche($request->fin),
                                 'tiempo' => $tiempo,
                             ];
                             return response()->json($data);
@@ -684,6 +688,7 @@ class TiempoController extends Controller {
                             $tiempo->save();
                             $data = [
                                 'message' => 'Tiempo actualizado correctamente',
+                                '$request->fin' => $request->fin,
                                 'tiempo' => $tiempo,
                             ];
                             return response()->json($data);
