@@ -13,7 +13,7 @@ class CasosTableSeeder extends Seeder {
     public function run(): void
     {
         DB::table('casos')->insert([
-            'empleado_id' => 1,
+            'empleado_id' => 2,
             'asunto' => "Solicitud de vacaciones",
             'activo' => true,
             'fechaCreacion' => Carbon::now('Europe/Madrid'),
