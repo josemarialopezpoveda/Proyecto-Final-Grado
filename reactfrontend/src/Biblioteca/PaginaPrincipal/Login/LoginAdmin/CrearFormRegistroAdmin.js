@@ -27,7 +27,6 @@ function CrearFormRegistroAdmin() {
             /^\d{9}$/.test(contextoReg.form.telefonoMovil) &&
             /[a-zA-Z0-9]+@[A-za-z]+\.[A-za-z]{2,3}/.test(contextoReg.form.email)&&
             contextoReg.validarContrasenyas("valido")&&
-
             /^(?!\s*$).+/.test(contextoReg.form.direccion) &&
             /^(?!\s*$).+/.test(contextoReg.form.poblacion) &&
             /^(?!\s*$).+/.test(contextoReg.form.provincia) &&
@@ -35,44 +34,47 @@ function CrearFormRegistroAdmin() {
             /^(?!\s*$).+/.test(contextoReg.form.razonSocial) &&
             /^(?!\s*$).+/.test(contextoReg.form.nombreComercial)
         );
-
-        if (correcto) {
-            var raw = {
-                "cif": contextoReg.form.cif,
-                "razonSocial": contextoReg.form.razonSocial,
-                "nombreComercial": contextoReg.form.nombreComercial,
-                "direccion": contextoReg.form.direccion,
-                "poblacion": contextoReg.form.poblacion,
-                "provincia": contextoReg.form.provincia,
-                "pais": contextoReg.form.pais,
-                "telefonoFijo": contextoReg.form.telefonoFijo,
-                "telefonoMovil": contextoReg.form.telefonoMovil,
-                "email": contextoReg.form.email,
-                "password": contextoReg.form.password,
-                "password_confirmation": contextoReg.form.password,
-                "logotipo": contextoReg.form.logotipo,
-                "cPostal": contextoReg.form.codPostal,
-                "ultimaConexion": formatearFechaHora(),
-                "fechaAlta": formatearFecha(),
-                "activo": true,
-                "empleados": []
-            };
-            try {
-                let peticion = await peticionPost(URL_API+"empresas", raw)
-                if(peticion.data.errores !== undefined && peticion.data.errores !== null){
-                    mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
-                }else{
-                    mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
-                    localStorage.setItem('token', peticion.data.token);
-                    localStorage.setItem('tipoToken', peticion.data.token_type);
-                    localStorage.setItem('id', peticion.data.empresa);
-                    Navigate("/accionesEmpleados")
-                }
-            } catch (error) {
-                mostrarAlertaErronea(error.message, error.stack, null);
-            }
+        if(contextoReg.validarContrasenyas("valido") === false){
+            mostrarAlertaErronea("Error en la contraseña", "La contraseña debe tener mayúsculas, minúsculas y números (y debe tener al menos 7 caracteres).")
         }else{
-            mostrarAlertaErronea("Algo ha fallado...", "Algun campo está mal escrito.", "7000");
+            if (correcto) {
+                var raw = {
+                    "cif": contextoReg.form.cif,
+                    "razonSocial": contextoReg.form.razonSocial,
+                    "nombreComercial": contextoReg.form.nombreComercial,
+                    "direccion": contextoReg.form.direccion,
+                    "poblacion": contextoReg.form.poblacion,
+                    "provincia": contextoReg.form.provincia,
+                    "pais": contextoReg.form.pais,
+                    "telefonoFijo": contextoReg.form.telefonoFijo,
+                    "telefonoMovil": contextoReg.form.telefonoMovil,
+                    "email": contextoReg.form.email,
+                    "password": contextoReg.form.password,
+                    "password_confirmation": contextoReg.form.password,
+                    "logotipo": contextoReg.form.logotipo,
+                    "cPostal": contextoReg.form.codPostal,
+                    "ultimaConexion": formatearFechaHora(),
+                    "fechaAlta": formatearFecha(),
+                    "activo": true,
+                    "empleados": []
+                };
+                try {
+                    let peticion = await peticionPost(URL_API+"empresas", raw)
+                    if(peticion.data.errores !== undefined && peticion.data.errores !== null){
+                        mostrarAlertaErronea(peticion.data.message, peticion.data.errores, "7000");
+                    }else{
+                        mostrarAlertaCorrecta(peticion.statusText, "Todo correcto y funcionando perfectamente", "5000");
+                        localStorage.setItem('token', peticion.data.token);
+                        localStorage.setItem('tipoToken', peticion.data.token_type);
+                        localStorage.setItem('id', peticion.data.empresa);
+                        Navigate("/accionesEmpleados")
+                    }
+                } catch (error) {
+                    mostrarAlertaErronea(error.message, error.stack, null);
+                }
+            }else{
+                mostrarAlertaErronea("Algo ha fallado...", "Algun campo está mal escrito.", "7000");
+            }
         }
     }
 

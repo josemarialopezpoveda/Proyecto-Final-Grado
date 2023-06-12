@@ -79,8 +79,7 @@ function CrearFormularioAltaEmpleados() {
       /^\d{5}$/.test(form.codPostal) &&
       /^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(form.contrasenya);
       if(/^(?!.*[{}[\]<>;:&])(?=\w*\d)(?=\w*[A-Z])(?=\w*[a-z])\S{6,20}$/.test(form.contrasenya) === false){
-        console.log("HOLA")
-        mostrarAlertaErronea("Error en la contraseña", "La contraseña debe tener mayúsculas, minúsculas y números.")
+        mostrarAlertaErronea("Error en la contraseña", "La contraseña debe tener mayúsculas, minúsculas y números (y debe tener al menos 7 caracteres).")
       }else{
         if (correcto) {
           var raw = {
