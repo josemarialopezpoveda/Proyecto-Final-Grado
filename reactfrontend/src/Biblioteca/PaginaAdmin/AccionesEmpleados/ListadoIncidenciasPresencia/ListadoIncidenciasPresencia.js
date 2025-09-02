@@ -32,8 +32,13 @@ function ListadoIncidenciasPresencia(){
           },
         };
         let datosAusencias = await peticionGetAuth(URL_API + "ausenciasEmpleados", header);
+        console.log(datosAusencias)
             let datos = datosAusencias.data.ausencias.map((ausencia)=>{
-                if(ausencia.fechaFin === null){
+                console.log("FECHAS")
+                console.log(ausencia.fechaFin)
+                console.log(ausencia.fechaInicio)
+                if(ausencia.fechaFin === null &&
+                    fechaEntreRango(ausencia.fechaInicio,null,fechasBuscador.diaSeleccionado)){
                     return({
                         nombre: ausencia.nombre + " " + ausencia.apellidos,
                         descripcion: ausencia.descripcion,
@@ -41,6 +46,7 @@ function ListadoIncidenciasPresencia(){
                     })
                 }else{   
                     if(fechaEntreRango(ausencia.fechaInicio,ausencia.fechaFin,fechasBuscador.diaSeleccionado)){
+                        console.log(datosAusencias)
                         return({
                             nombre: ausencia.nombre + " " + ausencia.apellidos,
                             descripcion: ausencia.descripcion,
@@ -49,6 +55,7 @@ function ListadoIncidenciasPresencia(){
                     }
                 }
             })
+            console.log(datos)
             const DatosFiltrados = datos.filter(item => item !== null && item !== undefined);
             setDatosFaltas(DatosFiltrados);
       };

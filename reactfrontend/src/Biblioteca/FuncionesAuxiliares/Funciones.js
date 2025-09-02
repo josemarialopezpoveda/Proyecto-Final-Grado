@@ -476,7 +476,12 @@ export const convertirHoraANumero = (hora)=>{
 //Una funcion que reciba una fechainicio una fechaFin y una fecha y si dicha decha esta entre la de inicio y la de fin devuelva true.
 export const fechaEntreRango = (fechaInicio, fechaFin, fechaComprobar) =>{
   const inicio = new Date(fechaInicio);
-  const fin = new Date(fechaFin);
+  var fin = undefined;
+  if(fechaFin == null){
+    fin = new Date();
+  }else{
+    fin = new Date(fechaFin);
+  }
   const comprobar = new Date(fechaComprobar);
   return comprobar >= inicio && comprobar <= fin;
 }
